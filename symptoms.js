@@ -12808,18 +12808,20 @@ const SYMPTOMS = [
  {
   "id": "s-carrier-hsi-resistance-and-replacement",
   "equipment": "Gas Furnace",
-  "title": "Carrier 59MN7C/59TP6 - checking hot surface igniter resistance (40-70 ohms cold) and replacing it",
-  "summary": "Carrier states the igniter does not require annual inspection and that its resistance must be checked before removal. Resistance rises with temperature, so a hot igniter will read high and mislead you.",
+  "title": "Carrier gas furnaces (59MN7, 59TP6, 59SP5 / 59SP6, 59SC2 / 59SC5 / 59SC6) - what a hot surface igniter (ignitor, HSI) should ohm out: 40-70 ohms cold, checking it and replacing it",
+  "summary": "The 59MN7, 59TP6, 59SP5, 59SP6, 59SC2, 59SC5 and 59SC6 service manuals all give the same figure: 40 to 70 ohms at room temperature, stable over the life of the igniter. Carrier states the igniter does not require annual inspection and that its resistance must be checked before removal. Igniter resistance is affected by temperature, so only check it at room temperature (the 59MN7 manual adds that the reading increases as the igniter gets hotter).",
   "steps": [
    "Turn off gas and electrical supplies to the furnace.",
    "Remove the control door.",
    "Disconnect the igniter wire connection.",
-   "Check resistance only when the igniter is at room temperature - resistance reading increases as igniter temperature increases.",
+   "Check resistance only when the igniter is at room temperature - igniter resistance is affected by temperature.",
    "Using an ohm meter, check resistance across both igniter leads in the connector; a cold reading should be between 40 ohms and 70 ohms.",
-   "If replacement is required, use a 1/4-in. driver to remove the two screws securing the igniter mounting bracket to the burner assembly.",
-   "Carefully withdraw the igniter and bracket assembly through the front of the burner assembly without striking the igniter on surrounding parts, and inspect it for signs of damage or failure.",
+   "Using a 1/4-in. driver, remove the two screws securing the igniter mounting bracket to the burner assembly.",
+   "Carefully withdraw the igniter and bracket assembly through the front of the burner assembly without striking the igniter on surrounding parts, and inspect the igniter for signs of damage or failure.",
+   "If replacement is required, remove the screw that secures the igniter on the igniter bracket and remove the igniter.",
    "Install the replacement, reverse the removal steps, and dress the igniter wires so there is no tension on the igniter itself.",
-   "Turn on gas and electrical supplies and verify igniter operation by initiating the control board self-test feature or by cycling the thermostat."
+   "Turn on gas and electrical supplies and verify igniter operation by initiating the control board self-test feature or by cycling the thermostat.",
+   "Replace the control door."
   ],
   "confidence": "verify"
  },
@@ -21563,7 +21565,7 @@ const SYMPTOMS = [
   "brand": "ecobee",
   "equipment": "Thermostat",
   "askBrandOnly": true,
-  "title": "ecobee - get the heat strips (aux heat / auxiliary heat) to come on sooner when the heat pump can't keep up: Thresholds, Configure Staging, Aux Savings Optimization, Compressor to Aux Temp Delta",
+  "title": "ecobee - get the heat strips (aux heat / auxiliary heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up: Thresholds, Configure Staging, Aux Savings Optimization, Compressor to Aux Temp Delta",
   "summary": "Make these changes ON THE THERMOSTAT - ecobee says threshold settings cannot be changed in the app. Applies to every ecobee; the exact screens for each model are on its card in Thermostats under 'How to use it'. Written for the Smart Thermostat Enhanced (also sold as ecobee by Generac - back label model ECB501). From ecobee's support articles and user guides.",
   "steps": [
    "Path: Main Menu > General (Gear icon) > Settings > Installation Settings > Thresholds. On Smart Thermostat Lite / Essential, ecobee3 and older screens there is no General step: Main Menu > Settings > Installation Settings > Thresholds.",
@@ -21586,7 +21588,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "amazon alexa",
-  "title": "Amazon thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "Amazon thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each Amazon thermostat does this its own way. 0 of the 1 Amazon thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Amazon thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Amazon) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21603,7 +21605,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "aprilaire",
-  "title": "Aprilaire thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "Aprilaire thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each Aprilaire thermostat does this its own way. 7 of the 7 Aprilaire thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Aprilaire thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Aprilaire) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21620,7 +21622,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "bosch",
-  "title": "Bosch thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "Bosch thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each Bosch thermostat does this its own way. 2 of the 2 Bosch thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Bosch thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Bosch) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21637,7 +21639,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "braeburn",
-  "title": "Braeburn thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "Braeburn thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each Braeburn thermostat does this its own way. 16 of the 18 Braeburn thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Braeburn thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Braeburn) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21655,7 +21657,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "carrier bryant payne",
-  "title": "Carrier thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "Carrier thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each Carrier thermostat does this its own way. 13 of the 17 Carrier thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Carrier thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Carrier) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21674,7 +21676,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "daikin",
-  "title": "Daikin thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "Daikin thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each Daikin thermostat does this its own way. 7 of the 9 Daikin thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Daikin thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Daikin) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21692,7 +21694,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "goodman amana",
-  "title": "Goodman / Amana thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "Goodman / Amana thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each Goodman / Amana thermostat does this its own way. 6 of the 6 Goodman / Amana thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Goodman / Amana thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Goodman / Amana) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21709,7 +21711,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "nest google",
-  "title": "Nest thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up: Heat Pump Balance, auxiliary lockout temperature, aux upstage timer, droop",
+  "title": "Nest thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up: Heat Pump Balance, auxiliary lockout temperature, aux upstage timer, droop",
   "summary": "Each Nest thermostat does this its own way. 5 of the 5 Nest thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Nest thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Google Nest) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21726,7 +21728,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "honeywell resideo",
-  "title": "Honeywell / Resideo thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up: Backup Heat Droop, Upstage Timer, aux heat lockout, balance point, Auxiliary heat control comfort / economy",
+  "title": "Honeywell / Resideo thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up: Backup Heat Droop, Upstage Timer, aux heat lockout, balance point, Auxiliary heat control comfort / economy",
   "summary": "Each Honeywell / Resideo thermostat does this its own way. 18 of the 48 Honeywell / Resideo thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Honeywell / Resideo thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Honeywell Home) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21745,7 +21747,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "hunter",
-  "title": "Hunter thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "Hunter thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each Hunter thermostat does this its own way. 0 of the 1 Hunter thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Hunter thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Hunter) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21762,7 +21764,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "icp heil tempstar comfortmaker arcoaire keeprite",
-  "title": "ICP (Heil / Tempstar / Comfortmaker) thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "ICP (Heil / Tempstar / Comfortmaker) thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each ICP (Heil / Tempstar / Comfortmaker) thermostat does this its own way. 3 of the 4 ICP (Heil / Tempstar / Comfortmaker) thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which ICP (Heil / Tempstar / Comfortmaker) thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand ICP (Heil / Tempstar / Comfortmaker)) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21780,7 +21782,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "lennox",
-  "title": "Lennox thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "Lennox thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each Lennox thermostat does this its own way. 13 of the 14 Lennox thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Lennox thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Lennox) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21798,7 +21800,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "lux",
-  "title": "Lux thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "Lux thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each Lux thermostat does this its own way. 10 of the 14 Lux thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Lux thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Lux) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21816,7 +21818,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "mitsubishi",
-  "title": "Mitsubishi thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "Mitsubishi thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each Mitsubishi thermostat does this its own way. 1 of the 8 Mitsubishi thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Mitsubishi thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Mitsubishi) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21834,7 +21836,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "mysa",
-  "title": "Mysa thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "Mysa thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each Mysa thermostat does this its own way. 1 of the 1 Mysa thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Mysa thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Mysa) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21851,7 +21853,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "pro1",
-  "title": "Pro1 thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "Pro1 thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each Pro1 thermostat does this its own way. 17 of the 33 Pro1 thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Pro1 thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Pro1) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21870,7 +21872,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "rheem ruud",
-  "title": "Rheem / Ruud thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "Rheem / Ruud thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each Rheem / Ruud thermostat does this its own way. 6 of the 7 Rheem / Ruud thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Rheem / Ruud thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Rheem / Ruud) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21888,7 +21890,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "robertshaw",
-  "title": "Robertshaw thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "Robertshaw thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each Robertshaw thermostat does this its own way. 3 of the 4 Robertshaw thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Robertshaw thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Robertshaw) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21906,7 +21908,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "totaline",
-  "title": "Totaline thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "Totaline thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each Totaline thermostat does this its own way. 2 of the 3 Totaline thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Totaline thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Totaline) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21924,7 +21926,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "trane american standard",
-  "title": "Trane / American Standard thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "Trane / American Standard thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each Trane / American Standard thermostat does this its own way. 12 of the 17 Trane / American Standard thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Trane / American Standard thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Trane / American Standard) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21943,7 +21945,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "venstar",
-  "title": "Venstar thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "Venstar thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each Venstar thermostat does this its own way. 8 of the 8 Venstar thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Venstar thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Venstar) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21960,7 +21962,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "white-rodgers emerson sensi",
-  "title": "White-Rodgers thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "White-Rodgers thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each White-Rodgers thermostat does this its own way. 18 of the 24 White-Rodgers thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which White-Rodgers thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand White-Rodgers) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21978,7 +21980,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "wyze",
-  "title": "Wyze thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "Wyze thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each Wyze thermostat does this its own way. 0 of the 1 Wyze thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which Wyze thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Wyze) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -21995,7 +21997,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandGate": true,
   "askBrandAlso": "york coleman luxaire",
-  "title": "York / Coleman thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "title": "York / Coleman thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner / faster (not coming on fast enough) when the heat pump can't keep up",
   "summary": "Each York / Coleman thermostat does this its own way. 6 of the 6 York / Coleman thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
   "steps": [
    "Which York / Coleman thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand York / Coleman) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
@@ -22579,6 +22581,41 @@ const SYMPTOMS = [
    "Trade practice: a beep that cuts in and out when you tap or wiggle the part or its wires points to a loose or intermittent connection."
   ],
   "safety": "Never use continuity or ohms on a live circuit.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-unit-age-from-serial-number",
+  "equipment": "Other",
+  "title": "How old is the unit (age of the system) - read the year it was made from the serial number, by brand: York, Carrier / Bryant, ICP (Heil / Tempstar / Comfortmaker), Lennox / Allied, Goodman / Amana / Daikin, Trane / American Standard, Nortek",
+  "summary": "Quickest: scan the data plate in the Tag Scanner - when it reads the serial and knows the brand's rule it shows \"Made <year> (about N years old)\". A date printed on the plate beats any serial rule. By hand, use the brand rules below. The Tag Scanner also has rules for Bosch and LG; for any other brand use the plate date or call the maker with the serial.",
+  "steps": [
+   "Look on the plate yourself for a printed date first (MFG DATE, MFR DATE, DATE OF MANUFACTURE, PROD DATE, or just a date such as 6/94). Many Trane, Rheem, Generac and ductless plates print one, and it beats any serial rule.",
+   "York (Johnson Controls), from 2004 on: the serial is a letter, a digit, a month letter, a digit, then 6 digits. The 2nd and 4th characters are the year: W1E9937625 = 1 and 9 = 2019. Before 2004 a York-built unit has 4 letters then 6 digits and the 3rd letter is the year; those letters repeat every 21 years, so the style of the unit tells you which. An older Coleman / Evcon serial (4 letters then 5 digits) is laid out differently - use the plate date or call.",
+   "Carrier / Bryant: 4 digits, a letter, 5 digits. The first 2 digits are the week and the next 2 are the year: 0118E00001 = week 01 of 2018.",
+   "ICP (Heil, Tempstar, Comfortmaker): a plant letter, 2 digits of year, 2 digits of week, then the sequence: L942353044 = 1994, week 23 (checked against plates back to 1993; on anything older trust the plate date).",
+   "Lennox / Allied (not Lennox ductless): 2 digits of plant, 2 digits of year, a month letter, then the sequence: 1909C05716 = 2009.",
+   "Goodman / Amana / Daikin (not Daikin ductless): the serial is all digits and the first 4 are the year and month (YYMM): a serial starting 2410 = October 2024 (Goodman's own example: 1306 = June 2013).",
+   "Trane / American Standard (not their ductless): a 10-character serial (2010 on, and some 2009) starts with the 2-digit year, then the week. A 9-character serial from 2002-2009 starts with one digit for the year: 85152491V = 2008. A 9-character serial that starts with a letter is 1980-2001 - the letter is the year (for example J = 1994, M = 1997, R = 2000, Z = 2001).",
+   "Nortek: the 4th and 5th characters are the year and the 6th and 7th the month."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-lennox-slp99-float-switch-wiring",
+  "equipment": "Gas Furnace",
+  "title": "Lennox SLP99 furnace (SLP99UH070XV36B and other SLP99UHV) - how to wire a 2-wire safety switch (condensate float / overflow switch)",
+  "summary": "This card covers a condensate float (overflow) switch - on the coil drain pan, or the optional overflow switch on the furnace condensate trap. If the 2-wire switch is something else, see step 1. Where the two wires go depends on the thermostat. With a Lennox communicating thermostat (R, i+, i-, C), Lennox shows it on the furnace board: cut the on-board link W914 and land the switch on R and DS. Do not put it in the R wire to a communicating thermostat - Lennox lists a tripped float switch in series with R as a cause of alert 31. With a plain 24 V thermostat, Lennox's furnace manual shows no float switch hookup, so leave W914 alone and use the trade-practice break-R or break-Y method.",
+  "steps": [
+   "Turn power off to the furnace first. Find out what the switch is and what thermostat is on the furnace. The furnace install manual shows an optional overflow switch on the furnace condensate trap. If the 2-wire device is a HEPA interlock kit or a ventilation control, stop - Lennox draws those separately. Thermostat cable on the 4-terminal R, i+, i-, C plug means communicating. Thermostat cable on W1, W2 and G on the terminal strip means a conventional 24 V thermostat. Wires on Y1 / Y2 alone do not tell you - on a communicating system they can go to a conventional outdoor unit.",
+   "Communicating thermostat - Lennox's method at the furnace: on the SureLight (A92) board find the clippable on-board link W914, labeled DEHUM OR HARMONY, which ties R to DS. Cut W914. Land one switch wire on the R terminal and the other on the DS terminal of the 24 V terminal strip, so the switch replaces the link. For the R-DS hookup the switch must be closed when dry and open on high water - the control looks for loss of 24 VAC on DS. Lennox's drawing lists the SLP99V for this and says cutting DS to R will not cause a communication interruption or error code.",
+   "What to expect on that hookup: Lennox's communicating alert guide says the control should see 24 VAC on DS when all is well. When it loses 24 VAC on DS for two minutes it sends alert code 370 (GF Interlock Switch Open) and disables heating; if a demand is running, it de-energizes all outputs, including the blower. The alert clears when 24 VAC is back on DS for 10 seconds straight, or on a power reset (it comes back after the reset if DS still has no voltage). That guide's wording names the EL296 and SL280 furnaces, so prove it on this SLP99: power up, run a call, lift the float, wait more than two minutes and confirm the furnace stops and the thermostat shows the alert. If it does not, call Lennox tech support before leaving it.",
+   "Communicating thermostat with a conventional (non-communicating) outdoor unit - the other Lennox drawing: put the switch in series with one 24 V wire going to the outdoor unit. The SLP99UHV manual draws it in the C wire from the furnace to the outdoor unit and marks it as disabling the outdoor unit only; the iComfort S30 guide draws it in the Y1 wire to the outdoor unit. Either way it disables the outdoor unit only, so it does not stop the furnace. For a switch on the furnace condensate trap, Lennox's manual gives no wiring; the R-DS hookup is the Lennox drawing that acts on the furnace - prove it as in step 3.",
+   "Communicating outdoor unit: do not put the switch in R. Lennox's S30 and E30 guides say that with a float switch you use an isolation relay to break the common wire to the outdoor unit. The S30 wiring figure shows the float switch feeding a relay coil from the furnace's conventional R and C terminals, with the relay contact in the C wire to the outdoor unit. The furnace transformer is 40 VA; Lennox recommends the 75 VA transformer kit 27J32 when adding 24 V accessories.",
+   "Conventional 24 V thermostat: do not use the R-DS hookup. Lennox's alert guide says W914 is NOT cut in non-communicating mode - with no 24 VAC on DS for two minutes or more the system will not operate. The furnace manual only has W914 cut for a dehumidification thermostat or Harmony III zoning, where DS is the dehumidification signal. The SLP99UHV manual does not draw a float switch for a conventional thermostat, so this is trade practice, not a Lennox instruction: break R between the furnace R terminal and the thermostat (everything the thermostat controls stops, furnace heat included, and the thermostat goes blank), or break Y to the outdoor unit (only the compressor and outdoor fan stop; blower and furnace heat keep running). Trade practice is that breaking R makes sense with a 90%+ furnace, because it stops everything the thermostat controls. Wire two switches in series so either one shuts it down.",
+   "Test before you leave: restore power, run a call, lift the float and confirm what you wired actually stops (the outdoor unit only, or the whole system), then let the float drop and confirm it comes back. On the R-DS hookup, check for 24 VAC from DS to C with the float down. Taking the float switch out of the circuit is for testing only - Lennox says to do that when tracing alert 31 - never leave it jumpered.",
+   "Call Lennox tech support if: alert 370 shows with the float down and 24 VAC present on DS; the thermostat shows alert 31 after the switch was added; the furnace does not shut down on the R-DS hookup; or the board is not the A92 SureLight control with the W914 link (a different board or a K-suffix SLP99UHVK model - follow that unit's own manual)."
+  ],
+  "safety": "Disconnect all power to the furnace before wiring at the control board. Before handling the control board, touch your hand and tools to bare metal on the furnace to discharge static. A float switch is a water-damage safety - never leave it bypassed or jumpered out. Cut W914 only for a communicating thermostat float switch (or for a dehumidification thermostat / Harmony III as the manual directs); if W914 is cut by mistake, put a jumper back between DS and R on the terminal strip.",
   "confidence": "common"
  }
 ];
