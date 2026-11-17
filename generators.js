@@ -27476,6 +27476,1303 @@ const GENERATORS = [
    { "title": "Generac product support lookup - every document for this model number", "docType": "other", "url": "https://www.generac.com/service-support/product-support-lookup/" }
   ],
   "sourceNotes": "Generac H-100 Control Panel Technical Manual (0F3750) and SG035/SG100 industrial gaseous spec sheets. H-100 named/configurable channel alarms."
+ },
+ {
+  "id": "gen-generac-protector-xg-pz410",
+  "series": "Generac (Protector - liquid-cooled)",
+  "family": "Generac Protector XG liquid-cooled home standby (Power Zone 410, 25-80 kW)",
+  "controller": "Power Zone 410 (liquid-cooled Protector XG)",
+  "kw": [
+   "25",
+   "30",
+   "32",
+   "40",
+   "48",
+   "60",
+   "80"
+  ],
+  "engine": "Generac 2.5 L inline 4-cylinder naturally aspirated (XG02525, XG03025) or Generac 4.5 L inline 4-cylinder: naturally aspirated on XG03245 / XG04045 / XG04845, turbocharged and aftercooled on XG06045 / XG08045. 1,800 rpm operating speed, 1,200 rpm exercise speed, hydraulic lifters (A0010408477 Rev B p.2; A0005286945 Rev F p.3).",
+  "fuel": "LP vapor or natural gas; the fuel type is selected in the controller only, no fuel system parts change (A0010408477 Rev B p.3; A0005286945 Rev F p.4; A0011166772 Rev A p.12). Shipped set for NG (A0011166772 Rev A p.12; A0005536684 Rev D p.12). Fuel pressure at the generator: LP vapor 7-14 in H2O, NG 3.5-14 in H2O on both spec sheets and in the installation manual (A0010408477 Rev B p.3; A0005286945 Rev F p.4; A0005536699 Rev E p.21, p.24); the 32-80 kW owner's manual table prints LP 7-17 and NG 3.5 in H2O instead (A0005536684 Rev D p.10).",
+  "years": "current",
+  "sort": 5,
+  "models": [
+   {
+    "g": "",
+    "lc": "XG025",
+    "digits": "XG025",
+    "desc": "25 kW, 2.5 L NA, Power Zone 410 (XG02525AUAX 1-phase, XG02525CUAX 3-phase)"
+   },
+   {
+    "g": "",
+    "lc": "XG030",
+    "digits": "XG030",
+    "desc": "30 kW, 2.5 L NA, Power Zone 410 (XG03025AUAX 1-phase, XG03025CUAX 3-phase)"
+   },
+   {
+    "g": "",
+    "lc": "XG032",
+    "digits": "XG032",
+    "desc": "32 kW, 4.5 L NA, Power Zone 410 (XG03245ANAX 1-phase, XG03245CNAX 3-phase)"
+   },
+   {
+    "g": "",
+    "lc": "XG035",
+    "digits": "XG035",
+    "desc": "35 kW (XG03545) - named in the installation manual (cover: '35 kW XG03545'; grouped there with XG03245 / XG04045 / XG04845 for battery, cartridges, drawings and the 4.5 L maintenance kit) and in the 25-30 kW spec sheet's accessory list; no rating column in either public spec sheet and not on Generac's listing - use the data plate"
+   },
+   {
+    "g": "",
+    "lc": "XG040",
+    "digits": "XG040",
+    "desc": "40 kW, 4.5 L NA, Power Zone 410 (XG04045ANAX / ANAC 1-phase, CNAX / CNAC 3-phase)"
+   },
+   {
+    "g": "",
+    "lc": "XG048",
+    "digits": "XG048",
+    "desc": "48 kW, 4.5 L NA, Power Zone 410 (XG04845ANAX / ANAC 1-phase, CNAX / CNAC 3-phase)"
+   },
+   {
+    "g": "",
+    "lc": "XG060",
+    "digits": "XG060",
+    "desc": "60 kW, 4.5 L turbo, Power Zone 410 (XG06045ANAX / ANAC 1-phase, CNAX / CNAC 3-phase)"
+   },
+   {
+    "g": "",
+    "lc": "XG080",
+    "digits": "XG080",
+    "desc": "80 kW on NG / 75 kW on LP, 4.5 L turbo, Power Zone 410 (XG08045ANAX / ANAC 1-phase, CNAX / CNAC 3-phase)"
+   }
+  ],
+  "specs": {
+   "oil": "Factory fill is 5W-20 conventional oil. After the 25-hour break-in change, Generac 5W-20 Full Synthetic; once synthetic is used, stay with it. No special additives (A0011166772 Rev A p.11, p.34; A0005536684 Rev D p.10-11). Full-flow spin-on filter. Hydraulic lifters.",
+   "oilCapacity": "2.5 L (XG02525, XG03025): 5.0 qt (4.7 L) (A0010408477 Rev B p.2; A0011166772 Rev A p.10, p.37). 4.5 L (XG03245, XG04045, XG04845, XG06045, XG08045): 11.6 qt (11.0 L) on the spec sheet and in the oil change steps (A0005286945 Rev F p.3; A0005536684 Rev D p.37); the owner's manual specification table prints 12 qt (11 L) (A0005536684 Rev D p.10). Fill to the dipstick FULL mark.",
+   "sparkPlug": "2.5 L (XG02525, XG03025): tighten to 8.9 +/- 1 ft-lb (12 +/- 1 N-m) (A0011166772 Rev A p.43). 4.5 L (XG03245-XG08045): tighten to 28 ft-lb (38 Nm) (A0005536684 Rev D p.42). Plug part numbers are not printed in the owner's manuals - they come in the maintenance kit (see Air filter).",
+   "plugGap": "0.012-0.017 in (0.31-0.45 mm), 2.5 L and 4.5 L (A0011166772 Rev A p.10; A0005536684 Rev D p.10, p.42).",
+   "valveClearance": "Hydraulic lifters (A0010408477 Rev B p.2; A0005286945 Rev F p.3). The owner's manuals list no valve clearance check in the maintenance schedule.",
+   "battery": "12 V flooded lead acid. 2.5 L (XG02525, XG03025): Group 26, 525 CCA minimum; maximum battery size Group 34, 690 CCA minimum, recommended where it drops below -22 F (-30 C) (A0010408477 Rev B p.3; A0011166772 Rev A p.13; A0005536699 Rev E p.44-45). 4.5 L (XG03245-XG08045): Group 27, 600 CCA minimum; maximum allowable battery Group 31, 750 CCA minimum (A0005286945 Rev F p.4; A0005536684 Rev D p.12; A0005536699 Rev E p.44). Replace every three years, every two years in extreme conditions (A0011166772 Rev A p.33; A0005536684 Rev D p.33). The 5 A charger is built into the Power Zone 410 controller (A0011166772 Rev A p.13).",
+   "airFilter": "Air filter, oil filter and spark plugs come in Generac's regular maintenance kits: 2.5 L kit G0073710 for XG02525 and XG03025 (A0010408477 Rev B p.6; A0005536699 Rev E p.70); 4.5 L kit G0079910 for XG03245, XG04045, XG04845, XG06045 and XG08045 (adds an oil funnel) (A0005286945 Rev F p.8). Individual filter part numbers are not printed in the public manuals.",
+   "fuelPressure": "LP vapor 7-14 in H2O (1.74-3.48 kPa); natural gas 3.5-14 in H2O (0.87-3.48 kPa), all XG models, at the generator (A0010408477 Rev B p.3; A0005286945 Rev F p.4; A0005536699 Rev E p.21, p.24). The 32-80 kW owner's manual table prints LP '7-17 in H2O' and NG '3.5 in H2O' beside the same kPa figures (A0005536684 Rev D p.10) - use the spec sheet range. Pressure must not drop more than 1-2 in H2O from no load to full load and never below the minimum (A0005536699 Rev E p.32).",
+   "exercise": "Set at the Power Zone 410 (Setting screen > Set Exercise): Quiet Test yes / no (yes = low speed, 1,200 rpm), time, frequency Weekly (default) / Bi-Weekly / Monthly, day Sunday (default) or day 1-28 for monthly, duration 5-60 minutes (default 12), transfer on exercise Never / 3 / 6 / 12 months (A0005536699 Rev E p.52; A0010408477 Rev B p.2; A0005286945 Rev F p.3). Only runs in AUTO (A0011166772 Rev A p.28)."
+  },
+  "maintReset": {
+   "title": "Power Zone 410 (Protector XG): clear the Schedule A / B / C maintenance warning",
+   "steps": [
+    "Do the maintenance first.",
+    "Read the warning on the screen (for example Schedule A Maintenance).",
+    "Press OFF on the controller.",
+    "Press ENTER. The message clears and the next one (if any) shows.",
+    "Repeat for each warning left.",
+    "Press AUTO. The green LED confirms AUTO."
+   ],
+   "resets": "The owner's manual prints OFF then ENTER to clear any alarm or warning message, and 'press ENTER to clear' for SERVICE SCHEDULE A / B / C. The A-B-C / Year maintenance schedule counter is reset in the Dealer sub menu, which needs the dealer password (not printed in the public manuals).",
+   "notes": [
+    "Schedule A is every year or 200 hours on the 2.5 L (XG02525, XG03025) and every year or 150 hours on the 4.5 L (XG03245-XG08045). Schedule B is every 2 years or 400 hours (2.5 L) / 300 hours (4.5 L). Schedule C is every 1,000 hours on both.",
+    "If Schedule A or B comes due at 900-999 total hours, the owner's manual has an IASD do the Schedule C tasks too and reset the A-B-C / Year counter.",
+    "Info screen > Maintenance Log lists maintenance occurrences by time and date.",
+    "The Power Zone 410 controller manual words it as: on the Alarm screen press STOP and then ENTER to clear all alarms present. The XG owner's manual words it as OFF, then ENTER.",
+    "To clear an active Auxiliary Shutdown alarm, the rocker switch (if equipped) on the controller face needs to be set to ON (I) (A0005536684 Rev D p.43)."
+   ],
+   "sources": [
+    {
+     "title": "Owner's Manual, Protector XG XG02525 / XG03025 (A0011166772 Rev A)",
+     "pages": "PDF p.24 (press OFF then ENTER to clear); p.33 (Service Maintenance Schedule, 900-999 hour note); p.43 (Schedule C: reset the counter in the Dealer Sub Menu, password required); p.48 (SERVICE SCHEDULE A/B/C: press ENTER to clear)",
+     "seedFile": "generac-protector-xg-25-30kw-owners-a0011166772.pdf",
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-protector-xg-25-30kw-owners-a0011166772.pdf"
+    },
+    {
+     "title": "Owner's Manual, Protector XG XG03245-XG08045 (A0005536684 Rev D)",
+     "pages": "PDF p.24 (press OFF then ENTER to clear); p.33 (Service Maintenance Schedule 150 / 300 / 1,000 hours); p.43 (Auxiliary Shutdown note); p.48",
+     "seedFile": "generac-protector-xg-32-80kw-owners-a0005536684.pdf",
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-protector-xg-32-80kw-owners-a0005536684.pdf"
+    },
+    {
+     "title": "Power Zone 410 Controller Owner's Manual (A0001458309 Rev E)",
+     "pages": "PDF p.17 (Maintenance Log); p.18 (Alarm Screen: STOP then ENTER clears all alarms present)",
+     "seedFile": "generac-protector-xg-power-zone-410-controller-manual-a0001458309.pdf",
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-protector-xg-power-zone-410-controller-manual-a0001458309.pdf"
+    }
+   ]
+  },
+  "maintenance": [
+   {
+    "interval": "First 25 hours (break-in)",
+    "task": "Replace oil and oil filter; switch to Generac 5W-20 Full Synthetic (A0011166772 Rev A p.33-34; A0005536684 Rev D p.33)."
+   },
+   {
+    "interval": "Daily when running continuously",
+    "task": "Inspect enclosure slots and openings, fuel hoses, coolant level and hoses, radiator for clogging, oil level and drain hose (A0011166772 Rev A p.33; A0005536684 Rev D p.33)."
+   },
+   {
+    "interval": "Schedule A - every year, or 200 hours (2.5 L XG02525 / XG03025) or 150 hours (4.5 L XG03245-XG08045)",
+    "task": "Everything in the daily list, plus replace oil and oil filter, inspect the accessory drive belt, replace the air filter element (A0011166772 Rev A p.33; A0005536684 Rev D p.33). Battery: replace every three years, two in extreme conditions."
+   },
+   {
+    "interval": "Schedule B - every 2 years, or 400 hours (2.5 L) or 300 hours (4.5 L)",
+    "task": "Schedule A plus drain and flush the coolant system, clean the coolant level sensor, replace spark plugs (A0011166772 Rev A p.33, p.40-43; A0005536684 Rev D p.33, p.40-42)."
+   },
+   {
+    "interval": "Schedule C - every 1,000 hours",
+    "task": "Schedules A and B plus tighten critical fasteners and replace the accessory drive belt; the procedure text also has the dealer replace upper and lower radiator hoses and engine coolant bypass hoses (4.5 L manual adds block heater hoses), then reset the A-B-C / Year counter (A0011166772 Rev A p.33, p.43; A0005536684 Rev D p.33, p.43)."
+   }
+  ],
+  "alarms": [
+   {
+    "code": "500",
+    "name": "Invalid VCODE Configuration",
+    "meaning": "Invalid Voltage Code setting. (A0001458309 Rev E p.29)"
+   },
+   {
+    "code": "501",
+    "name": "Missing Config - VCODE",
+    "meaning": "Configuration Not Set - VCODE. (A0001458309 Rev E p.29)"
+   },
+   {
+    "code": "502",
+    "name": "Missing Config - Parameter Group",
+    "meaning": "Configuration Not Set - Parameter Group. (A0001458309 Rev E p.29)"
+   },
+   {
+    "code": "503",
+    "name": "Missing Config - Exercise",
+    "meaning": "Configuration Not Set - Exercise. (A0001458309 Rev E p.29)"
+   },
+   {
+    "code": "504",
+    "name": "Missing Config - Fuel Type",
+    "meaning": "Configuration Not Set - Fuel Type. (A0001458309 Rev E p.29)"
+   },
+   {
+    "code": "505",
+    "name": "Missing Config - Governor",
+    "meaning": "Diesel: Configuration Not Set - GOV CODE Gaseous: Configuration Not Set - GOV CODE, EMISSIONS CODE. (A0001458309 Rev E p.29)"
+   },
+   {
+    "code": "506",
+    "name": "Configuration Mismatch",
+    "meaning": "Alarm Voltage configuration set in controller does not match voltage configuration for installed Voltage Configuration Cartridge (VCC). (A0001458309 Rev E p.29)"
+   },
+   {
+    "code": "1000",
+    "name": "Controller Fault",
+    "meaning": "The system has experienced an internal fault. Contact an IASD. (A0001458309 Rev E p.29)"
+   },
+   {
+    "code": "1001",
+    "name": "Controller Fault",
+    "meaning": "The system has experienced an internal fault. Contact an IASD. (A0001458309 Rev E p.29)"
+   },
+   {
+    "code": "1005",
+    "name": "Watchdog Timeout",
+    "meaning": "Watchdog Timeout - An internal watchdog timeout occurred. Controller will reboot and transition to the same key state it was previously in and resume operation. (A0001458309 Rev E p.29)"
+   },
+   {
+    "code": "1006",
+    "name": "Controller Fault",
+    "meaning": "An Exception Occurred - Controller will reboot and transition to the same key state it was in before and resume operation. (A0001458309 Rev E p.29)"
+   },
+   {
+    "code": "1007",
+    "name": "Controller Fault",
+    "meaning": "An Internal Error Occurred - Controller will reboot and transition to the same key state it was in before and resume operation. (A0001458309 Rev E p.29)"
+   },
+   {
+    "code": "1100",
+    "name": "Overcrank",
+    "meaning": "Default - Engine/Starter Problem The default for overcrank alarm, because of the nature of cranking there is almost no insight into the cause of an overcrank alarm with the current sensors. (A0001458309 Rev E p.29)"
+   },
+   {
+    "code": "1200",
+    "name": "Overspeed",
+    "meaning": "Prolonged Over 72 Hz for 3 seconds. (A0001458309 Rev E p.30)"
+   },
+   {
+    "code": "1205",
+    "name": "Overspeed",
+    "meaning": "Instantaneous - Over 75 Hz for 1 second. Possible causes: broken stepper wire. (A0001458309 Rev E p.30)"
+   },
+   {
+    "code": "1208",
+    "name": "Overspeed",
+    "meaning": "Frequency (DPE measured) > 20% of target frequency for 5 seconds. (A0001458309 Rev E p.30)"
+   },
+   {
+    "code": "1300",
+    "name": "Low Oil Pressure",
+    "meaning": "Occurred while running - Default. The default extended alarm for low oil pressure. Check the oil level. (A0001458309 Rev E p.30)"
+   },
+   {
+    "code": "1400",
+    "name": "High Temperature",
+    "meaning": "Air Flow Impeded / Flow Issue - Check the inlet/outlet for debris. Coolant temp greater than 246 F (119 C) for 1 second. Check coolant sensor circuit for correct operation. (A0001458309 Rev E p.30)"
+   },
+   {
+    "code": "1521",
+    "name": "RPM Sensor",
+    "meaning": "Missing Pulses during Running While running, no tooth pulses for 75 consecutive milliseconds. Possible causes: RPM sensor alignment, low battery. (A0001458309 Rev E p.30)"
+   },
+   {
+    "code": "1522",
+    "name": "RPM Sensor",
+    "meaning": "After crank command, RPM and DPE frequency both read 0. Possible cause - failed motor. (A0001458309 Rev E p.30)"
+   },
+   {
+    "code": "1523",
+    "name": "RPM Sensor",
+    "meaning": "After crank command flywheel teeth count and DPE frequency both read 0. Possible cause - failed motor. (A0001458309 Rev E p.30)"
+   },
+   {
+    "code": "1524",
+    "name": "RPM Sensor",
+    "meaning": "Fault conditions: (1) When Overcurrent PID Control is not active, Flywheel sense is not valid, DPE frequency is valid & RPM from DPE frequency & Flywheel RPM differ by 100 rpm or more for 300 ms. (2) When Overcurrent PID Control is not active & both Flywheel sense, DPE frequency are not valid for 300 ms. (3) When Overcurrent PID Control is active & Flywheel sense is not valid for 40 ms. (A0001458309 Rev E p.30)"
+   },
+   {
+    "code": "1600",
+    "name": "Underspeed",
+    "meaning": "Unit Overloaded or Fuel System issue <83.3% speed (60 Hz) or <66.6% speed (50 Hz) for 30 seconds. Unit is overloaded slowing engine speed. Possible cause: highly inductive loads, actuator, or fuel supply. (A0001458309 Rev E p.30)"
+   },
+   {
+    "code": "1800",
+    "name": "Overvoltage",
+    "meaning": "Prolonged three seconds of over 10% above nominal. (A0001458309 Rev E p.30)"
+   },
+   {
+    "code": "1801",
+    "name": "Overvoltage",
+    "meaning": "Instantaneous Set by an instantaneous measurement 30% over nominal. (A0001458309 Rev E p.30)"
+   },
+   {
+    "code": "1900",
+    "name": "Undervoltage",
+    "meaning": "Prolonged Undervoltage; Generator voltage below 80% of nominal for 10+ seconds. (A0001458309 Rev E p.30)"
+   },
+   {
+    "code": "1901",
+    "name": "Undervoltage",
+    "meaning": "Instantaneous Generator voltage less than 15V. Hold off time of two seconds. (A0001458309 Rev E p.30)"
+   },
+   {
+    "code": "1902",
+    "name": "Undervoltage",
+    "meaning": "Both Zero Crosses missing Undervoltage due to faulty excitation winding, or zero cross circuit, or circuit in general. Both zero crosses must be missing for 1.5 seconds. Possible cause: loose wiring, field boost hardware failure. (A0001458309 Rev E p.30)"
+   },
+   {
+    "code": "1906",
+    "name": "Undervoltage",
+    "meaning": "Single Zero Cross missing Undervoltage due to faulty excitation winding, or zero cross circuit, or circuit in general. One zero cross missing for greater than 1.5 seconds. Possible cause: field boost hardware failure. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "1907",
+    "name": "Undervoltage",
+    "meaning": "After resuming from a loadshed event (i.e., generator is commanded at full speed again), still undervoltage because of overload condition. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2000",
+    "name": "Transfer Switch Position Error",
+    "meaning": "Transfer Switch Position - Both Gen and Utility stuck open. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2001",
+    "name": "Transfer Switch Position Error",
+    "meaning": "Transfer Switch Position - Both Gen and Utility stuck closed. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2002",
+    "name": "Transfer Switch Position Error",
+    "meaning": "Transfer Switch Position - Gen stuck closed/Utility stuck open. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2003",
+    "name": "Transfer Switch Position Error",
+    "meaning": "Transfer Switch Position - Gen stuck open/Utility stuck closed. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2060",
+    "name": "3 Wire Switch Position Error",
+    "meaning": "3 Wire Start NO NC switches are not in desired position. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2070",
+    "name": "Keypad Missing",
+    "meaning": "Keypad is missing. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2098",
+    "name": "Wire Error",
+    "meaning": "Miswired - Generator Xfer Enabled Output has been miswired. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2099",
+    "name": "Wire Error",
+    "meaning": "Miswired - Incorrect DC AC wiring hook up. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2100",
+    "name": "Overload Remove Load",
+    "meaning": "Overload CT's (2 Alternator Output Current Transformers) Output current measured value is above threshold. Possible cause: overload. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2101",
+    "name": "Overload Remove Load",
+    "meaning": "Overload (DPE Style Field Current Method) Field Current measured value is above threshold. Possible cause: overload. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2109",
+    "name": "Ground Fault",
+    "meaning": "Ground + Neutral Current is above threshold. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2111",
+    "name": "Overload Overcurrent",
+    "meaning": "When current exceeds 150% of rated current (most likely because of P-P or P-N short), control PID tries to prevent the unit from stalling by running at 300% rated current load. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2112",
+    "name": "Overload I2T",
+    "meaning": "I2T based detection - gen output current above rated limit accumulates to 300% within 11 seconds. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2501",
+    "name": "Bosch",
+    "meaning": "Stuck Open Command and position feedback not matching or taking too much time to achieve. Governor in open position for greater than one second. Possible causes: governor wire loose, governor module. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2502",
+    "name": "Bosch",
+    "meaning": "Stuck Closed Command and position feedback not matching or taking too much time to achieve. Governor in closed position (commanded otherwise) for greater than one second. Possible cause: governor wire loose, governor module. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2670",
+    "name": "CAN Bus",
+    "meaning": "Problem with CANbus interface. There is a 1 second holdoff on startup. If no message received for 1 second, alarm activated. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2681",
+    "name": "Extremely Low Fuel Level",
+    "meaning": "Fuel Level is less than 10%. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2688",
+    "name": "Enclosure Damper Actuator is stuck",
+    "meaning": "Enclosure damper actuator is stuck. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2689",
+    "name": "Fluid detected in tertiary containment",
+    "meaning": "Fluid detected in tertiary containment. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2710",
+    "name": "Ruptured Tank",
+    "meaning": "The system detected fuel in the outer basin tank and has triggered the alarm. The code table prints this code as A (alarm); the Alarm Screen example in the same manual (Figure 2-35, p.18) shows it as 'W 2710 Ruptured Tank'. (A0001458309 Rev E p.32, p.18)"
+   },
+   {
+    "code": "2720",
+    "name": "Low Coolant",
+    "meaning": "Low coolant digital input detected low coolant for greater than 5 seconds. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2725",
+    "name": "High Oil Temperature",
+    "meaning": "Triggers when oil temperature is > 320 F (160 C) while the engine is running. Has a 10 second hold-off. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2735",
+    "name": "Low Oil Level",
+    "meaning": "Triggers when oil level is below limit, detected after a 60 sec hold-off since startup. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2751",
+    "name": "Very Low Battery",
+    "meaning": "The system detected battery voltage level < 9.0 for 60 seconds and has triggered the alarm. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "2800",
+    "name": "ESTOP Pressed/AUX Shutdown",
+    "meaning": "The system detected the Generator Emergency Shutdown Switch button was pressed and shutdown. E-Stop can also be set for AUX shutdown. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "2801",
+    "name": "Auxiliary Shutdown",
+    "meaning": "The system detected an auxiliary shutdown or onboard rocker switch on Power Zone 410 front panel button was pressed and prompted a shutdown. Shutdown detected when pressed for greater than 300 ms. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "2802",
+    "name": "External Common Alarm - 1",
+    "meaning": "System detected a common shutdown alarm indicator true for 1 second from one of the configured I/O Extender modules. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "2803",
+    "name": "External Common Alarm - 2",
+    "meaning": "System detected a common shutdown alarm indicator true for 1 second from one of the configured I/O Extender modules. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "2804",
+    "name": "External Common Alarm - 3",
+    "meaning": "System detected a common shutdown alarm indicator true for 1 second from one of the configured I/O Extender modules. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "2805",
+    "name": "General I/O Alarm",
+    "meaning": "Alarm detected on any digital input of connected IO Extender configured as General Alarm. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "3000",
+    "name": "ECU Faulted",
+    "meaning": "Hardware Match Error - Alarm SPN/FMI not supported by Genset Controller. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "3001",
+    "name": "ECU Faulted",
+    "meaning": "Speed Match Error - Speed Command Mismatch - ECU not running at commanded speed. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "3002",
+    "name": "ECU Faulted",
+    "meaning": "Fuel Match Error - Fuel Command Mismatch - ECU not operating on the commanded Fuel Type. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "3003",
+    "name": "ECU Faulted",
+    "meaning": "ECU shutdown - ECU initiated Emergency Shutdown but no DTC received by Controller. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "3100",
+    "name": "Engine Throttle Valve 1 Position 1",
+    "meaning": "Throttle Body Air - Data valid but above normal operating range; high severe level. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "3101",
+    "name": "Engine Throttle Valve 1 Position 1",
+    "meaning": "Throttle Body Air - Data valid but above normal operating range; high severe level. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "3102",
+    "name": "Engine Throttle Valve 1 Position 1",
+    "meaning": "Throttle Body Air - Data erratic, intermittent, or incorrect. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "3103",
+    "name": "Engine Throttle Valve 1 Position 1",
+    "meaning": "Throttle Body Air - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3104",
+    "name": "Engine Throttle Valve 1 Position 1",
+    "meaning": "Throttle Body Air - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3107",
+    "name": "Engine Throttle Valve 1 Position 1",
+    "meaning": "Throttle Body Air - Mechanical system not responding correctly. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3200",
+    "name": "Engine Fuel Delivery Pressure",
+    "meaning": "High Fuel Pressure - Data valid but above normal operating range; high severe level. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3201",
+    "name": "Engine Fuel Delivery Pressure",
+    "meaning": "Low Fuel Pressure - Data valid but above normal operating range; high severe level. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3202",
+    "name": "Engine Fuel Delivery Pressure",
+    "meaning": "Fuel Pressure Fault - Data erratic, intermittent, or incorrect. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3203",
+    "name": "Engine Fuel Delivery Pressure",
+    "meaning": "Fuel Pressure Fault - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3204",
+    "name": "Engine Fuel Delivery Pressure",
+    "meaning": "Fuel Pressure Fault - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3300",
+    "name": "Engine Oil Pressure",
+    "meaning": "High Oil Pressure - Data valid but above normal operating range; high severe level. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3301",
+    "name": "Engine Oil Pressure",
+    "meaning": "Low Oil Pressure - Data valid but below normal operating range; high severe level. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3302",
+    "name": "Engine Oil Pressure",
+    "meaning": "Oil Pressure Fault - Data erratic, intermittent, or incorrect. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3303",
+    "name": "Engine Oil Pressure",
+    "meaning": "Oil Pressure Fault - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3304",
+    "name": "Engine Oil Pressure",
+    "meaning": "Oil Pressure Fault - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3400",
+    "name": "Engine Intake Manifold #1 Pressure",
+    "meaning": "High MAP - Data valid but above normal operating range; high severe level. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3401",
+    "name": "Engine Intake Manifold #1 Pressure",
+    "meaning": "Low MAP - Data valid but below normal operating range; high severe level. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3402",
+    "name": "Engine Intake Manifold #1 Pressure",
+    "meaning": "MAP Fault - Data erratic, intermittent, or incorrect. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3403",
+    "name": "Engine Intake Manifold #1 Pressure",
+    "meaning": "MAP Fault - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.35)"
+   },
+   {
+    "code": "3404",
+    "name": "Engine Intake Manifold #1 Pressure",
+    "meaning": "MAP Fault - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.35)"
+   },
+   {
+    "code": "3500",
+    "name": "Engine Intake Manifold 1 Temperature",
+    "meaning": "High MAP Temp - Data valid but above normal operating range; high severe level. (A0001458309 Rev E p.35)"
+   },
+   {
+    "code": "3501",
+    "name": "Engine Intake Manifold 1 Temperature",
+    "meaning": "Low MAP Temp - Data valid but below normal operating range; high severe level. (A0001458309 Rev E p.35)"
+   },
+   {
+    "code": "3502",
+    "name": "Engine Intake Manifold 1 Temperature",
+    "meaning": "MAP Temp Fault - Data erratic, intermittent, or incorrect. (A0001458309 Rev E p.35)"
+   },
+   {
+    "code": "3503",
+    "name": "Engine Intake Manifold 1 Temperature",
+    "meaning": "MAP Temp Fault - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.35)"
+   },
+   {
+    "code": "3504",
+    "name": "Engine Intake Manifold 1 Temperature",
+    "meaning": "MAP Temp Fault - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.35)"
+   },
+   {
+    "code": "3600",
+    "name": "Engine Air Filter 1 Differential Pressure",
+    "meaning": "Check Air Filter - Data valid but above normal operating range; high severe level. (A0001458309 Rev E p.35)"
+   },
+   {
+    "code": "3601",
+    "name": "Engine Air Filter 1 Differential Pressure",
+    "meaning": "Check Air Filter - Data valid but below normal operating range; high severe level. (A0001458309 Rev E p.35)"
+   },
+   {
+    "code": "3602",
+    "name": "Engine Air Filter 1 Differential Pressure",
+    "meaning": "Air Filter Sensor Fault - Data erratic, intermittent, or incorrect. (A0001458309 Rev E p.35)"
+   },
+   {
+    "code": "3603",
+    "name": "Engine Air Filter 1 Differential Pressure",
+    "meaning": "Air Filter Sensor Fault - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.35)"
+   },
+   {
+    "code": "3604",
+    "name": "Engine Air Filter 1 Differential Pressure",
+    "meaning": "Air Filter Sensor Fault - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.35)"
+   },
+   {
+    "code": "3700",
+    "name": "Engine Coolant Temperature",
+    "meaning": "High Coolant Temp - Data valid but above normal operating range; high severe level. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "3701",
+    "name": "Engine Coolant Temperature",
+    "meaning": "Low Coolant Temp - Data valid but below normal operating range; high severe level. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "3702",
+    "name": "Engine Coolant Temperature",
+    "meaning": "Coolant Temp Fault - Data erratic, intermittent, or incorrect. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "3703",
+    "name": "Engine Coolant Temperature",
+    "meaning": "Coolant Temp Fault - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "3704",
+    "name": "Engine Coolant Temperature",
+    "meaning": "Coolant Temp Fault - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "3802",
+    "name": "Battery Potential / Power Input 1",
+    "meaning": "Data erratic, intermittent, or incorrect. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "3803",
+    "name": "Battery Potential / Power Input 1",
+    "meaning": "High Battery Voltage - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "3804",
+    "name": "Battery Potential / Power Input 1",
+    "meaning": "Low Battery Voltage - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "3900",
+    "name": "Engine Oil Temperature 1",
+    "meaning": "High Oil Temp - Data valid but above normal operating range; high severe level. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "3901",
+    "name": "Engine Oil Temperature 1",
+    "meaning": "Low Oil Temp - Data valid but above normal operating range; high severe level. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "3902",
+    "name": "Engine Oil Temperature 1",
+    "meaning": "Oil Temp Fault - Data valid but below normal operating range; high severe level. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "3903",
+    "name": "Engine Oil Temperature 1",
+    "meaning": "Oil Temp Fault - Data erratic, intermittent, or incorrect. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "3904",
+    "name": "Engine Oil Temperature 1",
+    "meaning": "Oil Temp Fault - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "4003",
+    "name": "Engine Fuel Shutoff 1 Control",
+    "meaning": "Fuel System Fault - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "4004",
+    "name": "Engine Fuel Shutoff 1 Control",
+    "meaning": "Fuel System Fault - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "4100",
+    "name": "Engine Position Sensor",
+    "meaning": "Crankshaft Sensor Fault - Data valid but above normal operating range; high severe level. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "4101",
+    "name": "Engine Position Sensor",
+    "meaning": "Crankshaft Sensor Fault - Data valid but below normal operating range; high severe level. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4102",
+    "name": "Engine Position Sensor",
+    "meaning": "Crankshaft Sensor Fault - Data erratic, intermittent, or incorrect. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4103",
+    "name": "Engine Position Sensor",
+    "meaning": "Crankshaft Sensor Fault - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4104",
+    "name": "Engine Position Sensor",
+    "meaning": "Crankshaft Sensor Fault - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4200",
+    "name": "Engine Timing Sensor",
+    "meaning": "Crankshaft Sensor Fault - Data valid but above normal operating range; high severe level. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4201",
+    "name": "Engine Timing Sensor",
+    "meaning": "Crankshaft Sensor Fault - Data valid but below normal operating range; high severe level. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4202",
+    "name": "Engine Timing Sensor",
+    "meaning": "Crankshaft Sensor Fault - Data erratic, intermittent, or incorrect. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4203",
+    "name": "Engine Timing Sensor",
+    "meaning": "Crankshaft Sensor Fault - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4204",
+    "name": "Engine Timing Sensor",
+    "meaning": "Crankshaft Sensor Fault - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4300",
+    "name": "O2 Sensor",
+    "meaning": "Check O2 Sensor - Data valid but above normal operating range; high severe level. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4301",
+    "name": "O2 Sensor",
+    "meaning": "Check O2 Sensor - Data valid but below normal operating range; high severe level. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4302",
+    "name": "O2 Sensor",
+    "meaning": "Check O2 Sensor - Data erratic, intermittent, or incorrect. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4303",
+    "name": "O2 Sensor",
+    "meaning": "Check O2 Sensor - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4304",
+    "name": "O2 Sensor",
+    "meaning": "Check O2 Sensor - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4400",
+    "name": "Engine Knock 1",
+    "meaning": "Engine Knock Sensor Fault - Data valid but above normal operating range; high severe level. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4401",
+    "name": "Engine Knock 1",
+    "meaning": "Engine Knock Sensor Fault - Data valid but below normal operating range; high severe level. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4402",
+    "name": "Engine Knock 1",
+    "meaning": "Engine Knock Sensor Fault - Data erratic, intermittent, or incorrect. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4403",
+    "name": "Engine Knock 1",
+    "meaning": "Engine Knock Sensor Fault - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4404",
+    "name": "Engine Knock 1",
+    "meaning": "Engine Knock Sensor Fault - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4502",
+    "name": "Engine Ignition Coil #1",
+    "meaning": "Ignition Coil 1 Fault - Data erratic, intermittent, or incorrect. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4503",
+    "name": "Engine Ignition Coil #1",
+    "meaning": "Ignition Coil 1 Fault - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4504",
+    "name": "Engine Ignition Coil #1",
+    "meaning": "Ignition Coil 1 Fault - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4507",
+    "name": "Engine Ignition Coil #1",
+    "meaning": "Ignition Coil 1 Fault - Mechanical system not responding correctly. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4602",
+    "name": "Engine Ignition Coil #2",
+    "meaning": "Ignition Coil 2 Fault - Data erratic, intermittent, or incorrect. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4603",
+    "name": "Engine Ignition Coil #2",
+    "meaning": "Ignition Coil 2 Fault - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4604",
+    "name": "Engine Ignition Coil #2",
+    "meaning": "Ignition Coil 2 Fault - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4607",
+    "name": "Engine Ignition Coil #2",
+    "meaning": "Ignition Coil 2 Fault - Mechanical system not responding correctly. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4702",
+    "name": "Engine Ignition Coil #3",
+    "meaning": "Ignition Coil 3 Fault - Data erratic, intermittent, or incorrect. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4703",
+    "name": "Engine Ignition Coil #3",
+    "meaning": "Ignition Coil 3 Fault - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4704",
+    "name": "Engine Ignition Coil #3",
+    "meaning": "Ignition Coil 3 Fault - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4707",
+    "name": "Engine Ignition Coil #3",
+    "meaning": "Ignition Coil 3 Fault - Mechanical system not responding correctly. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4802",
+    "name": "Engine Ignition Coil #4",
+    "meaning": "Ignition Coil 4 Fault - Data erratic, intermittent, or incorrect. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4803",
+    "name": "Engine Ignition Coil #4",
+    "meaning": "Ignition Coil 4 Fault - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4804",
+    "name": "Engine Ignition Coil #4",
+    "meaning": "Ignition Coil 4 Fault - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4807",
+    "name": "Engine Ignition Coil #4",
+    "meaning": "Ignition Coil 4 Fault - Mechanical system not responding correctly. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4900",
+    "name": "Engine Fuel Valve 1 Position",
+    "meaning": "Fuel Mixer - Data valid but above normal operating range; high severe level. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4901",
+    "name": "Engine Fuel Valve 1 Position",
+    "meaning": "Fuel Mixer - Data valid but below normal operating range; high severe level. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4902",
+    "name": "Engine Fuel Valve 1 Position",
+    "meaning": "Fuel Mixer - Data erratic, intermittent, or incorrect. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4903",
+    "name": "Engine Fuel Valve 1 Position",
+    "meaning": "Fuel Mixer - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4904",
+    "name": "Engine Fuel Valve 1 Position",
+    "meaning": "Fuel Mixer - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4907",
+    "name": "Engine Fuel Valve 1 Position",
+    "meaning": "Fuel Mixer - Mechanical system not responding correctly. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "5003",
+    "name": "Engine Charge Air Cooler 1 Bypass",
+    "meaning": "CAC - Voltage above normal range; shorted to high source. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "5004",
+    "name": "Engine Charge Air Cooler 1 Bypass",
+    "meaning": "CAC - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "5100",
+    "name": "Engine Speed",
+    "meaning": "RPM High - Data valid but above normal operating range; high severe level. (A0001458309 Rev E p.39)"
+   },
+   {
+    "code": "5101",
+    "name": "Engine Speed",
+    "meaning": "RPM Low - Data valid but below normal operating range; high severe level. (A0001458309 Rev E p.39)"
+   },
+   {
+    "code": "5102",
+    "name": "Engine Speed",
+    "meaning": "RPM Fault - Data erratic, intermittent, or incorrect. (A0001458309 Rev E p.39)"
+   },
+   {
+    "code": "5107",
+    "name": "Engine Speed",
+    "meaning": "RPM Fault - Mechanical system not responding correctly. (A0001458309 Rev E p.39)"
+   },
+   {
+    "code": "7620",
+    "name": "High Manifold Intake Temp",
+    "meaning": "The Manifold inlet temperature reached its maximum threshold limit. (A0001458309 Rev E p.39)"
+   }
+  ],
+  "warnings": [
+   {
+    "code": "134",
+    "name": "Emissions/Airfuel DTC",
+    "meaning": "O2 sensor stuck open/closed DTC logged in eeprom. Warning will clear after engine runs with no DTC codes three times. (A0001458309 Rev E p.29)"
+   },
+   {
+    "code": "1301",
+    "name": "Low Oil Pressure",
+    "meaning": "Check the oil level. (A0001458309 Rev E p.30)"
+   },
+   {
+    "code": "1403",
+    "name": "Engine Coolant Temperature",
+    "meaning": "High Coolant Temp - Data valid but above normal operating range; least severe level. (A0001458309 Rev E p.30)"
+   },
+   {
+    "code": "1404",
+    "name": "Engine Coolant Temperature",
+    "meaning": "Low Coolant Temp - Data valid but below normal operating range; least severe level. (A0001458309 Rev E p.30)"
+   },
+   {
+    "code": "1405",
+    "name": "Engine Coolant Temperature Sensor Open",
+    "meaning": "Coolant Temp Sensor is not reporting any change in value even when unit is running. The reported value is also stuck at minimum, indicating sensor is wiring is stuck open (wording as printed). (A0001458309 Rev E p.30)"
+   },
+   {
+    "code": "2674",
+    "name": "12/24V Battery Config Error",
+    "meaning": "Dealer Config and the Digital Input for confirming a 12/24 V Battery Type system mismatch. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2675",
+    "name": "I/O Ext. 1 Loss of Comm",
+    "meaning": "No response from I/O Extender for 3 seconds after a hold-off duration of 30 seconds. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2676",
+    "name": "I/O Ext. 2 Loss of Comm",
+    "meaning": "No response from I/O Extender for 3 seconds after a hold-off duration of 30 seconds. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2677",
+    "name": "I/O Ext. 3 Loss of Comm",
+    "meaning": "No response from I/O Extender for 3 seconds after a hold-off duration of 30 seconds. (A0001458309 Rev E p.31)"
+   },
+   {
+    "code": "2678",
+    "name": "I/O Ext. 4 Loss of Comm",
+    "meaning": "No response from I/O Extender for 3 seconds after a hold-off duration of 30 seconds. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2679",
+    "name": "External Charger Failure",
+    "meaning": "External Charger is enabled and the External Charger Fail digital input is True for 3 seconds. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2680",
+    "name": "Low Fuel Level",
+    "meaning": "Low fuel level is triggered when the low fuel switch is triggered for 1 minute. The sensor triggers at 20% fuel remaining. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2682",
+    "name": "Diesel High Fuel Level",
+    "meaning": "Fuel Level above 90% full. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2683",
+    "name": "External Warning - 1",
+    "meaning": "System detected a common warning indicator true for 1 second from one of the configured external source I/O Extender. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2684",
+    "name": "External Warning - 2",
+    "meaning": "System detected a common warning indicator true for 1 second from one of the configured external source I/O Extender. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2685",
+    "name": "Fluid Basin Overfill",
+    "meaning": "Fluid basin overfill indicator is true for 1 second from one of the configured external source I/O Extender. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2686",
+    "name": "Fluid Basin Missing",
+    "meaning": "Fluid basin missing indicator is true for 5 seconds from one of the configured external source I/O Extender. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2687",
+    "name": "MLCB Aux Contact",
+    "meaning": "Generator Main line circuit breaker (MLCB) is open or tripped. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2690",
+    "name": "Low Fuel Pressure",
+    "meaning": "Low fuel pressure is triggered when the switch is active. The switch is designed to trigger when pressure falls below 5.2 in H2O +/- 0.4 in (below 0.19 psi). (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2691",
+    "name": "Critical High Fuel Level",
+    "meaning": "Fuel level greater than the configured high fuel level set point for more than 1 second. Default Set point - 95%. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2692",
+    "name": "DI Warning",
+    "meaning": "System detected warning on a configured IO Extender Digital Input - Fault message will indicate which Digital Input status triggered the alarm. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2740",
+    "name": "Check Engine",
+    "meaning": "Engine type specific (emissions certified gas units). If an O2 sensor exists and is faulted (O2 sensor stuck open/closed) for 90 seconds, this will trigger as an emissions failure. This warning will clear after engine runs with no O2 sensor faults (stuck open/closed) for 4 minutes. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2745",
+    "name": "Lid Open/Theft Alarm",
+    "meaning": "Lid or door is open. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2746",
+    "name": "SPI Flash Abuse",
+    "meaning": "Controller wrote to the SPI Flash more than 500 times in less than 4 minutes. (A0001458309 Rev E p.32)"
+   },
+   {
+    "code": "2747",
+    "name": "Test Warning",
+    "meaning": "Test Warning - can be triggered by writing \"1\" to Modbus reg 1625. Warning will auto-clear after 60 seconds. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "2750",
+    "name": "Low Battery",
+    "meaning": "Low battery voltage is less than 12.1VDC for 1 minute. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "2760",
+    "name": "Battery Problem",
+    "meaning": "Battery is >16V or charge current is >600 mA at end of 18 hour charge cycle, which is started after battery voltage falls to <12.5V or the controller is initially powered. This indicates battery may be bad. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "2770",
+    "name": "Charger Warning",
+    "meaning": "Battery voltage is above 16.1Vdc at any time. Also, can be set due to Battery voltage is less than 12.5Vdc after completing 26 hour charge cycle. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "2780",
+    "name": "Charger Missing AC",
+    "meaning": "During charging, AC input to battery charger missing for greater than 5 minutes. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "2790",
+    "name": "SEEPROM Abuse",
+    "meaning": "Controller wrote to the EEPROM more than 500 times in less than 4 minutes. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "2793",
+    "name": "Config EEPROM CRC Mismatch",
+    "meaning": "Config computed CRC unequal to stored EEPROM CRC. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "2806",
+    "name": "Shutdown Inhibit Active",
+    "meaning": "NFPA20 Shutdown Inhibit is enabled and active. This warning indicates that shutdown alarms will be inhibited per NFPA20 requirement. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "3015",
+    "name": "ECU Faulted",
+    "meaning": "Hardware Match Error - Warning SPN/FMI not supported by Genset Controller. (A0001458309 Rev E p.33)"
+   },
+   {
+    "code": "3115",
+    "name": "Engine Throttle Valve 1 Position 1",
+    "meaning": "Throttle Body Air - Data valid but above normal operating range; least severe level. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3117",
+    "name": "Engine Throttle Valve 1 Position 1",
+    "meaning": "Throttle Body Air - Data valid but above normal operating range; least severe level. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3215",
+    "name": "Engine Fuel Delivery Pressure",
+    "meaning": "High Fuel Pressure - Data valid but above normal operating range; least severe level. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3217",
+    "name": "Engine Fuel Delivery Pressure",
+    "meaning": "Low Fuel Pressure - Data valid but below normal operating range; least severe level. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3315",
+    "name": "Engine Oil Pressure",
+    "meaning": "High Oil Pressure - Data valid but above normal operating range; least severe level. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3317",
+    "name": "Engine Oil Pressure",
+    "meaning": "High Oil Pressure - Data valid but below normal operating range; least severe level. (A0001458309 Rev E p.34)"
+   },
+   {
+    "code": "3415",
+    "name": "Engine Intake Manifold #1 Pressure",
+    "meaning": "High MAP - Data valid but above normal operating range; least severe level. (A0001458309 Rev E p.35)"
+   },
+   {
+    "code": "3417",
+    "name": "Engine Intake Manifold #1 Pressure",
+    "meaning": "Low MAP - Data valid but below normal operating range; least severe level. (A0001458309 Rev E p.35)"
+   },
+   {
+    "code": "3515",
+    "name": "Engine Intake Manifold 1 Temperature",
+    "meaning": "High MAP Temp - Data valid but above normal operating range; least severe level. (A0001458309 Rev E p.35)"
+   },
+   {
+    "code": "3517",
+    "name": "Engine Intake Manifold 1 Temperature",
+    "meaning": "Low MAP Temp - Data valid but below normal operating range; least severe level. (A0001458309 Rev E p.35)"
+   },
+   {
+    "code": "3615",
+    "name": "Engine Air Filter 1 Differential Pressure",
+    "meaning": "Check Air Filter - Data valid but above normal operating range; least severe level. (A0001458309 Rev E p.35)"
+   },
+   {
+    "code": "3617",
+    "name": "Engine Air Filter 1 Differential Pressure",
+    "meaning": "Check Air Filter - Data valid but below normal operating range; least severe level. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "3715",
+    "name": "Engine Coolant Temperature",
+    "meaning": "High Coolant Temp - Data valid but above normal operating range; least severe level. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "3717",
+    "name": "Engine Coolant Temperature",
+    "meaning": "Low Coolant Temp - Data valid but below normal operating range; least severe level. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "3815",
+    "name": "Battery Potential / Power Input 1",
+    "meaning": "Data valid but above normal operating range; least severe level. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "3817",
+    "name": "Battery Potential / Power Input 1",
+    "meaning": "Data valid but below normal operating range; least severe level. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "3915",
+    "name": "Engine Oil Temperature 1",
+    "meaning": "High Oil Temp - Voltage below normal range; shorted to low source; open circuit. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "3917",
+    "name": "Engine Oil Temperature 1",
+    "meaning": "High Oil Temp - Data valid but below normal operating range; least severe level. (A0001458309 Rev E p.36)"
+   },
+   {
+    "code": "4315",
+    "name": "O2 Sensor",
+    "meaning": "Check O2 Sensor - Data valid but above normal operating range; least severe level. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4317",
+    "name": "O2 Sensor",
+    "meaning": "Check O2 Sensor - Data valid but below normal operating range; least severe level. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4415",
+    "name": "Engine Knock 1",
+    "meaning": "Engine Knock Sensor - Data valid but above normal operating range; least severe level. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4417",
+    "name": "Engine Knock 1",
+    "meaning": "Engine Knock Sensor - Data valid but below normal operating range; least severe level. (A0001458309 Rev E p.37)"
+   },
+   {
+    "code": "4915",
+    "name": "Engine Fuel Valve 1 Position",
+    "meaning": "Fuel Mixer - Data valid but above normal operating range; least severe level. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "4917",
+    "name": "Engine Fuel Valve 1 Position",
+    "meaning": "Fuel Mixer - Data valid but below normal operating range; least severe level. (A0001458309 Rev E p.38)"
+   },
+   {
+    "code": "5115",
+    "name": "Engine Speed",
+    "meaning": "RPM High - Data valid but above normal operating range; least severe level. (A0001458309 Rev E p.39)"
+   },
+   {
+    "code": "5117",
+    "name": "Engine Speed",
+    "meaning": "RPM Low - Data valid but below normal operating range; least severe level. (A0001458309 Rev E p.39)"
+   }
+  ],
+  "installNotes": [
+   "Liquid-cooled: radiator, coolant and a water pump - do NOT service it like an air-cooled unit. WARNING (Generac): do not open the coolant system until the engine has completely cooled.",
+   "Coolant: 50/50 ethylene glycol; system capacity 2.9 US gal (11 L) on every XG model (A0010408477 Rev B p.2; A0005286945 Rev F p.3). The 2.5 L owner's manual says use only Purus Heavy Duty Nitrite-Free Extended Life Antifreeze/Coolant (A0011166772 Rev A p.12); the 4.5 L owner's manual says use only Generac brand 50/50 ethylene glycol coolant (A0005536684 Rev D p.12). Both: do NOT use propylene glycol, do not mix coolant types or brands. Generac also has a service bulletin on 2.5 L coolant - it shows in Bulletins when the model is a 2.5 L XG.",
+   "Coolant flush fill quantities as printed: 2.5 L units 2.3 US gal (8.7 L) of de-ionized or distilled water plus flush product (A0011166772 Rev A p.40); 4.5 L units 2.9 US gal (11 L) (A0005536684 Rev D p.40). Clean the coolant level sensor (pencil eraser on the metal probe) before refilling (A0011166772 Rev A p.40-41).",
+   "Ratings (A0010408477 Rev B p.2; A0005286945 Rev F p.2): XG02525 25 kW; XG03025 30 kW; XG03245 32 kW; XG04045 40 kW; XG04845 48 kW; XG06045 60 kW; XG08045 80 kW on NG and 75 kW on LP. 1-phase breakers: 125 A (25 kW), 150 A (30 and 32 kW), 200 A (40 and 48 kW), 300 A (60 kW), 400 A (80 kW). 3-phase models have a molded case switch; a 3-pole breaker is a field kit.",
+   "3-phase models leave the factory at 208/120 V. 240/120 V or 480/277 V needs the matching Voltage Configuration Cartridge AND the same voltage selected in the controller (A0011166772 Rev A p.12; A0005536699 Rev E p.51). Cartridges: G0099010 / G0099020 / G0099030 for XG02525-XG04845, G0099740 / G0099750 / G0099760 for XG06045 and XG08045 (A0005286945 Rev F p.6). A 3-phase model cannot be made 1-phase or the reverse (A0011166772 Rev A p.12).",
+   "RTS transfer switches on a 3-phase XG need the 3-Phase Voltage Sensing Kit: G0074110 for 208/120 or 240/120 V, G0074120 for 480/277 V (A0010408477 Rev B p.6; A0005286945 Rev F p.8).",
+   "Cooling fans: XG02525 / XG03025 two electric; XG03245 / XG04045 one belt-driven (always on); XG04845 / XG06045 three electric; XG08045 four electric. Electric fans start at 194 F (90 C) coolant and stay OFF during exercise - if coolant reaches 194 F during exercise the test stops, which Generac calls normal (A0011166772 Rev A p.28; A0005536684 Rev D p.28; A0005286945 Rev F p.3).",
+   "Cranking: 15 s crank, 7 s rest, then 7 s crank / 7 s rest, six crank cycles in all (A0011166772 Rev A p.27). Cool-down is five minutes on turbo models (XG06045, XG08045), one minute naturally aspirated (A0005536684 Rev D p.28).",
+   "Before any service follow Removing From Service in the owner's manual. 2.5 L (XG02525, XG03025), in this order: press the Generator Emergency Shutdown push button, open the viewing window, set the generator disconnect to OFF (OPEN), verify the shutdown rocker switch on the controller face is OFF (O), press OFF on the controller, remove the T1 fuse from the transfer switch, pull up the rubber flap and remove the 7.5 amp fuse, disconnect the negative battery cable, put a DO NOT OPERATE tag on the control panel and the transfer switch, and if the unit has been running wait at least ten minutes for the engine to cool. DANGER (Generac): automatic start-up - disconnect utility power and render the unit inoperable before working on it (A0011166772 Rev A p.33-34). 4.5 L (XG03245-XG08045): the same steps starting at open the viewing window (no push-button step printed); its warning reads: accidental start-up - disconnect the negative battery cable, then the positive battery cable when working on the unit (A0005536684 Rev D p.33-34).",
+   "The code table is the Power Zone 410 controller's whole list, for firmware 1.15 and higher (A0001458309 Rev E p.29). The manual notes that some of the listed alarms and warnings may be engine or fuel specific; it does not say which codes a Protector XG can show. All alarm conditions shut the generator down; warning messages are for conditions that do not disable the unit (A0011166772 Rev A p.26)."
+  ],
+  "tips": [
+   "Read the E-code in Info > Alarm Log (date, time, message, ECODE) before clearing anything.",
+   "Owner's manual first checks (A0011166772 Rev A p.48): HIGH TEMPERATURE - check ventilation at the intake, exhaust and rear; LOW OIL PRESSURE - check oil level; OVERCRANK - clear and try MANUAL; RPM SENSE LOSS with no start - check battery condition on the controller.",
+   "Blown fuses: 'Open F1 7.5 amp fuse' and 'Open F2 15 amp fuse' are both listed as causes of 'engine cranks but will not start'; a blown 7.5 amp fuse in the generator controller is listed under 'engine does not crank' (A0011166772 Rev A p.47).",
+   "Firmware: cellular units update over the air; without connectivity a dealer updates by USB thumb drive at the port under the rubber flap (A0011166772 Rev A p.26). See the bulletin on replacement controllers and over-the-air updates on this card.",
+   "3-phase model on the wrong voltage: Configuration Mismatch (code 506) means the controller voltage setting does not match the installed Voltage Configuration Cartridge."
+  ],
+  "manuals": [
+   {
+    "title": "Protector XG 25-30 kW (XG02525, XG03025) - Spec Sheet (A0010408477 Rev B, 09/10/2026)",
+    "docType": "spec",
+    "seedFile": "generac-protector-xg-25-30kw-spec-a0010408477.pdf"
+   },
+   {
+    "title": "Protector XG 32-80 kW (XG03245-XG08045) - Spec Sheet (A0005286945 Rev F, 08/03/2026)",
+    "docType": "spec",
+    "seedFile": "generac-protector-xg-32-80kw-spec-a0005286945.pdf"
+   },
+   {
+    "title": "Protector XG XG02525 / XG03025 2.5 L - Owner's Manual (A0011166772 Rev A, 08/05/2026)",
+    "docType": "owner",
+    "seedFile": "generac-protector-xg-25-30kw-owners-a0011166772.pdf"
+   },
+   {
+    "title": "Protector XG XG03245-XG08045 4.5 L - Owner's Manual (A0005536684 Rev D, 01/15/2026)",
+    "docType": "owner",
+    "seedFile": "generac-protector-xg-32-80kw-owners-a0005536684.pdf"
+   },
+   {
+    "title": "Protector XG 25-80 kW - Installation Manual (A0005536699 Rev E, 08/11/2026)",
+    "docType": "install",
+    "seedFile": "generac-protector-xg-25-80kw-installation-a0005536699.pdf"
+   },
+   {
+    "title": "Power Zone 410 Controller - Owner's Manual with the E-code table (A0001458309 Rev E, 09/17/2025)",
+    "docType": "diagnostic",
+    "seedFile": "generac-protector-xg-power-zone-410-controller-manual-a0001458309.pdf"
+   },
+   {
+    "title": "Power Zone 410 Controller - Spec Sheet (A0001371117 Rev A, 03/26/21)",
+    "docType": "spec",
+    "seedFile": "generac-protector-xg-power-zone-410-controller-spec-a0001371117.pdf"
+   },
+   {
+    "title": "Generac product support lookup - every document for this model number",
+    "docType": "other",
+    "url": "https://www.generac.com/service-support/product-support-lookup/"
+   }
+  ],
+  "sourceNotes": "Generac public documents from productmanuals.generac.com (no sign-in): spec sheets A0010408477 Rev B and A0005286945 Rev F, owner's manuals A0011166772 Rev A and A0005536684 Rev D, installation manual A0005536699 Rev E, Power Zone 410 Controller Owner's Manual A0001458309 Rev E (E-code table p.29-39, firmware 1.15 and higher). Model list from generac.com's home standby listing read 2026-11-17. Where the 32-80 kW owner's manual and spec sheet disagree, both figures are shown."
  }
 ];
 

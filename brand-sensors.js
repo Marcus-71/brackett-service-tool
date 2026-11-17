@@ -13255,351 +13255,432 @@ const BRAND_SENSOR_MAPS = [
  },
  {
   "id": "york-y82v-z8vt-furnace-control",
-  "title": "York Y82V / Z8VT 80% two-stage variable-speed communicating furnace control",
+  "replacesExisting": "Same id as the entry already in brand-sensors.js (~line 13257). This draft replaces it: it adds the manual's board-replacement step (Model ID), the menu settings and the 0.35 microamp test-pad figure, makes the pressure switches kind 'switch', and drops the 12-pin position numbers, which the author could not re-trace on the rendered diagram (see sources.md).",
+  "title": "York Y82V / Z8VT two-stage variable-speed 80% furnace control (status LED, three 7-segment displays, four buttons)",
   "side": "indoor",
-  "brand": "York / Coleman / Luxaire",
-  "models": "Y82V (York) and Z8VT (LX series) two-stage variable speed ECM, non-condensing, multi-position (manual 6762470-UIM-A-0126)",
+  "brand": "York",
+  "models": "Y82V060A12, Y82V080B12, Y82V080C16, Y82V100C16, Y82V100C20, Y82V120C20 and the Z8VT series (install manual 6762470-UIM-A-0126)",
   "match": [
    "Y82V",
    "Z8VT"
   ],
+  "matchNote": "",
   "sizes": [
    "all"
   ],
-  "board": "Two-stage COMM furnace control board with 3-digit display, BACK / LEFT / RIGHT / SELECT buttons, 3 A fuse, 12-pin plug (pins 12-9-6-3 / 11-8-5-2 / 10-7-4-1), COMM (A+ R C B-), FLT / AUX inputs (wiring diagram 6218339-UWD-C-1024)",
+  "board": "Furnace control board ('WIRING DIAGRAM - TWO STAGE COMM NON-CONDENSING FURNACE' 6218339-UWD-C-1024): diagnostic (status) LED, three 7-segment displays, BACK / LEFT / RIGHT / SELECT push buttons, 3A fuse, thermostat screw terminal block (O, D-HUM, Y1, Y/Y2, W2, W/W1, G, C, R), comm headers (A+ R C B-), AUX inputs (R, FLT, R, AUX), ID motor control header, 24V inputs/outputs plug, line voltage and neutral plugs, EAC / HUM spade terminals. No DIP switches or jumpers are shown - settings are menus",
   "replacement": [
    {
-    "board": "York / Coleman / Luxaire control board - replacement",
+    "board": "York Y82V / Z8VT furnace control board - replacement",
     "kit": "",
-    "replaces": "No factory replacement procedure published (none found).",
-    "differences": "No factory replacement procedure was found. No refrigerant or A2L setting is documented for this board. ",
+    "replaces": "The factory control board. The manual's parts list is generic ('Control, furnace') and prints no part number.",
+    "differences": "The model ID must be set on a replacement board: it identifies the motor horsepower and airflow configuration. Code 12 = model ID configuration error. The manual prints no refrigerant, A2L or leak-sensor setting on this board - rL is a status the board displays, and the RDS is wired per the RDS / indoor coil manual.",
     "steps": [
-     "GENERAL GUIDANCE (not from a manufacturer procedure): order the replacement by the part number printed on the old board (or the unit's parts list) and confirm it fits the unit model and serial.",
-     "GENERAL GUIDANCE (not from a manufacturer procedure): photograph the old board and label every wire before removal; reconnect to the unit wiring diagram.",
-     "GENERAL GUIDANCE (not from a manufacturer procedure): copy every DIP switch, jumper and cut-link setting from the old board to the new one, then re-check the setup items described in this map and the unit manual."
+     "Open all disconnects before servicing (diagram caution). The blower door switch is not a main power disconnect.",
+     "After fitting the board, put it in unlocked mode: press and hold Left and Right for 5 s until the displays show UnL (p.53).",
+     "Navigate to the Id menu and press Select to view the model ID. Model IDs: 060A12 = 8, 080B12 = 9, 080C16 = 10, 100C16 = 11, 100C20 = 12, 120C20 = 13 (p.57).",
+     "Navigate to the correct model ID and press Select (p.70). Incorrect configuration of the model ID could lead to equipment failure and damage.",
+     "Re-enter the installation settings - they are menu items, not switches: CFG > HP, HSt, Stg, FSd, bdy and CF2 > Ht, dLy, Adj, CL (p.52-53). Printed defaults: HP off, HSt off, FSd A, bdy 60 s, dLy A, Adj A, CL A; Stg and Ht defaults are printed two ways in the manual (p.54, p.60).",
+     "The board exits unlocked mode when Left and Right are pressed again, or after 10 min of idle time (p.53).",
+     "If any original wire must be replaced, use wire with a temperature rating of at least 221 F (105 C) (diagram note 1)."
     ],
-    "source": "No replacement procedure found in this unit's manual(s) or the public manufacturer / distributor literature searched (2026-11-09).",
-    "general": true
+    "source": "york-y82v-z8vt-furnace-install.pdf p.53, p.57, p.70, p.52-53, p.72"
    }
   ],
   "sensors": [
    {
-    "plug": "12-pin plug pin 3",
-    "pins": "3",
-    "name": "Flame sensor FS (PUR wire 16)",
+    "plug": "FS lead, PUR (16)",
+    "name": "Flame sensor (FS)",
+    "kind": "other",
+    "spec": "Normal approximately 3.7 microamps DC; low flame signal warning starts at 1.5 microamps; lockout point 0.1 microamps DC (p.68). Code table: continuous amber flash = below 0.35 microamps (p.64)",
+    "errorCodes": [
+     "Continuous (rapid) amber flash = low flame sense current",
+     "01 = flame sensed with no call for heat",
+     "07 = flame not established in three trials",
+     "08 = flame lost five times (four recycles)",
+     "09 lists 'flame probe shorted to chassis' as a check"
+    ],
+    "test": "Manual: verify that current is greater than 0.35 micro amps at the flame current test pad; check and clean flame sensor; check for proper gas flow. Or read it on the displays: with H1 / H2 showing press Select - CFM scrolls 5 s, then the flame current shows.",
+    "source": "york-y82v-z8vt-furnace-install.pdf p.64, p.68, p.72"
+   },
+   {
+    "plug": "PS1 leads: ORG (18) and ORG/BLK (22)",
+    "name": "PS1 - pressure switch-low (first stage)",
+    "kind": "switch",
+    "spec": "Make / break setting not printed in the manual",
+    "errorCodes": [
+     "02 = pressure switch closed with IDM off",
+     "03 = PS1 open with low speed IDM on",
+     "06 = PS cycle lockout (opened four times during the call)"
+    ],
+    "test": "Manual checks: faulty inducer, blocked vent pipe, broken pressure switch hose, disconnected pressure switch or inducer wires, faulty pressure switch; for 02, a faulty switch or miswiring. Never adjust pressure switch to allow furnace operation.",
+    "source": "york-y82v-z8vt-furnace-install.pdf p.65-67, p.72"
+   },
+   {
+    "plug": "PS2 leads: WHT (18A) and BLK/WHT (24)",
+    "name": "PS2 - pressure switch-high (second stage)",
+    "kind": "switch",
+    "spec": "Make / break setting not printed in the manual",
+    "errorCodes": [
+     "13 = PS2 open with high speed IDM on"
+    ],
+    "test": "Manual checks: faulty inducer, blocked vent pipe, broken or disconnected pressure switch hoses, disconnected pressure switch or inducer wiring, faulty pressure switch.",
+    "source": "york-y82v-z8vt-furnace-install.pdf p.67, p.72"
+   },
+   {
+    "plug": "LS leads: RED/BLK (19) and RED/GRN (17)",
+    "name": "LS - main limit switch (automatic reset)",
+    "location": "Vestibule panel near the gas valve",
+    "kind": "switch",
+    "spec": "Trip temperature not printed",
+    "errorCodes": [
+     "04 = main limit open (diagram: LS / ROS switch open)",
+     "11 = open more than 5 min, hard lockout",
+     "05 = open longer than 15 min"
+    ],
+    "test": "Manual checks for 04: dirty filter, duct sizing, incorrect blower speed setting, incorrect firing rate, loose limit switch wiring, faulty blower motor. For 11: check limit switch wiring, verify that limit switch is closed, check for faulty blower motor.",
+    "source": "york-y82v-z8vt-furnace-install.pdf p.61, p.65-67, p.72"
+   },
+   {
+    "plug": "ROS1 / ROS2: RED/BLK (19), RED (20) between them, RED/WHT (21)",
+    "name": "ROS1 / ROS2 - rollout switches (manual reset)",
     "location": "Burner assembly",
-    "kind": "other",
-    "spec": "Normal about 3.7 uA DC; low-flame warning starts at 1.5 uA; lockout point 0.1 uA DC; flame current can be viewed on the display during active calls (p.68)",
+    "kind": "switch",
+    "spec": "Trip temperature not printed.",
     "errorCodes": [
-     "Rapid amber = low flame sense current",
-     "1 red (01) = flame present with GV off",
-     "7 red (07) = lockout due to failed ignition",
-     "8 red (08) = lockout due to flame dropouts"
+     "05 = rollout switch open (hard lockout, cycle power after the repair)",
+     "04 on the diagram reads LS / ROS SWITCH OPEN"
     ],
-    "test": "Meter in series with the flame sensor lead (or on the board's flame current test pad if fitted), set to DC microamps, during a heat call with burners lit. Low reading: clean the rod with fine steel wool/emery, check rod position in the flame, burner/ground connection and flame quality.",
-    "source": "york-y82v-z8vt-furnace-install.pdf p.72 (wire), p.68 (uA)"
+    "test": "The rollout control is manually reset. Check for proper combustion air, proper inducer operation, and primary heat exchanger failure or a burner problem before resetting. Never bypass any safety control.",
+    "source": "york-y82v-z8vt-furnace-install.pdf p.61, p.66, p.72"
    },
    {
-    "plug": "12-pin plug pins 6 & 11",
-    "pins": "6 = RED/WHT (21); 11 = RED/GRN (17)",
-    "name": "Limit string: pin 6 RED/WHT (21) - ROS2 - RED (20) - ROS1 - RED/BLK (19) - limit LS - RED/GRN (17) back to pin 11",
-    "location": "Rollouts on burner assembly; limit on the furnace vestibule panel",
-    "kind": "other",
-    "errorCodes": [
-     "4 red (04) = LS / ROS switch open",
-     "5 red (05) = LS / ROS open greater than 15 min",
-     "11 red (11) = LS / ROS open from 5 to 15 min"
-    ],
-    "test": "Normally closed. With power off and the leads removed, measure ohms across the switch: near 0 ohms = closed; open when cool = failed (or a manual-reset rollout that needs resetting after finding the cause).",
-    "source": "york-y82v-z8vt-furnace-install.pdf p.72"
-   },
-   {
-    "plug": "12-pin plug pin 12",
-    "pins": "12",
-    "name": "Low-fire pressure switch PS1: ORG (18) from the ROS2 / RED/WHT (21) junction, ORG/BLK (22) back to pin 12",
-    "kind": "other",
-    "errorCodes": [
-     "2 red (02) = pressure switch closed with IDM off",
-     "3 red (03) = PS1 open with low speed IDM on",
-     "6 red (06) = PS cycle lockout"
-    ],
-    "test": "With power off, unplug the switch leads and check: open (no continuity) at rest; during an inducer run it must close (continuity / 0 VAC across it). If it does not close, check the hose, port, vent and intake before replacing the switch.",
-    "source": "york-y82v-z8vt-furnace-install.pdf p.72"
-   },
-   {
-    "plug": "12-pin plug pin 2",
-    "pins": "2",
-    "name": "High-fire pressure switch PS2: fed from the same junction (WHT 18A), BLK/WHT (24) back to pin 2",
-    "kind": "other",
-    "errorCodes": [
-     "13 red (13) = PS2 open with high speed IDM on"
-    ],
-    "test": "With power off, unplug the switch leads and check: open (no continuity) at rest; during an inducer run it must close (continuity / 0 VAC across it). If it does not close, check the hose, port, vent and intake before replacing the switch. PS2 must close at high-speed inducer.",
-    "source": "york-y82v-z8vt-furnace-install.pdf p.72"
-   },
-   {
-    "plug": "12-pin plug pins 7, 8 & 1",
-    "pins": "7 = YEL (14); 8 = WHT (15); 1 = BLK (23)",
-    "name": "Gas valve: terminal 1 YEL (14) pin 7, terminal 2 WHT (15) pin 8, terminal 3 BLK (23) pin 1",
+    "plug": "GV plug: 1 = YEL (14), 2 = WHT (15), 3 = BLK (23)",
+    "name": "GV - two-stage gas valve",
     "location": "Gas valve",
     "kind": "other",
+    "spec": "Terminal functions (low / high / common) are not labelled on the diagram. IN P and OUT P pressure ports, on/off switch, separate high and low stage regulators",
     "errorCodes": [
-     "10 red (10) = GV fault"
+     "10 = gas valve energized with no call for heat (GV fault)",
+     "01 = flame present with GV off"
     ],
-    "test": "24 VAC on the valve terminals during ignition and high fire (terminal functions not labelled on the diagram).",
-    "source": "york-y82v-z8vt-furnace-install.pdf p.72"
+    "test": "Manual: check gas valve and gas valve wiring (10); check for a leaking or slow-closing gas valve (01).",
+    "source": "york-y82v-z8vt-furnace-install.pdf p.25, p.49, p.65, p.66, p.72"
    },
    {
-    "plug": "12-pin plug pins 5 & 9",
-    "pins": "5 = BRN, 9 = BLU",
-    "name": "Transformer 24 V secondary (BRN 6 on pin 5, BLU 7 on pin 9)",
-    "location": "40 VA transformer",
+    "plug": "XFMR: 115V PRI, 24V SEC (BLU 7 / BRN 6 on the diagram); 3A fuse on the board",
+    "name": "24 V 40 VA transformer and control fuse",
     "kind": "other",
+    "spec": "3 A ATO automotive fuse. Low-voltage thresholds: 17 below approximately 19 VAC (diagram 19.2), 18 below approximately 16 VAC, recovers above approximately 20 VAC",
     "errorCodes": [
-     "Rapid red (FUS) = fuse open",
-     "17 red (17) = low voltage < 19.2 VAC",
-     "18 red (18) = low voltage < 16 VAC"
+     "FUS / rapid red = fuse open",
+     "17 = low voltage, no further relays",
+     "18 = low voltage, relays dropped"
     ],
-    "test": "Measure and record volts between R and C on the control board (start-up checklist item; no expected range printed); check 3 A fuse.",
-    "source": "york-y82v-z8vt-furnace-install.pdf p.72"
+    "test": "Verify proper line voltage; check the transformer for correct low voltage output. Start-up sheet: record volts between R and C on the control board.",
+    "source": "york-y82v-z8vt-furnace-install.pdf p.61, p.67, p.73, p.72"
    },
    {
-    "plug": "12-pin plug pins 4 & 10",
-    "pins": "4, 10",
-    "name": "Ground (GRN 13 and GRN 12)",
+    "plug": "MOT: 6-pin control plug (RED 37, GRN 38, BLK/WHT 36) to the ID motor control header; 5-pin power plug (BLK 41, WHT 39, GRN 40, BLU/WHT 42)",
+    "name": "MOT - variable-speed ECM blower motor",
+    "location": "Blower compartment",
     "kind": "other",
-    "source": "york-y82v-z8vt-furnace-install.pdf p.72"
+    "spec": "PF choke installed with 3/4 - 1.0 HP motors only; BLK (41) connects to main harness BLK (26) when not equipped with the choke (diagram note 2)",
+    "errorCodes": [
+     "12 = model ID configuration error (could occur due to an incorrect blower selection)",
+     "11 = usually a failed blower motor or blower wheel"
+    ],
+    "test": "View the CFM the board is asking for: press Select during an active call. Check the model ID in the Id menu.",
+    "source": "york-y82v-z8vt-furnace-install.pdf p.72, p.57, p.67, p.68"
    },
    {
-    "plug": "6-pin header (line voltage)",
-    "name": "Line-voltage header: pin 6 RED (10), pin 5 BLK (25), pin 4 GRY (8), pin 3 BLK (2), pin 2 BLK (4), pin 1 BLK (26) - inducer IDM, igniter HSI, transformer and line leads",
-    "location": "Board, right side",
+    "plug": "IDM plug (3-pin: BLK, RED, WHT) and HSI plug (WHT, WHT)",
+    "name": "IDM - induced draft motor (HI / LOW) and HSI - hot surface ignitor",
     "kind": "other",
-    "spec": "Per-pin function not stated in text; follow the wire numbers on the unit diagram.",
-    "source": "york-y82v-z8vt-furnace-install.pdf p.72"
+    "spec": "115 VAC loads. The igniter glows for about 17 s before the gas valve opens. Igniter resistance not printed",
+    "errorCodes": [
+     "07 lists a faulty hot surface ignitor",
+     "03 / 06 / 13 list a faulty inducer"
+    ],
+    "source": "york-y82v-z8vt-furnace-install.pdf p.45, p.72"
    },
    {
-    "plug": "6-pin motor power / communicating motor plug",
-    "name": "Variable-speed ECM blower: 5-pin motor power plug with BLK (41) through the PF choke (3/4-1 HP motors only; otherwise BLK (41) joins main harness BLK (26)), WHT (39), GRN (40) ground and BLU/WHT (42); 6-pin motor communication plug from the board 6-pin header with RED (37), GRN (38), BLK/WHT (36)",
-    "location": "Blower",
-    "kind": "other",
-    "source": "york-y82v-z8vt-furnace-install.pdf p.72 (note 2)"
-   },
-   {
-    "plug": "COMM (A+ R C B-)",
-    "name": "Communicating thermostat / outdoor unit bus",
-    "kind": "other",
-    "source": "york-y82v-z8vt-furnace-install.pdf p.72"
-   },
-   {
-    "plug": "FLT / AUX",
-    "name": "Float switch and auxiliary switch inputs",
-    "kind": "other",
-    "source": "york-y82v-z8vt-furnace-install.pdf p.72"
-   },
-   {
-    "plug": "Thermostat strip",
+    "plug": "Thermostat screw terminal block",
     "name": "O, D-HUM, Y1, Y/Y2, W2, W/W1, G, C, R",
     "kind": "other",
+    "spec": "Two-stage cooling: low cool speed with Y1, high cool speed with Y1 and Y2",
     "errorCodes": [
-     "4 amber (44) = Y call without G call"
+     "44 = Y signal without G"
     ],
-    "source": "york-y82v-z8vt-furnace-install.pdf p.72"
+    "source": "york-y82v-z8vt-furnace-install.pdf p.62, p.67, p.72"
    },
    {
-    "plug": "Display code",
-    "name": "12 red (12) = model ID configuration error; ALT red/amber (rL) = refrigerant leak detected near furnace",
+    "plug": "COMM headers / four small screws A+ R C B-",
+    "name": "Communicating bus",
     "kind": "other",
-    "source": "york-y82v-z8vt-furnace-install.pdf p.72"
+    "spec": "Do not place more than one wire under any single communication terminal screw - use a pigtail no longer than 6 in. Do not run R to a variable capacity outdoor unit",
+    "source": "york-y82v-z8vt-furnace-install.pdf p.35-38, p.72"
+   },
+   {
+    "plug": "AUX inputs: R, FLT, R, AUX",
+    "name": "Float switch (FLT + R) and auxiliary switch (AUX + R) inputs",
+    "kind": "other",
+    "spec": "Only functional on communicating systems with the Hx 3 Touch Screen Thermostat. The float switch may have normally open or normally closed contacts. Do not install a float switch in series with any thermostat wiring when using communicating controls",
+    "source": "york-y82v-z8vt-furnace-install.pdf p.35, p.51, p.72"
+   },
+   {
+    "plug": "HUM / HUM-N and EAC / EAC-N 1/4 in. spade terminals",
+    "name": "Humidifier and electronic air cleaner outputs",
+    "kind": "other",
+    "spec": "115 VAC, 1.0 A maximum each. HUM during heating system operation; EAC during circulating blower operation",
+    "source": "york-y82v-z8vt-furnace-install.pdf p.31, p.72"
+   },
+   {
+    "plug": "Displays: rL",
+    "name": "Refrigerant leak status (no sensor plug on this board is shown)",
+    "kind": "other",
+    "spec": "Alternating red / amber LED with rL = refrigerant leak detected near the furnace. The diagram shows no A2L sensor connector on the furnace board. York outdoor-unit manuals (6694740-UIM-B-1025 p.14; 6411591-UIM-B-0824 p.13; 6515371-UIM-B-0526 p.12, p.13, p.36) wire the 10-pin A2L mitigation control's green/black A2L output to this furnace's G terminal, with both mitigation DIP switches on. The YH9 / XH9 manual (6515371-UIM-B-0526 p.12) also describes a second detection system that is a sensor only, with a 6-pin cable and no control board; its Figure 16 (p.37) wires that sensor to a communicating furnace's R, C and G terminals and does not name furnace models",
+    "errorCodes": [
+     "rL = refrigerant leak detected near the furnace"
+    ],
+    "test": "Furnace manual: check for refrigerant leak. Field test where the 10-pin mitigation control board is fitted - YH4 / XH4 / RH4 manual 6694740-UIM-B-1025 p.15: give a Y call for cooling; disconnect the A2L sensor wire from the A2L control board or short the test pins with a screwdriver; after 15 s verify the call for the compressor is removed, the Y output pin has no voltage and the G output pin has 24 VAC; reinstall the sensor or stop shorting the pins and verify the system returns to cooling mode; with the system in standby repeat for a W call for heating; re-install the front cover on the control box. The YC3 / YC4 / YC6 manual 6411591-UIM-B-0824 p.14 differs: move the test jumper from NC to Test instead of shorting pins, return the jumper to NC once testing is complete, and after reinstalling the sensor wait 5 min before verifying that cooling returns.",
+    "source": "york-y82v-z8vt-furnace-install.pdf p.65, p.31, p.34, p.72"
    }
   ],
-  "test": "Display: H1/H2 = low/high gas heat, HP = heat pump heat, CC = cooling, FF = factory test. Fault retrieval: press LEFT until L5F, then SELECT; RIGHT cycles older faults; hold SELECT >5 s in L5F to clear (p.72).",
-  "notes": "Diagram is vector; wire numbers in brackets.",
+  "test": "Displays: H1 / H2 = first / second stage gas heat, HP = heat pump, CC = cooling, FF = factory test mode, two dots = fan only. Menu order with the Right button: call status > Fault history (L5F) > CFG > blower configuration (CF2) > Id. Fault history (make sure there are no active thermostat calls): press Left until L5F shows, Select; Right = next older fault; hold Select 5 s in unlocked mode to clear.",
+  "notes": "Wire numbers are the bracketed numbers on the diagram. The 12-pin 24V plug position numbers are not given here - go by wire colour and number.",
   "gaps": [
-   "Gas valve terminal 1/2/3 functions not labelled",
-   "6-pin line-voltage header per-pin functions not stated",
-   "Pressure switch / limit setpoints not printed"
+   "Pressure switch and limit / rollout set points not printed",
+   "Gas valve terminal 1 / 2 / 3 functions not labelled",
+   "Igniter resistance not printed",
+   "What the furnace does during rL is not printed in the furnace manual"
   ],
   "sources": [
    {
     "file": "york-y82v-z8vt-furnace-install.pdf",
-    "pages": "68,72",
-    "what": "flame uA, wiring diagram and codes"
+    "pages": "31,45,51-57,61,64-70,72",
+    "what": "control board drawing, menus, safety controls, code table, fault history, wiring diagram"
    }
   ]
  },
  {
   "id": "york-y92v-z9vt-furnace-control",
-  "title": "York Y92V / Z9VT 96% two-stage variable-speed communicating condensing furnace control",
+  "replacesExisting": "Same id as the entry already in brand-sensors.js (~line 13432). This draft replaces it: it adds the manual's board-replacement step (Model ID), the menu settings and the 0.35 microamp test-pad figure, makes the pressure switches kind 'switch', and drops the 12-pin position numbers, which the author could not re-trace on the rendered diagram (see sources.md).",
+  "title": "York Y92V two-stage variable-speed condensing furnace control (status LED, three 7-segment displays, four buttons)",
   "side": "indoor",
-  "brand": "York / Coleman / Luxaire",
-  "models": "Y92V (York) and Z9VT (LX series) two-stage variable speed ECM condensing, multi-position (manual 6553957-UIM-A-0626)",
+  "brand": "York",
+  "models": "Y92V040A10, Y92V060B12, Y92V080B12, Y92V080C16, Y92V100C16, Y92V100C20, Y92V120D20 (install manual 6553957-UIM-A-0626)",
   "match": [
-   "Y92V",
-   "Z9VT"
+   "Y92V"
   ],
+  "matchNote": "The existing entry also matches Z9VT. The Y92V manual does not print Z9VT; York's YH4 / YC3 / YH9 outdoor manuals only list Z9VT beside Y92V as furnaces that use the mitigation board's A2L output. Keep or drop the Z9VT token at the integrator's choice - it is not confirmed by this draft.",
   "sizes": [
    "all"
   ],
-  "board": "Two-stage COMM furnace control board with 3-digit display and buttons, 3 A fuse, 12-pin plug (pins 12-9-6-3 / 11-8-5-2 / 10-7-4-1), COMM (A+ R C B-), FLT / AUX inputs (wiring diagram 6540996-UWD-A-0925)",
+  "board": "Furnace control board ('WIRING DIAGRAM - TWO STAGE COMM CONDENSING FURNACE' 6540996-UWD-A-0925): diagnostic (status) LED, three 7-segment displays, BACK / LEFT / RIGHT / SELECT push buttons, 3A fuse, thermostat screw terminal block (O, D-HUM, Y1, Y/Y2, W2, W/W1, G, C, R), comm headers (A+ R C B-), AUX inputs (R, FLT, R, AUX), ID motor control header, 24V inputs/outputs plug, line voltage and neutral plugs, EAC / HUM spade terminals. No DIP switches or jumpers are shown - settings are menus",
   "replacement": [
    {
-    "board": "York / Coleman / Luxaire control board - replacement",
+    "board": "York Y92V furnace control board - replacement",
     "kit": "",
-    "replaces": "No factory replacement procedure published (none found).",
-    "differences": "No factory replacement procedure was found. No refrigerant or A2L setting is documented for this board. ",
+    "replaces": "The factory control board. The manual's parts list is generic ('Control, furnace') and prints no part number.",
+    "differences": "The model ID must be set on a replacement board: it identifies the motor horsepower and airflow configuration. Code 12 = model ID configuration error. The manual prints no refrigerant, A2L or leak-sensor setting on this board - rL is a status the board displays, and the RDS is wired per the RDS / indoor coil manual.",
     "steps": [
-     "GENERAL GUIDANCE (not from a manufacturer procedure): order the replacement by the part number printed on the old board (or the unit's parts list) and confirm it fits the unit model and serial.",
-     "GENERAL GUIDANCE (not from a manufacturer procedure): photograph the old board and label every wire before removal; reconnect to the unit wiring diagram.",
-     "GENERAL GUIDANCE (not from a manufacturer procedure): copy every DIP switch, jumper and cut-link setting from the old board to the new one, then re-check the setup items described in this map and the unit manual."
+     "Open all disconnects before servicing (diagram caution). The blower door switch is not a main power disconnect.",
+     "After fitting the board, put it in unlocked mode: press and hold Left and Right for 5 s until the displays show UnL (p.75).",
+     "Navigate to the Id menu and press Select to view the model ID. Model IDs: 040A10 = 1, 060B12 = 2, 080B12 = 3, 080C16 = 4, 100C16 = 5, 100C20 = 6, 120D20 = 7 (0 = not configured) (p.79).",
+     "Navigate to the correct model ID and press Select (p.93). Incorrect configuration of the model ID could lead to equipment failure and damage.",
+     "Re-enter the installation settings - they are menu items, not switches: CFG > HP, HSt, Stg, FSd, bdy and CF2 > Ht, dLy, Adj, CL (p.74-75). Printed defaults: HP off, HSt off, FSd A, bdy 60 s, dLy A, Adj A, CL A; Stg and Ht defaults are printed two ways in the manual (p.76, p.83).",
+     "The board exits unlocked mode when Left and Right are pressed again, or after 10 min of idle time (p.75).",
+     "If any original wire must be replaced, use wire with a temperature rating of at least 221 F (105 C) (diagram note 1)."
     ],
-    "source": "No replacement procedure found in this unit's manual(s) or the public manufacturer / distributor literature searched (2026-11-09).",
-    "general": true
+    "source": "york-y92v-z9vt-furnace-install.pdf p.75, p.79, p.93, p.74-75, p.96"
    }
   ],
   "sensors": [
    {
-    "plug": "12-pin plug pin 3",
-    "pins": "3",
-    "name": "Flame sensor FS (PUR wire 16)",
+    "plug": "FS lead, PUR (16)",
+    "name": "Flame sensor (FS)",
+    "location": "Igniter / flame sensor bracket (parts list p.94; location not described in the manual)",
+    "kind": "other",
+    "spec": "Normal approximately 3.7 microamps DC; low flame signal warning starts at 1.5 microamps; lockout point 0.1 microamps DC (p.91). Code table: continuous amber flash = below 0.35 microamps (p.87)",
+    "errorCodes": [
+     "Continuous (rapid) amber flash = low flame sense current",
+     "01 = flame sensed with no call for heat",
+     "07 = flame not established in three trials",
+     "08 = flame lost five times (four recycles)",
+     "09 lists 'flame probe shorted to chassis' as a check"
+    ],
+    "test": "Manual: verify that current is greater than 0.35 micro amps at the flame current test pad; check and clean flame sensor; check for proper gas flow. Or read it on the displays: with H1 / H2 showing press Select - CFM scrolls 5 s, then the flame current shows.",
+    "source": "york-y92v-z9vt-furnace-install.pdf p.87, p.91, p.96"
+   },
+   {
+    "plug": "PS1 leads: WHT (18A) from PS3, WHT (18B) to PS2, ORG/BLK (22) to the board",
+    "name": "PS1 - pressure switch-low (first stage)",
+    "kind": "switch",
+    "spec": "Make / break setting not printed in the manual",
+    "errorCodes": [
+     "02 = pressure switch closed with IDM off",
+     "03 = PS1 open with low speed IDM on",
+     "06 = PS cycle lockout (opened four times during the call)"
+    ],
+    "test": "Manual checks: faulty inducer, blocked vent pipe, broken pressure switch hose, disconnected pressure switch or inducer wires, faulty pressure switch; for 02, a faulty switch or miswiring. Never adjust pressure switch to allow furnace operation.",
+    "source": "york-y92v-z9vt-furnace-install.pdf p.87-90, p.96"
+   },
+   {
+    "plug": "PS2 leads: WHT (18B) and BLK/WHT (24)",
+    "name": "PS2 - pressure switch-high (second stage)",
+    "kind": "switch",
+    "spec": "Make / break setting not printed in the manual",
+    "errorCodes": [
+     "13 = PS2 open with high speed IDM on"
+    ],
+    "test": "Manual checks: faulty inducer, blocked vent pipe, broken or disconnected pressure switch hoses, disconnected pressure switch or inducer wiring, faulty pressure switch.",
+    "source": "york-y92v-z9vt-furnace-install.pdf p.90, p.96"
+   },
+   {
+    "plug": "PS3 leads: ORG (18) and WHT (18A)",
+    "name": "PS3 - pressure switch-condensate",
+    "kind": "switch",
+    "spec": "Make / break setting not printed in the manual. Wired between the rollout / limit string (ORG 18) and PS1 (WHT 18A) on the diagram",
+    "errorCodes": [
+     "No code of its own is printed. On the diagram it is in series between the limit / rollout string and the common side of PS1 and PS2"
+    ],
+    "test": "The safety-controls page lists blockage of condensate drain piping among the conditions the pressure switches act on. Check the drain, the internal trap and the hose routing: hoses must slope down with no sagging loops (p.44).",
+    "source": "york-y92v-z9vt-furnace-install.pdf p.83, p.44, p.96"
+   },
+   {
+    "plug": "LS leads: RED/BLK (19) and RED/GRN (17)",
+    "name": "LS - main limit switch (automatic reset)",
+    "location": "Vestibule panel near the gas valve",
+    "kind": "switch",
+    "spec": "Trip temperature not printed",
+    "errorCodes": [
+     "04 = main limit open (diagram: LS / ROS switch open)",
+     "11 = open more than 5 min, hard lockout",
+     "05 = open longer than 15 min"
+    ],
+    "test": "Manual checks for 04: dirty filter, duct sizing, incorrect blower speed setting, incorrect firing rate, loose limit switch wiring, faulty blower motor. For 11: check limit switch wiring, verify that limit switch is closed, check for faulty blower motor.",
+    "source": "york-y92v-z9vt-furnace-install.pdf p.83-84, p.87-90, p.96"
+   },
+   {
+    "plug": "ROS1 / ROS2: RED/BLK (19), RED (20) between them, RED/WHT (21)",
+    "name": "ROS1 / ROS2 - rollout switches (manual reset)",
     "location": "Burner assembly",
-    "kind": "other",
-    "spec": "Normal about 3.7 uA DC; low-flame warning starts at 1.5 uA; lockout point 0.1 uA DC; flame current can be viewed on the display during active calls (p.91)",
+    "kind": "switch",
+    "spec": "Trip temperature not printed. The diagram carries the note 'NOT USED ON 40K MODELS' with two arrows, one to the RED (20) lead between the switches and one to ROS2.",
     "errorCodes": [
-     "Rapid amber = low flame sense current",
-     "1 red (01) = flame present with GV off",
-     "7 red (07) = lockout due to failed ignition",
-     "8 red (08) = lockout due to flame dropouts"
+     "05 = rollout switch open (hard lockout, cycle power after the repair)",
+     "04 on the diagram reads LS / ROS SWITCH OPEN"
     ],
-    "test": "Meter in series with the flame sensor lead (or on the board's flame current test pad if fitted), set to DC microamps, during a heat call with burners lit. Low reading: clean the rod with fine steel wool/emery, check rod position in the flame, burner/ground connection and flame quality.",
-    "source": "york-y92v-z9vt-furnace-install.pdf p.96 (wire), p.91 (uA)"
+    "test": "The rollout control is manually reset. Check for proper combustion air, proper inducer operation, and primary heat exchanger failure or a burner problem before resetting. Never bypass any safety control.",
+    "source": "york-y92v-z9vt-furnace-install.pdf p.83, p.89, p.96"
    },
    {
-    "plug": "12-pin plug pins 6 & 11",
-    "pins": "6 = RED/WHT (21); 11 = RED/GRN (17)",
-    "name": "Limit string: pin 6 RED/WHT (21) - ROS2 - RED (20) - ROS1 - RED/BLK (19) - limit LS - RED/GRN (17) back to pin 11",
-    "location": "Rollouts on burner assembly; limit on the unit vestibule panel near the gas valve",
-    "kind": "other",
-    "errorCodes": [
-     "4 red (04) = LS / ROS switch open",
-     "5 red (05) = LS / ROS open greater than 15 min",
-     "11 red (11) = LS / ROS open from 5 to 15 min"
-    ],
-    "test": "Normally closed. With power off and the leads removed, measure ohms across the switch: near 0 ohms = closed; open when cool = failed (or a manual-reset rollout that needs resetting after finding the cause).",
-    "source": "york-y92v-z9vt-furnace-install.pdf p.96"
-   },
-   {
-    "plug": "12-pin plug pin 12",
-    "pins": "12",
-    "name": "Low-fire pressure switch PS1 in series with condensate switch PS3: ORG (18) from the ROS2 / RED/WHT (21) junction - PS3 - WHT (18A) - PS1 - ORG/BLK (22) back to pin 12",
-    "kind": "other",
-    "errorCodes": [
-     "2 red (02) = pressure switch closed with IDM off",
-     "3 red (03) = PS1 open with low speed IDM on",
-     "6 red (06) = PS cycle lockout"
-    ],
-    "test": "With power off, unplug the switch leads and check: open (no continuity) at rest; during an inducer run it must close (continuity / 0 VAC across it). If it does not close, check the hose, port, vent/intake and condensate drain before replacing the switch.",
-    "source": "york-y92v-z9vt-furnace-install.pdf p.96"
-   },
-   {
-    "plug": "12-pin plug pin 2",
-    "pins": "2",
-    "name": "High-fire pressure switch PS2: fed from the PS1/PS3 junction (WHT 18B), BLK/WHT (24) back to pin 2",
-    "kind": "other",
-    "errorCodes": [
-     "13 red (13) = PS2 open with high speed IDM on"
-    ],
-    "test": "With power off, unplug the switch leads and check: open (no continuity) at rest; during an inducer run it must close (continuity / 0 VAC across it). If it does not close, check the hose, port, vent/intake and condensate drain before replacing the switch. PS2 must close at high-speed inducer.",
-    "source": "york-y92v-z9vt-furnace-install.pdf p.96"
-   },
-   {
-    "plug": "12-pin plug pins 7, 8 & 1",
-    "pins": "7 = YEL (14); 8 = WHT (15); 1 = BLK (23)",
-    "name": "Gas valve: terminal 1 YEL (14) pin 7, terminal 2 WHT (15) pin 8, terminal 3 BLK (23) pin 1",
+    "plug": "GV plug: 1 = YEL (14), 2 = WHT (15), 3 = BLK (23)",
+    "name": "GV - two-stage gas valve",
     "location": "Gas valve",
     "kind": "other",
+    "spec": "Terminal functions (low / high / common) are not labelled on the diagram. IN P and OUT P pressure ports, on/off switch, separate high and low stage regulators",
     "errorCodes": [
-     "10 red (10) = GV fault"
+     "10 = gas valve energized with no call for heat (GV fault)",
+     "01 = flame present with GV off"
     ],
-    "test": "24 VAC on the valve terminals during ignition and high fire (terminal functions not labelled on the diagram).",
-    "source": "york-y92v-z9vt-furnace-install.pdf p.96"
+    "test": "Manual: check gas valve and gas valve wiring (10); check for a leaking or slow-closing gas valve (01).",
+    "source": "york-y92v-z9vt-furnace-install.pdf p.31, p.70, p.87, p.90, p.96"
    },
    {
-    "plug": "12-pin plug pins 5 & 9",
-    "pins": "5 = BRN, 9 = BLU",
-    "name": "Transformer 24 V secondary (BRN 6 on pin 5, BLU 7 on pin 9)",
-    "location": "40 VA transformer",
+    "plug": "XFMR: 115V PRI, 24V SEC (BLU 7 / BRN 6 on the diagram); 3A fuse on the board",
+    "name": "24 V 40 VA transformer and control fuse",
     "kind": "other",
+    "spec": "3 A ATO automotive fuse. Low-voltage thresholds: 17 below approximately 19 VAC (diagram 19.2), 18 below approximately 16 VAC, recovers above approximately 20 VAC",
     "errorCodes": [
-     "Rapid red (FUS) = fuse open",
-     "17 red (17) = low voltage < 19.2 VAC",
-     "18 red (18) = low voltage < 16 VAC"
+     "FUS / rapid red = fuse open",
+     "17 = low voltage, no further relays",
+     "18 = low voltage, relays dropped"
     ],
-    "test": "Measure and record volts between R and C on the control board (start-up checklist item; no expected range printed); check 3 A fuse.",
-    "source": "york-y92v-z9vt-furnace-install.pdf p.96"
+    "test": "Verify proper line voltage; check the transformer for correct low voltage output. Start-up sheet: record volts between R and C on the control board.",
+    "source": "york-y92v-z9vt-furnace-install.pdf p.83, p.90, p.91, p.97, p.96"
    },
    {
-    "plug": "12-pin plug pins 4 & 10",
-    "pins": "4, 10",
-    "name": "Ground (GRN 13 and GRN 12)",
+    "plug": "MOT: 6-pin control plug (RED 37, GRN 38, BLK/WHT 36) to the ID motor control header; 5-pin power plug (BLK 41, WHT 39, GRN 40, BLU 42)",
+    "name": "MOT - variable-speed ECM blower motor",
+    "location": "Blower compartment",
     "kind": "other",
-    "source": "york-y92v-z9vt-furnace-install.pdf p.96"
+    "spec": "PF choke installed with 3/4 - 1.0 HP motors only; BLK (41) connects to main harness BLK (26) when not equipped with the choke (diagram note 2)",
+    "errorCodes": [
+     "12 = model ID configuration error (could occur due to an incorrect blower selection)",
+     "11 = usually a failed blower motor or blower wheel"
+    ],
+    "test": "View the CFM the board is asking for: press Select during an active call. Check the model ID in the Id menu.",
+    "source": "york-y92v-z9vt-furnace-install.pdf p.96, p.79, p.91"
    },
    {
-    "plug": "6-pin header (line voltage)",
-    "name": "Line-voltage header: pin 6 RED (10), pin 5 BLK (25), pin 4 GRY (8), pin 3 BLK (2), pin 2 BLK (4), pin 1 BLK (26) - inducer IDM, igniter HSI, transformer and line leads",
-    "location": "Board, right side",
+    "plug": "IDM plug (3-pin: BLK, RED, WHT) and HSI plug (WHT, WHT)",
+    "name": "IDM - induced draft motor (HI / LOW) and HSI - hot surface ignitor",
     "kind": "other",
-    "spec": "Per-pin function not stated in text; follow the wire numbers on the unit diagram.",
-    "source": "york-y92v-z9vt-furnace-install.pdf p.96"
+    "spec": "115 VAC loads. The igniter glows for about 17 s before the gas valve opens. Igniter resistance not printed",
+    "errorCodes": [
+     "07 lists a faulty hot surface ignitor",
+     "03 / 06 / 13 list a faulty inducer"
+    ],
+    "source": "york-y92v-z9vt-furnace-install.pdf p.65, p.96"
    },
    {
-    "plug": "6-pin motor power / communicating motor plug",
-    "name": "Variable-speed ECM blower: 5-pin motor power plug with BLK (41) through the PF choke (3/4-1.0 HP motors only; otherwise BLK (41) joins main harness BLK (26)), WHT (39), GRN (40) ground and BLU (42); 6-pin motor communication plug from the board 6-pin header with RED (37), GRN (38), BLK/WHT (36)",
-    "location": "Blower",
-    "kind": "other",
-    "source": "york-y92v-z9vt-furnace-install.pdf p.96 (note 2)"
-   },
-   {
-    "plug": "COMM (A+ R C B-)",
-    "name": "Communicating thermostat / outdoor unit bus",
-    "kind": "other",
-    "source": "york-y92v-z9vt-furnace-install.pdf p.96"
-   },
-   {
-    "plug": "FLT / AUX",
-    "name": "Float switch and auxiliary switch inputs",
-    "kind": "other",
-    "source": "york-y92v-z9vt-furnace-install.pdf p.96"
-   },
-   {
-    "plug": "Thermostat strip",
+    "plug": "Thermostat screw terminal block",
     "name": "O, D-HUM, Y1, Y/Y2, W2, W/W1, G, C, R",
     "kind": "other",
+    "spec": "Jumper R to W1 + W2 for a high-fire test call (p.71). Two-stage cooling: low cool speed with Y1, high cool speed with Y1 and Y2",
     "errorCodes": [
-     "4 amber (44) = Y call without G call"
+     "44 = Y signal without G"
     ],
-    "source": "york-y92v-z9vt-furnace-install.pdf p.96"
+    "source": "york-y92v-z9vt-furnace-install.pdf p.71, p.85, p.91, p.96"
    },
    {
-    "plug": "Display code",
-    "name": "12 red (12) = model ID configuration error; ALT red/amber (rL) = refrigerant leak detected near furnace",
+    "plug": "COMM headers / four small screws A+ R C B-",
+    "name": "Communicating bus",
     "kind": "other",
-    "source": "york-y92v-z9vt-furnace-install.pdf p.96"
+    "spec": "Do not place more than one wire under any single communication terminal screw - use a pigtail no longer than 6 in. Do not run R to a variable capacity outdoor unit",
+    "source": "york-y92v-z9vt-furnace-install.pdf p.40-42, p.96"
+   },
+   {
+    "plug": "AUX inputs: R, FLT, R, AUX",
+    "name": "Float switch (FLT + R) and auxiliary switch (AUX + R) inputs",
+    "kind": "other",
+    "spec": "Only functional on communicating systems with the Smart Home Control (S1-TSHC510). The float switch may have normally open or normally closed contacts. Do not install a float switch in series with any thermostat wiring when using communicating controls",
+    "source": "york-y92v-z9vt-furnace-install.pdf p.40, p.73, p.96"
+   },
+   {
+    "plug": "HUM / HUM-N and EAC / EAC-N 1/4 in. spade terminals",
+    "name": "Humidifier and electronic air cleaner outputs",
+    "kind": "other",
+    "spec": "115 VAC, 1.0 A maximum each. HUM during heating system operation; EAC during circulating blower operation",
+    "source": "york-y92v-z9vt-furnace-install.pdf p.36, p.96"
+   },
+   {
+    "plug": "Displays: rL",
+    "name": "Refrigerant leak status (no sensor plug on this board is shown)",
+    "kind": "other",
+    "spec": "Alternating red / amber LED with rL = refrigerant leak detected near the furnace. The diagram shows no A2L sensor connector on the furnace board. York outdoor-unit manuals (6694740-UIM-B-1025 p.14; 6411591-UIM-B-0824 p.13; 6515371-UIM-B-0526 p.12, p.13, p.36) wire the 10-pin A2L mitigation control's green/black A2L output to this furnace's G terminal, with both mitigation DIP switches on. The YH9 / XH9 manual (6515371-UIM-B-0526 p.12) also describes a second detection system that is a sensor only, with a 6-pin cable and no control board; its Figure 16 (p.37) wires that sensor to a communicating furnace's R, C and G terminals and does not name furnace models",
+    "errorCodes": [
+     "rL = refrigerant leak detected near the furnace"
+    ],
+    "test": "Furnace manual: check for refrigerant leak. Field test where the 10-pin mitigation control board is fitted - YH4 / XH4 / RH4 manual 6694740-UIM-B-1025 p.15: give a Y call for cooling; disconnect the A2L sensor wire from the A2L control board or short the test pins with a screwdriver; after 15 s verify the call for the compressor is removed, the Y output pin has no voltage and the G output pin has 24 VAC; reinstall the sensor or stop shorting the pins and verify the system returns to cooling mode; with the system in standby repeat for a W call for heating; re-install the front cover on the control box. The YC3 / YC4 / YC6 manual 6411591-UIM-B-0824 p.14 differs: move the test jumper from NC to Test instead of shorting pins, return the jumper to NC once testing is complete, and after reinstalling the sensor wait 5 min before verifying that cooling returns.",
+    "source": "york-y92v-z9vt-furnace-install.pdf p.87, p.36, p.38, p.96"
    }
   ],
-  "test": "Display: H1/H2 = low/high gas heat, HP = heat pump heat, CC = cooling, FF = factory test. Fault retrieval: press LEFT until L5F, then SELECT; RIGHT cycles older faults; hold SELECT >5 s in L5F to clear (p.92-93, p.96).",
-  "notes": "Same 12-pin assignment as the Y82V; the low-fire switch PS1 is in series with condensate switch PS3, and PS2 hangs off the PS1 output. One rollout is not used on 40K models.",
+  "test": "Displays: H1 / H2 = first / second stage gas heat, HP = heat pump, CC = cooling, FF = factory test mode, two dots = fan only. Menu order with the Right button: call status > Fault history (L5F) > CFG > blower configuration (CF2) > Id. Fault history (make sure there are no active thermostat calls): press Left until L5F shows, Select; Right = next older fault; hold Select 5 s in unlocked mode to clear.",
+  "notes": "Wire numbers are the bracketed numbers on the diagram. The 12-pin 24V plug position numbers are not given here - go by wire colour and number.",
   "gaps": [
-   "Gas valve terminal 1/2/3 functions not labelled",
-   "6-pin line-voltage header per-pin functions not stated",
-   "Pressure switch / limit setpoints not printed"
+   "Pressure switch and limit / rollout set points not printed",
+   "Gas valve terminal 1 / 2 / 3 functions not labelled",
+   "Igniter resistance not printed",
+   "What the furnace does during rL is not printed in the furnace manual"
   ],
   "sources": [
    {
     "file": "york-y92v-z9vt-furnace-install.pdf",
-    "pages": "91,96",
-    "what": "flame uA, wiring diagram and codes"
+    "pages": "36,40,65,73-79,83-93,96",
+    "what": "control board drawing, menus, safety controls, code table, fault history, wiring diagram"
    }
   ]
  },
@@ -51735,8 +51816,14 @@ const BRAND_SENSOR_MAPS = [
   "brand": "Rheem / Ruud",
   "models": "(-)P17 (17 SEER) EcoNet heat pumps, e.g. RP1724, RP1736, RP1748, RP1760 (R = Rheem, U = Ruud).",
   "match": [
-   "RP17",
-   "UP17"
+   "RP1724",
+   "RP1736",
+   "RP1748",
+   "RP1760",
+   "UP1724",
+   "UP1736",
+   "UP1748",
+   "UP1760"
   ],
   "sizes": [
    "24",
@@ -125696,6 +125783,633 @@ const BRAND_SENSOR_MAPS = [
     "file": "trane-s9vm-lp-kit-fnr-svn004a.pdf",
     "pages": "7",
     "what": "disconnect the gas valve connector before conversion"
+   }
+  ]
+ },
+ {
+  "id": "carrier-ft5bd-main-control",
+  "title": "Carrier / Bryant FT5BD Next Generation air handler main control board (3-digit display, NFC, built-in A2L leak dissipation)",
+  "side": "indoor",
+  "brand": "Carrier / Bryant",
+  "models": "FT5BD2417X00, FT5BD3617X00, FT5BD4821X00, FT5BD6021X00",
+  "match": [
+   "FT5BD2417X",
+   "FT5BD3617X",
+   "FT5BD4821X",
+   "FT5BD6021X"
+  ],
+  "sizes": [
+   "all"
+  ],
+  "board": "Main control board (IDU PCB) with a 3-digit 7-segment display, MENU/SELECT and NEXT/OPTION buttons, NFC antenna, STATUS and COMM LEDs, 3 amp fuse and a Super Plug socket (PL5). Thermostat strip: DHUM, R, G, W/W1, W2, Y/Y1 TSTAT, Y2, O, C, Y/Y1 OUT. Separate motor controller PCB (L1, L2, PE, two fuses, COMM and STATUS LEDs) drives the ECM. Fig. 26 shows no DIP switches; operating parameters are adjusted from the menu or the Service Tech app.",
+  "replacement": [
+   {
+    "board": "Carrier / Bryant FT5BD replacement main control board",
+    "kit": "",
+    "replaces": "The factory main control board (service part number not printed in the Installation Instructions or Product Data).",
+    "differences": "A new board must be programmed with the correct Model Program Number before the air handler will operate. The main menu flow chart shows no refrigerant selection - the unit is for R-454B (Puron Advance) only and the leak dissipation system is integrated into the board. Without the A2L sensor the system defaults into Dissipation Mode and cannot be overwritten.",
+    "steps": [
+     "Turn off all power - there may be more than one disconnect. Let the motor controller dissipate for a minimum of two minutes or until all LEDs go out.",
+     "Read the Model Program Number on the air handler rating plate. Do NOT program the control board with a Model Program Number different than what is specified on the rating plate - parameter options will not match design values (printed caution: air handler overheating hazard, reduced air handler life).",
+     "Method 1: use the supported mobile app (Service Tech app) to flash the model program onto the board using NFC. Remove 115/230 V power from the control board before using NFC. The QR code on the front page of the Installation Instructions links to the app.",
+     "Method 2: use the correct air handler Super Plug (available from the distributor / replacement component) and model program number to copy the correct model program onto the new board. On power-up with a Super Plug detected the board goes to Model Plug Selection.",
+     "Further details for both methods are provided with the replacement control board.",
+     "After power-up the display alternates PrG (program number) and vEr (software version) - check PrG against the rating plate. Menu item inF shows them again.",
+     "Code 25.x = program missing, wrong or corrupted; code 27.x = Super Plug program missing, not recognized or corrupted (remove the Super Plug and retry, then try a different Super Plug, then replace the control)."
+    ],
+    "source": "carrier-ft5bd-install-im-ft5bd-01.pdf p.9, p.14, p.16, p.17, p.18, p.23, p.25"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "J5 A2L (4-pin)",
+    "pins": "4, 3, 2, 1 (the wiring diagram draws three of the four positions wired to the sensor; pin functions are not printed)",
+    "code": "56",
+    "name": "A2L (R-454B) leak detection sensor",
+    "location": "Vertical: factory installed 'on the center of the V coil where the coil is bent' (p.13); p.14 describes the sensor 'at the bottom of the V-coil' - both are printed, go by Fig. 25. Horizontal left / right: centre of the V-coil at the side of the bottom coil. Connector facing down or horizontal, never upward. Must be relocated when the orientation changes",
+    "kind": "other",
+    "spec": "Trips at 20% LFL or more. No voltage or resistance values are printed. Without the sensor the system defaults into Dissipation Mode and cannot be overwritten",
+    "errorCodes": [
+     "56.1 leak detected (sensor >= 20% LFL)",
+     "56.2 sensor open",
+     "56.3 active dissipation (15 min)",
+     "56.5 sensor fault, autocleared by board",
+     "56.6 sensor overcurrent, replace A2L sensor"
+    ],
+    "test": "Run the A2L test: board idle, no faults, Y call present, Menu > tSt > A2L. 60 seconds of dissipation logic (LED 600 ms slow blink): the outdoor compressor must be off and the indoor fan running. Keep the sensor free of dust and dirt - it can clog the sensor.",
+    "source": "carrier-ft5bd-install-im-ft5bd-01.pdf p.4, p.13, p.14, p.15, p.23, p.25"
+   },
+   {
+    "plug": "PL10 (screw terminals marked SAT)",
+    "pins": "SAT pair on PL10",
+    "code": "52",
+    "name": "Supply air temperature sensor (SAT)",
+    "location": "Not printed",
+    "kind": "other",
+    "spec": "Required (with RAT) for modulating electric heat. No resistance chart is printed",
+    "errorCodes": [
+     "52.1 SAT open",
+     "52.2 SAT short"
+    ],
+    "test": "Check the SAT is firmly plugged into the control board and not damaged. Menu item t° (oFF default / F / C) turns on the supply and return air temperature display.",
+    "source": "carrier-ft5bd-install-im-ft5bd-01.pdf p.15, p.17, p.23, p.25"
+   },
+   {
+    "plug": "PL10 (screw terminals marked RAT)",
+    "pins": "RAT pair on PL10",
+    "code": "53",
+    "name": "Return air temperature sensor (RAT)",
+    "location": "Not printed",
+    "kind": "other",
+    "spec": "Required (with SAT) for modulating electric heat. No resistance chart is printed",
+    "errorCodes": [
+     "53.1 RAT open",
+     "53.2 RAT short"
+    ],
+    "test": "Check the RAT is firmly plugged into the control board and not damaged.",
+    "source": "carrier-ft5bd-install-im-ft5bd-01.pdf p.15, p.23, p.25"
+   },
+   {
+    "plug": "P5 / P6 thermostat strip",
+    "pins": "DHUM, R, G, W/W1, W2, Y/Y1 TSTAT, Y2, O, C, Y/Y1 OUT",
+    "code": "TSTAT",
+    "name": "24 V thermostat and outdoor unit connections",
+    "location": "Right edge of the main control board",
+    "kind": "other",
+    "spec": "Thermostat Y (Y1) lands on Y/Y1 TSTAT. The outdoor unit Y (Y1) lands on Y/Y1 OUT - it provides the compressor signal after the dissipation check. Thermostat and outdoor Y2, O, C, R share their terminals. The humidistat opens R to DHUM for dehumidification (about 80% of nominal cooling airflow)",
+    "errorCodes": [
+     "19.1 / 19.2 communication",
+     "25.9 O signal detected for an AC outdoor unit",
+     "56.7 Y inverted",
+     "56.8 Y OUT shorted to Y TSTAT"
+    ],
+    "test": "No response to W, Y or G: check for 24 V at the W, Y or G terminals on the control; disconnect all thermostat wires and jumper R to W, Y or G. If the problem repeats with the jumper, replace the fan coil control; if not, the thermostat is not compatible - fit a ballast resistor, connect the thermostat's 24 V common, or replace the thermostat.",
+    "source": "carrier-ft5bd-install-im-ft5bd-01.pdf p.10, p.23, p.24, p.25, p.26"
+   },
+   {
+    "plug": "SEC1 / SEC2 and 3 AMP fuse",
+    "pins": "SEC1 = red, SEC2 = brown transformer secondary leads",
+    "code": "24.1",
+    "name": "24 V transformer secondary and low-voltage fuse",
+    "location": "Left edge of the main control board",
+    "kind": "other",
+    "spec": "40 VA transformer with 230 V, 208 V, 115 V and COM primary taps; fan coil 18.0 VA, 22.0 VA remaining. 3 amp fuse on the board (diagram note 4: no greater than 5 amp)",
+    "errorCodes": [
+     "24.1 fuse fault"
+    ],
+    "test": "Status LED off: check for 115 / 230 V at L1 and L2, then 24 V at SEC-1 and SEC-2. No 24 V = replace transformer; 24 V present = replace fan coil control.",
+    "source": "carrier-ft5bd-install-im-ft5bd-01.pdf p.12, p.15, p.23, p.24"
+   },
+   {
+    "plug": "PL3 BLOWER (4-pin)",
+    "pins": "Yellow, brown and green wires to PL7 on the motor controller (PL3 positions 1-4 drawn; which colour is on which pin is not listed in text)",
+    "code": "41 / 44",
+    "name": "Blower harness to the motor controller",
+    "location": "Left edge of the main control board; motor controller PCB has PL7 (4-pin), J8 (4-pin to the ECM, PLUG 2), L1, L2, PE and two fuses",
+    "kind": "other",
+    "spec": "No voltage or resistance values are printed",
+    "errorCodes": [
+     "41.x blower RPM / locked rotor / short / phase loss",
+     "44.x motor controller"
+    ],
+    "test": "Check for loose blower wire connections. Component test (Menu > tSt > Ct) runs the fan motor.",
+    "source": "carrier-ft5bd-install-im-ft5bd-01.pdf p.15, p.22, p.23, p.25"
+   },
+   {
+    "plug": "P8 HEATER (6-pin, PL8 on the wiring diagram) and HV1 TRIAC OUTPUT",
+    "pins": "PL8: 6 brown, 5 gray, 4 violet, 3 white, 2 blue, 1 blue - to PLUG 1, the unit harness plug that the heater plug (or the factory power plug, RECP 1) connects to. PLUG 1 pins: 8 blue, 6 gray, 5 blue, 2 white, 1 violet, 3 brown, 4 drawn jumpered to 3 (brown) and to GND, 7 black (L1), 9 yellow (L2, or N on 115 V)",
+    "code": "36",
+    "name": "Electric heater connections",
+    "location": "Top left of the main control board",
+    "kind": "other",
+    "spec": "With variable (modulating) electric heat two separate heater plugs connect to the main control: the 6-pin from the fan coil harness and a 7-pin from the electric heat kit. The diagram marks HV1 '7-1'",
+    "errorCodes": [
+     "36.1 heater not sensed",
+     "36.2 heater sensed with no call",
+     "36.3 variable heater fault",
+     "25.8 invalid heater"
+    ],
+    "test": "Check for loose electric heat wire connections. Component test steps EH1 and EH2 energize each heat stage for 10 seconds.",
+    "source": "carrier-ft5bd-install-im-ft5bd-01.pdf p.15, p.22, p.23, p.25"
+   },
+   {
+    "plug": "J6 ALARM (3 screw terminals)",
+    "pins": "NO, COM, NC",
+    "code": "ALARM",
+    "name": "Alarm contact",
+    "location": "Bottom edge of the main control board",
+    "kind": "switch",
+    "spec": "Marked NO / COM / NC ALARM on the board drawing. What triggers it and the contact rating are not printed",
+    "errorCodes": [],
+    "test": "",
+    "source": "carrier-ft5bd-install-im-ft5bd-01.pdf p.15, p.23"
+   },
+   {
+    "plug": "EAC-1 and HUM1 (quick-connect tabs)",
+    "pins": "1 tab each",
+    "code": "EAC / HUM",
+    "name": "Electronic air cleaner and humidifier terminals",
+    "location": "Bottom edge of the main control board",
+    "kind": "other",
+    "spec": "Voltage and rating are not printed in these documents",
+    "errorCodes": [],
+    "test": "",
+    "source": "carrier-ft5bd-install-im-ft5bd-01.pdf p.15, p.23"
+   },
+   {
+    "plug": "SUPER PLUG (PL5)",
+    "pins": "4 positions drawn",
+    "code": "27",
+    "name": "Super Plug socket (model program)",
+    "location": "Right side of the main control board, below PL16",
+    "kind": "other",
+    "spec": "Used to copy the model program onto a replacement board",
+    "errorCodes": [
+     "27.1 / 27.2 / 27.3 program in super plug missing, not recognized or corrupted"
+    ],
+    "test": "Remove the super plug then retry; try a different super plug; if it still fails replace the control.",
+    "source": "carrier-ft5bd-install-im-ft5bd-01.pdf p.15, p.17, p.18, p.23, p.25"
+   }
+  ],
+  "test": "Read the 3-digit display: major.minor status code. Through the door only the LED shows - short flashes = first digit, long flashes = second digit of the major code. Menu > Flt then NEXT steps through the last 7 codes, newest first ('non' = none); CLr clears; codes are erased after 72 hours. Menu > tSt > Ct (no W, Y or G call) runs the component test: fan, then EH1 and EH2 for 10 seconds each when electric heat is fitted. Menu > tSt > A2L (Y call present) runs the 60 second leak dissipation test.",
+  "notes": "Menu (MENU/SELECT scrolls, NEXT/OPTION shows and changes the value, MENU/SELECT saves - display flashes three times): Flt fault history; tYP system type AC / HP; voL transformer voltage 230 / 115; odU outdoor unit size 24 / 36 / 48 / 60; t° temperature display oFF (default) / F / C; Ht2, Ht1, CL2, CL1, CFn speed settings; HHt hydronic heat airflow; ond 0 / 30; Hyn 0 / 30 / 60 ... 240; Eod 0 / 5 / 10 / 90; Cod 5 / 90; Hod 5 / 90; HyF 0 / 30 / 60 ... 240; Htt heating thermostat type; Aot airflow outdoor type; Eht variable electric heat setpoint 0-3; dir orientation UPF / dnF (flips the display); inF program # and software; tSt test mode Ct / A2L / no; rSt reset no / YES. NFC: the Service Tech app can adjust parameters with the board unpowered - remove 115/230 V power before using NFC. LEDs: STATUS and COMM on the main board and on the motor controller.",
+  "gaps": [
+   "Service part numbers for the main control board, motor controller, A2L sensor, SAT / RAT sensors, transformer, motor and Super Plug are not printed in IM-FT5BD-01 or the Product Data",
+   "No resistance / temperature chart for the SAT and RAT sensors and no voltage values for the A2L sensor are printed; J5 pin functions are not printed",
+   "The Installation Instructions point to a separate Service Manual and to 'motor controller instructions' / 'Motor Replacement instructions' that are not on the public document host yet",
+   "Menu names disagree between pages: ond is 'ODU Fan On Delay' in Table 10, 'Fan On Delay' on the service label and 'Electric Heat on Delay' in the flow chart; Eod is 'Electric Heat On Delay' in Table 10 and 'Electric Heat Off Delay' on the service label and flow chart; Htt / Aot options are printed 1SG / 2SG / ADA in Table 10 and drawn 1St / 2St / AdP in the flow chart",
+   "Fig. 26 labels the 4-position connector on the left edge TRIAC OUTPUT (HV1); the wiring diagram draws HV1 as '7-1'. Pin-outs for HV1, PL16 and PLT1 are not printed",
+   "The alarm relay (J6) trigger, and the EAC-1 / HUM1 output voltage and rating, are not printed"
+  ],
+  "sources": [
+   {
+    "file": "carrier-ft5bd-install-im-ft5bd-01.pdf",
+    "pages": "4, 9, 10, 12-18, 22-26",
+    "what": "Fig. 26 main control board p.15, Fig. 27 wiring diagram 352509-201 Rev. C and Fig. 28 service label 352570-201 Rev. F p.23"
+   }
+  ]
+ },
+ {
+  "id": "trane-ms7-aoc-a1000aa",
+  "title": "Trane multi-speed 5TWR7 / 5TTR7 / 5TWX7 / 5TTX7 outdoor control board (AOC) - A1000AA models",
+  "side": "outdoor",
+  "brand": "Trane",
+  "models": "5TWR7, 5TTR7, 5TWX7, 5TTX7 sizes 024 / 036 / 048 / 060 - the board the guide's captions label 'A1000AA models' (Figure 38 'Application Oriented Controller (AOC) - A1000AA models'). Read against the nomenclature that is the end of the model number; the guide prints no sentence saying so - confirm on the board",
+  "match": [
+   "5TWR7",
+   "5TTR7",
+   "5TWX7",
+   "5TTX7",
+   "5TWR7024A1000A",
+   "5TWR7036A1000A",
+   "5TWR7048A1000A",
+   "5TWR7060A1000A",
+   "5TTR7024A1000A",
+   "5TTR7036A1000A",
+   "5TTR7048A1000A",
+   "5TTR7060A1000A",
+   "5TWX7024A1000A",
+   "5TWX7036A1000A",
+   "5TWX7048A1000A",
+   "5TWX7060A1000A",
+   "5TTX7024A1000A",
+   "5TTX7036A1000A",
+   "5TTX7048A1000A",
+   "5TTX7060A1000A"
+  ],
+  "sizes": [
+   "024",
+   "036",
+   "048",
+   "060"
+  ],
+  "board": "Application Oriented Controller (AOC) of the integrated multi-speed control drive - A1000AA version: three sensor plugs (J21, J22, J23), jumpers J2-J3 FB and J40-J41 TEST, two-character status / fault display",
+  "replacement": [
+   {
+    "board": "Trane integrated multi-speed control drive (drive assembly = AOC board + MOC drive)",
+    "kit": "",
+    "replaces": "The drive replacement guide prints no drive part number per unit model. It says to confirm the replacement by the drive label colour and unit tonnage: 2 and 3-ton multi-speed = purple labelled drive only; 4 and 5-ton multi-speed = orange labelled drive only.",
+    "differences": "If the drive being replaced is a Multi-Speed DRV01838 or DRV04015 (D162554G01 or D162556G01), kit BAYLPWD17A is required: on that drive the LPCO and HPCO are in series, the new drive has a dedicated LPCO connection on the AOC (J26, 'G02 and later drives'). The guide speaks of 'Multi-Speed' drives and does not list unit model numbers. No refrigerant or A2L setting is printed for this board. The original drive may have ferrite harnesses on the HPCO leads, fan motor or compressor harness - discard them, they are no longer required with the new drive designs.",
+    "steps": [
+     "WARNING (printed in the guide): wait two (2) minutes after disconnecting power before touching electrical components - they may hold a dangerous charge of 400 VDC. Then verify less than 42 VDC at the inverter test points labelled +DC and -DC before servicing the board. Do not proceed until it measures less than 42 Vdc.",
+     "Shut down the unit, wait at least two minutes, remove the four control box cover screws and test across the +DC / -DC test points (their position varies with the drive model).",
+     "Remove the ground wire at the bottom of the drive and disconnect the compressor harness. Unplug the AOC connectors: Latching Switchover Valve (LSOV) J17, Electronic Expansion Valve (EEV) J5, Ambient Temperature (AMB) J21, Discharge Temperature (Dis_T) J22, Coil temperature (Coil_T) J23, 24 Vac Thermostat Control J4, Personality Module J16, and LPCO (Suc_P) J26 on G02 and later drives.",
+     "Unplug the HPCO wires, fan harness and compressor harness from the MOC and disconnect the high-voltage field connections. Some connectors have latching tabs that must be depressed; grasp by the connector, do not pull on the wires.",
+     "Remove the three aluminum nuts and the cold plate - avoid direct contact with the thermal grease that is exposed when the plate is removed. Move the liquid line one to two inches away from the drive without bending or straining the copper, and wipe the old thermal grease off the tubes with a clean, dry cloth, supporting the tubing at all times.",
+     "Remove the drive screws, supporting the drive on the last one so it cannot slip and damage the liquid line; slide the drive up and away.",
+     "New drive: apply a small 1/8-inch bead of thermal grease in the centre of the liquid-line cutout along its entire length (the 0.5 oz tube is enough for two to three applications).",
+     "Slide the drive between the liquid line and the cabinet, fit the top right screw first hand-tight, check no harness is pinched, then fit the remaining five screws with a 5/16-inch nut driver. Reconnect the AOC and MOC plugs.",
+     "If the old drive was a DRV01838 or DRV04015 (D162554G01 or D162556G01): use the jumper from kit BAYLPWD17A to connect the unit's LPCO wires to the AOC, attach both HPCO wires to the MOC terminals, and stick the kit's wiring diagram over the old one inside the control cover - it shows the updated wiring and fault code list.",
+     "Align the liquid line with the cutout and seat the rubber grommet in the housing notch, then position the cold plate over the liquid line on the bolts and hand-tighten the three aluminum nuts two to three turns. Press the liquid line into the cutout, apply pressure to the cold plate and finger-tighten the nuts; repeat three to four times until thermal grease begins to flow around the tube. Torque the aluminum nuts to 40 to 50 in-lb - they are designed to strip out at 80 in-lb, do not overtighten. Use only the original aluminum nuts or those shipped with the replacement kit.",
+     "Plug in the compressor plug at the bottom of the drive, reattach the shielded harness ground wire, check the line set cover is in place, start the unit and verify operation. Return the faulty control to the parts center (a pre-authorization number is needed for warranty credit)."
+    ],
+    "source": "trane-vs-drive-replacement-odr-svn009b.pdf p.4, p.7, p.8, p.9, p.11, p.12, p.14, p.15, p.16, p.17, p.18"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "J4",
+    "name": "24 VAC thermostat control terminals: X2 (white), O (orange), Y2 (yellow/red), Y1 (yellow), GND (blue), R (red)",
+    "kind": "other",
+    "spec": "Field wiring per the connection diagrams: Y1 = cool/heat 1st stage, Y2 = cool/heat 2nd stage, O = SOV, R = 24 VAC hot, GND (blue) = 24 VAC common, X2 (white). Heat pump models require R and O at the outdoor unit. 1000AA air conditioner models require R at the outdoor unit; all other AC models do not require R or O at the outdoor unit. Do not wire X2 with select Trane thermostats - defrost is communicated to the thermostat via the O signal. Control wiring 18 AWG, 500 ft combined maximum.",
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.22, p.23, p.25 (Figure 38)"
+   },
+   {
+    "plug": "J21 AMB",
+    "name": "Outdoor ambient temperature sensor",
+    "location": "Outside the outdoor coil",
+    "kind": "thermistor",
+    "spec": "Used with the coil sensor for demand defrost (Delta-T). Demand defrost is enabled when it reports an outdoor temperature at or below 50°F. No resistance table is printed in the Installer's Guide.",
+    "errorCodes": [
+     "second character A = Outdoor Ambient Temperature Sensor Fault"
+    ],
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.25 (Figure 38), p.32"
+   },
+   {
+    "plug": "J22 Dis_T",
+    "name": "Discharge temperature sensor",
+    "kind": "thermistor",
+    "spec": "No resistance table and no trip temperature are printed in the Installer's Guide.",
+    "errorCodes": [
+     "second character D (d) = Discharge Temperature Sensor Fault",
+     "second character 8 = High Discharge Temperature Protection"
+    ],
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.25 (Figure 38)"
+   },
+   {
+    "plug": "J23 Coil_T",
+    "name": "Outdoor coil temperature sensor",
+    "location": "On the outdoor coil",
+    "kind": "thermistor",
+    "spec": "Measures coil temperature for the defrost Delta-T and for termination of the defrost cycle. No resistance table is printed in the Installer's Guide.",
+    "errorCodes": [
+     "second character C = Coil Temperature Sensor Fault",
+     "second character 7 = High Coil Temperature Protection"
+    ],
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.25 (Figure 38), p.32"
+   },
+   {
+    "plug": "J2-J3 FB / J40-J41 TEST",
+    "name": "Jumper pins - J2-J3 FB is marked '*Audit specific' on the Trane drawing; the American Standard drawing marks both pairs",
+    "kind": "other",
+    "spec": "The fault list has 'B = AOC Jumper Pin Engaged' as a second character. The guide does not describe what the jumpers do.",
+    "errorCodes": [
+     "second character B (b) = AOC Jumper Pin Engaged"
+    ],
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.25 (Figure 38, Table 10)"
+   },
+   {
+    "plug": "HPCO / LPCO (MOC)",
+    "name": "High and low pressure cut-out switches",
+    "kind": "switch",
+    "spec": "This board drawing has no pressure plug. The drive replacement guide says that on Multi-Speed DRV01838 / DRV04015 (D162554G01 / D162556G01) drives the LPCO and HPCO are in series, with the HPCO wires on the MOC; it does not say in so many words that those drives are the A1000AA units. The fault list has one code for both. No switch settings are printed.",
+    "errorCodes": [
+     "second character P = Pressure Protection (High or Low)"
+    ],
+    "source": "trane-vs-drive-replacement-odr-svn009b.pdf p.11, p.17; trane-5twr7-5ttr7-install-odr-svn002f.pdf p.25 (Table 10)"
+   },
+   {
+    "plug": "J17 LSOV",
+    "name": "Latching switchover valve",
+    "kind": "other",
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.25 (Figure 38); trane-vs-drive-replacement-odr-svn009b.pdf p.12"
+   },
+   {
+    "plug": "J5 EEV",
+    "name": "Electronic expansion valve",
+    "kind": "other",
+    "spec": "No coil resistance is printed.",
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.25 (Figure 38); trane-vs-drive-replacement-odr-svn009b.pdf p.12"
+   },
+   {
+    "plug": "J16",
+    "name": "Personality Module",
+    "kind": "other",
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.25 (Figure 38)"
+   },
+   {
+    "plug": "J8",
+    "name": "AOC - MOC interface",
+    "kind": "other",
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.25 (Figure 38)"
+   },
+   {
+    "plug": "J19 / J11",
+    "name": "J19 Data Port, J11 Program Port",
+    "kind": "other",
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.25 (Figure 38)"
+   },
+   {
+    "plug": "S6",
+    "name": "Force Defrost button",
+    "kind": "other",
+    "spec": "Hold for over 5 seconds, in heat mode with the system running on a thermostat demand, to force a defrost (display shows 7 as the first digit). Quickly double-click to enter or leave the stored status/fault history.",
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.25 (Figure 38), p.28, p.32"
+   },
+   {
+    "plug": "JP1",
+    "name": "Defrost termination temperature jumper",
+    "kind": "other",
+    "spec": "The defrost termination temperature can be increased by clipping the defrost termination jumper pin. Figure 47 draws two flat lines: Factory Termination Temp at about 50°F and High Termination Temp at about 65°F coil temperature (read from the graph - no figures are printed).",
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.25 (Figure 38), p.32 (Figure 47)"
+   },
+   {
+    "plug": "SEG1 / SEG2",
+    "name": "Two 7-segment LED displays: SEG1 status LED, SEG2 fault LED",
+    "kind": "other",
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.25 (Figure 38), p.28"
+   }
+  ],
+  "notes": [
+   "The guide's figure captions are the only place the two boards are told apart: 'A1000AA models' (Figure 38, Table 10) and 'A1000BA models' (Figure 39, Figure 40).",
+   "5TWX7060B / 5TTX7060B (cover of ODR-SVN003E-EN) are named under neither caption - check the board itself.",
+   "ODR-SVN003E-EN (5TWX7 / 5TTX7) prints the same chapter on the same pages (p.25-28)."
+  ],
+  "gaps": [
+   "No thermistor resistance table for the ambient, coil or discharge sensor is printed in any public document for these units.",
+   "No pressure switch settings are printed.",
+   "No EEV or switchover valve coil resistance is printed.",
+   "Whether a DRV01838 / DRV04015 (G01) drive is the A1000AA board is not stated in so many words.",
+   "Sensor type (thermistor) is the app's category; the guides call them temperature sensors."
+  ],
+  "sources": [
+   {
+    "file": "trane-5twr7-5ttr7-install-odr-svn002f.pdf",
+    "pages": "22-23, 25, 28, 32",
+    "what": ""
+   },
+   {
+    "file": "trane-5twx7-5ttx7-install-odr-svn003e.pdf",
+    "pages": "25, 28, 32",
+    "what": "same text"
+   },
+   {
+    "file": "trane-vs-drive-replacement-odr-svn009b.pdf",
+    "pages": "4-18",
+    "what": ""
+   }
+  ]
+ },
+ {
+  "id": "trane-ms7-aoc-a1000ba",
+  "title": "Trane multi-speed 5TWR7 / 5TTR7 / 5TWX7 / 5TTX7 outdoor control board (AOC) - A1000BA models",
+  "side": "outdoor",
+  "brand": "Trane",
+  "models": "5TWR7, 5TTR7, 5TWX7, 5TTX7 sizes 024 / 036 / 048 / 060 - the board the guide's captions label 'A1000BA models' (Figure 39 'Application Oriented Controller (AOC) - A1000BA models'). Read against the nomenclature that is the end of the model number; the guide prints no sentence saying so - confirm on the board",
+  "match": [
+   "5TWR7",
+   "5TTR7",
+   "5TWX7",
+   "5TTX7",
+   "5TWR7024A1000B",
+   "5TWR7036A1000B",
+   "5TWR7048A1000B",
+   "5TWR7060A1000B",
+   "5TTR7024A1000B",
+   "5TTR7036A1000B",
+   "5TTR7048A1000B",
+   "5TTR7060A1000B",
+   "5TWX7024A1000B",
+   "5TWX7036A1000B",
+   "5TWX7048A1000B",
+   "5TWX7060A1000B",
+   "5TTX7024A1000B",
+   "5TTX7036A1000B",
+   "5TTX7048A1000B",
+   "5TTX7060A1000B"
+  ],
+  "sizes": [
+   "024",
+   "036",
+   "048",
+   "060"
+  ],
+  "board": "Application Oriented Controller (AOC) of the integrated multi-speed control drive - A1000BA version: adds J24 Suc_T and J26 Suc_P, separate jumpers J3 FB / J2 R / J41 FL, two-letter code display (Figure 40)",
+  "replacement": [
+   {
+    "board": "Trane integrated multi-speed control drive (drive assembly = AOC board + MOC drive)",
+    "kit": "",
+    "replaces": "The drive replacement guide prints no drive part number per unit model. It says to confirm the replacement by the drive label colour and unit tonnage: 2 and 3-ton multi-speed = purple labelled drive only; 4 and 5-ton multi-speed = orange labelled drive only.",
+    "differences": "If the drive being replaced is a Multi-Speed DRV01838 or DRV04015 (D162554G01 or D162556G01), kit BAYLPWD17A is required: on that drive the LPCO and HPCO are in series, the new drive has a dedicated LPCO connection on the AOC (J26, 'G02 and later drives'). The guide speaks of 'Multi-Speed' drives and does not list unit model numbers. No refrigerant or A2L setting is printed for this board. The original drive may have ferrite harnesses on the HPCO leads, fan motor or compressor harness - discard them, they are no longer required with the new drive designs.",
+    "steps": [
+     "WARNING (printed in the guide): wait two (2) minutes after disconnecting power before touching electrical components - they may hold a dangerous charge of 400 VDC. Then verify less than 42 VDC at the inverter test points labelled +DC and -DC before servicing the board. Do not proceed until it measures less than 42 Vdc.",
+     "Shut down the unit, wait at least two minutes, remove the four control box cover screws and test across the +DC / -DC test points (their position varies with the drive model).",
+     "Remove the ground wire at the bottom of the drive and disconnect the compressor harness. Unplug the AOC connectors: Latching Switchover Valve (LSOV) J17, Electronic Expansion Valve (EEV) J5, Ambient Temperature (AMB) J21, Discharge Temperature (Dis_T) J22, Coil temperature (Coil_T) J23, 24 Vac Thermostat Control J4, Personality Module J16, and LPCO (Suc_P) J26 on G02 and later drives.",
+     "Unplug the HPCO wires, fan harness and compressor harness from the MOC and disconnect the high-voltage field connections. Some connectors have latching tabs that must be depressed; grasp by the connector, do not pull on the wires.",
+     "Remove the three aluminum nuts and the cold plate - avoid direct contact with the thermal grease that is exposed when the plate is removed. Move the liquid line one to two inches away from the drive without bending or straining the copper, and wipe the old thermal grease off the tubes with a clean, dry cloth, supporting the tubing at all times.",
+     "Remove the drive screws, supporting the drive on the last one so it cannot slip and damage the liquid line; slide the drive up and away.",
+     "New drive: apply a small 1/8-inch bead of thermal grease in the centre of the liquid-line cutout along its entire length (the 0.5 oz tube is enough for two to three applications).",
+     "Slide the drive between the liquid line and the cabinet, fit the top right screw first hand-tight, check no harness is pinched, then fit the remaining five screws with a 5/16-inch nut driver. Reconnect the AOC and MOC plugs.",
+     "If the old drive was a DRV01838 or DRV04015 (D162554G01 or D162556G01): use the jumper from kit BAYLPWD17A to connect the unit's LPCO wires to the AOC, attach both HPCO wires to the MOC terminals, and stick the kit's wiring diagram over the old one inside the control cover - it shows the updated wiring and fault code list.",
+     "Align the liquid line with the cutout and seat the rubber grommet in the housing notch, then position the cold plate over the liquid line on the bolts and hand-tighten the three aluminum nuts two to three turns. Press the liquid line into the cutout, apply pressure to the cold plate and finger-tighten the nuts; repeat three to four times until thermal grease begins to flow around the tube. Torque the aluminum nuts to 40 to 50 in-lb - they are designed to strip out at 80 in-lb, do not overtighten. Use only the original aluminum nuts or those shipped with the replacement kit.",
+     "Plug in the compressor plug at the bottom of the drive, reattach the shielded harness ground wire, check the line set cover is in place, start the unit and verify operation. Return the faulty control to the parts center (a pre-authorization number is needed for warranty credit)."
+    ],
+    "source": "trane-vs-drive-replacement-odr-svn009b.pdf p.4, p.7, p.8, p.9, p.11, p.12, p.14, p.15, p.16, p.17, p.18"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "J4",
+    "name": "24 VAC thermostat control terminals: X2 (white), O (orange), Y2 (yellow/red), Y1 (yellow), GND (blue), R (red)",
+    "kind": "other",
+    "spec": "Field wiring per the connection diagrams: Y1 = cool/heat 1st stage, Y2 = cool/heat 2nd stage, O = SOV, R = 24 VAC hot, GND (blue) = 24 VAC common, X2 (white). Heat pump models require R and O at the outdoor unit. 1000AA air conditioner models require R at the outdoor unit; all other AC models do not require R or O at the outdoor unit. Do not wire X2 with select Trane thermostats - defrost is communicated to the thermostat via the O signal. Control wiring 18 AWG, 500 ft combined maximum.",
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.22, p.23, p.26 (Figure 39)"
+   },
+   {
+    "plug": "J21 AMB",
+    "name": "Outdoor ambient temperature sensor",
+    "location": "Outside the outdoor coil",
+    "kind": "thermistor",
+    "spec": "Used with the coil sensor for demand defrost (Delta-T). Demand defrost is enabled when it reports an outdoor temperature at or below 50°F. No resistance table is printed in the Installer's Guide.",
+    "errorCodes": [
+     "FA = Ambient Temperature Sensor Fault"
+    ],
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.26 (Figure 39), p.32"
+   },
+   {
+    "plug": "J22 Dis_T",
+    "name": "Discharge temperature sensor",
+    "kind": "thermistor",
+    "spec": "No resistance table and no trip temperature are printed in the Installer's Guide.",
+    "errorCodes": [
+     "Fd = Discharge Temperature Sensor Fault",
+     "dd / Ld / Hd = high discharge temperature de-rate / lockout / hard-lock"
+    ],
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.26 (Figure 39)"
+   },
+   {
+    "plug": "J23 Coil_T",
+    "name": "Outdoor coil temperature sensor",
+    "location": "On the outdoor coil",
+    "kind": "thermistor",
+    "spec": "Measures coil temperature for the defrost Delta-T and for termination of the defrost cycle. No resistance table is printed in the Installer's Guide.",
+    "errorCodes": [
+     "FC = Coil Temperature Sensor Fault",
+     "d8 / L8 / H8 = high coil temperature de-rate / lockout / hard-lock"
+    ],
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.26 (Figure 39), p.32"
+   },
+   {
+    "plug": "J24 Suc_T",
+    "name": "Suction temperature (Suc_T) plug",
+    "kind": "other",
+    "spec": "Shown on the A1000BA board drawing only. The drive replacement guide's list of multi-speed connectors to unplug does not include J24, so the documents do not confirm a sensor is fitted here. The code list has no suction temperature sensor fault, and no resistance table is printed.",
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.26 (Figure 39)"
+   },
+   {
+    "plug": "J26 Suc_P",
+    "pins": "Drawn with four positions numbered 1 2 3 4; pin functions are not printed",
+    "name": "Suction pressure (Suc_P) plug - listed as 'LPCO (Suc_P) J26' in the drive replacement guide",
+    "kind": "other",
+    "spec": "The drive replacement guide lists it as LPCO (low pressure cut-out), on G02 and later drives: the new drive has a dedicated LPCO connection on the AOC. The documents do not say whether a pressure switch or a pressure transducer is plugged in here on a factory unit - the plug is drawn with four positions and labelled Suc_P. No pressure settings are printed.",
+    "errorCodes": [
+     "LL = Lockout: LPCO Low Pressure (AOC Low Suction Pressure Lockout)",
+     "HL = HardLock: LPCO Low Pressure (description column: AOC Low Suction Pressure Soft-Lock)"
+    ],
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.26 (Figure 39), p.27 (Figure 40); trane-vs-drive-replacement-odr-svn009b.pdf p.12, p.17"
+   },
+   {
+    "plug": "HPCO (MOC terminals)",
+    "name": "High pressure cut-out switch wires on the MOC drive",
+    "kind": "switch",
+    "spec": "Both HPCO wires attach to the MOC terminals. No pressure setting is printed.",
+    "errorCodes": [
+     "LH = Lockout: HPCO / DTC (MOC HPS Circuit Open Lockout)",
+     "HH = HardLock: HPCO / DTC (MOC HPS Circuit Open Hard-Lock)"
+    ],
+    "source": "trane-vs-drive-replacement-odr-svn009b.pdf p.11, p.13 (Figure 7), p.17; trane-5twr7-5ttr7-install-odr-svn002f.pdf p.27 (Figure 40)"
+   },
+   {
+    "plug": "J3 FB / J2 R / J41 FL",
+    "name": "Jumper pins",
+    "kind": "other",
+    "spec": "Code J1 = AOC FL Jumper Pin Engaged; code J2. = AOC FB Jumper Pin Engaged. The guide lists 'AOC test mode jumpers' in the display priority but does not describe what each jumper does; no code is printed for J2 R.",
+    "errorCodes": [
+     "J1 = AOC FL Jumper Pin Engaged",
+     "J2. = AOC FB Jumper Pin Engaged"
+    ],
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.26 (Figure 39), p.27 (Figure 40), p.28"
+   },
+   {
+    "plug": "J17 LSOV",
+    "name": "Latching switchover valve",
+    "kind": "other",
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.26 (Figure 39); trane-vs-drive-replacement-odr-svn009b.pdf p.12"
+   },
+   {
+    "plug": "J5 EEV",
+    "name": "Electronic expansion valve",
+    "kind": "other",
+    "spec": "No coil resistance is printed.",
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.26 (Figure 39); trane-vs-drive-replacement-odr-svn009b.pdf p.12"
+   },
+   {
+    "plug": "J16",
+    "name": "Personality Module",
+    "kind": "other",
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.26 (Figure 39)"
+   },
+   {
+    "plug": "J8",
+    "name": "AOC - MOC interface",
+    "kind": "other",
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.26 (Figure 39)"
+   },
+   {
+    "plug": "J19 / J11",
+    "name": "J19 Data Port, J11 Program Port",
+    "kind": "other",
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.26 (Figure 39)"
+   },
+   {
+    "plug": "S6",
+    "name": "Force Defrost button",
+    "kind": "other",
+    "spec": "Hold for over 5 seconds, in heat mode with the system running on a thermostat demand, to force a defrost (display shows 7 as the first digit). Quickly double-click to enter or leave the stored status/fault history.",
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.26 (Figure 39), p.28, p.32"
+   },
+   {
+    "plug": "JP1",
+    "name": "Defrost termination temperature jumper",
+    "kind": "other",
+    "spec": "The defrost termination temperature can be increased by clipping the defrost termination jumper pin. Figure 47 draws two flat lines: Factory Termination Temp at about 50°F and High Termination Temp at about 65°F coil temperature (read from the graph - no figures are printed).",
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.26 (Figure 39), p.32 (Figure 47)"
+   },
+   {
+    "plug": "SEG1 / SEG2",
+    "name": "Two 7-segment LED displays: SEG1 status LED, SEG2 fault LED",
+    "kind": "other",
+    "source": "trane-5twr7-5ttr7-install-odr-svn002f.pdf p.26 (Figure 39), p.28"
+   }
+  ],
+  "notes": [
+   "The guide's figure captions are the only place the two boards are told apart: 'A1000AA models' (Figure 38, Table 10) and 'A1000BA models' (Figure 39, Figure 40).",
+   "5TWX7060B / 5TTX7060B (cover of ODR-SVN003E-EN) are named under neither caption - check the board itself.",
+   "ODR-SVN003E-EN (5TWX7 / 5TTX7) prints the same chapter on the same pages (p.25-28).",
+   "No plug J25 is drawn on either multi-speed board (J25 Liq T and J27 Liq P belong to the variable-speed IVSC board in the drive replacement guide, p.12)."
+  ],
+  "gaps": [
+   "No thermistor resistance table for the ambient, coil, discharge or suction sensor is printed in any public document for these units.",
+   "No pressure switch settings are printed; the guide does not say whether J26 carries a switch or a transducer beyond the drive guide's 'LPCO (Suc_P)'.",
+   "J26 pin functions are not printed.",
+   "No EEV or switchover valve coil resistance is printed.",
+   "Sensor type (thermistor) is the app's category; the guides call them temperature sensors."
+  ],
+  "sources": [
+   {
+    "file": "trane-5twr7-5ttr7-install-odr-svn002f.pdf",
+    "pages": "22-23, 26, 27, 28, 32",
+    "what": ""
+   },
+   {
+    "file": "trane-5twx7-5ttx7-install-odr-svn003e.pdf",
+    "pages": "26-28, 32",
+    "what": "same text"
+   },
+   {
+    "file": "trane-vs-drive-replacement-odr-svn009b.pdf",
+    "pages": "4-18",
+    "what": ""
    }
   ]
  }
