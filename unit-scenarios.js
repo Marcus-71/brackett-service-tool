@@ -798,7 +798,7 @@ const UNIT_SCENARIOS = [
   "brand": "Carrier",
   "equipment": "Condenser/Heat Pump",
   "title": "No heat pump heat, backup heat only — 25VNA4 Greenspeed",
-  "summary": "Conditions on the 25VNA4 that stop compressor heating and leave the house on backup heat only.",
+  "summary": "Conditions on the 25VNA4 that stop compressor heating while cooling or backup heat still work.",
   "steps": [
    "Check outdoor temperature first. The 25VNA4 heats up to 75°F outdoor and will START heating down to 0°F. Below 0°F it keeps running only if it was already running, until it hits a limit.",
    "53-41 / 53-42 'OST Open/Shorted - Backup Heat Only': the suction thermistor is needed for the heating EXV, so heat pump heating is locked out (cooling still allowed). The OST reads 47 on the status/checkout screen. Open = over 465 kohm, shorted = under 1 kohm, measured at the PCM connector.",
@@ -5262,6 +5262,303 @@ const UNIT_SCENARIOS = [
    87
   ],
   "source": "Altherma 3 H HT W air-to-water monobloc heat pump UPRA036DVK / UPRA043DVK with UTBX040E hot water tank (R-32) Service Manual - Daikin Altherma 3 H HT W, UPRA036+043D + UTBX040E (ESIE25-03, 2026.02) - error codes, symptom troubleshooting, component checks, water circuit, p.87",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-s9v2ps-no-heat-read-display",
+  "unit": "^S9V2[A-D][0-9]{3}[UD][0-9]PSAA",
+  "brand": "Trane",
+  "equipment": "Gas Furnace",
+  "title": "No heat: read the display and the last 6 faults first — S9V2 PS",
+  "summary": "The S9V2 PS guide has no troubleshooting chart - the 7-segment display, the fault list and the sequence of operation are what it gives you.",
+  "steps": [
+   "Read the 7-segment display on the IFC. IdL = idle (no thermostat demand); Ht1 / Ht2 = first / second stage heating; ArF = airflow times 10 (080 = 800 CFM). (p.96)",
+   "Idle with the thermostat calling: check for 24 VAC from W1 to B/C at the furnace - the guide says a tech should read 24 VAC there on a 1st stage call. (p.98)",
+   "Stored faults: press Menu until L6F shows, then press Option to enter the menu; the last 6 faults can be viewed. Err is the active alarm menu. (p.96, p.97)",
+   "Write the codes down before clearing. To clear: in L6F hold Option at least 5 seconds; three dashes show 3 times. (p.97)",
+   "E2.1 and E2.2 are one-hour lockouts (flame never sensed after 3 tries / flame lost after 10 recycles). (p.96)",
+   "Resetting Factory Defaults is a separate procedure (display in Idle, Menu + Option together for 15 seconds, Fd flashes 3 times): it resets the unit to the factory defaults, it is not how faults are cleared. (p.97)"
+  ],
+  "safety": "Before servicing, disconnect all electrical power to furnace (p.2). If operating checks must be performed with the unit operating, it is the technician's responsibility to recognize these hazards and proceed safely (p.4). Do NOT attempt to manually light the furnace (guide warning, p.63).",
+  "manual": "trane-s9v2-ps-furnace-install",
+  "pages": [
+   96,
+   98,
+   97
+  ],
+  "source": "S9V2 PS (S9V2xxxxxPSAA, 2-stage inducer) Installer's Guide - Upflow/Horizontal and Downflow Gas-Fired, Direct/Non-Direct Vent, 2-Stage Condensing Variable Speed Furnaces (18-CE01D1-1E-EN, 11/2016), p.96, p.98, p.97",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-s9v2ps-inducer-no-ignition",
+  "unit": "^S9V2[A-D][0-9]{3}[UD][0-9]PSAA",
+  "brand": "Trane",
+  "equipment": "Gas Furnace",
+  "title": "Heat call, but the igniter never glows (E3.1 / E3.2 / E04 / E09) — S9V2 PS",
+  "summary": "Follow the IFC's own pre-ignition checks in the order the S9V2 PS guide lists them.",
+  "steps": [
+   "Order of the self-check on a W1 call: (a) condensate pressure switch and inducer limit switch closed - 24 VAC out HLO, read back on ILI (pin 1); (b) rollout switches 1 and 2, main thermal limit and any reverse airflow switch closed - out HLO (pin 4), back on HLI (pin 11); (c) PS1 and PS2 proved OPEN on pins 3 and 7. (p.98)",
+   "E09 = step (a) failed: open inducer limit switch or condensate pressure switch. (p.97)",
+   "E04 = step (b) failed: main thermal limit, a rollout switch or the reverse airflow switch is open. (p.96)",
+   "E3.1 / E3.3 = PS1 / PS2 read closed (shorted) at step (c), before the inducer runs. (p.96)",
+   "Only after a, b and c pass does the inducer relay close for 1st stage inducer. PS1 must then close - if it does not, E3.2. The igniter relay closes only when PS1 closes. (p.98, p.96)",
+   "No 24 VAC at either pressure switch does not condemn the switches: the guide notes that with a thermal limit open, 24 VAC will not be present at either pressure switch. Find the open limit first. (p.98)"
+  ],
+  "safety": "Before servicing, disconnect all electrical power to furnace (p.2). If operating checks must be performed with the unit operating, it is the technician's responsibility to recognize these hazards and proceed safely (p.4). Do NOT touch igniter. It is extremely hot (p.6).",
+  "manual": "trane-s9v2-ps-furnace-install",
+  "pages": [
+   98,
+   97,
+   96
+  ],
+  "source": "S9V2 PS (S9V2xxxxxPSAA, 2-stage inducer) Installer's Guide - Upflow/Horizontal and Downflow Gas-Fired, Direct/Non-Direct Vent, 2-Stage Condensing Variable Speed Furnaces (18-CE01D1-1E-EN, 11/2016), p.98, p.97, p.96",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-s9v2ps-ignition-lockout",
+  "unit": "^S9V2[A-D][0-9]{3}[UD][0-9]PSAA",
+  "brand": "Trane",
+  "equipment": "Gas Furnace",
+  "title": "Igniter glows, burners do not stay lit (E2.1 / E2.2 / E08) — S9V2 PS",
+  "summary": "Timing and flame-current figures from the S9V2 PS sequence of operation.",
+  "steps": [
+   "Normal order: PS1 closes, the igniter relay closes and the igniter warms up about 20 seconds, then the 1st stage gas valve relay closes. The first burner lights, flame crosses over to the rest, and flame must be sensed within 4 seconds. (p.98)",
+   "E2.1 = flame never sensed, one-hour lockout after 3 times. E2.2 = flame sensed then lost, one-hour lockout after 10 times. E08 = flame current low but still strong enough to run. (p.96, p.97)",
+   "Flame current: meter on DC volts across the two pads marked FP on the IFC; 1 VDC = 1 microamp. Typical 0.75 to 3.0 microamps (0.75 to 3 VDC), and it varies with the meter used. (p.98)",
+   "Never lit at all: confirm the gas valve switch inside the furnace and the outside shut-off are ON, and that supply pressure at the valve is 5.0 to 13.8 in. w.c. natural or 10.0 to 13.8 in. w.c. LP. (p.63, p.21)",
+   "Manifold pressure on the White-Rodgers 36J valve: turn off all electrical power to the system before attaching the gauge to the OUT P boss; loosen (do NOT remove) the tap screw one turn with a 3/32 in. hex wrench; turn power on and energize the valve; adjust 1st stage (LO) then 2nd stage (HI); cycle the valve several times; turn off all electrical power, remove the gauge and tighten the pressure tap screw. Fuel Manifold Pressure Settings: natural gas 3.5 in. w.c. 2nd stage max / 1.7 in. w.c. 1st stage max; LP 10.0 max / 6.0 max. (p.23)",
+   "After the manifold check, check the outlet boss and tap screw with leak detection solution or soap suds; then turn power on and check operation. (p.23)"
+  ],
+  "safety": "Before servicing, disconnect all electrical power to furnace (p.2). If operating checks must be performed with the unit operating, it is the technician's responsibility to recognize these hazards and proceed safely (p.4). Do NOT touch igniter. It is extremely hot (p.6). Check gas connections with a soapy solution - DO NOT CHECK WITH AN OPEN FLAME. Do NOT attempt to manually light the furnace (p.21, p.63).",
+  "manual": "trane-s9v2-ps-furnace-install",
+  "pages": [
+   98,
+   96,
+   97,
+   63,
+   21,
+   23
+  ],
+  "source": "S9V2 PS (S9V2xxxxxPSAA, 2-stage inducer) Installer's Guide - Upflow/Horizontal and Downflow Gas-Fired, Direct/Non-Direct Vent, 2-Stage Condensing Variable Speed Furnaces (18-CE01D1-1E-EN, 11/2016), p.98, p.96, p.97, p.63, p.21, p.23",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-s9v2ps-no-second-stage",
+  "unit": "^S9V2[A-D][0-9]{3}[UD][0-9]PSAA",
+  "brand": "Trane",
+  "equipment": "Gas Furnace",
+  "title": "Runs, but never goes to (or drops out of) 2nd stage (E3.4) — S9V2 PS",
+  "summary": "How the S9V2 PS brings on 2nd stage and when it gives up on it.",
+  "steps": [
+   "2nd stage cannot run without 1st stage. On a W2 call the tech should read 24 VAC from W2 to B/C and the display reads Ht2. (p.98, p.99)",
+   "The display follows the thermostat inputs: with W1 and W2 called together it reads Ht2 even though the IFC brings on 1st stage first. (p.98)",
+   "The IFC closes the 2nd stage inducer relay, the inducer goes to 2nd stage, the 2nd stage gas valve relay closes and the blower ramps to the 2nd stage heating airflow. (p.99)",
+   "PS2 must close within 45 seconds. If not, the IFC declares the PS2 open error (E3.4) and the furnace keeps heating in 1st stage. (p.99, p.96)",
+   "It waits 10 minutes and tries again. After the third failed try in the same heat call, 2nd stage is locked out until the heat call is removed or power is cycled. (p.99)",
+   "The guide prints no check procedure for E3.4. Related page in it: Maximum Vent Length table. (p.29)",
+   "2nd stage heating airflow is adjustable in the IFC menu (gHC); 1st stage is not adjustable. (p.96)"
+  ],
+  "safety": "Before servicing, disconnect all electrical power to furnace (p.2). If operating checks must be performed with the unit operating, it is the technician's responsibility to recognize these hazards and proceed safely (p.4).",
+  "manual": "trane-s9v2-ps-furnace-install",
+  "pages": [
+   98,
+   99,
+   96,
+   29
+  ],
+  "source": "S9V2 PS (S9V2xxxxxPSAA, 2-stage inducer) Installer's Guide - Upflow/Horizontal and Downflow Gas-Fired, Direct/Non-Direct Vent, 2-Stage Condensing Variable Speed Furnaces (18-CE01D1-1E-EN, 11/2016), p.98, p.99, p.96, p.29",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-s9v2ps-cold-weather-shutdown",
+  "unit": "^S9V2[A-D][0-9]{3}[UD][0-9]PSAA",
+  "brand": "Trane",
+  "equipment": "Gas Furnace",
+  "title": "Shuts down in freezing weather / water at the furnace (E09) — S9V2 PS",
+  "summary": "The S9V2 PS guide ties drain problems to furnace shutdown; E09 is the code for the condensate pressure switch.",
+  "steps": [
+   "E09 = open inducer limit switch or condensate pressure switch. The IFC checks both before every heat cycle. (p.97, p.98)",
+   "The guide states frozen condensate will block drains, resulting in furnace shutdown. (p.58)",
+   "The drain can be cleaned or inspected by removing the drain tube at the header. (p.58)",
+   "The drain must connect to an OPEN / VENTED drain, and outside the cabinet all piping must be 1/2 in. minimum PVC. (p.58)",
+   "A drain line in an unconditioned space or below freezing needs heat tape: 5 or 6 watts per foot at 120 volts, self-regulating (preferred) or thermostatically controlled. (p.58)",
+   "When the furnace and coil drains are manifolded together, a primary drain vent stack must end below the outlet of the secondary heat exchanger drain connection, so a plugged drain does not put water on the furnace controls. (p.58)",
+   "Horizontal installs: the condensate trap has to be repositioned and the inducer-housing drain tube may need moving to the lower connection. (p.58)"
+  ],
+  "safety": "Before servicing, disconnect all electrical power to furnace (p.2). If operating checks must be performed with the unit operating, it is the technician's responsibility to recognize these hazards and proceed safely (p.4).",
+  "manual": "trane-s9v2-ps-furnace-install",
+  "pages": [
+   97,
+   98,
+   58
+  ],
+  "source": "S9V2 PS (S9V2xxxxxPSAA, 2-stage inducer) Installer's Guide - Upflow/Horizontal and Downflow Gas-Fired, Direct/Non-Direct Vent, 2-Stage Condensing Variable Speed Furnaces (18-CE01D1-1E-EN, 11/2016), p.97, p.98, p.58",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-fhp-ec-dead",
+  "unit": "^EC0(?:07|09|12|15|19|24|30|36|41|42|48|60|70)-?[0-9][VH]",
+  "brand": "FHP (Bosch)",
+  "equipment": "Other",
+  "title": "Entire unit does not run — FHP EC Series",
+  "summary": "The first row of the EC Series trouble shooting table, plus the UPM power LED.",
+  "steps": [
+   "Power supply off: apply power, close the disconnect. Blown fuse: replace the fuse or reset the breaker and check for correct fuses. (p.51)",
+   "Low supply voltage: if it is below the minimum on the unit data plate, contact the power company. (p.51)",
+   "Green LED on the UPM board = 18 to 30 VAC at the board. The transformer primary is dual tapped 208 / 230 - the wrong tap gives low control voltage. 18 V minimum, 24 V ideal. (p.5, p.7)",
+   "Thermostat test: fan ON - the fan should run. COOL at the lowest setting - the unit should cool (reversing valve energized). HEAT at the highest setting - the unit should heat. Nothing in all three = thermostat miswired or faulty. (p.51)",
+   "Prove it at the unit low voltage terminal strip: 24 volts R to C, Y to C and O to C; blower not running, G to C. Replace the thermostat if it is defective. (p.51)",
+   "Thermostat terminals on this unit: C common, R 24 VAC hot, G fan, Y compressor contactor, O reversing valve (energized in cooling). (p.4)"
+  ],
+  "safety": "Turn off main power before service (IOM p.2 warning). R-410A: do not use R-22 service equipment or components.",
+  "manual": "fhp-ec-series-iom-970-289",
+  "pages": [
+   51,
+   5,
+   7,
+   4
+  ],
+  "source": "EC Series EC007-EC070 water-to-air heat pump EC Series Installation, Operation and Maintenance Manual (form 970-289, rev 05-12), p.51, p.5, p.7, p.4",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-fhp-ec-blower-no-compressor",
+  "unit": "^EC0(?:07|09|12|15|19|24|30|36|41|42|48|60|70)-?[0-9][VH]",
+  "brand": "FHP (Bosch)",
+  "equipment": "Other",
+  "title": "Blower runs but the compressor does not — FHP EC Series",
+  "summary": "Start at the UPM board's red LED, then the table's wiring and compressor checks.",
+  "steps": [
+   "Check the UPM board red LED for a blink code: 1 high pressure, 2 low pressure, 3 freeze sensor, 4 condensate overflow, 5 brownout. The blower keeps running during a lockout. (p.51, p.5, p.7)",
+   "The UPM also holds the compressor off for its normal time delays: a 5-minute delay on break, and a random start delay of 270 to 300 seconds after initial power up or a power interruption. (p.5)",
+   "To speed that up for testing, the TEST DIP switch drops all delays to 10 seconds. Put it back to NO when done - the IOM warns of accelerated wear in test mode. (p.5)",
+   "A unit with no freeze sensor must have a jumper across the FREEZE terminals on the UPM or it will not start. (p.4)",
+   "Thermostat: check setting, calibration and wiring. Wiring: loose or broken wires at the compressor, capacitor or contactor. (p.51)",
+   "Compressor overload open: if the compressor is cool and the overload will not reset, replace the compressor. (p.51)",
+   "Compressor grounded (winding to shell): replace it, and after a burnout install a suction filter drier. Windings open: let it cool, check winding continuity, replace if open. (p.51)",
+   "Hard lockout reset: thermostat off then on (RESET DIP on Y, the factory setting) or unit power off at the breaker (RESET DIP on R). (p.5, p.7)"
+  ],
+  "safety": "Turn off main power before service (IOM p.2 warning). R-410A: do not use R-22 service equipment or components.",
+  "manual": "fhp-ec-series-iom-970-289",
+  "pages": [
+   51,
+   5,
+   7,
+   4
+  ],
+  "source": "EC Series EC007-EC070 water-to-air heat pump EC Series Installation, Operation and Maintenance Manual (form 970-289, rev 05-12), p.51, p.5, p.7, p.4",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-fhp-ec-high-pressure",
+  "unit": "^EC0(?:07|09|12|15|19|24|30|36|41|42|48|60|70)-?[0-9][VH]",
+  "brand": "FHP (Bosch)",
+  "equipment": "Other",
+  "title": "Off on high pressure (1 blink) — FHP EC Series",
+  "summary": "Water side in cooling, air side in heating - straight from the EC Series trouble shooting table.",
+  "steps": [
+   "One blink on the red UPM LED = high pressure lockout; the switch is in the discharge line on the HPC terminals. (p.5, p.4)",
+   "COOLING: lack of or inadequate water flow, entering water too warm, or a scaled or plugged water coil (condenser). (p.51)",
+   "HEATING: lack of or inadequate air flow - blower not running, clogged filter or duct restrictions. (p.51)",
+   "Water side limits: a boiler / tower loop should be 60 to 110F in cooling and 50 to 75F in heating; unit range is 50 to 100F entering (25 to 110F with the extended range option). (p.9, p.2)",
+   "Set water flow by the pressure drop across the water coil at the P/T ports, against the unit specification sheet. (p.7)",
+   "Compare pressures with the operating table for the size (EC030-042 on p.45). The table is a guide, not a charging chart. (p.51, p.45)",
+   "Overcharge: reclaim, evacuate and recharge with the factory recommended charge. Also check for a defective or mis-calibrated high pressure switch. (p.51)",
+   "It retries by itself after the 5-minute delay; a second trip inside 60 minutes (fourth if the LOCKOUT DIP is on 4) is a hard lockout. (p.5)"
+  ],
+  "safety": "Turn off main power before service (IOM p.2 warning). R-410A: do not use R-22 service equipment or components.",
+  "manual": "fhp-ec-series-iom-970-289",
+  "pages": [
+   5,
+   4,
+   51,
+   9,
+   2,
+   7,
+   45
+  ],
+  "source": "EC Series EC007-EC070 water-to-air heat pump EC Series Installation, Operation and Maintenance Manual (form 970-289, rev 05-12), p.5, p.4, p.51, p.9, p.2, p.7, p.45",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-fhp-ec-low-pressure-freeze",
+  "unit": "^EC0(?:07|09|12|15|19|24|30|36|41|42|48|60|70)-?[0-9][VH]",
+  "brand": "FHP (Bosch)",
+  "equipment": "Other",
+  "title": "Off on low pressure or freeze sensor (2 or 3 blinks) — FHP EC Series",
+  "summary": "Air side in cooling, water side in heating; the freeze sensor trips on lost water flow.",
+  "steps": [
+   "Two blinks = low pressure lockout (suction-line switch on LPC1 / LPC2). Three blinks = freeze sensor lockout. (p.5, p.4)",
+   "The low pressure switch is ignored for 120 seconds after it opens; still open after 2 minutes = compressor off. (p.5)",
+   "HEATING: lack of or inadequate water flow, entering water too cold, or a scaled or plugged water coil. (p.51)",
+   "COOLING: lack of or inadequate air flow, entering air too cold, blower not running, clogged filter or duct restrictions. (p.51)",
+   "Freeze sensor: trips after 30 seconds at or below the limit (factory 30F; 15F only with resistor R42 cut), and after 90 seconds of lost water flow. (p.4, p.5)",
+   "No antifreeze in the water = the limit must stay at 30F. Well water 50F minimum; closed loops need antifreeze and the extended range option. (p.5, p.2, p.10)",
+   "Low charge: find and repair the leak, evacuate, recharge with the factory recommended charge. Also check for a defective or mis-calibrated low pressure switch. (p.51)",
+   "The IOM's own note: periodic lockouts are almost always air or water flow problems - check water flow, water temperature, air flow and air temperature. (p.11)"
+  ],
+  "safety": "Turn off main power before service (IOM p.2 warning). R-410A: do not use R-22 service equipment or components.",
+  "manual": "fhp-ec-series-iom-970-289",
+  "pages": [
+   5,
+   4,
+   51,
+   2,
+   10,
+   11
+  ],
+  "source": "EC Series EC007-EC070 water-to-air heat pump EC Series Installation, Operation and Maintenance Manual (form 970-289, rev 05-12), p.5, p.4, p.51, p.2, p.10, p.11",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-fhp-ec-condensate",
+  "unit": "^EC0(?:07|09|12|15|19|24|30|36|41|42|48|60|70)-?[0-9][VH]",
+  "brand": "FHP (Bosch)",
+  "equipment": "Other",
+  "title": "Locked out on condensate overflow (4 blinks) — FHP EC Series",
+  "summary": "The one fault that hard-locks on the first trip.",
+  "steps": [
+   "Four blinks = condensate overflow. A single overflow fault is an immediate hard lockout that needs a manual reset. (p.5)",
+   "The overflow sensor is in the drain pan and lands on the COND terminal of the UPM. The sensor is optional (standard on horizontal units). (p.4)",
+   "Clear and flush the condensate drain - the IOM calls for this yearly. (p.11)",
+   "Reset: thermostat off then on (RESET DIP on Y, the factory setting) or unit power off at the breaker (RESET DIP on R). (p.5, p.7)",
+   "The blower keeps running while the unit is locked out. (p.7)"
+  ],
+  "safety": "Turn off main power before service (IOM p.2 warning). R-410A: do not use R-22 service equipment or components.",
+  "manual": "fhp-ec-series-iom-970-289",
+  "pages": [
+   5,
+   4,
+   11,
+   7
+  ],
+  "source": "EC Series EC007-EC070 water-to-air heat pump EC Series Installation, Operation and Maintenance Manual (form 970-289, rev 05-12), p.5, p.4, p.11, p.7",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-fhp-ec-poor-capacity",
+  "unit": "^EC0(?:07|09|12|15|19|24|30|36|41|42|48|60|70)-?[0-9][VH]",
+  "brand": "FHP (Bosch)",
+  "equipment": "Other",
+  "title": "Short cycles, or not enough cooling or heating — FHP EC Series",
+  "summary": "The last two rows of the EC Series trouble shooting table.",
+  "steps": [
+   "Short cycling: thermostat near a supply grille (relocate it; readjust the heat anticipator), loose wiring or a defective compressor contactor, or an oversized unit (recalculate the loads). (p.51)",
+   "Not enough capacity, air side: dirty filter, lack of air flow or poor air distribution, duct leaks, or outside air getting in through doors and windows. (p.51)",
+   "Compare operating pressures with the pressure / temperature chart for the size (EC041 is in the EC030-042 table). (p.51, p.45)",
+   "Discharge too low with suction too high = compressor not pumping; replace the compressor. (p.51)",
+   "Reversing valve bypassing discharge to suction: replace the reversing valve. (p.51)",
+   "TXV / capillary tube: check for a restriction or defect, replace if necessary. (p.51)",
+   "Low charge runs inefficiently. Moisture or non-condensables: reclaim, evacuate and recharge with the factory charge; a liquid line drier may be required. (p.51)",
+   "Undersized unit: recalculate the loads; added insulation and shading may fix it. (p.51)"
+  ],
+  "safety": "Turn off main power before service (IOM p.2 warning). R-410A: do not use R-22 service equipment or components.",
+  "manual": "fhp-ec-series-iom-970-289",
+  "pages": [
+   51,
+   45
+  ],
+  "source": "EC Series EC007-EC070 water-to-air heat pump EC Series Installation, Operation and Maintenance Manual (form 970-289, rev 05-12), p.51, p.45",
   "confidence": "manual"
  }
 ];

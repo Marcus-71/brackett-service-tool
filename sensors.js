@@ -43,7 +43,9 @@ function snNorm(s) { return String(s || "").toUpperCase().replace(/[^A-Z0-9]/g, 
 // Maps for a typed model. A full model (DZ20VC0361) picks the map(s) with the longest matching token, so a
 // size-specific map (DZ20VC0361) beats the family one. A partial model (DZ20) lists every map it could be.
 function snMapsForModel(model) {
-  const m = snNorm(model);
+  // v443: Generac data tags print the model without its "G" (0058751 for G0058751); the maps are filed
+  // under the G-number, so an older plate scanned as printed showed no Sensor plugs button.
+  const m0 = snNorm(model), m = /^00\d{5,6}$/.test(m0) ? "G" + m0 : m0;
   if (!m) return [];
   let best = 0, hits = [];
   for (const mp of snMaps()) {

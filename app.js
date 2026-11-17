@@ -669,6 +669,12 @@ const CODE_FAMILY_GUARDS = [
   // 11-12 audit (accuracy #5): every family that names a 24ANB names the two-stage 24ANB7 / 24ANB1. A
   // single-stage 24ANB6 fell back to the five characters "24ANB" and got the two-stage tables.
   { re: /^24ANB[^17]/, min: 6 },
+  // v443: Trane S9V2 - the PS (PSAA) furnace has its own code table (Installer's Guide 18-CE01D1-1E-EN);
+  // an S9V2-VS or PSBB model shares the first ten characters (S9V2B080U4) and must not open it.
+  { re: /^S9V2[A-D][0-9]{3}[UD][0-9]/, min: 14 },
+  // v443: Trane / American Standard *UH1 / *DH1 (XR95): the flash-code family names the standard models
+  // (TDH1C085A9481); an A9H.. high-efficiency-motor model shares the first ten characters and was not read.
+  { re: /^[AT][UD]H1[BCD][0-9]{3}A9/, min: 13 },
 ];
 // Families a model cannot belong to, proven from the family text itself. Lennox: one family is titled
 // "... EL195 / EL196 gas furnace (non-K models)" and the other lists only names that end in K
@@ -10485,6 +10491,8 @@ const MODEL_PATTERNS = [
   { re: /^(?:MGH[AB]|MMH[AB]|MGBB|MMBB)-?0(?:56|70|77|90)/, brand: "Nortek", equipment: "Gas Furnace", series: "Nortek (Nordyne / Intertherm / Miller) MG / MM series manufactured-home downflow gas furnace, direct vent, 56,000-90,000 BTU/h input (MGHA/MGHB/MGBB standing pilot, MMHA/MMHB/MMBB direct ignition)", notes: ["Read MGHB-056ABFC as M = mobile home, G = gas direct-vent atmospheric burner, HB = A/C ready (3 ton) with relay, 056 = 56,000 BTU/h input, A = 120 V 1 ph, B = cabinet with built-in coil cavity, FC = field convertible; a -01/-02 type number may follow","MGH*/MGBB light a standing pilot (match, or the optional piezo ignitor kit); MMH*/MMBB use a hot-surface igniter","Old family: Nortek's replacement chart lists MGHA(B)/MMHA(B) as replaced by the MG1E, MG2R or MG2S series","Source: Nordyne Series MG, MM, MS and MB Installation Instructions/Owners Manual 7067092 (03/91), Tables 2-3 p.2-4; Nortek MH furnace replacement chart 846D-1019"] },
   { re: /^EC0(?:07|09|12|15|19|24|30|36|41|42|48|60|70)-?[0-9][VH]/, brand: "FHP (Bosch)", equipment: "Other", series: "FHP (Florida Heat Pump, Bosch) EC Series water-to-air geothermal / water-loop heat pump, EC007-EC070, R-410A (discontinued)", notes: ["Read EC041-1VTC-FLT as EC series, 041 size (about 3.5 ton), 1 = 208/230-1-60, VT = vertical (HZ = horizontal), C = copper water coil, F = front water connections, L = left return, T = top supply.", "Water-source unit: no defrost, no air-source charging charts; weigh in the plate charge.", "UPM board red LED: 1 high pressure, 2 low pressure, 3 freeze, 4 condensate, 5 brownout.", "Source: FHP EC Series Catalog 6720220353 (rev 5/13) p.3 and IOM 970-289 (rev 05-12) p.1, p.4-7."] },
   { re: /^2TEC3F[0-9]{2}[A-C]1000A/, brand: "Trane", equipment: "Air Handler", series: "Trane/American Standard 2TEC convertible air handler (R-22 twin of the 4TEC, prior generation)", notes: ["Fully convertible (upflow, downflow, horizontal) multi-speed PSC air handler; 2TEC ships for R-22, 4TEC is the R-410A twin.", "2TEC3F42C1000A: 3-1/2 ton (42,000 Btuh nominal), factory non-bleed TXV.", "Source: Trane Installer's Guide 18-GE08D1-7 (2008), which lists 2/4TEC3F42C1000A; nomenclature from Product Data 22-1774-18 p2."] },
+  // v443 (Andy 2026-11-17 "pull the models that we didn't have"): Cameron's two 1993-94 ICP plates (photos bcni95 11/16, CA9024VKA2 10/9). No ICP literature for these exists publicly (three searches), so the entry holds only what the rating plates print; no tonnage is shown (decodeCapacity).
+  { re: /^N?CA90(?:24VKA2|36VKC1)/, brand: "ICP", equipment: "Condenser/Heat Pump", series: "Inter-City Products split-system air conditioner (cooling only), R-22, built 1993-94 in LaVergne TN - known only from two rating plates; no ICP literature found", notes: ["The plate shows two forms of one number: MODEL NO. CA9036VKC1 and MFR. NO. NCA9036VKC1 (CA9024VKA2 / NCA9024VKA2 on the 1993 plate).", "Use the rating plate for charge and electrical data. CA9036VKC1 plate (6/94): R-22 shipping charge 97 oz; 208/230 V 1 ph; minimum circuit ampacity 20.6; max fuse or HACR breaker 35 A; compressor RLA 15.4, LRA 88; fan 1/3 HP, 1.4 FLA; design pressure high 300 / low 150 psig.", "Read the CA9024VKA2 figures from its own plate - they are different, and that plate is faded.", "The plate does not print capacity or SEER. For the total operating charge the plate points to the tech sheet or installation instructions, which could not be found.", "Not the 2012-on (C,H,T)CA9 two-stage R-410A air conditioner - that is a different unit with a longer model number (CCA936GKA100).", "WARNING printed on the 1993 plate: single pole contactor - it does not break all power. All disconnects must be off to remove power from this unit and the indoor unit.", "Source: unit rating plates, Inter-City Products Corporation (USA), LaVergne TN."] },
   // --- end triage additions ---
   // ---- v312: library gap audit (Andy 2026-10-16, "push the gaps when tests pass") - each family checked against its manual's model list or nomenclature ----
   { re: /^28[69]BNA0(24|36|48|60)/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Bryant Evolution Series 286B / 289B 2-stage heat pump with Puron (R-410A), 2 to 5 tons - 286BNA / 289BNA 024-060", notes: ["Table 5 lists one model plug per size: 286BNA024 HK70EZ041 through 289BNA060 HK70EZ016. Source: Bryant II286-289B-07 p10.","On 286B the outdoor fan is a PSC motor. On 289B it is an ECM motor run by PWM outputs from the control board. Source: II286-289B-07 p7.","Can be wired to an Evolution control or a standard 2-stage thermostat. Source: II286-289B-07 p1."] },
@@ -10534,7 +10542,25 @@ const MODEL_PATTERNS = [
 function decodeCapacity(model, equipment) {
   // Generator digits are kW (QT048 = 48 kW), not cooling tonnage.
   if (equipment === "Generator") return null;
+  // v443: the 1993-94 Inter-City Products CA9 plates print no capacity and no ICP literature decodes the model - no tonnage line.
+  if (/^N?CA90(?:24VKA2|36VKC1)/.test(model)) return null;
   if (equipment === "Gas Furnace") {
+    // v443: Trane / American Standard *UH1 / *DH1 (XR95): the size digits are not always the input
+    // (Installer's Guide 18-CD29D1-14-EN p.32 Table 16; Vern's ADH1C085A9481AA is 80,000). The A9H..
+    // high-efficiency-motor models are not in that table and are left to the general rule below.
+    const xr95 = model.match(/^[AT]([UD])H1([BCD])(040|060|065|080|085|100|110|120)A9(?:24|36|42|48|60)1([A-Z])?/);
+    if (xr95) {
+      // Only the revisions the guides name: C (18-CD29D1-14-EN) and A (the 2012 guide 18-CD29D1-9, same
+      // inputs); the upflow B080 is named there as revision B. Any other revision gets no line.
+      const key = xr95[1] + xr95[2] + xr95[3], rev = xr95[4] || "";
+      const inp = { UB040: 40, UB060: 60, UB080: 77, UC080: 80, UC100: 100, UD100: 100, UD120: 110, DB040: 40, DB065: 60, DC085: 80, DD110: 110 }[key];
+      const revOk = rev === "C" || (key === "UB080" ? rev === "B" : rev === "A");
+      return inp && revOk ? `${inp},000 BTU/h input (Trane table; confirm on the rating plate)` : null;
+    }
+    // v443: Nordyne MG / MM manufactured-home furnaces: 056 / 070 / 077 / 090 = MBtuh input (Nordyne manual
+    // 7067092 Tables 4-5; "Furnace Input" in Nortek 707893A p.3). Kenny's MGHB-056ABFC had no capacity line.
+    const mg = model.match(/^(?:MGH[AB]|MMH[AB]|MGBB|MMBB)-?0(56|70|77|90)/);
+    if (mg) return `~${parseInt(mg[1],10)},000 BTU/h input (furnace sizes are input BTU)`;
     // v312: Bryant 395CAV puts the blower size first (395CAV060136 = 060 blower, 136 input class).
     const b = model.match(/^395CAV[0-9]{3}([0-9]{3})/);
     if (b) return `~${parseInt(b[1],10)},000 BTU/h input (furnace sizes are input BTU)`;
@@ -12111,7 +12137,19 @@ async function ocrTagTextPasses(file, onStatus) {
     const split = voteSplit(reads.map(r => r.model), kept.model);
     return { c: kept, agree: false, split };
   };
-  const finish = async (c) => {
+  const finish = async (c0) => {
+    let c = c0;
+    // v443: a Generac-shaped model with its MODEL label word seen - the boxed value votes on it.
+    // A clear vote for other digits replaces the read (0064520 -> 0064620 on Vern's plate).
+    if (BOX_MODEL_RE.test(c.model) && anchors.some(a => a.kind === "model" && !a.fr)) {
+      try {
+        const bv = await boxModelVote(c.model);
+        if (bv && !bv.agree) {
+          const zc = ocrCleanModel(bv.model);
+          if (zc.lib && zc.tier === 2) c = mkCand({ ...c, box: null, zat: bv.at }, zc, c.conf, { zoomed: true });
+        }
+      } catch (e) { if (e !== OCR_STOP) throw e; }
+    }
     const fields = c.fields;
     fields.model = c.model;
     if (c.tailBad) fields.ocrTailBad = true;   // v275: a character breaks the family's format - "check the tag"
@@ -12270,6 +12308,66 @@ async function ocrTagTextPasses(file, onStatus) {
     }
     return null;
   };
+  // v443 (Andy 2026-11-17 "check tag scans that didn't work"; Vern's Generac plates h89xz2 and
+  // ps9kki): a Generac plate prints the MODEL value inside a drawn box. The full-photo passes read
+  // the box lines into the digits (0064620 came back 0064520) or read nothing (0058751). Tight
+  // single-line reads of just the box beside the MODEL label word, at three heights and two sizes,
+  // vote on the digit string. Only a Generac-shaped model counts (00 + 5 or 6 digits, with or
+  // without the G), only with 3 or more reads agreeing and no other string at more than a third
+  // of that. The first three reads are the gate: a plate that gives no such string on any of them
+  // (every other brand) costs three small reads and stops.
+  const BOX_READS = [[0.2, 0.8, false, true, 44], [0.3, 1.4, false, true, 64], [0.6, 2, false, true, 44], [0.2, 0.8, false, true, 64], [0.2, 0.8, false, false, 44], [0.2, 0.8, false, false, 64], [0.3, 1.4, false, false, 44], [0.3, 1.4, true, true, 64], [0.6, 2, false, true, 64], [0.6, 2, true, true, 64]];
+  const BOX_MODEL_RE = /^G?00\d{5,6}$/;
+  const boxVotes = new Map();   // label word -> Map(digits -> { n, g }), filled once per label word
+  const boxModelVote = async (candModel) => {
+    const candDigits = candModel ? candModel.replace(/^G/, "") : "";
+    const total = new Map(), seen = new Set();
+    for (const a of anchors.filter(x => x.kind === "model" && !x.fr).sort((x, y) => y.conf - x.conf)) {
+      const key = [a.deg, a.passScale, a.box.x0, a.box.y0, a.box.x1, a.box.y1].join(",");
+      if (seen.has(key)) continue;
+      if (seen.size >= 2) break;
+      seen.add(key);
+      let v = boxVotes.get(key);
+      if (!v) {
+        v = new Map();
+        const h = Math.max(1, a.box.y1 - a.box.y0), lw = (a.box.x1 - a.box.x0) / h;
+        let whole = true;
+        for (let k = 0; k < BOX_READS.length; k++) {
+          if (ocrStopRequested) throw OCR_STOP;
+          if (k === 3 && !v.size) break;   // the gate: not a boxed Generac value
+          const [u, d, flat, straight, size] = BOX_READS[k];
+          let data = null;
+          try { data = await ocrZoomLine(worker, photo, a.box, a.rad, a.deg, a.passScale, size, straight, { l: -(lw + 0.35), r: 11, u, d, psm: "7" }, flat); } catch (e) { data = null; }
+          for (const t of new Set(String(data && data.text || "").toUpperCase().split(/[^A-Z0-9]+/))) {
+            if (!BOX_MODEL_RE.test(t)) continue;
+            const dg = t.replace(/^G/, ""), e = v.get(dg) || { n: 0, g: 0 };
+            e.n++; if (t[0] === "G") e.g++;
+            v.set(dg, e);
+          }
+          // the read in hand is confirmed: no need for the rest
+          if (candDigits && (v.get(candDigits) || { n: 0 }).n >= 2) { whole = false; break; }
+        }
+        if (whole) boxVotes.set(key, v);
+      }
+      for (const [dg, e] of v) { const t = total.get(dg) || { n: 0, g: 0 }; t.n += e.n; t.g += e.g; total.set(dg, t); }
+      if (candDigits && (total.get(candDigits) || { n: 0 }).n >= 2) return { model: candModel, agree: true, at: a };
+    }
+    const ranked = [...total].sort((x, y) => y[1].n - x[1].n);
+    if (!ranked.length || ranked[0][1].n < 3 || (ranked[1] && ranked[1][1].n * 3 > ranked[0][1].n)) return null;
+    const [dg, e] = ranked[0];
+    const at = anchors.find(x => x.kind === "model" && !x.fr);
+    return { model: (e.g * 2 > e.n ? "G" : "") + dg, agree: dg === candDigits, at };
+  };
+  // No pass found a model: the boxed value by itself, when the vote is clear and the library knows it.
+  const boxModel = async () => {
+    if (!anchors.some(a => a.kind === "model" && !a.fr)) return null;
+    const bv = await boxModelVote("");
+    if (!bv) return null;
+    const zc = ocrCleanModel(bv.model);
+    if (!(zc.lib && zc.tier === 2)) return null;
+    const fields = best ? { ...best } : { model: "", serial: "", serialSource: "", brandHint: null, text: "", confidence: 0 };
+    return mkCand({ fields, box: null, deg: bv.at.deg, zat: bv.at, event: "tag model read from its box" + (bv.at.deg ? " rotate " + bv.at.deg : "") }, zc, 80);
+  };
   const anchorSerial = async (brand) => {
     for (const r of await anchorReads("serial", 2)) {
       const f = extractTagFields(r.data.text || "");
@@ -12343,6 +12441,8 @@ async function ocrTagTextPasses(file, onStatus) {
     if (onStatus) onStatus("Taking a closer look at the label...");
     let z = await probeWords(3);
     if (z) return await finish(z);
+    z = await boxModel();   // v443: a boxed Generac MODEL value
+    if (z) return await finish(z);
     // Sparse passes stay un-straightened: on real cluttered photos the angle
     // estimate went wrong and lost reads the plain sparse pass made.
     for (const deg of [0, 90, 270, 180]) {
@@ -12350,6 +12450,8 @@ async function ocrTagTextPasses(file, onStatus) {
       if (done) return await finish(done);
     }
     z = await probeWords(3);
+    if (z) return await finish(z);
+    z = await boxModel();   // v443: the sparse passes may be the first to see the MODEL label word
     if (z) return await finish(z);
     // v276: label zoom. A pass read a serial but no model: the model sits on the
     // same data label, often in smaller print the full-photo pass skipped
@@ -14900,7 +15002,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v442";
+const APP_VERSION = "v443";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
