@@ -9503,5 +9503,454 @@ const UNIT_SCENARIOS = [
   ],
   "source": "GRVT96 / GDVT96 / ARVT96 / ADVT96 Installation Instructions for *DVT96* & *RVT96* Two-Stage Gas Furnace (IOG-2044B, 10/2026), p.13, p.50, p.51",
   "confidence": "manual"
+ },
+ {
+  "id": "u-bosch-bgh97-condensate-switch",
+  "unit": "^BGH97M(060|080|100|120)[BCD][345]A",
+  "brand": "Bosch",
+  "equipment": "Gas Furnace",
+  "title": "Checking the condensate overflow pressure switch - BGH97",
+  "summary": "The BGH97 came with two kinds of overflow switch; the test depends on which one is fitted.",
+  "steps": [
+   "Units produced before August 2026 have a normally closed condensate overflow pressure switch. Check it before each heating season (p.73).",
+   "The resistance of that switch should be 0 ohms (p.73).",
+   "With the hose on the black (positive) pressure port disconnected, the unit should trigger a protection shut off immediately and show a fault code on the main control board (p.73).",
+   "If either of the two is not met, the condensate overflow pressure switch must be replaced (p.73).",
+   "The safety-circuit section describes the overflow switch as normally open, closing during the pre-purge time; the hose from the switch goes to the lower tap on the condensate collector box (p.67).",
+   "Factory hose routing is for upflow and horizontal right only; horizontal left needs the hoses rerouted. Connecting hoses incorrectly will result in failure to protect condensate overflow (p.67).",
+   "Codes: E9 = condensate overflow pressure switch failed (contacts stuck or a short in the circuit); the wiring diagram lists E5 / E6 as rollout switch or condensate switch open / open lockout (p.70, p.75)."
+  ],
+  "safety": "Before servicing, disconnect all electrical power to furnace.",
+  "manual": "bosch_bgh97_furnace_iom_en_07.2026",
+  "pages": [
+   67,
+   70,
+   73,
+   75
+  ],
+  "source": "BGH97 97% furnace Bosch 97% AFUE Condensing Gas Furnace Installation and Operating Instructions (BTC 772103301 B, 07.2026), p.67, p.70, p.73, p.75",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-bosch-bgh97-inducer-blower-codes",
+  "unit": "^BGH97M(060|080|100|120)[BCD][345]A",
+  "brand": "Bosch",
+  "equipment": "Gas Furnace",
+  "title": "Reading the IPM module codes (blower or inducer) - BGH97",
+  "summary": "The IPM module drives both motors; a decimal point after the code tells which motor.",
+  "steps": [
+   "Error code 1X-6X is for the circulating blower motor; 1X.-6X. (with a point) is for the induced draft blower motor (p.75).",
+   "1X motor over-current; 2X IPM over-temperature (IPM above 203°F / 95°C); 3X DC bus voltage fault - check if the power supply is wired incorrectly; 4X IPM fault (p.71).",
+   "5X motor startup fault - check whether there is blockage inside the blower housing; 6X motor phase loss - check the motor wiring (p.71).",
+   "90 = communication fault with the air pressure sensor: check that the model is selected correctly and the sensor wiring is secure and undamaged (p.71).",
+   "EC = machine type not set: check the SW2 switches against the 97% MACHINE TYPE table on the wiring diagram (p.71, p.75).",
+   "Status on the IPM display: FF both blowers running; F- inducer running, circulating blower idle; -F inducer idle, circulating blower running (p.75)."
+  ],
+  "safety": "High voltage: disconnect all power before servicing. Multiple power sources may be present.",
+  "manual": "bosch_bgh97_furnace_iom_en_07.2026",
+  "pages": [
+   71,
+   75
+  ],
+  "source": "BGH97 97% furnace Bosch 97% AFUE Condensing Gas Furnace Installation and Operating Instructions (BTC 772103301 B, 07.2026), p.71, p.75",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-bosch-bgh97-manifold",
+  "unit": "^BGH97M(060|080|100|120)[BCD][345]A",
+  "brand": "Bosch",
+  "equipment": "Gas Furnace",
+  "title": "Setting manifold pressure - BGH97",
+  "summary": "Low and high fire figures differ by size on the BGH97.",
+  "steps": [
+   "Turn OFF all electrical power. With a 3/32 in. hex wrench loosen the outlet pressure tap screw one turn - do not remove it. Attach hose and manometer (p.64).",
+   "Power on, call for heat, and leak-check the hose connection with leak detection solution. SHUT OFF GAS AND FIX ALL LEAKS IMMEDIATELY (p.64).",
+   "Natural gas low / high: 60B 1.6 / 3.5; 80B and 80C 1.6 / 3.6; 100C, 100D and 120D 1.7 / 3.6 in. WC (p.65).",
+   "Propane low / high: 4.1 / 9.4 in. WC, except 120D 4.1 / 9.9 in. WC (p.65).",
+   "Remove the regulator cover screw; clockwise raises pressure, counter clockwise lowers it. Final pressure within ± 0.3 in. WC (p.64-65).",
+   "To restore the factory setting: fully tighten the plastic adjustment screw clockwise, then back it out counterclockwise 2-3 turns until the reading matches the table (p.65).",
+   "Power off, remove the manometer, tighten the tap clockwise 7 in-lbs minimum, then re-check for leaks with the furnace firing (p.65).",
+   "Larger changes in gas flow are made by changing the burner orifice, not the regulator (p.65)."
+  ],
+  "safety": "Never test for gas leaks with an open flame. Gas input must never be greater than the rating plate.",
+  "manual": "bosch_bgh97_furnace_iom_en_07.2026",
+  "pages": [
+   64,
+   65
+  ],
+  "source": "BGH97 97% furnace Bosch 97% AFUE Condensing Gas Furnace Installation and Operating Instructions (BTC 772103301 B, 07.2026), p.64, p.65",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-bosch-bgh97-refrigerant-sensor",
+  "unit": "^BGH97M(060|080|100|120)[BCD][345]A",
+  "brand": "Bosch",
+  "equipment": "Gas Furnace",
+  "title": "b-codes with an R-454B coil on the furnace - BGH97",
+  "summary": "The refrigerant sensor plugs into the furnace and reports on the IPM display.",
+  "steps": [
+   "With a Bosch BMAC R-454B cased coil, the sensor cable goes into the CN3 port and DIP switch SW1-2 must be ON (p.54).",
+   "b3 hardware fault (damaged sensor): replace the refrigerant sensor and restart (p.54).",
+   "b4 communication with the sensor failed for 30 seconds: check the plug, then replace the sensor (p.54).",
+   "b7 active refrigerant leak: check the refrigerant circuit for punctures and repair; check for a natural gas / propane leak, ventilate and avoid open flames; replace the sensor if no leak is found (p.54).",
+   "b8 sensor past its 15 year service life: replace it (p.54). b9 sensor connected but SW1-2 OFF: set SW1-2 ON (p.54).",
+   "b5 communication fault between furnace and outdoor unit: check the wiring against the diagram (p.71)."
+  ],
+  "safety": "A2L refrigerant: maintain ventilation and avoid open flames when a leak is indicated.",
+  "manual": "bosch_bgh97_furnace_iom_en_07.2026",
+  "pages": [
+   54,
+   71
+  ],
+  "source": "BGH97 97% furnace Bosch 97% AFUE Condensing Gas Furnace Installation and Operating Instructions (BTC 772103301 B, 07.2026), p.54, p.71",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-bosch-bgh96c-no-ignition",
+  "unit": "^BGH96M(060|080|100|120)[BCD][345]C",
+  "brand": "Bosch",
+  "equipment": "Gas Furnace",
+  "title": "E7 / E8 ignition lockout - BGH96 Rev C",
+  "summary": "Three tries, then a one hour lockout; the manual's own list of causes.",
+  "steps": [
+   "Sequence: inducer on high, low pressure switch closes, 15 second pre-purge, inducer to low, ignitor warm-up 17 seconds, low fire valve opens, flame must be proven within 4 seconds (p.63, p.64).",
+   "Two retries with a 60 second inter-purge, then lockout. Auto reset after one hour, or interrupt 115 V power or the call for heat for 1 - 20 seconds (p.68); the sequence of operation says a momentary power interruption of 10 seconds or longer may reset it (p.63).",
+   "Listed causes: gas valve switched off; ignitor failure; orifices blocked; flame sensor dirty or broken; furnace improperly grounded; manifold or inlet gas pressure out of range (p.70).",
+   "Ignitor: not over 200 ohms at about 70°F with its wires disconnected (p.72).",
+   "Flame sensor: clean with emery cloth or steel wool; signal should be 0.5 to 6 microamps at 115 volts (p.71).",
+   "The control must be grounded or it will lock out - ground is the green/yellow wire to the gas valve and manifold bracket screw (p.63).",
+   "Inlet gas 4.5 - 10.5 in. WC natural, 11.0 - 13.0 in. WC propane; manifold 1.6 low / 3.5 high natural (p.45, p.65)."
+  ],
+  "safety": "Never test for gas leaks with an open flame. Turn power OFF prior to repair.",
+  "manual": "bosch-bgh96-revc-iom-btc772003301c",
+  "pages": [
+   45,
+   63,
+   64,
+   65,
+   68,
+   70,
+   71,
+   72
+  ],
+  "source": "BGH96 Rev C 96% two-stage gas furnace (BGH96M060B3C ... BGH96M120D5C) Installation and Operating Instructions 96% AFUE Condensing Gas Furnace Bosch BGH96 Model RevC (BTC 772003301 C, 06.2025), p.45, p.63, p.64, p.65, p.68, p.70, p.71, p.72",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-bosch-bgh96c-pressure-switch",
+  "unit": "^BGH96M(060|080|100|120)[BCD][345]C",
+  "brand": "Bosch",
+  "equipment": "Gas Furnace",
+  "title": "E1 - E4 pressure switch codes - BGH96 Rev C",
+  "summary": "Which code is which switch, and the manual's checks.",
+  "steps": [
+   "E1 pressure switch closed with inducer off: switch contacts stuck or a short in the circuit - replace the switch or repair the short (p.69).",
+   "E2 low fire (1st stage) pressure switch open with inducer on; E3 high fire (2nd stage) switch open with high inducer on; E4 pressure switch cycle lockout (p.69, p.74).",
+   "Check the pressure switch hose for blockage, pinching or wrong connection; check the flue for blockage, proper length, elbows and termination; weak induced draft blower (p.69).",
+   "Then switch setpoint / contacts (replace the switch with the proper part) and loose wiring (p.69).",
+   "Vent limits to check against: 60 input 40 ft of 2 in. or 90 ft of 3 in.; 80 input 3 in. only, 90 ft; 100 input 30 ft of 2 in. or 70 ft of 3 in.; 120 input 3 in. only, 50 ft - vent and intake each (p.31).",
+   "The pressure switches are normally open, negative pressure switches reading taps on the induced draft blower (p.67)."
+  ],
+  "safety": "Turn power OFF prior to repair.",
+  "manual": "bosch-bgh96-revc-iom-btc772003301c",
+  "pages": [
+   31,
+   67,
+   69,
+   74
+  ],
+  "source": "BGH96 Rev C 96% two-stage gas furnace (BGH96M060B3C ... BGH96M120D5C) Installation and Operating Instructions 96% AFUE Condensing Gas Furnace Bosch BGH96 Model RevC (BTC 772003301 C, 06.2025), p.31, p.67, p.69, p.74",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-bosch-edge-c21-comm",
+  "unit": "^BOHA-?(?:24|36|60)[RM]TB",
+  "brand": "Bosch",
+  "equipment": "Condenser/Heat Pump",
+  "title": "C21 - communication error between indoor and outdoor unit - IDS Edge / Edge Max",
+  "summary": "All units stop and C21 shows only on the outdoor unit. The IOM flowchart goes power, wiring, short, board, shielding.",
+  "steps": [
+   "Abnormal power supply for all indoor units? Solve the power supply problem first. (p.69)",
+   "Check that the communication wiring is correctly connected - connect it per the installation instructions and wiring diagram. Single-zone with an IDS Premium air handler uses the P Q terminals on both units; Edge Multi indoor units use M1 M2. (p.69, p.31, p.34)",
+   "Check whether the communication wiring is in short circuit - replace the broken wiring. (p.69)",
+   "Check the communication wiring between the main board and the communication board - replace broken wiring. (p.69)",
+   "Still there: replace the main board; if the error stays, replace the communication board. (p.69)",
+   "Still there: the communication wiring is not shielded or the outdoor unit is in electromagnetic noise - use shielded cable and other protection measures. For Hyper-Link (M1 M2) wires the IOM adds: when shielded wires are used, the shielding layers at both ends must be connected to earth. (p.69, p.30)",
+   "Listed causes also include communication wiring that is too long (\"Over 3937ft.\"). Note 1 on the chart: make sure that the matched resistance has been connected in the last indoor unit. Keep power cords and communication wires more than 2 inches apart. (p.69, p.30)"
+  ],
+  "safety": "Do not connect the power cords (high voltage) to the Hyper-Link (M1 M2) / P Q communication wires - it will damage the control board (IOM p.30). Risk of electric shock - disconnect all remote power supplies before installing or servicing any portion of the system (IOM p.30). Operate the board switches and push buttons with an insulated stick (IOM p.51).",
+  "manual": "bosch-ids-edge-condensing-iom-762003323b",
+  "pages": [
+   69,
+   30,
+   31,
+   34,
+   51
+  ],
+  "source": "IDS Edge (Edge Regular) BOHA-24RTB-M18S / 36RTB / 60RTB (R-454B) Installation and Operating Instructions - Bosch IDS Heat Pump Edge Regular Series Condensing Unit, 2 - 3 - 5 Ton Capacity, R454B (BTC 762003323 B, 04.2026), p.69, p.30, p.31, p.34, p.51",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-bosch-edge-p13-high-pressure-switch",
+  "unit": "^BOHA-?(?:24|36|60)[RM]TB",
+  "brand": "Bosch",
+  "equipment": "Condenser/Heat Pump",
+  "title": "P13 - high pressure switch protection - IDS Edge / Edge Max",
+  "summary": "P13 = the detected high pressure is higher than 4.2 MPa; all units stop. (P12 is the high pressure protection at 3.9 MPa; P11 on this unit is the high pressure SENSOR error.)",
+  "steps": [
+   "Outdoor unit stop (cut-off) valve not open? Open it. (p.80)",
+   "High pressure switch not connected to the module board? Connect it - the note says the high-pressure switch interface is connector CN29 on the outdoor unit's module board. (p.80)",
+   "High pressure switch failed? Replace the switch. (p.80)",
+   "Excessive refrigerant (lower discharge temperature, higher discharge and suction pressures)? Perform a partial refrigerant recovery; if the system is low on oil make sure the oil level is replenished. (p.80)",
+   "Air or nitrogen in the system (higher discharge temperature and pressure, higher compressor current, abnormal compressor noise, unusual pressure fluctuations)? After vacuuming, recharge the refrigerant; replenish oil if low. (p.80)",
+   "High pressure pipe side blockage - pipe bending, damage, expansion valve blockage? Check and troubleshoot the piping system. (p.80)",
+   "Poor heat transfer? In cooling inspect the outdoor heat exchanger, fan and discharge opening for blockages; in heating inspect the indoor heat exchanger, fan and discharge opening. (p.80)",
+   "None of these: replacement of the control board. (p.80)",
+   "Related codes: P12 \"Discharge pipe high pressure protection\" and P14 (repeat lockout, manual re-start) are on p.79; P11 is the high pressure sensor error on p.78. (p.64, p.78, p.79)"
+  ],
+  "safety": "R-454B is an A2L (mildly flammable) refrigerant: if a leak is suspected remove / extinguish all naked flames and keep ventilation; if a leak needs brazing, recover all the refrigerant or isolate that part of the system first (IOM p.45). Disconnect all power before servicing (IOM p.30).",
+  "manual": "bosch-ids-edge-condensing-iom-762003323b",
+  "pages": [
+   80,
+   64,
+   78,
+   79,
+   45,
+   30
+  ],
+  "source": "IDS Edge (Edge Regular) BOHA-24RTB-M18S / 36RTB / 60RTB (R-454B) Installation and Operating Instructions - Bosch IDS Heat Pump Edge Regular Series Condensing Unit, 2 - 3 - 5 Ton Capacity, R454B (BTC 762003323 B, 04.2026), p.80, p.64, p.78, p.79, p.45, p.30",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-bosch-edge-p22-low-pressure",
+  "unit": "^BOHA-?(?:24|36|60)[RM]TB",
+  "brand": "Bosch",
+  "equipment": "Condenser/Heat Pump",
+  "title": "P22 / P25 - low pressure protection - IDS Edge / Edge Max",
+  "summary": "P22 = detected low pressure lower than 0.12 MPa; P25 = repeated P22 and needs a manual re-start. (P21 on this unit is the low pressure SENSOR error.)",
+  "steps": [
+   "Heating with ambient lower than -13 F? Check the real ambient temperature. (p.82)",
+   "Is the outdoor unit shutoff valve open? If not, open it. (p.82)",
+   "Restart the outdoor unit to see whether too little refrigerant remains - adjust the refrigerant amount. (p.82)",
+   "Compressor has abnormal sound or vibration? Check the cable from the compressor INV board to the compressor; replace a broken compressor after judging it correctly (e.g. measure the 3 phase resistance). (p.82)",
+   "Does the expansion valve actually open according to control logic? If not, replace the winding or the expansion valve. (p.82)",
+   "Put a pressure gauge on the low pressure stop valve: is the low pressure close to 0.12 MPa before protection? One exit, printed \"No\", goes to \"Check the low pressure sensor or pressure switch in failure\"; the other exit is also printed \"No\" and goes to \"Power off, and replace the ODU main board, then power on.\" (p.82)",
+   "The chart also asks whether the high / low pressure difference is larger than 58 psi (0.5 MPa) over 5 minutes after the fault stop - if so, check which part of the indoor unit is blocked. (p.82)",
+   "P25 count: the code tables print \"P22 error occurs 3 times in 100 minutes\"; this page prints \"3 times in 60 min\". Low pressure can be read on the display: spot check item 25 = low pressure in PSIG. (p.58, p.64, p.82, p.56)"
+  ],
+  "safety": "R-454B is an A2L (mildly flammable) refrigerant: if a leak is suspected remove / extinguish all naked flames and keep ventilation; if a leak needs brazing, recover all the refrigerant or isolate that part of the system first (IOM p.45). Disconnect all power before servicing (IOM p.30).",
+  "manual": "bosch-ids-edge-condensing-iom-762003323b",
+  "pages": [
+   82,
+   58,
+   64,
+   56,
+   45,
+   30
+  ],
+  "source": "IDS Edge (Edge Regular) BOHA-24RTB-M18S / 36RTB / 60RTB (R-454B) Installation and Operating Instructions - Bosch IDS Heat Pump Edge Regular Series Condensing Unit, 2 - 3 - 5 Ton Capacity, R454B (BTC 762003323 B, 04.2026), p.82, p.58, p.64, p.56, p.45, p.30",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-bosch-edge-f72-discharge-temp",
+  "unit": "^BOHA-?(?:24|36|60)[RM]TB",
+  "brand": "Bosch",
+  "equipment": "Condenser/Heat Pump",
+  "title": "F72 / F7A - discharge temperature protection - IDS Edge / Edge Max",
+  "summary": "F72 = discharge temperature (T7C) at or above 115 C; F7A = F72 three times in 100 minutes and needs a manual re-start.",
+  "steps": [
+   "Check that the check valve is open - open it. (p.75)",
+   "Check the discharge temperature sensor (T7C) is properly seated on top of the compressor and securely connected to the outdoor main board, and that the wiring from the compressor INV board goes to the right compressor. Fix the sensor location / connection or reconnect the compressor wiring. (p.75)",
+   "Check the sensor resistance - replace a faulty sensor. (p.75)",
+   "Restart the unit to see whether there is too little refrigerant - adjust the refrigerant amount. (p.75)",
+   "Pump-down behaviour (too low suction pressure) in heating? Check for blockage in the expansion valve and solenoid valve of the outdoor and indoor units. (p.75)",
+   "Abnormal sound or vibration from the compressor? Replace the broken compressor. Otherwise replace the outdoor main board. (p.75)",
+   "Read it live: spot check item 15 = T7C1 discharge temperature, item 18 = discharge superheat (F). (p.56)"
+  ],
+  "safety": "R-454B is an A2L (mildly flammable) refrigerant: if a leak is suspected remove / extinguish all naked flames and keep ventilation; if a leak needs brazing, recover all the refrigerant or isolate that part of the system first (IOM p.45). Disconnect all power before servicing (IOM p.30).",
+  "manual": "bosch-ids-edge-condensing-iom-762003323b",
+  "pages": [
+   75,
+   56,
+   58,
+   45,
+   30
+  ],
+  "source": "IDS Edge (Edge Regular) BOHA-24RTB-M18S / 36RTB / 60RTB (R-454B) Installation and Operating Instructions - Bosch IDS Heat Pump Edge Regular Series Condensing Unit, 2 - 3 - 5 Ton Capacity, R454B (BTC 762003323 B, 04.2026), p.75, p.56, p.58, p.45, p.30",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-bosch-edge-a11-refrigerant-leak",
+  "unit": "^BOHA-?(?:24|36|60)[RM]TB",
+  "brand": "Bosch",
+  "equipment": "Condenser/Heat Pump",
+  "title": "A11 - indoor unit refrigerant leakage - IDS Edge / Edge Max",
+  "summary": "A leak was detected at an indoor unit: that unit's fan runs at the highest speed, its expansion valve closes and the buzzer sounds. Re-powering does not clear it; A11 needs a manual re-start.",
+  "steps": [
+   "Causes listed: an indoor-side R454B leak; a leak detection sensor that is damaged or contaminated (vapour, oil) - a new sensor is required if the fault will not lift; a damaged indoor unit main board. (p.67)",
+   "Flowchart (p.67), in the order printed: R-454B refrigerant leak in the site piping? Yes: process according to the Note (steps 1-5 below).",
+   "No leak in the site piping: is the fault cleared after replacing the indoor unit main board? Yes: fault cleared. (p.67)",
+   "Still there: is the sensor damaged or contaminated with external foreign matter (e.g. vapor, oil) resulting in a fault? Yes: service required - see the refrigerant leak sensor installation and operating instructions and service manual. No: contact technical support for processing. (p.67)",
+   "1. Recover the residual refrigerant. With a leak the refrigerant shut-off device is closed, so recover at both the outdoor unit check valve service valve and the shut-off device, and select the evacuation (vacuum) mode in the outdoor menu while recovering. (p.67; vacuum mode n1-5-0 p.52)",
+   "2. Locate and repair the leaks in the piping. (p.67)",
+   "3. Test the piping for airtightness as in the piping installation section; repeat the repair until it passes. Leak check pressure in this IOM: 250 PSIG dry nitrogen. (p.67, p.25)",
+   "4. Replace the R454B leak detection sensor on the indoor unit that displayed the fault. (p.67)",
+   "5. Re-vacuum and refill the refrigerant per the outdoor unit installation instructions. (p.67, p.26, p.27)",
+   "Menu n3-3 decides the leak response: 0 = display A11 immediately (default), 4 = forced running refrigerant recovery mode 1 after leakage. A15 = \"Recover refrigerant after refrigerant leakage and shut down\". (p.53, p.64)"
+  ],
+  "safety": "R-454B is an A2L (mildly flammable) refrigerant: if a leak is suspected remove / extinguish all naked flames and keep ventilation; if a leak needs brazing, recover all the refrigerant or isolate that part of the system first (IOM p.45). Disconnect all power before servicing (IOM p.30).",
+  "manual": "bosch-ids-edge-condensing-iom-762003323b",
+  "pages": [
+   67,
+   25,
+   26,
+   27,
+   45,
+   52,
+   53,
+   64,
+   30
+  ],
+  "source": "IDS Edge (Edge Regular) BOHA-24RTB-M18S / 36RTB / 60RTB (R-454B) Installation and Operating Instructions - Bosch IDS Heat Pump Edge Regular Series Condensing Unit, 2 - 3 - 5 Ton Capacity, R454B (BTC 762003323 B, 04.2026), p.67, p.25, p.26, p.27, p.45, p.52, p.53, p.64, p.30",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-bosch-edge-charge-check-subcooling",
+  "unit": "^BOHA-?(?:24|36|60)[RM]TB",
+  "brand": "Bosch",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Checking the charge by subcooling (Cooling Test mode) - IDS Edge / Edge Max",
+  "summary": "The only approved charge check is in cooling force / test mode with the outdoor temperature 55-120 F and indoor 70-80 F. Below 50 F outdoor, weigh in.",
+  "steps": [
+   "Outdoor below 50 F: use the weigh-in method (factory charge covers 25 ft of liquid line; add 0.59 oz/ft of 3/8\" liquid line beyond that) and come back in warm weather. (p.27)",
+   "Start the Cooling Test: menu item n1-1-0 (hold MENU 5 seconds to enter menu mode). There is a 7 minute start up delay before the compressor runs. (p.27, p.50)",
+   "Let it stabilize 20 minutes at 100% capacity - the compressor reaches 90 Hz (24), 80 Hz (36), 90 Hz (60). (p.28)",
+   "Measure suction line temperature and pressure and work out superheat from Table 16; measure liquid line temperature and pressure and work out subcooling from Table 17. (p.28)",
+   "Design values: 2 and 3 ton subcooling 5-12 F, superheat 2-7 F; 5 ton subcooling 6-14 F, superheat 2-7 F. With a third party indoor unit keep superheat at 10-18 F. (p.29, p.28)",
+   "Subcooling low: add refrigerant. Subcooling high: recover refrigerant. Wait 5 minutes between adjustments. (p.29)",
+   "When done: remove gauges, replace the service port caps finger tight plus 1/6 turn, and write the added charge on the outdoor unit label. (p.29)"
+  ],
+  "safety": "R-454B is an A2L (mildly flammable) refrigerant (IOM p.15): no sources of ignition shall be used in a manner that may lead to the risk of fire or explosion when working on the refrigerant system (IOM p.7); if a leak is suspected remove / extinguish all naked flames and keep ventilation (IOM p.45). Risk of electric shock - disconnect all remote power supplies before installing or servicing any portion of the system (IOM p.30). Operate the board switches and push buttons with an insulated stick (IOM p.51).",
+  "manual": "bosch-ids-edge-condensing-iom-762003323b",
+  "pages": [
+   27,
+   28,
+   29,
+   50,
+   51,
+   15,
+   45,
+   30
+  ],
+  "source": "IDS Edge (Edge Regular) BOHA-24RTB-M18S / 36RTB / 60RTB (R-454B) Installation and Operating Instructions - Bosch IDS Heat Pump Edge Regular Series Condensing Unit, 2 - 3 - 5 Ton Capacity, R454B (BTC 762003323 B, 04.2026), p.27, p.28, p.29, p.50, p.51, p.15, p.45, p.30",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-bosch-ultra-b5-communication",
+  "unit": "^BOVB-?(?:36|60)MTB-?M19E|^BOVB19",
+  "brand": "Bosch",
+  "equipment": "Condenser/Heat Pump",
+  "title": "b5 - communication fault between indoor and outdoor unit - IDS Ultra (R-454B)",
+  "summary": "Service manual causes: wiring issue, mode collection error, control board in the outdoor or indoor unit failed.",
+  "steps": [
+   "Are the M1M2 or PQ wires incorrectly connected? Correct the outdoor-to-indoor communication wire connection. (p.48)",
+   "Are outdoor DIP switch SW5-4 and indoor DIP switch SW7-1 correct? Correct the DIP switch settings. On the Ultra outdoor board SW5-4 OFF is the factory default = Communicating mode (ON is printed \"Reserved\"). Power must be off when adjusting DIP switches, and a change only takes effect after a power cycle. (p.48, p.26, p.22)",
+   "Are the M1M2 or PQ wires shorted or touching sheet metal? Arrange the M1 and M2 wire so it is not touching other wires or any sheet metal. (p.48)",
+   "Replace the indoor unit control board and restart. Fault not cleared: replace the outdoor unit control board and restart. (p.48)",
+   "Voltage checks for the two buses are in the Advanced System Check section: M1 M2 Voltage Check and PQ Voltage Check. (p.78, p.79)"
+  ],
+  "safety": "Hazardous voltage - all electrical work by qualified personnel; when measuring resistance make sure the unit is powered off and wait 3 min before taking the measurement (service manual p.46). Power off when adjusting DIP switches (p.26).",
+  "manual": "bosch-ids-ultra-service-manual-762002313a",
+  "pages": [
+   48,
+   26,
+   22,
+   46,
+   78,
+   79
+  ],
+  "source": "IDS Ultra 2026 - BOVB19 (BOVB-36MTB-M19E, BOVB-60MTB-M19E, BIVB-36/48/60MCB-M19X) (R-454B); the nomenclature figure on p.12 and Bosch bulletins BTC 762002303 A / 762002309 A print BOVA-60MTB-M19E / BOVA-60k for the 5 ton Ultra Service Manual - Bosch IDS Heat Pump Ultra Series, 3-5 Ton Capacity, R454B (BTC 762002313 A, 09.2026), p.48, p.26, p.22, p.46, p.78, p.79",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-bosch-ultra-e49-baseplate-heater",
+  "unit": "^BOVB-?(?:36|60)MTB-?M19E|^BOVB19",
+  "brand": "Bosch",
+  "equipment": "Condenser/Heat Pump",
+  "title": "E49 - baseplate (base pan) heating fault - IDS Ultra (R-454B)",
+  "summary": "Causes listed: baseplate wiring issue, current sensor failed, baseplate failed, outdoor control board failed.",
+  "steps": [
+   "Is the base pan heating coil correctly plugged into CN42? Make sure the base pan heater is properly plugged in. (p.54)",
+   "Unplug the base pan heater and measure its resistance: it should fall in the range 290-325 ohm. If not, replace the faulty base pan heater. (p.54)",
+   "In range: replace the current sensor connected to CN15. Code cleared - continue normal operation. (p.54)",
+   "Not cleared: is the supplied line voltage at L1 and L2 between 187 and 253 V? If not, correct the line voltage. (p.54)",
+   "With the outdoor temperature below 35 F (confirm with check point #6 on the board), is the voltage at CN42 between 187 and 253 V? If not, replace the outdoor control board. If yes, restart the system. (p.54)"
+  ],
+  "safety": "Hazardous voltage - when measuring resistance make sure the unit is powered off and wait 3 min before taking the measurement. When measuring high voltage follow proper safety precautions and wear appropriate PPE such as insulated gloves, safety glasses, flame-resistant clothing (service manual p.54).",
+  "manual": "bosch-ids-ultra-service-manual-762002313a",
+  "pages": [
+   54,
+   44
+  ],
+  "source": "IDS Ultra 2026 - BOVB19 (BOVB-36MTB-M19E, BOVB-60MTB-M19E, BIVB-36/48/60MCB-M19X) (R-454B); the nomenclature figure on p.12 and Bosch bulletins BTC 762002303 A / 762002309 A print BOVA-60MTB-M19E / BOVA-60k for the 5 ton Ultra Service Manual - Bosch IDS Heat Pump Ultra Series, 3-5 Ton Capacity, R454B (BTC 762002313 A, 09.2026), p.54, p.44",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-bosch-ultra-h14-power-sensor",
+  "unit": "^BOVB-?(?:36|60)MTB-?M19E|^BOVB19",
+  "brand": "Bosch",
+  "equipment": "Condenser/Heat Pump",
+  "title": "H14 - power consumption sensor fault in the outdoor unit - IDS Ultra (R-454B)",
+  "summary": "Causes listed: wiring error, current sensor failure, outdoor control board failure. The current sensor reads the red input power cable only.",
+  "steps": [
+   "Is the red input power cable going through the current sensor? If not, correct it using the wiring diagram. (p.58)",
+   "Are the red and black input power cables both going through the current sensor at the same time? Make sure only the red cable goes through it. (p.58)",
+   "Check that the current sensor is correctly plugged into CN15 - the chart says to ensure the current sensor is properly connected to CN15. (p.58)",
+   "With a clip-on ammeter, compare the input AC current with checkpoint 29 on the control board (within 1.5 A). The chart as printed sends a \"Yes\" (they match) to \"Replace outdoor control board\". (p.58)",
+   "They do not match: replace the current sensor and wire it according to the wiring diagram. Fault cleared - resume normal operation; not cleared - replace the outdoor control board. (p.58)",
+   "H04 (chip of the power consumption sensor communication fault) has a single action: replace the outdoor control board and restart the system. (p.58)"
+  ],
+  "safety": "Hazardous voltage - when measuring input voltage / current follow proper safety precautions and wear appropriate PPE such as insulated gloves, safety glasses, flame-resistant clothing (service manual p.58).",
+  "manual": "bosch-ids-ultra-service-manual-762002313a",
+  "pages": [
+   58,
+   44
+  ],
+  "source": "IDS Ultra 2026 - BOVB19 (BOVB-36MTB-M19E, BOVB-60MTB-M19E, BIVB-36/48/60MCB-M19X) (R-454B); the nomenclature figure on p.12 and Bosch bulletins BTC 762002303 A / 762002309 A print BOVA-60MTB-M19E / BOVA-60k for the 5 ton Ultra Service Manual - Bosch IDS Heat Pump Ultra Series, 3-5 Ton Capacity, R454B (BTC 762002313 A, 09.2026), p.58, p.44",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-bosch-ultra-limited-condition-letters",
+  "unit": "^BOVB-?(?:36|60)MTB-?M19E|^BOVB19",
+  "brand": "Bosch",
+  "equipment": "Condenser/Heat Pump",
+  "title": "A letter or dashes followed by two digits on the outdoor display - IDS Ultra (R-454B)",
+  "summary": "These are Limited Condition Status codes, not faults: the unit keeps running with the compressor frequency limited, and the two digits are the compressor frequency in Hz. The manual says no service is required for them.",
+  "steps": [
+   "U + two digits: input or DC bus voltage limited (goes with E51 / E52). E51 trips at 270 VAC or more, or from 65 VAC up to (but below) 172 VAC, for 5 seconds. (p.33, p.35)",
+   "One low dash + two digits: low pressure limited (goes with P21). 3-5 ton cooling: limiting starts below 50.7 psig, P21 below 29 psig for 3 seconds, restart at 58 psig. Heating: 17.4 / 10.2 / 29 psig. Five P21 (cooling) or P22 (heating) trips in 100 minutes = F2 lockout. (p.33, p.36)",
+   "Two dashes + two digits: high pressure limited (goes with P11). Limiting starts at 500.4 psig, P11 at 565.6 psig for 3 seconds, restart below 471.4 psig. (p.33, p.39)",
+   "F + two digits: compressor IPM temperature limited (P0). L + two digits: high pressure switch (P1; opens at 580 psig, resets below 435 psig). (p.33, p.38)",
+   "C + two digits: current limited (P31 input current / P32 compressor current). d + two digits: discharge temperature limited (P4): limiting from 198 F, P4 at 230 F for 3 seconds, restart below 189 F. (p.34, p.39, p.40)",
+   "r + two digits: running under compressor ratio limited condition (low temperature and low load) - there is no fault code for it. (p.34, p.43)",
+   "dF = defrost, A + digits = oil return, and the force (charge) mode has its own display. (p.22, p.33)",
+   "If the condition worsens or persists a fault code replaces the letter and the compressor shuts off - then work that fault code. (p.33)"
+  ],
+  "safety": "Hazardous voltage - all electrical work must be carried out by competent and suitably qualified professionals; when measuring resistance make sure the unit is powered off and wait 3 min (service manual p.46).",
+  "manual": "bosch-ids-ultra-service-manual-762002313a",
+  "pages": [
+   33,
+   34,
+   35,
+   36,
+   38,
+   39,
+   40,
+   43,
+   22,
+   46
+  ],
+  "source": "IDS Ultra 2026 - BOVB19 (BOVB-36MTB-M19E, BOVB-60MTB-M19E, BIVB-36/48/60MCB-M19X) (R-454B); the nomenclature figure on p.12 and Bosch bulletins BTC 762002303 A / 762002309 A print BOVA-60MTB-M19E / BOVA-60k for the 5 ton Ultra Service Manual - Bosch IDS Heat Pump Ultra Series, 3-5 Ton Capacity, R454B (BTC 762002313 A, 09.2026), p.33, p.34, p.35, p.36, p.38, p.39, p.40, p.43, p.22, p.46",
+  "confidence": "manual"
  }
 ];

@@ -59349,6 +59349,21 @@ const BRAND_SENSOR_MAPS = [
     "name": "IPM module: PGND / P",
     "kind": "other",
     "source": "bosch_bgh97_furnace_iom_en_07.2026.pdf p.75"
+   },
+   {
+    "plug": "HLI / PS1 string",
+    "name": "Condensate overflow pressure switch",
+    "kind": "switch",
+    "spec": "Units produced before August 2026: normally closed, should read 0 ohms; pulling the hose off the black (positive) port should shut the unit off with a fault code (p.73). The safety-circuit text (p.67) describes a normally open switch that closes during the pre-purge time, and the wiring diagram (p.75) draws the condensate switch NO.",
+    "test": "Bosch bulletin BTC 772102302 A: power off, unplug the two wires, continuity across the terminals; then with the inducer running pull the hose from the positive port and call for heat - the furnace should show an error code and refuse to start.",
+    "source": "BTC 772103301 B p.67, p.73; BTC 772102302 A p.2"
+   },
+   {
+    "plug": "FP",
+    "name": "Flame sensor",
+    "kind": "other",
+    "spec": "0.5 to 6 microamps at 115 volts after cleaning.",
+    "source": "BTC 772003301 C p.71; BTC 772103301 B p.72"
    }
   ],
   "test": "IFC codes E1-E9, FE, FL, Pr, Fo, bE, nL; IPM codes 1X-6X blower faults (1X.-6X. = inducer), 80 drive/main chip comms, 90 air pressure sensor comms, EC machine type not set, b3-b9 refrigerant sensor/ODU.",
@@ -64409,6 +64424,21 @@ const BRAND_SENSOR_MAPS = [
     "name": "Neutrals",
     "kind": "other",
     "source": "bgh96_furnace_revc_iom_09.2024.pdf p.70"
+   },
+   {
+    "plug": "MVC(8) to gas valve C (purple wires) - the p.74 diagram shows a normally closed switch labelled \"PRESSURE SWITCH\" in this line, the only NC pressure switch on the diagram (the overflow switch is the NC one, p.67)",
+    "name": "Condensate overflow pressure switch",
+    "kind": "switch",
+    "spec": "Normally closed differential switch, two ports: black (positive) to the lower tap of the condensate collector box, gray (negative) to the higher tap.",
+    "test": "Bosch bulletin BTC 772102302 A: continuity across the two terminals with power off and wires unplugged; then hose off the positive port with the inducer running - the furnace should fault and not start.",
+    "source": "BTC 772003301 C p.67; BTC 772102302 A p.2"
+   },
+   {
+    "plug": "FP",
+    "name": "Flame sensor",
+    "kind": "other",
+    "spec": "0.5 to 6 microamps at 115 volts after cleaning.",
+    "source": "BTC 772003301 C p.71; BTC 772103301 B p.72"
    }
   ],
   "test": "Display codes: E1 pressure switch shorted, E2 1st-stage open, E3 2nd-stage open, E4 pressure switch locked, E5 limit/rollout open, E6 limit/rollout open after 5 times, E7 ignition lockout, E8 flame loss lockout, FE gas valve relay stuck closed / flame with valve off, FL flame low, Pr power reversed, Fo fuse open, bE board error, nL signal error. Press SW1 to step the last 10 codes.",
@@ -66053,10 +66083,11 @@ const BRAND_SENSOR_MAPS = [
    "BIVA48RCBM20",
    "BIVA60RCBM20",
    "BIVA20",
-   "BIVB24",
-   "BIVB36",
-   "BIVB48",
-   "BIVB60"
+   "BIVB24RCBM20",
+   "BIVB36RCBM20",
+   "BIVB48RCBM20",
+   "BIVB60RCBM20",
+   "BIVB20"
   ],
   "sizes": [
    "all"
@@ -128017,6 +128048,236 @@ const BRAND_SENSOR_MAPS = [
     "file": "goodman-amana-grvt96-arvt96-service-rs6612305r1.pdf",
     "pages": "19, 29-30, 35-36, 44",
     "what": "switch checks, flame current"
+   }
+  ]
+ },
+ {
+  "id": "bosch-ids-ultra-r454b-airhandler",
+  "title": "Bosch IDS Ultra (R-454B) air handler control board",
+  "side": "indoor",
+  "brand": "Bosch",
+  "models": "IDS Ultra air handler BIVB-36MCB-M19X, BIVB-48MCB-M19X, BIVB-60MCB-M19X (BIVB19); IOM BTC 762003306 H (02.2026)",
+  "match": [
+   "BIVB36MCBM19",
+   "BIVB48MCBM19",
+   "BIVB60MCBM19",
+   "BIVB19"
+  ],
+  "sizes": [
+   "all"
+  ],
+  "board": "Air handler control board (LED1, SW6, SW7)",
+  "replacement": [],
+  "sensors": [
+   {
+    "plug": "CN1",
+    "name": "T1 room temperature sensor",
+    "location": "at the fins of the aluminum evaporator at the air inlet",
+    "kind": "thermistor",
+    "spec": "No resistance table is printed in the air handler manual (the 1-flash flowchart refers to a \"resistance temperature table\" that is not in this document).",
+    "errorCodes": [
+     "1 flash"
+    ],
+    "source": "BTC 762003306 H p.42, p.17, p.43"
+   },
+   {
+    "plug": "CN2",
+    "name": "T2 pipe temperature sensor (indoor coil)",
+    "location": "indoor coil",
+    "kind": "thermistor",
+    "spec": "No resistance table printed. In heating with SW6-3 OFF (anti-cold-air), the fan delay starts when T2 is below 83 F (heat kit off, Y1 call) and the blower starts in first stage when T2 reaches 90 F, Pc reaches 435 psi or the delay has run 15 minutes.",
+    "errorCodes": [
+     "2 flashes"
+    ],
+    "test": "Flowchart: check it is seated; if resistance is 0 or very high replace the sensor.",
+    "source": "BTC 762003306 H p.42, p.29, p.44"
+   },
+   {
+    "plug": "CN26",
+    "name": "R454B refrigerant leak sensor",
+    "location": "on the coil; moved to the cabinet side for downflow / horizontal left",
+    "kind": "other",
+    "spec": "Service life 15 years. No sensor part number printed.",
+    "errorCodes": [
+     "continuous flashing",
+     "3 flashes",
+     "4 flashes",
+     "8 flashes"
+    ],
+    "source": "BTC 762003306 H p.42, p.15, p.17"
+   },
+   {
+    "plug": "CN9",
+    "name": "Hyper-Link M1 / M2 communication to the outdoor unit",
+    "kind": "other",
+    "spec": "16/18 AWG, 300 ft max. SW7-1 OFF = communication mode (default); outdoor SW5-4 OFF.",
+    "errorCodes": [
+     "5 flashes"
+    ],
+    "test": "5 flashes (Figure 38): check the M1 M2 wiring from ODU CN10 to IDU CN9 first, then the DIP switches (outdoor SW5-4, indoor SW7-1), then that M1 M2 are not shorted or touching sheet metal; then replace the IDU control board, then the ODU control board.",
+    "source": "BTC 762003306 H p.25, p.38, p.42, p.44"
+   },
+   {
+    "plug": "CN15 (CS1)",
+    "name": "Current sensor CS on the power wiring",
+    "kind": "other",
+    "spec": "No value printed. The LED table calls 6 flashes a \"power consumption sensor fault\"; the manual does not say which plug or part that is. CN16 (CS2) is drawn with a dashed (field installed) line to the heater kit, not to the CS ring.",
+    "errorCodes": [],
+    "test": "6 flashes flowchart: is the indoor blower functioning properly? Not working: replace the blower motor. Working: replace the indoor control board.",
+    "source": "BTC 762003306 H p.42, p.45"
+   },
+   {
+    "plug": "CN4",
+    "name": "Thermostat DH / B / W2 / W1 / Y1 / R / C / G / Y2 (gray, blue, brown, white, yellow, red, black, green, purple)",
+    "location": "low voltage",
+    "kind": "other",
+    "spec": "1-stage thermostat: jump Y1 and Y2. Cap unused CN4 wires individually.",
+    "source": "BTC 762003306 H p.42"
+   },
+   {
+    "plug": "CN6",
+    "name": "Electric heat kit (C / W3 / W2 / W1)",
+    "kind": "other",
+    "spec": "1 and 2 stage EHK-xxB kits use adapter cable 8733983631; 3-stage EHK-15I / 20I do not.",
+    "source": "BTC 762003306 H p.26, p.42"
+   },
+   {
+    "plug": "CN34",
+    "name": "Alarm unit for refrigerant leak protection (optional)",
+    "kind": "switch",
+    "spec": "Rated 24 VAC/1A or 30 VDC/1A or 250 VAC/1A.",
+    "source": "BTC 762003306 H p.42"
+   },
+   {
+    "plug": "CN35",
+    "name": "Indoor fan motor speed taps 1-5 and C",
+    "kind": "other",
+    "spec": "1 low, 2 medium low, 3 medium, 4 medium high, 5 high.",
+    "source": "BTC 762003306 H p.42"
+   }
+  ],
+  "notes": "LEAD: today these models fall into the Premium map through the token \"BIVB36\" (and BIVB48 / BIVB60). The Premium map says CN30 P/Q and SW7-1 ON = communication; on the Ultra it is CN9 M1 M2 and SW7-1 OFF. The Premium tokens need tightening (e.g. BIVB36RCBM20) or this map must win.",
+  "sources": [
+   {
+    "file": "bosch-ids-ultra-airhandler-iom-btc762003306h.pdf",
+    "pages": "see each row",
+    "what": "IDS Ultra air handler installation manual (BTC 762003306 H)"
+   }
+  ]
+ },
+ {
+  "id": "bosch-ids-edge-multi-r454b-airhandler",
+  "title": "Bosch IDS Edge Multi (R-454B) air handler main control board + switch module",
+  "side": "indoor",
+  "brand": "Bosch",
+  "models": "IDS Edge Multi air handler BIVA-12/18/24/36/48/60VCB-M18X; IOM BTC 762003320 B (04.2026)",
+  "match": [
+   "BIVA12VCBM18",
+   "BIVA18VCBM18",
+   "BIVA24VCBM18",
+   "BIVA36VCBM18",
+   "BIVA48VCBM18",
+   "BIVA60VCBM18"
+  ],
+  "sizes": [
+   "all"
+  ],
+  "board": "Main control board (SW8, display panel) with fan module and switch module (SW1, ENC1-3)",
+  "replacement": [],
+  "sensors": [
+   {
+    "plug": "CN80",
+    "name": "T2A liquid pipe temperature sensor (heat exchanger inlet)",
+    "kind": "thermistor",
+    "spec": "No resistance table printed in the air handler manual.",
+    "errorCodes": [
+     "F01"
+    ],
+    "source": "BTC 762003320 B p.41, p.44"
+   },
+   {
+    "plug": "CN81",
+    "name": "T2 middle pipe temperature sensor",
+    "kind": "thermistor",
+    "spec": "No resistance table printed.",
+    "errorCodes": [
+     "F11",
+     "F12"
+    ],
+    "source": "BTC 762003320 B p.41, p.44"
+   },
+   {
+    "plug": "CN82",
+    "name": "T1 inlet (return) air temperature sensor",
+    "kind": "thermistor",
+    "spec": "No resistance table printed.",
+    "errorCodes": [
+     "E24"
+    ],
+    "source": "BTC 762003320 B p.41, p.44"
+   },
+   {
+    "plug": "CN83",
+    "name": "T2B gas pipe temperature sensor (heat exchanger outlet)",
+    "kind": "thermistor",
+    "spec": "No resistance table printed.",
+    "errorCodes": [
+     "F21"
+    ],
+    "source": "BTC 762003320 B p.41, p.44"
+   },
+   {
+    "plug": "Switch module CN8",
+    "name": "A2L (R-454B) refrigerant sensor",
+    "kind": "other",
+    "spec": "Service life 15 years.",
+    "errorCodes": [
+     "A11",
+     "EC1",
+     "d43"
+    ],
+    "source": "BTC 762003320 B p.42, p.44, p.16"
+   },
+   {
+    "plug": "CN10",
+    "name": "Hyper-Link M1 / M2 to the outdoor unit",
+    "kind": "other",
+    "spec": "16/18 AWG, 4000 ft max, no polarity.",
+    "errorCodes": [
+     "C21"
+    ],
+    "source": "BTC 762003320 B p.26, p.41"
+   },
+   {
+    "plug": "Switch module CN3",
+    "name": "Conventional 24V thermostat R / C / B / Y1 / G / Y2 / W (top to bottom as drawn)",
+    "kind": "other",
+    "spec": "Switch module links to main board CN18 through its CN1.",
+    "errorCodes": [
+     "C79"
+    ],
+    "source": "BTC 762003320 B p.41-42"
+   },
+   {
+    "plug": "Switch module CN5",
+    "name": "DRY2 multi-function dry contact (set by ENC1)",
+    "kind": "switch",
+    "spec": "ON/OFF, 24 V DC/AC 1A max.",
+    "source": "BTC 762003320 B p.42-43"
+   },
+   {
+    "plug": "SW8-2",
+    "name": "Electric auxiliary heater installed / not installed",
+    "kind": "other",
+    "spec": "SW8-1 reserved.",
+    "source": "BTC 762003320 B p.41"
+   }
+  ],
+  "sources": [
+   {
+    "file": "Bosch IDS Edge Multi air handler installation manual BTC 762003320 B (not in the manuals list)",
+    "pages": "see each row",
+    "what": "board and plug layout"
    }
   ]
  }

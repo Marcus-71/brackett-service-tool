@@ -661,6 +661,10 @@ const CODE_FAMILY_GUARDS = [
   // v451: the earlier OTERRA FTXF / FTKF / RXF / RKF ..AXVJU would shorten to "FTXF09" / "RXF09", which sits in the
   // OTERRA ..BVJU9 family text - their own manual (DAMA-SM-23-021) prints a different table.
   { re: /^(?:FT[XK]F|R[XK]F)(?:09|12|18|24)(?!BVJU)/, min: 8 },
+  // v452: Bosch BGH96 Rev A / Rev B and BGH97 other than Rev A must not shorten onto the BGH96 Rev C / BGH97 Rev A tables.
+  { re: /^(?:BGH96M[0-9]{3}[BCD][345][^C]|BGH97M[0-9]{3}[BCD][345][^A])/, min: 12 },
+  // v452: Bosch air handlers - Premium BIVB..RCB would otherwise shorten onto the Ultra rows, Light / BIVA15 onto the Edge Multi rows.
+  { re: /^BI[VWKDS][AB][0-9]{2}/, min: 9 },
   { re: /^[AD]MST[0-9]{2}[A-Z]U14/, min: 10 },
   // v426: R-32 single-stage outdoor units - a front that shares five (or six) characters with a named model but is not it
   { re: /^(?:ALXS3[^B]|ALXS4[^BN]|ALXS5[^B]|ALZS4[^BN]|ALZS5[^B]|DC3SE[^N]|DC4SE[^A]|DC5SE[^A]|DH4SE[^A]|DH5SE[^A]|GLXS3[^B]|GLXS4[^BM]|GLXS5[^B]|GLZS4[^BM]|GLZS5[^B])/, min: 6 },
@@ -10529,6 +10533,21 @@ const MODEL_PATTERNS = [
   { re: /^D(?:MST|MVT)[0-9]{2}[A-Z]/, brand: "Daikin", equipment: "Air Handler", series: "Daikin-badged DMST (multi-speed ECM) / DMVT (variable-speed communicating) R-32 multi-position air handler - same unit as Goodman/Amana AMST / AMVT", notes: ["The first letter is the BRAND position: D = Daikin Air Handler, A = Corporate (Goodman / Amana) Air Handler - everything after it reads the same (SS-GAMST-R32 / SS-GAMVT-R32).","Read DMST24BU1300AA as D (Daikin) M (multi-position) S (MS-ECM; V = VS-ECM communicating) T (TXV) 24 (2 ton) B (17.5 in cabinet) U (unpainted) 1 (208/230V 1ph) 3 (R-32) 00 (no factory heat kW) then major and minor revision.","Install and spec documents are filed under Goodman AMST in Manuals (IO-4011H, SS-GAMST-R32)."] },
   // --- end coverage:goodman ---
   // --- Bosch Home Comfort ---
+  // v452 (Andy 2026-11-17 "continue ... till its all done"): BGH96 / BGH97 furnaces, the R-454B air handlers / indoor units / coils and the
+  // IDS Edge / Edge Max outdoor units were not identified (BIDA / BISA were re-read into the Bryant line). These lines must stay above the
+  // generic IDS outdoor lines and the short-tag air handler line below, which have no end anchor.
+  { re: /^BGH96M(?:060|080|100|120)[BCD][345][ABC]/, brand: "Bosch", equipment: "Gas Furnace", series: "Bosch BGH96 96% AFUE two-stage condensing gas furnace (last letter = revision A / B / C)", notes: ["The last letter is the revision and it matters: Rev A shows faults as flashes of a red diagnostic LED; Rev B and Rev C show letter codes on a 2-digit display, and only the Rev C manual has the IPM blower module codes. Use the manual and code list for the letter on the plate.", "Size digits are the input in thousands of BTU/h (060 / 080 / 100 / 120 - Rev C Table 36 lists Input Rating KBTU/H against each model). In Table 1 the B models are 17.5 in. wide, C models 21 in., D models 24.5 in.", "Negative pressure regulated gas valve - replace only with the same model number."] },
+  { re: /^BGH97M(?:060|080|100|120)[BCD][345][A-Z]/, brand: "Bosch", equipment: "Gas Furnace", series: "Bosch BGH97 97% AFUE two-stage condensing gas furnace", notes: ["Two displays: fault codes E1-E9, FE, FL, Pr, bE, nL, Fo on the integrated control module; motor, sensor and b-codes on the IPM module.", "On the IPM display a code with a decimal point (1X. - 6X.) is the inducer motor; without the point it is the circulating blower.", "Size digits are the input in thousands of BTU/h (060 / 080 / 100 / 120)."] },
+  { re: /^BOHA-?(?:24|36|60)RTB-?M18S?/, brand: "Bosch", equipment: "Condenser/Heat Pump", series: "Bosch IDS Edge (Edge Regular) side-discharge inverter heat pump, R-454B", notes: ["Side-discharge (horizontal discharge) IDS outdoor unit: BOHA-24RTB-M18S / 36RTB / 60RTB = 2 / 3 / 5 ton, 208/230 V 1 phase, R-454B (A2L).", "The R after the size = Regular heat pump; an M there = Edge Max.", "Its code list is NOT the Premium / Light / Ultra list: on the Edge E41 = outdoor ambient sensor T4, F41 = coil sensor T3, P11 / P21 = pressure SENSOR errors. Use the IDS Edge rows in Error Codes.", "Codes show on the outdoor board digital display; hold MENU 5 seconds for menu mode. Single-zone with an IDS Premium air handler uses the P Q terminals; Edge Multi indoor units use M1 M2."] },
+  { re: /^BOHA-?(?:24|36|60)MTB-?M18S?/, brand: "Bosch", equipment: "Condenser/Heat Pump", series: "Bosch IDS Edge Max side-discharge inverter heat pump, R-454B", notes: ["Side-discharge (horizontal discharge) IDS outdoor unit: BOHA-24MTB-M18S / 36MTB / 60MTB = 2 / 3 / 5 ton, 208/230 V 1 phase, R-454B (A2L).", "The M after the size = Max Performance heat pump; an R there = Edge (Regular).", "Same code tables as the Edge, and NOT the Premium / Light / Ultra list: E41 = outdoor ambient sensor T4, F41 = coil sensor T3, P11 / P21 = pressure SENSOR errors. Use the IDS Edge rows in Error Codes.", "Edge Max adds an Auto Charge mode in the outdoor menu (the Edge IOM lists manual charge only)."] },
+  { re: /^BIVB-?(?:36|48|60)MCB-?M19X?/, brand: "Bosch", equipment: "Air Handler", series: "Bosch IDS Ultra air handler, R-454B (BIVB-36MCB-M19X / 48 / 60; IOM short tag BIVB19)", notes: ["Two digits after BIVB = nominal capacity in 1,000 Btu/h (36 = 3 ton, 48 = 4 ton, 60 = 5 ton); the B before -M19 means R-454B.","Its LED1 flash table is NOT the Premium / Light one - use the IDS Ultra air handler rows in Error Codes.","Switch positions differ from the Premium air handler - use the Ultra figures card, not the Premium one."] },
+  { re: /^BIV[AB]-?(?:24|36|48|60)RCB-?M20X?/, brand: "Bosch", equipment: "Air Handler", series: "Bosch IDS Premium air handler, R-454B (BIVB-24RCB-M20X ... 60; some Bosch sheets print BIVA-..RCB-M20X; short tag BIVB20 / BIVA20)", notes: ["Two digits = nominal capacity in 1,000 Btu/h; B before -M20 = R-454B.","Faults show as a single-LED flash count on the indoor board and as b-codes on the outdoor display."] },
+  { re: /^BIVA-?(?:24|36|48|60)RXB-?M15X?/, brand: "Bosch", equipment: "Air Handler", series: "Bosch IDS Light air handler, R-454B, PSC blower (BIVA-24RXB-M15X ... 60; short tag BIVA15)", notes: ["Two digits = nominal capacity in 1,000 Btu/h; B before -M15 = R-454B.","Faults show as a single-LED flash count on the indoor board."] },
+  { re: /^BIVA-?(?:12|18|24|36|48|60)VCB-?M18X?/, brand: "Bosch", equipment: "Air Handler", series: "Bosch IDS Edge Multi air handler, R-454B (BIVA-12VCB-M18X ... 60VCB; pairs with the Edge / Edge Max side-discharge outdoor unit)", notes: ["Two digits = nominal capacity in 1,000 Btu/h (12 = 1 ton ... 60 = 5 ton); V = multi-zone capable indoor unit.","This is NOT the IDS Light / Premium air handler: it has its own display codes - use the IDS Edge Multi air handler rows in Error Codes."] },
+  { re: /^BIWA-?(?:07|09|12|18)VCB-?M18X?/, brand: "Bosch", equipment: "Mini-Split", series: "Bosch IDS Edge Multi wall mounted indoor unit, R-454B (BIWA-07VCB-M18X / 09 / 12 / 18)", notes: ["Two digits = capacity in 1,000 Btu/h (07 = 7,000 ... 18 = 18,000).","Indoor unit of the Edge / Edge Max multi-zone system - codes are in Error Codes under IDS Edge Multi wall mounted."] },
+  { re: /^BI[KDS]A-?(?:07|09|12|18)VCB-?M18X?/, brand: "Bosch", equipment: "Mini-Split", series: "Bosch IDS Edge indoor unit, R-454B (BIKA / BIDA / BISA-..VCB-M18X; unit type not printed in the documents on file)", notes: ["Indoor unit model listed for the Edge / Edge Max multi-zone outdoor units (Bosch Edge condensing unit manual BTC 762003323 B p.19, Table 9). The unit type is not printed for BIKA / BIDA / BISA in the documents on file - read the unit's own label.","No manual for these three types is in the library yet."] },
+  { re: /^BMAC(?:2430|3036|4248|4860)[A-D]BTA/, brand: "Bosch", equipment: "Other", series: "Bosch BMAC R-454B multi-position cased coil (BMAC2430 / 3036 / 4248 / 4860 ..BTA)", notes: ["Coil-only tag: capacity comes from the matched outdoor unit, not from the four digits (Bosch pairs BMAC4248 coils with both 3 ton and 5 ton outdoor units).","With a Bosch BGH96 Rev C or BGH97 furnace the coil's R-454B refrigerant sensor plugs into the furnace main control board (BGH96 Rev C: CN30; BGH97: CN3) and furnace DIP switch SW1-2 must be ON. With a third-party furnace or a Bosch Rev A / Rev B furnace the A2L accessory box (part number 8-733-967-005) is required."] },
+  { re: /^BMAT(?:18|24|30|36|42|48|60)[ABC]5[A-Z]{2}SA/, brand: "Bosch", equipment: "Other", series: "Bosch BMAT full-cased coil (BMAT18 - BMAT60; manual 6764360-UIM-A-0826)", notes: ["Coil-only tag: the two digits are the coil size; the outdoor unit sizes it may be matched with are in the coil manual's match table."] },
   // Nomenclature (from Bosch's own product-specification diagrams):
   //   Brand(B) Application(O=Outdoor/I=Indoor/P=Packaged) UnitType(V=Vertical/W=Wall/
   //   C=Ceiling/H|B=Packaged) Series(A|B) -- Capacity(kBTU) Performance(M=Max/R=Regular/
@@ -10665,6 +10684,11 @@ const GENERAC_ATS_AMPS = { "35": "100 A, 120/240 V single-phase, non-service ent
 function decodeCapacity(model, equipment) {
   // Generator digits are kW (QT048 = 48 kW), not cooling tonnage.
   if (equipment === "Generator") return null;
+  // v452: Bosch IDS air handlers / wall units - the general rule would read the "18" of M18X as 1.5 ton. BIKA / BIDA / BISA digits and the
+  // BMAC / BMAT coil numbers are not a printed capacity, so no line (BTC 762008302 B p.5, BTC 762008313 A p.5, BTC 762003325 B p.16).
+  const bi = String(model || "").match(/^BI[VW][AB]-?(07|09|12|18|24|36|48|60)[A-Z]{3}-?M\d{2}/);
+  if (bi) { const btu = parseInt(bi[1], 10); return btu >= 12 ? `${btu / 12} ton (${btu},000 BTU/h nominal)` : `${btu},000 BTU/h nominal`; }
+  if (/^BI[KDS]A-?\d{2}[A-Z]{3}-?M\d{2}/.test(model) || /^BMAC\d{4}/.test(model) || /^BMAT\d{2}/.test(model)) return null;
   // v450: a transfer switch never gets a tonnage / BTU line; the Generac FCM switches get their amp rating from the table above.
   if (equipment === "Transfer Switch") { const g = String(model || "").match(/^(?:G0|0)099(\d\d)-?0$/); return (g && GENERAC_ATS_AMPS[g[1]]) || null; }
   // v443: the 1993-94 Inter-City Products CA9 plates print no capacity and no ICP literature decodes the model - no tonnage line.
@@ -15252,7 +15276,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v451";
+const APP_VERSION = "v452";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
