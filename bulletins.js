@@ -42,6 +42,21 @@ const BULLETINS = [
 
   // ===================== GENERAC - GenService bulletins =====================
   {
+    id: "gen-sib-a0013192323-xg-coolant", brand: "Generac", number: "A0013192323", docNo: "A0013192323", rev: "A", date: "2026-11", type: "Service",
+    title: "Protector XG 2.5L coolant: 50/50 silicate-free OAT only",
+    applies: { genFamilies: [], modelRe: ["^XG0(2525|3025)(AU|CN)AX$"] },
+    appliesText: "Protector XG 2.5L engine models XG02525AUAX, XG02525CNAX, XG03025AUAX, XG03025CNAX. (No Protector XG family exists in the app yet - match on the model.)",
+    summary: "Any coolant other than a 50/50 mix of silicate-free OAT ethylene glycol and deionized water can block the radiator and cause high coolant temperature alarms on these XG units.",
+    steps: [
+      "Topping off or refilling coolant: use only a 50/50 mix of silicate-free OAT ethylene glycol coolant and deionized water.",
+      "High coolant temperature alarm on one of these units: ask or check what coolant was added. Per the bulletin, wrong coolant can lead to radiator blockage.",
+      "Follow the safety notes in the owner's, installation and diagnostic and repair manuals before servicing.",
+      "Warranty: the bulletin is marked information only."
+    ],
+    priority: "normal", confidential: true,
+    source: "Generac SIB A0013192323 Rev A, Nov 2026"
+  },
+  {
     id: "gen-sib25-12-ac", brand: "Generac", number: "SIB25-12-AC", docNo: "A0008846372", rev: "A", date: "2025-10", type: "Service",
     title: "Testing E-code 2800 (generator emergency shutdown)",
     applies: { genFamilies: BUL_GEN_EVO_AC, controllers: ["Evolution 1.0", "Evolution 2.0"], codes: ["2800"] },

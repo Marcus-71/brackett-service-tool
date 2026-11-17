@@ -124575,6 +124575,743 @@ const BRAND_SENSOR_MAPS = [
     "what": "models, slider"
    }
   ]
+ },
+ {
+  "id": "lennox-ml297uhvk-furnace-107629",
+  "title": "Lennox ML297UHVK (R-454B ready) 97% two-stage variable-speed upflow/horizontal furnace - control 107629",
+  "side": "indoor",
+  "brand": "Lennox",
+  "models": "ML297UHVK(X): ML297UH045XV36BK, 070XV36BK, 090XV36CK, 090XV60CK, 110XV60CK, 135XV60DK",
+  "match": [
+   "ML297UH045XV36BK",
+   "ML297UH070XV36BK",
+   "ML297UH090XV36CK",
+   "ML297UH090XV60CK",
+   "ML297UH110XV60CK",
+   "ML297UH135XV60DK"
+  ],
+  "sizes": [
+   "045",
+   "070",
+   "090",
+   "110",
+   "135"
+  ],
+  "board": "Integrated control 107629 (two stage, variable speed, non-communicating, 7-segment LED, Low GWP interface) - 107629-XX in the service manual FIGURE 4, 107629-01 in Installation Instructions 508907-02 p.44",
+  "replacement": [
+   {
+    "board": "Lennox 107629-XX integrated control. No ML297 document prints a replacement kit number. Kit sheet 508534-02 (kit 27P18) ships control 107629-XX for 'R454B compliant, two-stage, non communicating, variable speed furnaces' but does not name the ML297 - not confirmed.",
+    "kit": "Not printed in any ML297 document - order by control number 107629 from the furnace repair parts list. Kit 27P18 (sheet 508534-02) ships a 107629-XX control but its sheet does not name the ML297: not confirmed for this furnace.",
+    "replaces": "Same board number as fitted (107629). No ML297 document prints a replacement kit number; the ML297 manuals only say the control is not field repairable and to replace the entire control.",
+    "differences": "None stated in the kit sheet.",
+    "steps": [
+     "Turn off electrical and gas supplies to the furnace.",
+     "Label the wires before disconnecting, then disconnect the wires and harness connectors from the existing control.",
+     "Unlatch the two mounting legs on the right side of the control and rotate the control toward you to remove it.",
+     "Electrostatic discharge can damage the control: touch your hand and tools to metal before handling it. Fit the new control and reconnect the marked wires and harness connectors. (The kit sheet says this control is for use with a 120V ignitor only.)",
+     "Set the Low GWP DIP switches to the sensor configuration - failure to do so will cause faults on power-up (the kit sheet prints this section after its power-restore step). Furnace-only or non-Low GWP (R-410A) system: both switches to DISABLE, otherwise the blower operates continuously. One sensor on SENSOR 1 = switch 1 enable, switch 2 disable; two sensors = both enable.",
+     "Disabling refrigerant detection on an A2L system is prohibited by safety codes.",
+     "Restore electrical and gas supplies and verify operation. Make sure the appliance is properly earth grounded and that line neutral and line hot are connected correctly. Protect the control from water - a control that has been in direct contact with water must be replaced."
+    ],
+    "source": "lennox-508534-02-000.pdf p.1-2 (kit 27P18 application, steps); lennox-ml297uhvk-service-100231.pdf p.8 (control not field repairable), p.57 (Low GWP DIP settings)"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "CAI/HSI plug",
+    "name": "Combustion air inducer (two-stage) and hot surface ignitor plug",
+    "kind": "other",
+    "spec": "Control supplies a regulated 120 volts to the ignitor; ignitor 39 to 70 ohms. Inducer runs low speed on first-stage heat and high speed on second stage; 15 seconds pre-purge, 5 seconds post-purge.",
+    "test": "Test 1: remove the HSI/CAI 5-pin plug from the control and read ohms across terminals 1 and 5: 39 to 70 ohms (if correct, the only test needed; 0 or infinity = do Test 2). Test 2: separate the 2-pin jack-plug near the manifold and read the ignitor: 39 to 70 ohms; good there = wiring between the jack-plug and the control, bad = the ignitor. Test 3: small probes in terminals 1 and 5 during the 20 second warm-up: 120 volts plus or minus 10%; low = check the supply voltage.",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.9 (FIGURE 4); p.23 (ignitor); p.25 (FIGURE 16); p.26 (inducer)"
+   },
+   {
+    "plug": "Main harness plug",
+    "name": "Main harness interface: two-stage gas valve, low / high pressure switches, primary limit, rollout switches",
+    "kind": "other",
+    "spec": "Primary limit S10 in the heating vestibule panel: auto reset, must reset within three minutes or Watchguard for one hour; factory set, set point differs by model (not printed). | Flame rollout switches S47 on top of the burner box, one each side: N.C. SPST manual reset, trip (open) at 210°F, not adjustable. | Dual pressure switch S18 on the inducer orifice bracket, negative pressure; set points low / high heat inches w.c.: 0-4500 ft (TABLE 14) -045 0.50/0.80; -070 0.55/0.95; -090 0.50/0.90; -110 0.60/1.15; -135 0.45/0.85. 4501-7500 ft (TABLE 15) -045 0.41/0.74; -070 0.50/0.85; -090 0.45/0.75; -110 0.55/0.95; -135 0.40/0.80. 7501-10,000 ft (TABLE 16) -045 0.40/0.70; -070 0.45/0.75; -090 0.40/0.70; -110 0.50/0.90; -135 0.35/0.75. Values are break (open) points; make is 0.15 in. greater.",
+    "test": "Pin numbers are not tabulated in the manual; test each switch at its own terminals. Pressure switch: tee a manometer into both hoses with the provided fittings, read right after start-up and again at steady state (about 5 minutes). The switch is not field adjustable and must not be bypassed.",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.9 (FIGURE 4); p.23 (limit, rollout); p.26 (TABLES 13-16); p.27 (pressure switch check)"
+   },
+   {
+    "plug": "FLAME SENSE",
+    "name": "Flame sensor interface (3/16 in. quick connect)",
+    "kind": "other",
+    "spec": "Flame signal in microamps (TABLE 12): normal 1.5 or greater; low 1.0 or less; drop out 0.5. Sensor is on the left side of the burner support, tip in the flame of the left-most burner.",
+    "test": "Hold the diagnostic push button and release on F: the 7-segment display shows flame current in microamps. Exits on power reset, by holding the button until three horizontal lines show, or after 10 minutes.",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.10 (TABLE 1, Flame Signal Mode); p.23 (TABLE 12)"
+   },
+   {
+    "plug": "LGWP1 (SENSOR 1)",
+    "name": "Low GWP (A2L) refrigerant detection sensor #1 interface",
+    "kind": "other",
+    "spec": "A single sensor must be on the SENSOR 1 plug (LGWP1). Lennox approved evaporator coil and LGWP sensors only.",
+    "test": "E150 = leak alarm (cannot clear while the sensor reports a leak). E151 sensor #1 fault. E154 communication lost or invalid DIP configuration: check harness, connector, sensor and the Low GWP DIP switches; blower latches a minimum of 5 minutes. E160 wrong sensor type. LGWP TEST button retests.",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.10 (TABLE 3); p.12-15 (codes); p.57 (sensor connection)"
+   },
+   {
+    "plug": "LGWP2 (SENSOR 2)",
+    "name": "Low GWP sensor #2 interface (second sensor, confined-space or additional line set joints; sensor kit 27V53)",
+    "kind": "other",
+    "test": "E152 sensor #2 fault, E155 communication lost, E161 wrong sensor type.",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.10 (TABLE 3); p.12-15 (codes); p.57 (secondary sensor)"
+   },
+   {
+    "plug": "SW3 Low GWP DIP switches (2)",
+    "name": "Enable / disable for sensor 1 and sensor 2 - factory setting ENABLED",
+    "kind": "other",
+    "spec": "TABLE 30: one sensor on SENSOR 1 = LGWP1 Enable, LGWP2 Disable. Two sensors = Enable, Enable. No sensor (R410A or heat only) = Disable, Disable. LGWP1 Disable with LGWP2 Enable = invalid. On the board DISABLE is the ON side of the switch and ENABLE the other side (FIGURE 5). Other configurations cause a servicing fault; a wrong setting causes faults on power-up.",
+    "test": "Furnace-only or non-Low GWP application: both switches to DISABLE, otherwise the blower operates continuously. Disabling refrigerant detection on an A2L system is prohibited by safety codes.",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.16 (FIGURE 5); p.57 (TABLE 30, warning); p.1 (A2L warning)"
+   },
+   {
+    "plug": "ALARM / ZONE",
+    "name": "Low GWP leak audible alarm (dry contact) / zoning control interface for Low GWP applications",
+    "kind": "other",
+    "spec": "Alarm: dry relay contact rated 3A at 30 VAC/DC, triggered when the control enters Leak Detected mode.",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.10 (TABLE 3); p.59 (External Alarm)"
+   },
+   {
+    "plug": "LGWP TEST",
+    "name": "Push button to test Low GWP function (Test / Reset)",
+    "kind": "other",
+    "test": "Normal mode: triggers a leak detection response (code E164; clears by itself after 1 minute, or press again to end). Leak Detected mode: resets the control to normal after a leak has been detected and purged. Fault mode: resets the control after the fault is fixed; if not fixed it returns to Fault. Initializing, short press: skips the remaining pre-purge once the sensors are recognised. Long press: reset control.",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.10 (TABLE 3); p.59 (LGWP test button tables)"
+   },
+   {
+    "plug": "RECALL (diagnostic push button)",
+    "name": "Error code recall and flame signal menu",
+    "kind": "other",
+    "test": "Press and hold: a new menu item shows every five seconds; release on the one wanted. E = the most recent 10 error codes. Inside recall, c clears all codes - press the button a second time while c is flashing to confirm. Hold until solid three bars to exit. F = flame microamps.",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.9 (FIGURE 4); p.10 (Diagnostic Push Button)"
+   },
+   {
+    "plug": "Blower motor (ECM) interface / J48, J49",
+    "name": "Variable-speed blower motor B3 (GenTeq or Nidec): J48 power plug, J49 16-pin control plug",
+    "kind": "other",
+    "spec": "J48: pins 1 and 2 jumpered for 120 VAC line input, pin 3 ground, pins 4 and 5 AC line. J49: 1 C1, 2 W/W1, 3 C2, 4 Delay, 5 Cool, 6 Y1, 7 Adjust, 8 Out, 9 O, 10 DS (PWM), 11 Heat, 12 R, 13 EM/W2, 14 Y/Y2, 15 G, 16 Out +. Power choke L13 on 5 ton 1 hp units.",
+    "test": "Line voltage must be on J48 pins 4 and 5 for the motor to run. Motor that does not reach 200 rpm within 13 seconds shuts down and retries, up to eight tries, then locks out - reset by momentarily turning off power. Nidec 16X4W LEDs (PW / RX / TX): Off / Blink / Blink, not rotating = normal; all blinking, rotating = normal (PW blinks 100 cfm per blink); Blink / Off / Blink, not rotating = verify the 16X4W and motor control hp match and power to the motor control, power off 1 minute and restart, replace the controller if it still does not rotate; all off = verify power to the 16X4W, restart, replace the controller if still out. DANGER: disconnect power and wait at least five minutes for the capacitors to discharge before changing motor speed taps.",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.9 (FIGURE 4); p.20-21 (motor, TABLE 11); p.22 (FIGURES 12-13)"
+   },
+   {
+    "plug": "LINE",
+    "name": "120 VAC input to the control",
+    "kind": "other",
+    "test": "Line hot to line neutral 97 to 132 VAC. Ground check, line neutral to C: idle expected 0.3 / maximum 2 VAC; CAI / ignitor energized 0.75 / 5; indoor blower energized less than 2 / 10.",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.10 (TABLE 1); p.53 (ground and voltage table)"
+   },
+   {
+    "plug": "XFMR",
+    "name": "120 VAC output to the transformer",
+    "kind": "other",
+    "spec": "Transformer T1 40VA, 120V primary, 24V secondary; 24V circuit breaker CB8 rated 3A at 32V, press to reset.",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.10 (TABLE 1); p.8 (control box)"
+   },
+   {
+    "plug": "CIRC",
+    "name": "120 VAC output to the indoor blower",
+    "kind": "other",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.10 (TABLE 1)"
+   },
+   {
+    "plug": "HUM",
+    "name": "Unpowered normally open (dry) contacts",
+    "kind": "other",
+    "spec": "For a humidifier rated up to one amp, 24V or 120V; the terminal is energized in the heating mode.",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.10 (TABLE 1); p.19 (Humidifier)"
+   },
+   {
+    "plug": "ACC",
+    "name": "120 VAC output to the optional accessory",
+    "kind": "other",
+    "spec": "Energized when the indoor blower is operating; accessory rated up to one amp (use an external relay above that).",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.10 (TABLE 1); p.19 (Accessory Terminals)"
+   },
+   {
+    "plug": "NEUTRALS",
+    "name": "120 VAC neutrals (5)",
+    "kind": "other",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.10 (TABLE 1)"
+   },
+   {
+    "plug": "Thermostat W1 / W2",
+    "name": "Low stage heat / high stage heat",
+    "kind": "other",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.10 (TABLE 2)"
+   },
+   {
+    "plug": "Thermostat G",
+    "name": "Fan",
+    "kind": "other",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.10 (TABLE 2)"
+   },
+   {
+    "plug": "Thermostat Y1 / Y2",
+    "name": "Low / high stage cool (when W915 is clipped)",
+    "kind": "other",
+    "spec": "Link W915 (Y1 to Y2) must be cut for two-stage cooling; left uncut the outdoor unit runs second-stage cooling only.",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.10 (TABLE 2); p.19 (On-Board Links)"
+   },
+   {
+    "plug": "Thermostat C / R",
+    "name": "Thermostat common / ground; 24 VAC power to the thermostat",
+    "kind": "other",
+    "spec": "On a detected refrigerant leak the control shuts off R (24 VAC) to the thermostat.",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.10 (TABLE 2); p.58 (Leak Detected)"
+   },
+   {
+    "plug": "Thermostat O",
+    "name": "Heat pump reversing valve (when W951 is clipped)",
+    "kind": "other",
+    "spec": "Link W951 (R to O) must be cut for heat pump / dual fuel; left intact, O stays energized.",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.10 (TABLE 2); p.19 (On-Board Links)"
+   },
+   {
+    "plug": "Thermostat DH / DS",
+    "name": "Dehum / Harmony (when W914 is clipped)",
+    "kind": "other",
+    "spec": "Link W914 (R to DS) must be cut with Harmony III zone control or a thermostat with humidity control; left intact the Harmony PWM signal is blocked and the control can be damaged.",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.10 (TABLE 2); p.19 (On-Board Links)"
+   },
+   {
+    "plug": "SW1 four-bank DIP switches",
+    "name": "Thermostat selection, second-stage delay, heat blower-off delay",
+    "kind": "other",
+    "spec": "Switch 1: OFF = two-stage thermostat (factory), ON = single-stage thermostat with timed second stage. Switch 2: second-stage delay OFF = 7 minutes (factory), ON = 12 minutes (single-stage thermostat only). Switches 3 / 4 heat blower-off delay: 90 s = OFF / ON, 120 s = OFF / OFF (marked default in TABLE 5 and FIGURE 5; the text beside it says shipped at 90 seconds), 180 s = ON / OFF, 210 s = ON / ON. Blower-on delay 30 seconds, not adjustable.",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.16 (FIGURE 5); p.17 (SW1, TABLE 5)"
+   },
+   {
+    "plug": "SW2 eight-bank DIP switches",
+    "name": "Cooling speed, blower adjust, cooling off delay, heating speed",
+    "kind": "other",
+    "spec": "Switches 1 / 2 cooling speed: High (default) OFF / OFF, Medium High OFF / ON, Medium Low ON / OFF, Low ON / ON. Switches 3 / 4 adjust: Normal OFF / OFF, +10% ON / OFF, -10% OFF / ON, ON / ON = field test, do not use. Switch 5 cooling / heat pump blower-off delay: OFF = 45 seconds (factory), ON = 2 seconds. Switch 6 not used. Switches 7 / 8 heating speed: Medium High OFF / OFF (default per TABLE 9 and factory setting per TABLE 10; FIGURE 5 stars HIGH instead), High OFF / ON, Medium Low ON / OFF, Low ON / ON. Allowable heating speeds (TABLE 10): 070XV36B - High is Not Allowed; all other sizes allow all four.",
+    "source": "lennox-ml297uhvk-service-100231.pdf p.17 (TABLES 6-8); p.18 (TABLES 9-10)"
+   }
+  ],
+  "test": "Diagnostic push button: 'E' error recall (last 10 codes, 'c' clears), 'F' flame microamps.",
+  "notes": "Every ML297 model number printed ends in K (refrigerant detection-ready); the control ships with both Low GWP sensor positions ENABLED. Sensor #1 cable goes through the provided grommet with a drip loop below the control board on upflow installations; it must not block the view of the 7-segment LED. High-altitude pressure switch kits (4501-7500 / 7501-10,000 ft): 045 32C80 / 32C81, 070 32C78 / 14A54, 090 14A54 / 32C81, 135 25B94 / 25B95; for the 110 the service manual prints 32C87 / 32C76 but Addendum 508934-01 (08-11-2026) and Form 211300 give 32L29 / 32L30.",
+  "gaps": [
+   "Main harness and blower-motor interface pin numbers at the control are not tabulated.",
+   "Primary limit temperature not stated.",
+   "No ML297 document prints the control replacement kit number; 27P18 comes from the kit's own instruction sheet, which does not name the ML297.",
+   "No sensor resistance values are printed (the refrigerant sensors report faults to the control; no ohm table).",
+   "Trial-for-ignition time and retry count not stated."
+  ],
+  "sources": [
+   {
+    "file": "lennox-ml297uhvk-service-100231.pdf",
+    "pages": "8-27, 53, 57-59",
+    "what": "figure 4 (107629-XX), tables 1-3, codes, figure 5 and DIP tables 5-10, motor plugs J48/J49 and table 11, heating components, flame table 12, pressure switch tables 13-16, Low GWP application"
+   },
+   {
+    "file": "lennox-508534-02-000.pdf",
+    "pages": "1-2",
+    "what": "27P18 kit application and installation steps (kit sheet, not ML297-specific)"
+   }
+  ]
+ },
+ {
+  "id": "lennox-ml297dfvk-furnace-107629",
+  "title": "Lennox ML297DFVK (R-454B ready) 97% two-stage variable-speed downflow furnace - control 107629",
+  "side": "indoor",
+  "brand": "Lennox",
+  "models": "ML297DFVK(X): ML297DF070XV48BK, 090XV60CK, 110XV60CK",
+  "match": [
+   "ML297DF070XV48BK",
+   "ML297DF090XV60CK",
+   "ML297DF110XV60CK"
+  ],
+  "sizes": [
+   "070",
+   "090",
+   "110"
+  ],
+  "board": "Integrated control 107629 (two stage, variable speed, non-communicating, 7-segment LED, Low GWP interface) - the downflow service manual's FIGURE 4 carries no part number; 107629-01 is printed in Installation Instructions 508909-02 p.40",
+  "replacement": [
+   {
+    "board": "Lennox 107629-XX integrated control. No ML297 document prints a replacement kit number. Kit sheet 508534-02 (kit 27P18) ships control 107629-XX for 'R454B compliant, two-stage, non communicating, variable speed furnaces' but does not name the ML297 - not confirmed.",
+    "kit": "Not printed in any ML297 document - order by control number 107629 from the furnace repair parts list. Kit 27P18 (sheet 508534-02) ships a 107629-XX control but its sheet does not name the ML297: not confirmed for this furnace.",
+    "replaces": "Same board number as fitted (107629). No ML297 document prints a replacement kit number; the ML297 manuals only say the control is not field repairable and to replace the entire control.",
+    "differences": "None stated in the kit sheet.",
+    "steps": [
+     "Turn off electrical and gas supplies to the furnace.",
+     "Label the wires before disconnecting, then disconnect the wires and harness connectors from the existing control.",
+     "Unlatch the two mounting legs on the right side of the control and rotate the control toward you to remove it.",
+     "Electrostatic discharge can damage the control: touch your hand and tools to metal before handling it. Fit the new control and reconnect the marked wires and harness connectors. (The kit sheet says this control is for use with a 120V ignitor only.)",
+     "Set the Low GWP DIP switches to the sensor configuration - failure to do so will cause faults on power-up (the kit sheet prints this section after its power-restore step). Furnace-only or non-Low GWP (R-410A) system: both switches to DISABLE, otherwise the blower operates continuously. One sensor on SENSOR 1 = switch 1 enable, switch 2 disable; two sensors = both enable.",
+     "Disabling refrigerant detection on an A2L system is prohibited by safety codes.",
+     "Restore electrical and gas supplies and verify operation. Make sure the appliance is properly earth grounded and that line neutral and line hot are connected correctly. Protect the control from water - a control that has been in direct contact with water must be replaced."
+    ],
+    "source": "lennox-508534-02-000.pdf p.1-2 (kit 27P18 application, steps); lennox-ml297dfvk-service-100232.pdf p.7 (control not field repairable), p.57 (Low GWP DIP settings)"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "CAI/HSI plug",
+    "name": "Combustion air inducer (two-stage) and hot surface ignitor plug",
+    "kind": "other",
+    "spec": "Control supplies a regulated 120 volts to the ignitor; ignitor 39 to 70 ohms. Inducer runs low speed on first-stage heat and high speed on second stage; 15 seconds pre-purge, 5 seconds post-purge.",
+    "test": "Test 1: remove the HSI/CAI 5-pin plug from the control and read ohms across terminals 1 and 5: 39 to 70 ohms (if correct, the only test needed; 0 or infinity = do Test 2). Test 2: separate the 2-pin jack-plug near the manifold and read the ignitor: 39 to 70 ohms; good there = wiring between the jack-plug and the control, bad = the ignitor. Test 3: small probes in terminals 1 and 5 during the 20 second warm-up: 120 volts plus or minus 10%; low = check the supply voltage.",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.8 (FIGURE 4); p.22 (ignitor); p.24 (FIGURE 16); p.25 (inducer)"
+   },
+   {
+    "plug": "Main harness plug",
+    "name": "Main harness interface: two-stage gas valve, low / high pressure switches, primary limit, rollout switches",
+    "kind": "other",
+    "spec": "Primary limit S10 in the heating vestibule panel: auto reset, must reset within three minutes or Watchguard for one hour; factory set, set point differs by model (not printed). | Flame rollout switches S47 on top of the burner box, one each side: N.C. SPST manual reset, trip (open) at 210°F, not adjustable. | Dual pressure switch S18 on the inducer orifice bracket, negative pressure; set points low / high heat inches w.c. (TABLE 14, no altitude heading): -070 0.50/0.90; -090 0.45/0.90; -110 0.60/1.15. No high-altitude set-point table is printed for the downflow. Values are break (open) points; make is 0.15 in. greater.",
+    "test": "Pin numbers are not tabulated in the manual; test each switch at its own terminals. Pressure switch: tee a manometer into both hoses with the provided fittings, read right after start-up and again at steady state (about 5 minutes). The switch is not field adjustable and must not be bypassed.",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.8 (FIGURE 4); p.22 (limit, rollout); p.25 (TABLES 13-14); p.26 (pressure switch check)"
+   },
+   {
+    "plug": "FLAME SENSE",
+    "name": "Flame sensor interface (3/16 in. quick connect)",
+    "kind": "other",
+    "spec": "Flame signal in microamps (TABLE 12): normal 1.5 or greater; low 1.0 or less; drop out 0.5. Sensor is on the left side of the burner support, tip in the flame of the left-most burner.",
+    "test": "Hold the diagnostic push button and release on F: the 7-segment display shows flame current in microamps. Exits on power reset, by holding the button until three horizontal lines show, or after 10 minutes.",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.9 (TABLE 1, Flame Signal Mode); p.22 (TABLE 12)"
+   },
+   {
+    "plug": "LGWP1 (SENSOR 1)",
+    "name": "Low GWP (A2L) refrigerant detection sensor #1 interface",
+    "kind": "other",
+    "spec": "A single sensor must be on the SENSOR 1 plug (LGWP1). Lennox approved evaporator coil and LGWP sensors only.",
+    "test": "E150 = leak alarm (cannot clear while the sensor reports a leak). E151 sensor #1 fault. E154 communication lost or invalid DIP configuration: check harness, connector, sensor and the Low GWP DIP switches; blower latches a minimum of 5 minutes. E160 wrong sensor type. LGWP TEST button retests.",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.9 (TABLE 3); p.11-14 (codes); p.57 (sensor connection)"
+   },
+   {
+    "plug": "LGWP2 (SENSOR 2)",
+    "name": "Low GWP sensor #2 interface (second sensor, confined-space or additional line set joints; sensor kit 27V53)",
+    "kind": "other",
+    "test": "E152 sensor #2 fault, E155 communication lost, E161 wrong sensor type.",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.9 (TABLE 3); p.11-14 (codes); p.57 (secondary sensor)"
+   },
+   {
+    "plug": "SW3 Low GWP DIP switches (2)",
+    "name": "Enable / disable for sensor 1 and sensor 2 - factory setting ENABLED",
+    "kind": "other",
+    "spec": "TABLE 28: one sensor on SENSOR 1 = LGWP1 Enable, LGWP2 Disable. Two sensors = Enable, Enable. No sensor (R410A or heat only) = Disable, Disable. LGWP1 Disable with LGWP2 Enable = invalid. On the board DISABLE is the ON side of the switch and ENABLE the other side (FIGURE 5). Other configurations cause a servicing fault; a wrong setting causes faults on power-up.",
+    "test": "Furnace-only or non-Low GWP application: both switches to DISABLE, otherwise the blower operates continuously. Disabling refrigerant detection on an A2L system is prohibited by safety codes.",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.15 (FIGURE 5); p.57 (TABLE 28, warning); p.1 (A2L warning)"
+   },
+   {
+    "plug": "ALARM / ZONE",
+    "name": "Low GWP leak audible alarm (dry contact) / zoning control interface for Low GWP applications",
+    "kind": "other",
+    "spec": "Alarm: dry relay contact rated 3A at 30 VAC/DC, triggered when the control enters Leak Detected mode.",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.9 (TABLE 3); p.59 (External Alarm)"
+   },
+   {
+    "plug": "LGWP TEST",
+    "name": "Push button to test Low GWP function (Test / Reset)",
+    "kind": "other",
+    "test": "Normal mode: triggers a leak detection response (code E164; clears by itself after 1 minute, or press again to end). Leak Detected mode: resets the control to normal after a leak has been detected and purged. Fault mode: resets the control after the fault is fixed; if not fixed it returns to Fault. Initializing, short press: skips the remaining pre-purge once the sensors are recognised. Long press: reset control.",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.9 (TABLE 3); p.58 (LGWP test button tables)"
+   },
+   {
+    "plug": "RECALL (diagnostic push button)",
+    "name": "Error code recall and flame signal menu",
+    "kind": "other",
+    "test": "Press and hold: a new menu item shows every five seconds; release on the one wanted. E = the most recent 10 error codes. Inside recall, c clears all codes - press the button a second time while c is flashing to confirm. Hold until solid three bars to exit. F = flame microamps.",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.8 (FIGURE 4); p.9 (Diagnostic Push Button)"
+   },
+   {
+    "plug": "Blower motor (ECM) interface / J48, J49",
+    "name": "Variable-speed blower motor B3 (GenTeq or Nidec): J48 power plug, J49 16-pin control plug",
+    "kind": "other",
+    "spec": "J48: pins 1 and 2 jumpered for 120 VAC line input, pin 3 ground, pins 4 and 5 AC line. J49: 1 C1, 2 W/W1, 3 C2, 4 Delay, 5 Cool, 6 Y1, 7 Adjust, 8 Out, 9 O, 10 DS (PWM), 11 Heat, 12 R, 13 EM/W2, 14 Y/Y2, 15 G, 16 Out +. Power choke L13 on 4 ton 3/4 hp and 5 ton 1 hp units.",
+    "test": "Line voltage must be on J48 pins 4 and 5 for the motor to run. Motor that does not reach 200 rpm within 13 seconds shuts down and retries, up to eight tries, then locks out - reset by momentarily turning off power. Nidec 16X4W LEDs (PW / RX / TX): Off / Blink / Blink, not rotating = normal; all blinking, rotating = normal (PW blinks 100 cfm per blink); Blink / Off / Blink, not rotating = verify the 16X4W and motor control hp match and power to the motor control, power off 1 minute and restart, replace the controller if it still does not rotate; all off = verify power to the 16X4W, restart, replace the controller if still out. DANGER: disconnect power and wait at least five minutes for the capacitors to discharge before changing motor speed taps.",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.8 (FIGURE 4); p.19-20 (motor, TABLE 11); p.21 (FIGURES 12-13)"
+   },
+   {
+    "plug": "LINE",
+    "name": "120 VAC input to the control",
+    "kind": "other",
+    "test": "Line hot to line neutral 97 to 132 VAC. Ground check, line neutral to C: idle expected 0.3 / maximum 2 VAC; CAI / ignitor energized 0.75 / 5; indoor blower energized less than 2 / 10.",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.9 (TABLE 1); p.53 (ground and voltage table)"
+   },
+   {
+    "plug": "XFMR",
+    "name": "120 VAC output to the transformer",
+    "kind": "other",
+    "spec": "Transformer T1 40VA, 120V primary, 24V secondary; 24V circuit breaker CB8 rated 3A at 32V, press to reset.",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.9 (TABLE 1); p.7 (control box)"
+   },
+   {
+    "plug": "CIRC",
+    "name": "120 VAC output to the indoor blower",
+    "kind": "other",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.9 (TABLE 1)"
+   },
+   {
+    "plug": "HUM",
+    "name": "Unpowered normally open (dry) contacts",
+    "kind": "other",
+    "spec": "For a humidifier rated up to one amp, 24V or 120V; the terminal is energized in the heating mode.",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.9 (TABLE 1); p.18 (Humidifier)"
+   },
+   {
+    "plug": "ACC",
+    "name": "120 VAC output to the optional accessory",
+    "kind": "other",
+    "spec": "Energized when the indoor blower is operating; accessory rated up to one amp (use an external relay above that).",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.9 (TABLE 1); p.18 (Accessory Terminals)"
+   },
+   {
+    "plug": "NEUTRALS",
+    "name": "120 VAC neutrals (5)",
+    "kind": "other",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.9 (TABLE 1)"
+   },
+   {
+    "plug": "Thermostat W1 / W2",
+    "name": "Low stage heat / high stage heat",
+    "kind": "other",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.9 (TABLE 2)"
+   },
+   {
+    "plug": "Thermostat G",
+    "name": "Fan",
+    "kind": "other",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.9 (TABLE 2)"
+   },
+   {
+    "plug": "Thermostat Y1 / Y2",
+    "name": "Low / high stage cool (when W915 is clipped)",
+    "kind": "other",
+    "spec": "Link W915 (Y1 to Y2) must be cut for two-stage cooling; left uncut the outdoor unit runs second-stage cooling only.",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.9 (TABLE 2); p.18 (On-Board Links)"
+   },
+   {
+    "plug": "Thermostat C / R",
+    "name": "Thermostat common / ground; 24 VAC power to the thermostat",
+    "kind": "other",
+    "spec": "On a detected refrigerant leak the control shuts off R (24 VAC) to the thermostat.",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.9 (TABLE 2); p.58 (Leak Detected)"
+   },
+   {
+    "plug": "Thermostat O",
+    "name": "Heat pump reversing valve (when W951 is clipped)",
+    "kind": "other",
+    "spec": "Link W951 (R to O) must be cut for heat pump / dual fuel; left intact, O stays energized.",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.9 (TABLE 2); p.18 (On-Board Links)"
+   },
+   {
+    "plug": "Thermostat DH / DS",
+    "name": "Dehum / Harmony (when W914 is clipped)",
+    "kind": "other",
+    "spec": "Link W914 (R to DS) must be cut with Harmony III zone control or a thermostat with humidity control; left intact the Harmony PWM signal is blocked and the control can be damaged.",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.9 (TABLE 2); p.18 (On-Board Links)"
+   },
+   {
+    "plug": "SW1 four-bank DIP switches",
+    "name": "Thermostat selection, second-stage delay, heat blower-off delay",
+    "kind": "other",
+    "spec": "Switch 1: OFF = two-stage thermostat (factory), ON = single-stage thermostat with timed second stage. Switch 2: second-stage delay OFF = 7 minutes (factory), ON = 12 minutes (single-stage thermostat only). Switches 3 / 4 heat blower-off delay: 90 s = OFF / ON, 120 s = OFF / OFF (marked default in TABLE 5 and FIGURE 5; the text beside it says shipped at 90 seconds), 180 s = ON / OFF, 210 s = ON / ON. Blower-on delay 30 seconds, not adjustable.",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.15 (FIGURE 5); p.16 (SW1, TABLE 5)"
+   },
+   {
+    "plug": "SW2 eight-bank DIP switches",
+    "name": "Cooling speed, blower adjust, cooling off delay, heating speed",
+    "kind": "other",
+    "spec": "Switches 1 / 2 cooling speed: High (default) OFF / OFF, Medium High OFF / ON, Medium Low ON / OFF, Low ON / ON. Switches 3 / 4 adjust: Normal OFF / OFF, +10% ON / OFF, -10% OFF / ON, ON / ON = field test, do not use. Switch 5 cooling / heat pump blower-off delay: OFF = 45 seconds (factory), ON = 2 seconds. Switch 6 not used. Switches 7 / 8 heating speed: Medium High OFF / OFF (factory setting per the text and TABLE 10; TABLE 9 carries no default mark and FIGURE 5 stars HIGH instead), High OFF / ON, Medium Low ON / OFF, Low ON / ON. Allowable heating speeds (TABLE 10): all four speeds allowed on 070XV48BK, 090XV60CK and 110XV60CK.",
+    "source": "lennox-ml297dfvk-service-100232.pdf p.16 (TABLES 6-8); p.17 (TABLES 9-10)"
+   }
+  ],
+  "test": "Diagnostic push button: 'E' error recall (last 10 codes, 'c' clears), 'F' flame microamps.",
+  "notes": "Every ML297 model number printed ends in K (refrigerant detection-ready); the control ships with both Low GWP sensor positions ENABLED. Second sensor cable routes through the left side grommet. High-altitude pressure switch kits (4501-7500 / 7501-10,000 ft): 070 32C78 / 14A54, 090 14A54 / 32C81; for the 110 the service manual prints 32C87 / 32C76 but Addendum 508934-01 (08-11-2026) and Form 211301 give 32L29 / 32L30. LP low-fire manifold: the service manual's TABLE 25 prints 4.9 in. w.g. while its page 2, Form 211301 and the installation instructions print 4.5.",
+  "gaps": [
+   "Main harness and blower-motor interface pin numbers at the control are not tabulated.",
+   "Primary limit temperature not stated.",
+   "No ML297 document prints the control replacement kit number; 27P18 comes from the kit's own instruction sheet, which does not name the ML297.",
+   "No sensor resistance values are printed (the refrigerant sensors report faults to the control; no ohm table).",
+   "Trial-for-ignition time and retry count not stated.",
+   "Pressure switch set points above 4500 ft not printed for the downflow."
+  ],
+  "sources": [
+   {
+    "file": "lennox-ml297dfvk-service-100232.pdf",
+    "pages": "7-26, 53, 57-59",
+    "what": "figure 4, tables 1-3, codes, figure 5 and DIP tables 5-10, motor plugs J48/J49 and table 11, heating components, flame table 12, pressure switch tables 13-14, Low GWP application"
+   },
+   {
+    "file": "lennox-508534-02-000.pdf",
+    "pages": "1-2",
+    "what": "27P18 kit application and installation steps (kit sheet, not ML297-specific)"
+   }
+  ]
+ },
+ {
+  "id": "lennox-ml197uhek-furnace-107792",
+  "title": "Lennox ML197UHEK (refrigerant-detection ready) 97% single-stage furnace - control 107792 with Low GWP interface",
+  "side": "indoor",
+  "brand": "Lennox",
+  "models": "ML197UHEK: ML197UH030XE36BK, ML197UH060XE36BK, ML197UH080XE48CK",
+  "match": [
+   "ML197UH030XE36BK",
+   "ML197UH060XE36BK",
+   "ML197UH080XE48CK",
+   "ML197UH",
+   "ML197"
+  ],
+  "sizes": [
+   "030",
+   "060",
+   "080"
+  ],
+  "board": "Integrated control A92, Lennox 107792-XX (installation instructions print 107792-01): single stage, constant torque, non-communicating, 7-segment LED, Low GWP / A2L interface",
+  "replacement": [
+   {
+    "board": "Lennox 107792-XX integrated control",
+    "replaces": "Replace with the same control number as fitted (107792-XX; the installation instructions print 107792-01). No ML197 document prints a replacement kit number. Lennox kit sheet 508535-02 ships control 107792-XX as kit 27P19 for single stage furnaces with a constant torque blower motor, but it does not name the ML197 - confirm the kit for this furnace with Lennox parts before ordering.",
+    "differences": "Same control number. Set the Low GWP DIP switches by the ENABLE / DISABLE markings on the control (SM p.10 Figure 7, p.54 Table 22).",
+    "steps": [
+     "Electrostatic discharge can affect electronic components - touch your hand and tools to metal before handling the control.",
+     "Turn off electrical and gas supplies to the furnace.",
+     "Remove the access panel(s) to the blower compartment.",
+     "Label the wires before disconnecting the existing control. Wiring errors can cause improper and dangerous operation.",
+     "Disconnect the wires and harness connectors from the existing control.",
+     "Remove the existing control from the control box.",
+     "Position the replacement control over the mounting holes and carefully snap it in place.",
+     "Reconnect the wires and harness connectors (blower speed taps per the speed chart on the unit wiring diagram: COOL black; HEAT yellow on the 030, blue on the 060 and 080; FAN red).",
+     "Put the new diagnostic sticker (108253-01) over the old one on the access panel.",
+     "Set the Low GWP DIP switches to the sensor configuration BEFORE restoring power - a wrong setting faults at power-up. No sensor (R-410A or heat only): both DISABLE, or the blower runs continuously. One sensor on the SENSOR 1 plug: LGWP1 Enable, LGWP2 Disable. Two sensors: both Enable. Disabling refrigerant detection on an A2L system is prohibited by safety codes.",
+     "Refit the blower compartment access panel.",
+     "Restore electrical power and gas; the control runs a five-minute purge first.",
+     "Verify proper operation after servicing. Protect the control from direct contact with water; if it has been in direct contact with water, replace it."
+    ],
+    "source": "lennox-ml197uhek-service-100236.pdf p.7 (ESD), p.54 (Table 22), p.56 (purge), p.57 (speed chart); removal / refit steps and sticker from Lennox kit sheet 508535-02 p.1-2, which ships control 107792-XX but does not name the ML197"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "CAI/HSI plug (P2, 4-pin)",
+    "name": "Combustion air inducer and hot surface ignitor plug",
+    "kind": "other",
+    "spec": "Ignitor 39-70 ohms. Voltage to the ignitor during the 20-second warm-up: 102-132 VAC (text, p.14); Figure 10 on p.16 prints 120 volts plus or minus 10%. Pins: 1 inducer hot (black), 2 ignitor hot (black), 3 inducer neutral (white), 4 ignitor neutral (white).",
+    "test": "Remove the 4-pin plug and read ohms across terminals 2 and 4 (ignitor): 39-70 ohms. If it reads 0 or infinity, separate the ignitor's 2-pin plug near the manifold and read the ignitor itself: good there = wiring between the plug and the control; bad there = the ignitor. Voltage: small probes in terminals 2 and 4 during the 20-second warm-up.",
+    "source": "lennox-ml197uhek-service-100236.pdf p.10 (FIGURE 7), p.14, p.16 (FIGURE 10), p.57 (wiring diagram pins)"
+   },
+   {
+    "plug": "Main harness plug (P1, 12-pin)",
+    "name": "Main harness interface (limit, rollout, pressure switch, gas valve circuits)",
+    "kind": "other",
+    "spec": "Pins as drawn on the unit diagram: 3 TH (24 V from the transformer through breaker CB8, blue) | 6 TR (24 V common, yellow - the ladder labels this pin's connector P58/J58; the board drawing shows a position 6 on P1) | 5 RO1 and 11 RO2 (flame rollout switches S47, two in series, brown) | 1 HL0 and 7 HL1 (primary limit S10, blue) | 10 PS (combustion air pressure switch S18, purple) | 12 MV (gas valve GV1, orange; through low gas pressure switch S145 on LP units with a Honeywell valve) | 9 MV COM (gas valve common, yellow) | 8 GND (burner assembly ground, green/yellow). Pressure switch S18: SPST N.O. differential switch on the cold end header box, set point in. w.c. at 0-4500 / 4501-7500 / 7501-10000 ft (TABLE 6): -030 -0.65 / -0.65 / -0.60; -060 0.90 / 0.80 / 0.70; -080 0.90 / 0.80 / 0.70 (060 and 080 printed without a minus sign). Rollout switches S47: SPST N.C., manual reset. Primary limit S10: auto reset, not adjustable; not closed within 3 minutes = 1-hour soft lockout.",
+    "test": "Power off: continuity through the rollout pair (pins 5 to 11) and the limit (pins 1 to 7) with the furnace cool; pressure switch (pin 10) open with the inducer off. The pin numbers are read from the wiring diagram drawing, not a table - check them against the diagram on the unit.",
+    "source": "lennox-ml197uhek-wiring-538670.pdf p.1; lennox-ml197uhek-service-100236.pdf p.14, p.17, p.18 (TABLE 6), p.13 (E250), p.57"
+   },
+   {
+    "plug": "FLAME SENSE",
+    "name": "Flame sensor electrode (3/16 in. quick connect)",
+    "kind": "other",
+    "spec": "Flame signal in microamps: normal 1.5 or more; low 0.5-1.4; drop out 0.4 or less.",
+    "test": "Hold the diagnostic push button until 'F' shows, release: flame current in microamps on the 7-segment LED. Or DC microamp meter in series: (-) to the sensor wire, (+) to the FLAME SENSE terminal, read after the burners have run two minutes. Clean the rod with steel wool only.",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 1), p.11, p.14, p.15 (FIGURE 9)"
+   },
+   {
+    "plug": "LGWP1 (J4)",
+    "name": "Low GWP (A2L refrigerant detection) sensor #1 interface",
+    "kind": "other",
+    "test": "E150 = leak detected: cannot be cleared while the sensor reports a leak; repair the leak and verify charge. E151 = sensor #1 fault (sensor may need replacing). E154 = sensor #1 communication lost or wrong Low GWP DIP switch setting: check the sensor #1 harness and plug, the sensor for damage / obstruction, and the DIP switches; press LGWP TEST to retest (blower latches at least 5 minutes). E160 = sensor #1 wrong type. A single sensor must be on this plug.",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 3), p.12, p.54"
+   },
+   {
+    "plug": "LGWP2 (J5)",
+    "name": "Low GWP sensor #2 interface",
+    "kind": "other",
+    "test": "E152 = sensor #2 fault. E155 = sensor #2 communication lost: check the harness, plug and sensor; press LGWP TEST to retest (blower latches at least 5 minutes). E161 = sensor #2 wrong type. Second sensor kit 27V53.",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 3), p.12, p.54"
+   },
+   {
+    "plug": "ALARM (P8)",
+    "name": "Interface to Low GWP leak audible alarm (dry contact, rated 3 A at 30 VAC/DC)",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 3), p.56"
+   },
+   {
+    "plug": "ZONE (P8)",
+    "name": "Interface to zoning control (dry contact)",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 3)"
+   },
+   {
+    "plug": "LGWP TEST (SW3)",
+    "name": "Push button to test Low GWP function (also resets after a leak or fault)",
+    "kind": "other",
+    "test": "Normal mode: press to trigger a leak response (E164, clears by itself after 1 minute). Leak Detected or Fault mode: press to reset. Initializing: short press skips the rest of the purge once the sensors are recognized; long press resets the control.",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 3), p.13, p.56 (TABLE 23, TABLE 24)"
+   },
+   {
+    "plug": "Low GWP DIP switches (SW2)",
+    "name": "Two-bank DIP switch to enable / disable the Low GWP sensors",
+    "kind": "other",
+    "spec": "LGWP1 / LGWP2: one sensor = Enable / Disable; two sensors = Enable / Enable; no sensor (R-410A or heat only) = Disable / Disable; Disable / Enable is invalid. Factory: both ENABLED.",
+    "source": "lennox-ml197uhek-service-100236.pdf p.10 (FIGURE 7), p.54 (TABLE 22)"
+   },
+   {
+    "plug": "Blower-off delay DIP switches (SW1)",
+    "name": "Two-bank DIP switch, heat fan-off delay",
+    "kind": "other",
+    "spec": "SW1-1 / SW1-2: 90 s = OFF / ON; 120 s = OFF / OFF (factory); 180 s = ON / OFF; 210 s = ON / ON.",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8, p.10 (FIGURE 7)"
+   },
+   {
+    "plug": "W951",
+    "name": "On-board clippable link, R to O (heat pump)",
+    "kind": "other",
+    "spec": "Cut only for a heat pump with a dual fuel thermostat; left intact, O stays energized.",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8"
+   },
+   {
+    "plug": "120V HUM",
+    "name": "Power for humidifier 120 VAC (1/4 in.), on in heat with the inducer, 1 A max",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.7, p.8 (TABLE 1)"
+   },
+   {
+    "plug": "LINE",
+    "name": "Incoming power line 120 VAC",
+    "kind": "other",
+    "spec": "97 to 132 VAC line hot to line neutral.",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 1), p.49"
+   },
+   {
+    "plug": "XFMR",
+    "name": "Transformer primary 120 VAC",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 1)"
+   },
+   {
+    "plug": "CIRC",
+    "name": "Indoor blower motor 120 VAC",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 1)"
+   },
+   {
+    "plug": "ACC",
+    "name": "Accessory 120 VAC, on with the indoor blower, 1 A max",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.7, p.8 (TABLE 1)"
+   },
+   {
+    "plug": "24V HUM",
+    "name": "Humidifier 24 VAC (on in heat when the inducer runs and the pressure switch is closed; up to 0.5 A)",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 1)"
+   },
+   {
+    "plug": "NEUTRALS",
+    "name": "Neutral (5 terminals)",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 1)"
+   },
+   {
+    "plug": "COOL",
+    "name": "Cool speed tap from indoor blower motor (24 VAC) - factory black",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 1), p.57"
+   },
+   {
+    "plug": "HEAT",
+    "name": "Heat speed tap from indoor blower motor (24 VAC) - factory yellow on the 030, blue on the 060 and 080",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 1), p.10, p.57"
+   },
+   {
+    "plug": "FAN",
+    "name": "Continuous fan speed tap from indoor blower motor (24 VAC) - factory red, the only tap allowed",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 1), p.10, p.57"
+   },
+   {
+    "plug": "COMMON",
+    "name": "Common 24 VAC",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 1)"
+   },
+   {
+    "plug": "TWIN",
+    "name": "24 V twinning communication (twinning uses C, O and TWIN between the two controls)",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 1), p.5"
+   },
+   {
+    "plug": "PARK",
+    "name": "3 unpowered terminals to park unused motor speed taps",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 1), p.57"
+   },
+   {
+    "plug": "Blower motor plugs J48 / J49",
+    "name": "Constant torque motor power (J48: L, N, G, C) and speed taps (J49: 1 red, 2 yellow, 3 blue, 4 brown, 5 black)",
+    "kind": "other",
+    "spec": "120 V across L and N; 24 V between C and the active tap. A tap needs 12 to 33 VAC, under 20 mA.",
+    "test": "Test 1: 120 V across L and N at J48. Test 2: in continuous fan, 24 V between C of J48 and the fan tap on J49. Both good and the motor does not run = replace the motor. If either is missing, check for 120 V at L1 / Neutrals and 24 V between 24 COM and the active tap at the control: present there = harness, absent = control.",
+    "source": "lennox-ml197uhek-service-100236.pdf p.21, p.22 (FIGURE 18), p.57"
+   },
+   {
+    "plug": "Thermostat W",
+    "name": "Heat",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 2)"
+   },
+   {
+    "plug": "Thermostat C",
+    "name": "Common ground",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 2)"
+   },
+   {
+    "plug": "Thermostat R",
+    "name": "24 VAC (the control cuts R to the thermostat when a refrigerant leak is detected)",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 2), p.55"
+   },
+   {
+    "plug": "Thermostat G",
+    "name": "Fan",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 2)"
+   },
+   {
+    "plug": "Thermostat Y",
+    "name": "Cool",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 2)"
+   },
+   {
+    "plug": "Thermostat O",
+    "name": "Reversing valve (when link W951 is clipped)",
+    "kind": "other",
+    "source": "lennox-ml197uhek-service-100236.pdf p.8 (TABLE 2)"
+   }
+  ],
+  "test": "Hold the diagnostic push button: 'E' = error recall (last 10; 'c' clears, press again while it flashes), 'F' = flame microamps on the 7-segment LED.",
+  "notes": "K model: factory enabled for A2L refrigerant detection; disabling it on an A2L system is prohibited by safety codes. With no sensor (heat only or R-410A) both Low GWP DIP switches must be set to DISABLE or the blower runs continuously.",
+  "gaps": [
+   "Primary and secondary limit temperatures are not stated in any ML197 document.",
+   "Rollout opening temperature: the service manual sentence (210 F) names 'ML193UHEK' units, not ML197.",
+   "Refrigerant detection sensor electrical values are not given.",
+   "Main harness pin numbers come from the wiring diagram drawing; there is no pin table.",
+   "Replacement kit 27P19 is taken from the kit sheet for control 107792; no ML197 document prints a kit number.",
+   "Secondary limit plug J/P135 is listed in the diagram's jack/plug chart but the secondary limit is not drawn in the ML197 ladder."
+  ],
+  "sources": [
+   {
+    "file": "lennox-ml197uhek-service-100236.pdf",
+    "pages": "5-22, 49, 54-59",
+    "what": "terminal tables 1-3, figure 7 (107792), diagnostic codes, heating components, flame signal, ignitor checks, pressure switch table, motor checks, Low GWP section, wiring diagram, flow charts"
+   },
+   {
+    "file": "lennox-ml197uhek-wiring-538670.pdf",
+    "pages": "1",
+    "what": "plug pin numbers, speed chart, notes 3 / 5 / 7"
+   },
+   {
+    "file": "lennox-508535-02-000.pdf",
+    "pages": "1-2",
+    "what": "replacement kit 27P19 for control 107792 (does not name ML197)"
+   }
+  ]
  }
 ];
 const BRAND_SENSOR_CHARTS = [

@@ -9980,7 +9980,9 @@ const MODEL_PATTERNS = [
   // --- end coverage:lennox-ah-pkg ---
   // --- coverage:lennox-furn-current (v124) ---
   { re: /^ML195/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox Merit ML195UH / ML195DF 95% gas furnace", notes: ["Board depends on the dash number: earlier ML195UH / ML195DF use the two-LED SureLight board 100973 (LED #1 red, LED #2 green) - read the DS1/DS2 pattern, not a flash count. ML195UH-03 / ML195DFP-03 use integrated control 103085 with a single RED LED flash count (Lennox S&A Note H-12-10). Both tables are in Error Codes.","Flame sense on this board: below 1.5 microamps is a low-flame fault, 0.5 microamps is the minimum sense current.","Rollout code on this table also means the 12-pin connector is not seated - check the harness before condemning the switch.","Serial range 5911J-5912J had the gold-contact pressure switch problem (H-14-01)."] },
-  { re: /^ML197/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox Merit ML197UHEK 97% R-454B-ready gas furnace (2026 launch)", notes: ["7-segment E-code display, not a flash-count board - the full table is in Error Codes under the ML197UHEK / ML297UHV(K) family.","Carries Low GWP (A2L) refrigerant leak detection: codes E150-E164 and E390 are the sensor set, and E164 is just the test button being pressed.","E106 twin communication fault is unique to this control - it means one twinned furnace lost power or the two 24VAC supplies are out of phase.","Flame signal on this control: normal above 1.5, low 0.5-1.4, drop out below 0.4 microamps.","Lennox has not published Service Literature for ML197 yet - the code table above came out of the Installation Instructions."] },
+  { re: /^ML197/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox Merit ML197UHE(K) 97% AFUE single-stage upflow/horizontal gas furnace, constant-torque blower, refrigerant-detection ready", notes: ["Three sizes only: ML197UH030XE36BK 30,000 Btuh in / 29,000 out, ML197UH060XE36BK 60,000 / 59,000, ML197UH080XE48CK 80,000 / 79,000. The three digits after UH are the true input in thousands.","7-segment E-code display on integrated control 107792, not a flash-count board - the full table is in Error Codes under the ML197UHEK family. Hold the button beside the display: E = last 10 codes, c = clear, F = flame microamps.","Carries Low GWP (A2L) refrigerant leak detection: E150 = leak detected, E151-E161 = sensor faults, E163 = control board, E390 = Low GWP relay stuck, and E164 is just the test button being pressed.","The two Low GWP DIP switches ship ENABLED. On a heat-only or R-410A job with no sensor, set both to DISABLE or the blower runs continuously.","E106 twin communication fault: one twinned furnace lost power, or the two 24VAC supplies are out of phase.","Flame signal: normal 1.5 microamps or more, low 0.5-1.4, drop out 0.4 or less.","Lennox Service Literature 100236, Product Specifications 211302 (October 2026) and wiring diagram 538670-01 are in Manuals -> Lennox."] },
+  // v446 (Andy 2026-11-17 "I know lennox came out with a new furnace"): ML297 gets its own entry ahead of the general Merit one below.
+  { re: /^ML297(UH|DF)/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox Merit ML297 97% two-stage variable-speed gas furnace (ML297UHV(K) upflow/horizontal, ML297DFV(K) downflow)", notes: ["Two-stage, variable-speed, 97% AFUE; control 107629 with a 7-segment display - its E-codes are in Error Codes.","Size digits are nominal: 045 = 44,000, 070 = 66,000, 090 = 88,000, 110 = 110,000, 135 = 132,000 Btuh input on high fire.","K = refrigerant detection-ready: the Low GWP DIP switches ship enabled. Heat-only or R-410A job with no sensor: set both to DISABLE or the blower runs continuously.","Cannot be twinned.","Service manual and product specifications are in Manuals -> Lennox."] },
   // --- end coverage:lennox-furn-current ---
   // --- coverage:allied (v123) ---
   { re: /^A7(?:AC|HP|CP|SCP)[0-9]{2}[FTV]/, brand: "Allied Air", equipment: "Condenser/Heat Pump", series: "Armstrong Air / AirEase A7AC13F / A7AC14F / A7AC22V air conditioners and A7HP14F / A7HP19V / A7CP21V / A7SCP18V heat pumps - 2025 R-454B line", notes: ["R-454B (A2L). The system must be installed with an Allied Approved Refrigerant Detection System (RDS) sensor and RDS Blower Control Board - do not operate until the RDS is proven.","Read A7AC14F36P-**A as A (AirEase | Armstrong Air) 7 (R-454B) AC (air conditioner; HP heat pump, CP cold-climate heat pump, SCP side-discharge cold-climate) 14 (SEER2 tier) F (fixed speed; V variable) 36 (3 tons) P (208-230V/60Hz/1PH) then major and minor revision.","Capacity digits: 18 = 1.5 t, 24 = 2 t, 30 = 2.5 t, 36 = 3 t, 41/42 = 3.5 t, 47/48 = 4 t, 59/60 = 5 t.","A is the BRAND position and the diagram prints 'A = AirEase | Armstrong Air' - the same unit badged Ducane or Concord drops the A and reads 7AC14F...","The variable models (22V, 19V, 21V, 18V) have a 7-segment display and a push button on the outdoor control. Allied does NOT publish that alert-code table - the manual says alarm information is on the unit access panel and points to the AlliedConnect service manual. Do not read the 4SCU20LX table onto these.","Charge with LIQUID refrigerant by subcooling to the target on the unit charging label. The R-454B cylinder has a 1/4 in. LH flare - you need a LH female flare adapter.","A7AC22V charge mode: jumper the two CHRG MODE pins on the outdoor control to force 100% capacity; it self-exits after 60 minutes.","A7AC13F is sold only in the Northern US and Canada."] },
@@ -10561,6 +10563,16 @@ function decodeCapacity(model, equipment) {
     // 7067092 Tables 4-5; "Furnace Input" in Nortek 707893A p.3). Kenny's MGHB-056ABFC had no capacity line.
     const mg = model.match(/^(?:MGH[AB]|MMH[AB]|MGBB|MMBB)-?0(56|70|77|90)/);
     if (mg) return `~${parseInt(mg[1],10)},000 BTU/h input (furnace sizes are input BTU)`;
+    // v446: Lennox ML297 size digits are nominal - 045 / 070 / 090 are 44 / 66 / 88 MBtuh on high fire, and 135
+    // (132) had no line at all (Product Specifications Form 211300 p.12, Form 211301 p.11).
+    const ml297 = model.match(/^ML297(?:UH|DF)(045|070|090|110|135)/);
+    if (ml297) {
+      const io = { "045": [44, 29], "070": [66, 43], "090": [88, 57], "110": [110, 72], "135": [132, 86] }[ml297[1]];
+      return `${io[0]},000 BTU/h input on high fire, ${io[1]},000 on low fire (Lennox Form 211300 / 211301)`;
+    }
+    // v446: Lennox ML197: the digits are the true input, 030 included (Product Specifications Form 211302 p.11).
+    const ml197 = model.match(/^ML197UH(030|060|080)/);
+    if (ml197) return `${parseInt(ml197[1],10)},000 BTU/h input (Lennox Form 211302)`;
     // v312: Bryant 395CAV puts the blower size first (395CAV060136 = 060 blower, 136 input class).
     const b = model.match(/^395CAV[0-9]{3}([0-9]{3})/);
     if (b) return `~${parseInt(b[1],10)},000 BTU/h input (furnace sizes are input BTU)`;
@@ -15090,7 +15102,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v445";
+const APP_VERSION = "v446";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

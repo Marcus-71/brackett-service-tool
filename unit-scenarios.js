@@ -5560,5 +5560,524 @@ const UNIT_SCENARIOS = [
   ],
   "source": "EC Series EC007-EC070 water-to-air heat pump EC Series Installation, Operation and Maintenance Manual (form 970-289, rev 05-12), p.51, p.45",
   "confidence": "manual"
+ },
+ {
+  "id": "u-lennox-ml297-ignition-sequence",
+  "unit": "^ML297(UH|DF)",
+  "brand": "Lennox",
+  "equipment": "Gas Furnace",
+  "title": "No heat — walking the ignition sequence (and why it can light on high fire) — ML297",
+  "summary": "The ML297 runs a fixed two-stage sequence; knowing each timing and the high-fire fallback tells you where it is stopping.",
+  "steps": [
+   "On a call for heat the control runs a self-check, checks that the limit switches are closed and the pressure switches are open, then starts the inducer on low speed. The display shows H, blinking during ignition.",
+   "When the low pressure switch closes, a 15-second pre-purge runs on low speed. If the low-fire switch does not close, the inducer switches to high; after a 15-second pre-purge the high-fire switch closes, the furnace lights on high fire and drops to low fire after 10 to 20 seconds. The control stores E229 (ignition on high fire) when it does this; the manual lists E229 as no action needed.",
+   "After the pre-purge: a 20-second ignitor warm-up, inducer still on low.",
+   "Then the gas valve opens on low fire and the burners light. A 30-second blower on-delay starts; when it ends the blower runs at low-fire heat speed, the HUM contacts close and the 120 V ACC terminal is powered.",
+   "Second stage with a two-stage thermostat: W2 starts a 30-second recognition delay, then the inducer goes to high speed, the control checks that the high-fire pressure switch is closed, opens the high-fire valve and moves the blower to high-fire heat speed.",
+   "Single-stage thermostat (SW1 switch 1 ON): the control brings on second stage by itself after 7 minutes (switch 2 OFF, factory) or 12 minutes (switch 2 ON).",
+   "End of the call: gas valve off, 5-second post-purge, and the blower runs out the selected off delay (90, 120, 180 or 210 seconds).",
+   "Lockout: the control has an internal Watchguard - after one hour of continuous thermostat demand it breaks and remakes the demand and resets itself to try again. The ML297 manuals do not print the trial-for-ignition time or the number of retries.",
+   "Nothing at all happening: is the thermostat calling, are the access panels on, is the disconnect closed, is a fuse or breaker open, is the filter plugged, is the gas on at the meter, and are the manual main shut-off valve and the internal manual shut-off valve open? Is the ignition system in lockout?"
+  ],
+  "safety": "Do not try to light the burners by hand. Move the gas valve switch by hand only - never with tools; if it will not move by hand, replace the valve.",
+  "manual": "lennox-ml297uhvk-service-100231",
+  "pages": [
+   12,
+   14,
+   17,
+   50,
+   62,
+   63
+  ],
+  "source": "ML297UHVK(X) Upflow/Horizontal Service - Unit Information 100231, p.12, p.14, p.17, p.50, p.62, p.63",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-lennox-ml297uh-pressure-switch",
+  "unit": "^ML297UH",
+  "brand": "Lennox",
+  "equipment": "Gas Furnace",
+  "title": "Pressure switch codes E223-E227, low and high fire — set points and how to measure (ML297UH)",
+  "summary": "The ML297UH has a dual pressure switch, one side for low fire and one for high fire; the codes tell you which side, and the manual gives a break point for each size and altitude.",
+  "steps": [
+   "Which switch: E223 = low switch failed open. E224 = low switch failed closed (stuck closed on the heat call). E225 = high switch failed open. E226 = high switch failed closed. E227 = low switch opened during trial for ignition or run. E271 / E272 = soft lockouts whose last retry or recycle was a pressure switch opening.",
+   "Set points, low / high heat, 0-4500 ft: 045 0.50 / 0.80 · 070 0.55 / 0.95 · 090 0.50 / 0.90 · 110 0.60 / 1.15 · 135 0.45 / 0.85 in. w.c.",
+   "4501-7500 ft: 045 0.41 / 0.74 · 070 0.50 / 0.85 · 090 0.45 / 0.75 · 110 0.55 / 0.95 · 135 0.40 / 0.80. 7501-10,000 ft: 045 0.40 / 0.70 · 070 0.45 / 0.75 · 090 0.40 / 0.70 · 110 0.50 / 0.90 · 135 0.35 / 0.75.",
+   "Those are the break (open) points. The switch makes (closes) 0.15 in. higher.",
+   "Measure it: with the call removed, pull the tubing off both sides of the switch (leave it on the cold end header box). Use the provided 2 in. and 10 in. square tubing and tees to tee the manometer into the positive (black) side and the negative (red and black, or red) side. Run the furnace: take one reading right after start-up and a second at steady state, about 5 minutes - that is the differential.",
+   "Low reading: inspect the vent and the combustion air inducer for correct operation and restriction.",
+   "Drain side: check the condensate hose screen at the cold end header box and the trap. If the furnace and coil drains are tied together, the A/C drain outlet must be vented or the furnace pressure switch will not operate properly.",
+   "E229 with the furnace lighting on high fire means the low-fire switch did not close in time - same checks, low side.",
+   "Above 4500 ft the switch is changed for a high-altitude kit; all models use the factory switch from 0-4500 ft. For the 110, Addendum 508934-01 gives kits 32L29 (4501-7500 ft) and 32L30 (7501-10,000 ft) in place of the numbers in the service manual table."
+  ],
+  "safety": "The pressure switch is a factory-set safety shut-down control: not field adjustable, and it must not be bypassed for any reason. If the switch is closed or bypassed the control will not start ignition.",
+  "manual": "lennox-ml297uhvk-service-100231",
+  "pages": [
+   14,
+   15,
+   26,
+   27,
+   48,
+   52,
+   55,
+   62
+  ],
+  "source": "ML297UHVK(X) Upflow/Horizontal Service - Unit Information 100231, p.14, p.15, p.26, p.27, p.48, p.52, p.55, p.62",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-lennox-ml297df-pressure-switch",
+  "unit": "^ML297DF",
+  "brand": "Lennox",
+  "equipment": "Gas Furnace",
+  "title": "Pressure switch codes E223-E227, low and high fire — set points and how to measure (ML297DF)",
+  "summary": "The ML297DF has a dual pressure switch, one side for low fire and one for high fire; the codes tell you which side, and the manual gives a break point for each size.",
+  "steps": [
+   "Which switch: E223 = low switch failed open. E224 = low switch failed closed (stuck closed on the heat call). E225 = high switch failed open. E226 = high switch failed closed. E227 = low switch opened during trial for ignition or run. E271 / E272 = soft lockouts whose last retry or recycle was a pressure switch opening.",
+   "Set points, low / high heat: 070 0.50 / 0.90 · 090 0.45 / 0.90 · 110 0.60 / 1.15 in. w.c. The downflow manual prints this one table with no altitude heading and no high-altitude set points.",
+   "Those are the break (open) points. The switch makes (closes) 0.15 in. higher.",
+   "Measure it: with the call removed, pull the tubing off both sides of the switch (leave it on the cold end header box). Use the provided 2 in. and 10 in. square tubing and tees to tee the manometer into the positive (black) side and the negative (red and black, or red) side. Run the furnace: take one reading right after start-up and a second at steady state, about 5 minutes - that is the differential.",
+   "Low reading: inspect the vent and the combustion air inducer for correct operation and restriction.",
+   "Drain side: check the condensate hose screen at the cold end header box and the trap. If the furnace and coil drains are tied together, the A/C drain outlet must be vented or the furnace pressure switch will not operate properly.",
+   "E229 with the furnace lighting on high fire means the low-fire switch did not close in time - same checks, low side.",
+   "Above 4500 ft the switch is changed for a high-altitude kit; all models use the factory switch from 0-4500 ft. Kits (4501-7500 / 7501-10,000 ft): 070 32C78 / 14A54 · 090 14A54 / 32C81. For the 110, Addendum 508934-01 gives 32L29 / 32L30 in place of the numbers in the service manual table."
+  ],
+  "safety": "The pressure switch is a factory-set safety shut-down control: not field adjustable, and it must not be bypassed for any reason. If the switch is closed or bypassed the control will not start ignition.",
+  "manual": "lennox-ml297dfvk-service-100232",
+  "pages": [
+   13,
+   14,
+   25,
+   26,
+   48,
+   52,
+   55,
+   61
+  ],
+  "source": "ML297DFVK(X) Downflow Service - Unit Information 100232, p.13, p.14, p.25, p.26, p.48, p.52, p.55, p.61",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-lennox-ml297-flame-sense",
+  "unit": "^ML297(UH|DF)",
+  "brand": "Lennox",
+  "equipment": "Gas Furnace",
+  "title": "Lights then drops out, E240 / E270 / E273 — reading flame microamps on the board (ML297)",
+  "summary": "The control shows flame current on its own display; the ML297 figures are 1.5 or greater normal, 1.0 or less low, 0.5 drop out.",
+  "steps": [
+   "Read it without a meter: press and hold the diagnostic button beside the 7-segment display. A new menu item shows every five seconds; release on F. The display shows flame current in microamps. It leaves this mode on a power reset, when you hold the button until three horizontal lines show, or after 10 minutes.",
+   "Flame signal: normal 1.5 µA or greater · low 1.0 µA or less · drop out 0.5 µA.",
+   "E240 = low flame current in run mode (clears after the current heat call ends). E273 = soft lockout, last recycle due to flame failure. For both: clean or replace the sensor, and measure neutral to ground to make sure the unit ground is good.",
+   "E270 = retries used up with no flame current sensed: check for proper gas flow, that the ignitor is lighting the burner, and the flame sensor current.",
+   "The flame sensor is on the left side of the burner support with its tip in the flame of the left-most burner; it comes out without removing the burners.",
+   "Ground check at the control, AC volts between a line neutral spade and the C terminal: furnace idle expected 0.3, maximum 2 · inducer / ignitor on 0.75, maximum 5 · indoor blower on less than 2, maximum 10. Above the maximum, repair the ground before running the furnace. Line hot to neutral should be 97 to 132 VAC.",
+   "Not lighting at all with E207: ignitor should read 39 to 70 ohms across terminals 1 and 5 of the HSI/CAI 5-pin plug pulled off the control, and at the 2-pin jack-plug near the manifold. Voltage across 1 and 5 during the 20-second warm-up: 120 volts, plus or minus 10%.",
+   "E241 or E275 (flame sensed out of sequence): shut off the gas and check for a gas valve leak."
+  ],
+  "safety": "The furnace has polarity-sensitive electronics: it must be wired correctly and properly grounded. A poorly grounded furnace can contribute to premature ignitor failure.",
+  "manual": "lennox-ml297uhvk-service-100231",
+  "pages": [
+   10,
+   14,
+   15,
+   23,
+   25,
+   53
+  ],
+  "source": "ML297UHVK(X) Upflow/Horizontal Service - Unit Information 100231, p.10, p.14, p.15, p.23, p.25, p.53",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-lennox-ml297-limit-rollout",
+  "unit": "^ML297(UH|DF)",
+  "brand": "Lennox",
+  "equipment": "Gas Furnace",
+  "title": "Limit open E250 / E274 or rollout lockout E200 — what to check (ML297)",
+  "summary": "E250 is the primary limit, usually airflow or firing rate; E200 is a manual-reset rollout switch and means something is blocked.",
+  "steps": [
+   "E250 = limit switch circuit open. If the limit has not closed within 3 minutes the furnace goes into a 1-hour soft lockout; E274 is that lockout.",
+   "With the limit open the control runs the supply blower and closes the gas valve. The primary limit is in the heating vestibule panel, resets by itself, and is not adjustable. Its set point differs by model and is not printed in the manual - order by model from the repair parts list.",
+   "Check the firing rate (manifold pressure, clock the meter), check for blockage, and check airflow. A dirty or plugged filter will cause the limit to shut the unit off.",
+   "Temperature rise must be inside the TEMP. RISE range on the rating plate; the blower speed is set to get it there. Heating external static must not be more than 0.8 in. w.c. (cooling 1.0).",
+   "Heat speed is SW2 switches 7 and 8: Medium High = OFF / OFF (factory), High = OFF / ON, Medium Low = ON / OFF, Low = ON / ON. SW2 switches 3 and 4 trim it: +10% = ON / OFF, -10% = OFF / ON. On the ML297UH070 the High heat speed is not allowed.",
+   "E311 with it: the blower is in cutback for restricted airflow and the control has dropped the firing rate to first stage - check the filter and duct system.",
+   "E200 = hard lockout, rollout circuit open or previously open. Two rollout switches sit on top of the burner box, one each side; they open at 210 °F and are manual reset.",
+   "Rollout can be caused by a blocked heat exchanger, a blocked flue or a lack of combustion air. Correct the cause of the trip, or replace the rollout switch, then reset the switch with its button and test the furnace."
+  ],
+  "safety": "Correct the cause of a rollout trip before resetting the switch. Always run the furnace with the burner box front panel in place, and with the blower access panel securely in place.",
+  "manual": "lennox-ml297uhvk-service-100231",
+  "pages": [
+   14,
+   15,
+   17,
+   18,
+   23,
+   50,
+   54,
+   55
+  ],
+  "source": "ML297UHVK(X) Upflow/Horizontal Service - Unit Information 100231, p.14, p.15, p.17, p.18, p.23, p.50, p.54, p.55",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-lennox-ml297-blower-motor",
+  "unit": "^ML297(UH|DF)",
+  "brand": "Lennox",
+  "equipment": "Gas Furnace",
+  "title": "Variable-speed blower will not start, E292, or airflow cutback E311 — ML297",
+  "summary": "The blower is a GenTeq or Nidec variable-speed motor with two plugs; the manual gives the start-up behaviour, the plug pins and the Nidec LED table.",
+  "steps": [
+   "E292 = indoor blower motor unable to start (obstructed wheel or seized bearings per the manual). It is a 1-hour soft lockout that clears once the blower starts.",
+   "Normal start: the motor rocks gently back and forth for a moment, then eases up to speed; it can take 10 to 15 seconds to reach full speed. If it does not reach 200 rpm within 13 seconds it shuts down and tries again, up to eight times, then the motor controller locks out. Reset it by momentarily turning off power to the furnace.",
+   "Two plugs at the motor: J48 is power, J49 is control. J48 needs line voltage on pins 4 and 5; pins 1 and 2 are jumpered for 120 VAC; pin 3 is ground.",
+   "J49 (16-pin) carries the control signals: pin 2 W/W1, pin 13 EM/W2, pin 6 Y1, pin 14 Y/Y2, pin 15 G, pin 12 R, pins 1 and 3 C1 / C2, pin 11 Heat, pin 5 Cool, pin 7 Adjust, pin 4 Delay, pin 9 O, pin 10 DS (PWM), pins 8 and 16 Out.",
+   "Nidec motor with the 16X4W box (three LEDs PW / RX / TX; the box may be on the blower housing): PW off, RX and TX blinking, not rotating = normal. All three blinking, rotating = normal (PW blinks once per 100 cfm). PW blinking, RX off, TX blinking, not rotating = check that the 16X4W and motor control hp match and that the motor control has power, turn power off 1 minute and restart; still not rotating, replace the controller. All off = check power to the 16X4W, restart; still out, replace the controller.",
+   "E311 = airflow cutback, warning only: restricted airflow has the blower cut back and the control reduces the firing rate to first stage. Check the filter and ducts. The blower holds its cfm only up to 0.8 in. external static; above that it may slow down to protect itself while the display still shows the desired cfm.",
+   "Replacing the motor: centre the wheel in the housing and tighten the set screw on the flat of the shaft.",
+   "Blower that never shuts off on a K furnace is usually not the motor - see the refrigerant detection scenario (Low GWP DIP switches)."
+  ],
+  "safety": "DANGER: disconnect power and wait at least five minutes for the motor capacitors to discharge before changing motor speed tap settings. Failure to wait may cause personal injury or death.",
+  "manual": "lennox-ml297uhvk-service-100231",
+  "pages": [
+   11,
+   15,
+   20,
+   21,
+   22
+  ],
+  "source": "ML297UHVK(X) Upflow/Horizontal Service - Unit Information 100231, p.11, p.15, p.20, p.21, p.22",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-lennox-ml297-refrigerant-detection",
+  "unit": "^ML297(UH|DF)",
+  "brand": "Lennox",
+  "equipment": "Gas Furnace",
+  "title": "Blower runs all the time, or E150-E164 / E390 — refrigerant detection on the ML297 K control",
+  "summary": "The K control ships with both refrigerant-sensor positions enabled. With no sensor plugged in, or a sensor fault, the blower runs continuously until the DIP switches or the fault are put right.",
+  "steps": [
+   "Heat-only furnace, or a furnace on an R-410A (non-Low GWP) system with no sensor: move BOTH Low GWP DIP switches to DISABLE. Left at the factory ENABLE setting the blower operates continuously.",
+   "The switches are the 2-switch bank marked LGWP (SW3), just below the four-switch bank SW1, marked DISABLE / ENABLE; DISABLE is the ON side.",
+   "A2L system settings: one sensor, on the SENSOR 1 plug (LGWP1) = switch 1 enable, switch 2 disable. Two sensors (SENSOR 1 and SENSOR 2) = both enable. Switch 1 disable with switch 2 enable is invalid. Anything else gives a servicing fault, and a wrong setting faults on power-up.",
+   "At power-up the control runs an initial five-minute purge sequence while it connects to the sensor. Let that finish before judging the blower.",
+   "E150 = leak alarm. The control drops R (24 VAC) to the thermostat, so the compressor and the heat stop, and runs the blower on high. Once levels are below the threshold the blower finishes a seven-minute cycle and the system returns to normal. E150 cannot be cleared while the sensor still reports a leak - find the leak and verify the charge.",
+   "A Low GWP fault holds the blower on at a constant airflow until it is cleared (the manual does not list which codes do this). Low GWP codes: E151 / E152 sensor #1 / #2 fault · E154 sensor #1 communication lost or invalid DIP setting · E155 sensor #2 communication lost · E160 / E161 wrong sensor type · E163 control board failure · E390 Low GWP relay stuck. For E154 / E155 check the harness, the connector and the sensor plug; after E154, E155, E160 or E161 clear the blower stays latched at least 5 minutes.",
+   "LGWP TEST button: in normal mode it triggers a leak response (E164 shows; it clears by itself after 1 minute, or press again to end the test). In fault mode it re-checks the fault after a repair.",
+   "Because R is dropped during a leak event, an early-generation digital thermostat may lose its mode and set points.",
+   "At maintenance, inspect the sensors and the rubber sleeve."
+  ],
+  "safety": "Disabling the refrigerant detection function on an A2L system is prohibited by safety codes. For use with a Lennox approved evaporator coil and LGWP sensors only; with a non-Lennox approved coil use the original manufacturer recommended LGWP sensors.",
+  "manual": "lennox-ml297uhvk-service-100231",
+  "pages": [
+   1,
+   13,
+   14,
+   15,
+   16,
+   54,
+   57,
+   58,
+   59
+  ],
+  "source": "ML297UHVK(X) Upflow/Horizontal Service - Unit Information 100231, p.1, p.13, p.14, p.15, p.16, p.54, p.57, p.58, p.59",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-lennox-ml297-code-recall",
+  "unit": "^ML297(UH|DF)",
+  "brand": "Lennox",
+  "equipment": "Gas Furnace",
+  "title": "Reading, recalling and clearing codes on the 7-segment display — ML297",
+  "summary": "One push button beside the display runs a small menu: E recalls the last 10 codes, c clears them, F shows flame microamps.",
+  "steps": [
+   "Normal displays, not faults: a blinking decimal point = idle. H = gas heat (1 or 2 for the stage, then the cfm setting; blinks during ignition). C = cooling stage. A = continuous fan. d = dehumidification. h = heat pump stage. dF = defrost.",
+   "To recall codes: press and hold the diagnostic button next to the display. The menu steps to a new item every five seconds; release when E shows. The control gives the most recent 10 error codes.",
+   "E000 = no error in memory.",
+   "To clear: in the Error Code Recall menu select c, then press the button a second time while c is flashing to confirm.",
+   "To exit recall: press the button until a solid three-bar symbol shows.",
+   "F from the same menu shows flame current in microamps (normal 1.5 or greater, low 1.0 or less, drop out 0.5).",
+   "How faults clear by themselves: line voltage faults E110 / E111 / E112 / E113 about 5 seconds after the fault recovers; E117 30 seconds; E125 300 seconds; soft lockouts E270-E274 when a heat call finishes successfully.",
+   "The second button on the board, LGWP TEST, is for refrigerant detection only - it does not recall codes."
+  ],
+  "manual": "lennox-ml297uhvk-service-100231",
+  "pages": [
+   9,
+   10,
+   11,
+   12,
+   15,
+   23
+  ],
+  "source": "ML297UHVK(X) Upflow/Horizontal Service - Unit Information 100231, p.9, p.10, p.11, p.12, p.15, p.23",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-lennox-ml297-condensate",
+  "unit": "^ML297(UH|DF)",
+  "brand": "Lennox",
+  "equipment": "Gas Furnace",
+  "title": "Water backing up, gurgling, or pressure switch faults from the drain — ML297",
+  "summary": "The trap must be primed, the hose screen clear, and the drain vented at the right height; a drain problem shows up as pressure switch codes.",
+  "steps": [
+   "Prime the trap before start-up: pour 10 fl. oz. (300 ml) of water into it, or fire the burners about 3 minutes, end the call, wait for the inducer to stop, and repeat once.",
+   "Condensate hose screen: power off, pull the hose off the cold end header box, twist and pull the screen out, rinse it with tap water, refit.",
+   "Trap: remove the clean-out cap at the base of the trap to drain and inspect it. Inspect the traps and drain assembly, and disassemble and clean them, seasonally.",
+   "The trap can sit up to 5 ft from the furnace on PVC pipe that slopes at least 1/4 in. per ft toward the trap; from the trap the line slopes down to an open drain. A drain higher than the trap needs a condensate pump.",
+   "Drain vent height above the condensate drain connection: upflow and downflow 1 in. minimum to 2 in. maximum; horizontal 4 in. minimum to 5 in. maximum. The upflow/horizontal manual adds that anything taller can flood the heat exchanger if a combined drain line becomes restricted (downflow limits: downflow service manual 100232 p.47-48).",
+   "Furnace and evaporator coil on a common drain: the A/C condensate drain outlet must be vented to relieve pressure, or the furnace pressure switch will not operate properly.",
+   "Do not use copper tubing or existing copper condensate lines.",
+   "ML297UH: check the unused cold end header box drain plug for tightness. Horizontal: the trap must extend below the unit, needs 8 in. of service clearance, and a secondary drain pan under the unit and trap is recommended.",
+   "Freezing: route the drain inside conditioned space, or use Lennox heat cable kit 26K68 (6 ft), 26K69 (24 ft) or 26K70 (50 ft)."
+  ],
+  "safety": "Turn off power to the furnace before removing the condensate hose screen or emptying the trap.",
+  "manual": "lennox-ml297uhvk-service-100231",
+  "pages": [
+   46,
+   47,
+   48,
+   50,
+   55
+  ],
+  "source": "ML297UHVK(X) Upflow/Horizontal Service - Unit Information 100231, p.46, p.47, p.48, p.50, p.55",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-lennox-ml197-ignition-sequence",
+  "unit": "^ML197UH",
+  "brand": "Lennox",
+  "equipment": "Gas Furnace",
+  "title": "No heat — walking the ignition sequence — ML197UHEK",
+  "summary": "The ML197 runs one fixed single-stage sequence; knowing each timing tells you which step it is dying on.",
+  "steps": [
+   "At the call the control looks at the pressure switch first. It must be OPEN - if it is already closed (stuck or jumpered) the heat cycle will not start. Only then does the inducer come on.",
+   "The pressure switch has 2.5 minutes to close. If it does not, the display shows E223, gas valve and inducer go off, and the control waits 5 minutes before trying again.",
+   "Switch closed: 15-second pre-purge, then the ignitor warms up for 20 seconds.",
+   "Gas valve opens for a 4-second trial for ignition; the ignitor stays on for the first 3 seconds. Flame has to be proven within those 4 seconds (0.5 microamps).",
+   "No flame: it tries four more times (five trials in all), then goes into Watchguard flame failure - E270 - and retries by itself after 60 minutes. To skip the wait, move the thermostat from Heat to OFF and back to Heat.",
+   "Flame proven: the indoor blower starts 30 seconds later on the HEAT tap. That 30 seconds is not adjustable.",
+   "End of call: gas valve off, inducer post-purges 5 seconds, blower runs out the selected off delay (factory 120 seconds).",
+   "If nothing happens at all: thermostat calling, access panels on (door switch), disconnect closed, fuse or breaker, filter, gas on at the meter, manual shut-off and the gas valve switch ON. Never light the burners by hand."
+  ],
+  "safety": "Do not try to light the burners by hand. Move the gas valve switch by hand only - never with tools.",
+  "manual": "lennox-ml197uhek-service-100236",
+  "pages": [
+   8,
+   9,
+   45,
+   58,
+   59
+  ],
+  "source": "ML197UHEK Upflow/Horizontal - Unit Information / Service Literature (100236, posted 10/22/2026), p.8, p.9, p.45, p.58, p.59",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-lennox-ml197-pressure-switch",
+  "unit": "^ML197UH",
+  "brand": "Lennox",
+  "equipment": "Gas Furnace",
+  "title": "Pressure switch faults (E223, E224, E227, E271, E272) — measuring the differential — ML197UHEK",
+  "summary": "One differential switch on the cold end header box; measure across it before you condemn it.",
+  "steps": [
+   "E224 = on a call for heat the pressure switch is already closed before the inducer starts, so the control will not begin the heating cycle. Check that the switch is open with the inducer off (and that nobody left a jumper); replace it if it is stuck.",
+   "E223 = it did not close within 2.5 minutes. E227 = it opened during the trial for ignition or while running. Five openings in one heat call puts it in a 1-hour lockout (E271).",
+   "Measure it: with the call off, tee into BOTH hoses at the switch - the red (or red and black) hose is negative, the black hose is positive. Manometer negative side to the negative line, positive side to the positive line.",
+   "Run the furnace. Take one reading right after start-up and a second at steady state, about 5 minutes in. The steady reading is the differential and it must be greater than the set point.",
+   "Set points, 0-4500 ft: 030 = 0.65, 060 and 080 = 0.90 in. w.c. At 4501-7500 ft: 0.65 / 0.80. At 7501-10,000 ft: 0.60 / 0.70. The switch is not adjustable, and above 4500 ft a high-altitude switch kit is called for.",
+   "Low differential: look at the vent first - blocked or undersized intake or exhaust, or a run that is too long. Then hoses that are split, mis-routed or holding water, plugged taps, and the condensate side (blocked drain backs water up into the header box and lowers the differential).",
+   "Also check the cabinet tilts slightly toward the front (0 to 1/2 in.) so the header box drains, and the gaskets at the inducer and the cold end header box are not leaking.",
+   "Good differential and the switch still will not close: wrong or out-of-calibration switch, or wiring. If the cold end header box has to be replaced, the gaskets sealing the box to the vestibule panel and the inducer to the box must be replaced too."
+  ],
+  "manual": "lennox-ml197uhek-service-100236",
+  "pages": [
+   13,
+   18,
+   19,
+   20,
+   48,
+   58,
+   59
+  ],
+  "source": "ML197UHEK Upflow/Horizontal - Unit Information / Service Literature (100236, posted 10/22/2026), p.13, p.18, p.19, p.20, p.48, p.58, p.59",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-lennox-ml197-flame-sense",
+  "unit": "^ML197UH",
+  "brand": "Lennox",
+  "equipment": "Gas Furnace",
+  "title": "Lights then drops out, or E240 / E270 / E273 — flame signal — ML197UHEK",
+  "summary": "Read the microamps on the board's own display, then clean, ground and check polarity.",
+  "steps": [
+   "Hold the diagnostic button beside the display until F shows, then let go. The display now reads flame current in microamps. It drops out of this mode after 10 minutes, on a power reset, or when you hold the button until three horizontal lines show.",
+   "Normal is 1.5 microamps or more. 0.5 to 1.4 is low (E240 - the furnace keeps running). 0.4 or less and it drops out.",
+   "By meter instead: power off, pull the sensor wire off the control, meter on DC microamps in series - negative lead to the sensor wire, positive lead to the FLAME SENSE terminal. Power on, call for heat, read after the burners have run two minutes.",
+   "Low signal: pull the sensor (left side of the burner box; it comes out without removing the burners) and clean it with steel wool only.",
+   "This furnace is polarity sensitive. Confirm hot and neutral are right and the ground is good: line neutral to the C terminal should read about 0.3 V idle (2 V max), 0.75 V with the inducer or ignitor on (5 V max), under 2 V with the blower on (10 V max). A reading that swings with load means a poor ground.",
+   "E270 (five tries, no flame at all): check gas flow and that the ignitor is actually lighting the burner before blaming the sensor. E273 = repeated flame loss while running.",
+   "Flame showing with the gas valve off is E241: shut off the gas and check the valve for leak-through."
+  ],
+  "manual": "lennox-ml197uhek-service-100236",
+  "pages": [
+   11,
+   13,
+   14,
+   15,
+   49,
+   59
+  ],
+  "source": "ML197UHEK Upflow/Horizontal - Unit Information / Service Literature (100236, posted 10/22/2026), p.11, p.13, p.14, p.15, p.49, p.59",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-lennox-ml197-limit-rollout",
+  "unit": "^ML197UH",
+  "brand": "Lennox",
+  "equipment": "Gas Furnace",
+  "title": "Limit trips (E250, E274) or rollout lockout (E200) — ML197UHEK",
+  "summary": "Limits reset themselves and point at airflow or firing rate; rollouts are manual reset and point at a blockage.",
+  "steps": [
+   "E250 = limit circuit open. The control shuts the gas valve and runs the blower. If the limit is not closed again within 3 minutes the furnace goes into a 1-hour soft lockout (E274).",
+   "Primary limit is on the heating vestibule panel; the secondary limit is in the blower compartment on the back of the blower housing. Both reset by themselves and neither is adjustable.",
+   "Check airflow first: filter, blower wheel, heat tap. Temperature rise must be 25-55 F on the 030 and 30-60 F on the 060 and 080. External static on heating speed should not be over 0.5 in. w.c.",
+   "Heat tap: 030 ships on yellow, 060 and 080 on blue. The wiring diagram says do not use the red (low speed) lead for heating - the temperature rise will be outside the rise range - and marks the 060 against yellow as well. Check the speed chart and notes on the unit's wiring diagram.",
+   "Then firing rate: manifold 3.5 in. w.c. natural / 10.0 LP, and clock the meter - 030 120 seconds, 060 60 seconds, 080 45 seconds per revolution of a 1 cu ft dial on natural gas.",
+   "E200 = a flame rollout switch opened. There are two on the burner box and they are manual reset. The control holds with the inducer and blower running until the switch is closed AND power is interrupted or the thermostat is cycled off and on.",
+   "A rollout trip indicates a blockage in the combustion passages. Find it before resetting - do not just reset and leave.",
+   "To prove a limit, restrict the airflow; do not disconnect the indoor blower."
+  ],
+  "safety": "A tripped rollout switch indicates a blockage in the combustion passages. Correct the cause before resetting.",
+  "manual": "lennox-ml197uhek-service-100236",
+  "pages": [
+   2,
+   10,
+   13,
+   14,
+   17,
+   21,
+   46,
+   48,
+   50,
+   57,
+   59
+  ],
+  "source": "ML197UHEK Upflow/Horizontal - Unit Information / Service Literature (100236, posted 10/22/2026), p.2, p.10, p.13, p.14, p.17, p.21, p.46, p.48, p.50, p.57, p.59",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-lennox-ml197-blower-motor",
+  "unit": "^ML197UH",
+  "brand": "Lennox",
+  "equipment": "Gas Furnace",
+  "title": "Blower will not run or runs the wrong speed — constant-torque motor checks — ML197UHEK",
+  "summary": "The motor needs 120 V all the time and 24 V on one tap; the diagnostic code table lists no blower-motor fault code.",
+  "steps": [
+   "The motor is a constant torque ECM: line power on its 4-pin plug and five 24 V speed taps on its 5-pin plug. Each tap needs 24 V to run that speed (12 to 33 VAC, under 20 mA).",
+   "Taps from high to low: black, brown, blue, yellow, red. Factory: COOL = black, HEAT = yellow (030) or blue (060, 080), FAN = red. Unused taps sit on the PARK terminals. Red is the only tap allowed for continuous fan.",
+   "Test 1: power on, 120 V across L and N at the motor power plug. No voltage: check for 120 V between L1 and Neutrals at the control - there but not at the motor = harness.",
+   "Test 2: set the thermostat to continuous fan. 24 V between C on the power plug and the fan tap on the speed plug. Missing: check 24 V between 24 COM and the active speed tap at the control - present = harness, absent = control.",
+   "Both voltages present and the motor does not run right: replace the motor. It is not field repairable.",
+   "Only motors with a 4-pin power and 5-pin signal connector may have a replaceable control module. Before fitting a module, test the motor: any pin to the aluminum end plate more than 100k ohms, and the three motor pins all within an ohm of each other. If the motor fails either test it must be replaced too - a new module can fail on a defective motor.",
+   "Refit with the connectors facing down (between 4 and 8 o'clock) for a drip loop, module bolts to 22 inch-pounds, and the wheel centered in the housing with the set screw on the flat of the shaft.",
+   "Blower running non-stop with nobody calling is usually not the motor on this furnace - check for a refrigerant-detection fault and the Low GWP DIP switches."
+  ],
+  "manual": "lennox-ml197uhek-service-100236",
+  "pages": [
+   10,
+   21,
+   22,
+   23,
+   54,
+   57
+  ],
+  "source": "ML197UHEK Upflow/Horizontal - Unit Information / Service Literature (100236, posted 10/22/2026), p.10, p.21, p.22, p.23, p.54, p.57",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-lennox-ml197-rds-blower-runs",
+  "unit": "^ML197UH",
+  "brand": "Lennox",
+  "equipment": "Gas Furnace",
+  "title": "Blower runs continuously, no heat or cool — refrigerant leak detection and its DIP switches — ML197UHEK",
+  "summary": "The control ships with both refrigerant-sensor switches enabled; with no sensor, or a sensor fault, it runs the blower and holds off heating and cooling.",
+  "steps": [
+   "Read the display first. E150 = refrigerant leak detected. E151 / E152 = sensor 1 / 2 fault. E154 / E155 = sensor 1 / 2 communication lost (E154 is also a wrong DIP setting). E160 / E161 = wrong sensor type. E163 = control board. E390 = Low GWP relay stuck.",
+   "Heat-only furnace or an R-410A coil with no sensor: both Low GWP DIP switches must be moved to DISABLE. They ship ENABLED, and left that way the blower operates continuously.",
+   "A2L (R-454B) system: one sensor goes on the SENSOR 1 plug (LGWP1) with switch 1 Enable and switch 2 Disable. Two sensors: both Enable. Switch 1 Disable with switch 2 Enable is invalid. Set them before powering up - a wrong setting faults at power-up.",
+   "Every power-up starts with a five-minute purge: blower on, no heating or cooling yet. That is normal. A short press of the LGWP TEST button skips the rest once the sensors are recognized.",
+   "On a real leak the control cuts R (24 V) to the thermostat, stops the compressor and the burners, and runs the blower on high. When levels are safe it finishes a seven-minute cycle and returns to normal. E150 will not clear while the sensor still sees refrigerant - find and fix the leak, then verify the charge.",
+   "Communication faults: check the sensor harness and plug at the board and at the coil, look for damage or anything blocking the plug, and that the cable has a drip loop and is not pinched. After a fix the blower still latches for at least 5 minutes; press LGWP TEST to re-check.",
+   "LGWP TEST in normal mode fakes a leak so you can prove the wiring: display shows E164, blower comes on, outdoor unit (and burners, on a heat call) shut down. Press again to end it; E164 clears by itself after 1 minute.",
+   "Thermostats that lose their settings on a power loss may not come back to the right mode or setpoint after the control restores R."
+  ],
+  "safety": "Disabling the refrigerant detection function on an A2L refrigerant system is prohibited by safety codes. For use with Lennox approved evaporator coil and LGWP sensors only; with a non-Lennox-approved coil use the original manufacturer's recommended LGWP sensors.",
+  "manual": "lennox-ml197uhek-service-100236",
+  "pages": [
+   1,
+   12,
+   13,
+   54,
+   55,
+   56
+  ],
+  "source": "ML197UHEK Upflow/Horizontal - Unit Information / Service Literature (100236, posted 10/22/2026), p.1, p.12, p.13, p.54, p.55, p.56",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-lennox-ml197-code-recall",
+  "unit": "^ML197UH",
+  "brand": "Lennox",
+  "equipment": "Gas Furnace",
+  "title": "Reading and clearing stored codes on the 7-segment display — ML197UHEK",
+  "summary": "One button beside the display reaches code history, clear, and live flame current.",
+  "steps": [
+   "Normal display: a blinking decimal point = idle. H = gas heat (blinks during ignition), C = cooling, A = continuous fan, d = dehumidification, h = heat pump stage, dF = defrost.",
+   "Press and HOLD the diagnostic button beside the display. A new menu item shows every five seconds; let go on the one you want. The menu wraps around until you release.",
+   "Release on E for Error Code Recall: the last 10 codes. E000 means nothing is stored.",
+   "To clear: in the recall menu release on c, then press the button a second time while the c is flashing to confirm.",
+   "To leave recall, hold the button until three solid horizontal lines show.",
+   "Release on F for flame signal - the display reads microamps (1.5 or more is normal).",
+   "Codes that are just information: E164 means someone pressed the LGWP TEST button (clears in 1 minute); E117 is a poor-ground warning only.",
+   "Soft lockouts reset themselves: after one hour of continuous heat demand the Watchguard breaks and remakes the call. A rollout lockout (E200) does not - the rollout switch is manual reset, and the control then holds until power is interrupted or the thermostat is cycled off and on."
+  ],
+  "manual": "lennox-ml197uhek-service-100236",
+  "pages": [
+   7,
+   11,
+   13,
+   14,
+   59
+  ],
+  "source": "ML197UHEK Upflow/Horizontal - Unit Information / Service Literature (100236, posted 10/22/2026), p.7, p.11, p.13, p.14, p.59",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-lennox-ml197-condensate",
+  "unit": "^ML197UH",
+  "brand": "Lennox",
+  "equipment": "Gas Furnace",
+  "title": "Water at the furnace, gurgling, or pressure switch trips from the drain — ML197UHEK",
+  "summary": "A blocked or unprimed trap backs water into the cold end header box and opens the pressure switch.",
+  "steps": [
+   "If the condensate line is blocked, water backs up into the header box, the pressure differential drops and the pressure switch opens. So a drain problem often shows up as a pressure switch code.",
+   "Power off. Pull the clean-out cap at the bottom of the trap, drain it into a pan, look inside, refit the cap.",
+   "Pull the hoses off the cold end header box and check the hose screens: twist and pull them out, rinse under the tap, refit.",
+   "Check the pressure switch tubing for water and for cracks; clear or replace it.",
+   "Prime the trap before you leave: pour in 10 fl oz (300 ml) of water, or fire the burners about 3 minutes, stop, let the inducer stop, and do it once more.",
+   "Check the install: the trap may be up to 5 ft from the furnace on PVC sloped 1/4 in. per foot toward the trap; the drain vent stub must be 1 to 2 in. above the drain connection on an upflow, 4 to 5 in. on a horizontal. Taller than that can flood the heat exchanger if the line restricts.",
+   "If the furnace and the coil share a drain, the A/C condensate outlet has to be vented or the furnace pressure switch will not work properly. No copper drain lines.",
+   "Drain in a cold space: it can freeze - heat cable kit 26K68 (6 ft) or 26K69 (24 ft). And check the cabinet tilts slightly to the front (0 to 1/2 in.) so the header box drains."
+  ],
+  "manual": "lennox-ml197uhek-service-100236",
+  "pages": [
+   18,
+   20,
+   41,
+   42,
+   43,
+   45,
+   52
+  ],
+  "source": "ML197UHEK Upflow/Horizontal - Unit Information / Service Literature (100236, posted 10/22/2026), p.18, p.20, p.41, p.42, p.43, p.45, p.52",
+  "confidence": "manual"
  }
 ];
