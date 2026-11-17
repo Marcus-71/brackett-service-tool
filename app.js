@@ -11971,6 +11971,72 @@ async function ocrTagText(file, onStatus) {
   const slowTimer = userStatus ? setTimeout(() => userStatus((lastMsg || "Reading the tag...") + OCR_SLOW_HINT), OCR_SLOW_MS) : null;
   try { return await ocrTagTextPasses(file, onStatus); } finally { if (slowTimer) clearTimeout(slowTimer); }
 }
+// v444 (Andy 2026-11-17 "fix the generac serial read on the boxed plates"): older Generac plates print
+// MODEL and SERIAL inside drawn boxes, and Vern's photos of them are shot at an angle, so the print is
+// both turned and leaning. The full-photo passes then read no serial (0058751, 0064620, 0067300 plates).
+// ocrBoxCrop cuts a region out of the 1600 px copy, turned and with the lean taken out.
+function ocrBoxCrop(base, x0, y0, x1, y1, rotDeg, shear, scale) {
+  x0 = Math.max(0, Math.round(x0)); y0 = Math.max(0, Math.round(y0)); x1 = Math.min(base.width, Math.round(x1)); y1 = Math.min(base.height, Math.round(y1));
+  if (x1 - x0 < 20 || y1 - y0 < 10) return null;
+  const w = (x1 - x0) * scale, h = (y1 - y0) * scale;
+  const c = document.createElement("canvas"); c.width = Math.round(w); c.height = Math.round(h);
+  const x = c.getContext("2d", { willReadFrequently: true });
+  x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.imageSmoothingQuality = "high";
+  x.translate(c.width / 2, c.height / 2); x.rotate(rotDeg * Math.PI / 180); if (shear) x.transform(1, 0, shear, 1, 0, 0);
+  x.drawImage(base, x0, y0, x1 - x0, y1 - y0, -w / 2, -h / 2, w, h);
+  x.setTransform(1, 0, 0, 1, 0, 0);
+  return c;
+}
+// The 7-digit serial under the MODEL box. mAnchor / sAnchor: the MODEL (and SERIAL, when seen) label
+// words in 1600 px copy coordinates, { box, base (the word's baseline) }. The area holding both boxes
+// is straightened at up to six turn + lean pairs and read as a block; the digit word under the model's
+// is then read again alone. With the SERIAL label word, just its box is read too. Every 7-digit read
+// votes (not the model, not 00..., not the VOLTS line 120/240 read as 1207240); the serial needs 4 or
+// more votes and three times the runner-up. Returns "" when the vote is not clear - never a guess.
+async function ocrBoxedSerial(worker, base, mAnchor, sAnchor, modelDigits, stopCheck) {
+  const votes = new Map();
+  const tally = (text) => { for (const t of new Set(String(text || "").toUpperCase().split(/[^A-Z0-9]+/))) if (/^\d{7}$/.test(t) && !/^00/.test(t) && t !== modelDigits && !/^120.240$/.test(t)) votes.set(t, (votes.get(t) || 0) + 1); };
+  const lead = () => { const r = [...votes].sort((a, b) => b[1] - a[1]); return { top: r[0] || ["", 0], second: r[1] || ["", 0] }; };
+  const done = () => { const L = lead(); return L.top[1] >= 5 && L.second[1] * 4 <= L.top[1] ? L.top[0] : ""; };
+  const bl = mAnchor.base, slope = bl && bl.x1 > bl.x0 ? (bl.y1 - bl.y0) / (bl.x1 - bl.x0) : 0;
+  const rot0 = Math.max(-12, Math.min(12, -Math.atan(slope) * 180 / Math.PI));
+  const sg = rot0 < -1.5 ? -1 : rot0 > 1.5 ? 1 : 0;
+  // the plate is seen at an angle: the print leans the way it turns. Turn + lean pairs, likeliest first.
+  const T = sg ? [[rot0 + 3 * sg, sg * 0.15], [rot0 + 1.5 * sg, sg * 0.15], [rot0 + 4.5 * sg, sg * 0.3], [rot0 + 3 * sg, sg * 0.3], [rot0, 0], [rot0 + 1.5 * sg, 0]]
+    : [[rot0, 0], [rot0 - 3, 0], [rot0 + 3, 0], [rot0 - 3, -0.15], [rot0 + 3, 0.15], [rot0 - 6, -0.15]];
+  const rec = async (canvas, psm) => { if (stopCheck) stopCheck(); const { data } = await worker.recognize(canvas, { tessedit_pageseg_mode: psm }); tally(data.text); return data; };
+  const sub = (canvas, b, k) => {
+    const hh = b.y1 - b.y0, px = hh * 0.3, py = hh * 0.22;
+    const x0 = Math.max(0, b.x0 - px), y0 = Math.max(0, b.y0 - py), x1 = Math.min(canvas.width, b.x1 + px), y1 = Math.min(canvas.height, b.y1 + py);
+    const c = document.createElement("canvas"); c.width = Math.max(1, Math.round((x1 - x0) * k)); c.height = Math.max(1, Math.round((y1 - y0) * k));
+    const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.imageSmoothingQuality = "high";
+    g.drawImage(canvas, x0, y0, x1 - x0, y1 - y0, 0, 0, c.width, c.height);
+    return c;
+  };
+  const M = mAnchor.box, mw = M.x1 - M.x0;
+  for (const [r, sh] of T) {
+    const raw = ocrBoxCrop(base, M.x0 - 0.1 * mw, M.y0 - 0.2 * mw, M.x1 + 4.0 * mw, M.y0 + 2.3 * mw, r, sh, 2);
+    if (!raw) break;
+    const flat = ocrFlatten(raw, 1);
+    const data = await rec(flat, "6");
+    const dig = (data.words || []).filter(w => ((w.text || "").match(/\d/g) || []).length >= 5 && w.bbox.y1 - w.bbox.y0 >= 12).sort((a, b) => a.bbox.y0 - b.bbox.y0);
+    const first = dig[0], below = first && dig.find(w => w.bbox.y0 > first.bbox.y0 + (first.bbox.y1 - first.bbox.y0) * 0.6);
+    if (below) { await rec(sub(flat, below.bbox, 1.5), "7"); await rec(sub(raw, below.bbox, 1.5), "7"); }
+    const d = done(); if (d) return d;
+  }
+  if (sAnchor) {
+    const S = sAnchor.box, sw = S.x1 - S.x0;
+    for (const [r, sh] of T) for (const fl of [false, true]) {
+      const c = ocrBoxCrop(base, S.x1 + 0.14 * sw, S.y0 + 0.2 * sw, S.x1 + 2.9 * sw, S.y0 + 1.2 * sw, r, sh, 3);
+      if (!c) break;
+      await rec(fl ? ocrFlatten(c, 1) : c, "7");
+      const d = done(); if (d) return d;
+    }
+  }
+  const L = lead();
+  return L.top[1] >= 4 && L.second[1] * 3 <= L.top[1] ? L.top[0] : "";
+}
+
 async function ocrTagTextPasses(file, onStatus) {
   const photo = await loadPhotoForOcr(file);
   const base = photo.base;
@@ -12030,7 +12096,7 @@ async function ocrTagTextPasses(file, onStatus) {
       if (!m || w.bbox.y1 - w.bbox.y0 < 6) continue;
       const kind = m[1] || m[3] ? "model" : "serial", fr = !!(m[3] || m[4]);
       if (anchors.filter(a => a.kind === kind).length >= 4) continue;
-      anchors.push({ kind, fr, box: w.bbox, rad: turn, deg, passScale, conf: w.confidence || 0, event });
+      anchors.push({ kind, fr, box: w.bbox, base: w.baseline, pw: canvas.width, ph: canvas.height, rad: turn, deg, passScale, conf: w.confidence || 0, event });
     }
     const fields = extractTagFields(data.text || "");
     fields.text = data.text || "";
@@ -12178,6 +12244,28 @@ async function ocrTagTextPasses(file, onStatus) {
         if (sf && sf.serialSource !== "label" && !ocrBareSerialFitsBrand(fitBrand, sf.serial)) sf = null;
         if (sf && !(fields.model && (fields.model.includes(sf.serial) || sf.serial.includes(fields.model))) && !(fields.serial && fields.serial.includes(sf.serial))) { fields.serial = sf.serial; fields.serialSource = sf.serialSource; trackEvent("tag serial read by label-anchor zoom"); }
       } catch (e) { if (e !== OCR_STOP) throw e; }
+    }
+    // v444: a boxed Generac plate with no labelled serial yet - the 7-digit serial in the box under MODEL.
+    // Label words seen on an upright, full-size pass only (their place is known in the 1600 px copy).
+    if (rank(fields) < 2 && BOX_MODEL_RE.test(fields.model || "")) {
+      const upright = (kind) => anchors.filter(a => a.kind === kind && !a.fr && !a.deg && a.passScale === 1).sort((x, y) => y.conf - x.conf)[0];
+      // a pass that levelled the page reports the word in the levelled frame: turn it back
+      const place = (a) => {
+        if (!a) return null;
+        const cs = Math.cos(-(a.rad || 0)), sn = Math.sin(-(a.rad || 0));
+        const back = (u, v) => [a.pw / 2 + (u - a.pw / 2) * cs - (v - a.ph / 2) * sn, a.ph / 2 + (u - a.pw / 2) * sn + (v - a.ph / 2) * cs];
+        const [cx, cy] = back((a.box.x0 + a.box.x1) / 2, (a.box.y0 + a.box.y1) / 2), hw = (a.box.x1 - a.box.x0) / 2, hh = (a.box.y1 - a.box.y0) / 2;
+        let bs = null;
+        if (a.base && a.base.x1 > a.base.x0) { const [bx0, by0] = back(a.base.x0, a.base.y0), [bx1, by1] = back(a.base.x1, a.base.y1); bs = { x0: bx0, y0: by0, x1: bx1, y1: by1 }; }
+        return { box: { x0: cx - hw, y0: cy - hh, x1: cx + hw, y1: cy + hh }, base: bs };
+      };
+      const mA = place(upright("model"));
+      if (mA) {
+        try {
+          const bs = await ocrBoxedSerial(worker, base, mA, place(upright("serial")), fields.model.replace(/^G/, ""), () => { if (ocrStopRequested) throw OCR_STOP; });
+          if (bs) { fields.serial = bs; fields.serialSource = "label"; trackEvent("tag serial read from its box"); }
+        } catch (e) { if (e !== OCR_STOP) throw e; }
+      }
     }
     if (c.event) trackEvent(c.event);
     if (c.zoomed) trackEvent("tag model fixed by zoom re-read");
@@ -15002,7 +15090,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v443";
+const APP_VERSION = "v444";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
