@@ -7249,5 +7249,1149 @@ const UNIT_SCENARIOS = [
   ],
   "source": "Y82V / Z8VT (80% two-stage variable-speed ECM) Installation Manual: Y82V and Z8VT Series Two-Stage Variable Speed ECM Gas Furnace, Non-Condensing, Multi-Position (6762470-UIM-A-0126, 01/2026), p.70, p.72, p.53, p.68, p.52",
   "confidence": "manual"
+ },
+ {
+  "id": "u-generac-ats-100-200-utility-back-still-on-generator",
+  "unit": "^(?:G0|0)099(28|29|30|31|32|33|34|35)-?0$",
+  "brand": "Generac",
+  "equipment": "Generator",
+  "title": "Utility is back but the house is still on generator - Generac 100-200 A switch (G0099280-G0099350)",
+  "summary": "Generac's manual gives a manual transfer back to utility for when grid power has returned but the switch has not moved. It prints no fault-finding chart for why.",
+  "steps": [
+   "First make the switch dead: generator main breaker OFF, and turn OFF both the utility supply (the service disconnect breaker in a service entrance model; the upstream disconnect on a non-service entrance model) and the generator supply to the switch.",
+   "Look at the mechanism. Handle position UP = load terminals T1 / T2 are on utility N1 / N2. DOWN = on generator E1 / E2. On service entrance models the mechanism is behind the interior cover and is seen and reached through its narrow slot; the front of the moving part is yellow.",
+   "Handle already UP: the contacts are closed on utility, nothing more to do at the mechanism.",
+   "Handle DOWN: put the manual handle into the yellow movable contact carrier rocker and move it UP. Hold on to it - it moves quickly after passing the center of travel. Do not use excessive force.",
+   "Take the handle out and put it back in its storage bracket in the switch.",
+   "Turn ON the utility service disconnect breaker, then turn ON the generator main breaker.",
+   "The manual's only direction on the cause: if automatic operation does not occur, have a Generac dealer investigate, diagnose and service the system."
+  ],
+  "safety": "DANGER (Generac): do not manually transfer under load. Disconnect the transfer switch from all power sources before a manual transfer - failure to do so will result in death or serious injury, and equipment damage.",
+  "manual": "generac-ats-100-200a-fcm-owner-a0009313194",
+  "pages": [
+   22,
+   21
+  ],
+  "source": "Transfer switch 100-200 A with Fuse Control Module (G0099280, G0099290, G0099300, G0099310, G0099320, G0099330, G0099340, G0099350) Generac Automatic Transfer Switch 100 - 200 Amp, Service Entrance and Non-Service Entrance - Owner's Manual (A0009313194 Rev. A 9/26/2025), p.22, p.21",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-generac-ats-100-200-spd-led-off",
+  "unit": "^(?:G0|0)099(28|31|33)-?0$",
+  "brand": "Generac",
+  "equipment": "Generator",
+  "title": "Surge protector light is off - Generac 100-200 A service entrance switch with SPD (G0099280, G0099310, G0099330)",
+  "summary": "The surge protection device has one LED. Lit means the protection elements are intact; off means protection is lost.",
+  "steps": [
+   "Check the LED after installation, after a surge event and after a major weather event.",
+   "With system power applied the LED should be lit. With all phase voltages present it reports the protection elements: on when all are intact and protecting, OFF for any loss of protection.",
+   "LED not lit: remove power, check the connections, and test again.",
+   "Still not lit: Generac says to contact an IASD (Generac dealer). The surge device is not repairable and has no user serviceable parts - a failed one, shown by the unlit LED, is replaced.",
+   "Do NOT use the LED to decide whether phase voltage is present or absent.",
+   "Only the G0099280, G0099310 and G0099330 in this manual have the surge device; the manual prints no part number for it."
+  ],
+  "safety": "DANGER (Generac): high voltage is present at the transfer switch and terminals. Contact with live terminals will result in death or serious injury.",
+  "manual": "generac-ats-100-200a-fcm-owner-a0009313194",
+  "pages": [
+   24,
+   11,
+   6
+  ],
+  "source": "Transfer switch 100-200 A with Fuse Control Module (G0099280, G0099290, G0099300, G0099310, G0099320, G0099330, G0099340, G0099350) Generac Automatic Transfer Switch 100 - 200 Amp, Service Entrance and Non-Service Entrance - Owner's Manual (A0009313194 Rev. A 9/26/2025), p.24, p.11, p.6",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-generac-ats-100-200-fcm-fuse",
+  "unit": "^(?:G0|0)099(28|29|30|31|32|33|34|35)-?0$",
+  "brand": "Generac",
+  "equipment": "Generator",
+  "title": "FCM (T1 / N1 / N2): which is which and how to change one - Generac 100-200 A transfer switch (G0099280-G0099350)",
+  "summary": "Three 6.3 A fuses sit in the Fuse Control Module: T1 feeds the generator's battery charger, N1 and N2 are the utility sensing leads to the generator.",
+  "steps": [
+   "The three fuses are below the FCM terminal strip, marked T1, N1 and N2. T1 (fused) = battery charge. N1 (fused) and N2 (fused) = utility sense. All three are 240 VAC, 6.3A fuses.",
+   "What they feed at the terminal strip: T1 = fused 120 VAC for the battery charger (required to supply utility or generator voltage to the generator's battery charger); N1 and N2 = fused 240 VAC sensing for utility dropout and pickup.",
+   "A fuse removal and installation tool is stored in the FCM housing. Snap it free with an appropriate, electrically insulated tool such as diagonal pliers.",
+   "Use that tool to pull and fit the fuse. Do NOT touch any part of the fuse with anything else until it is completely out of the FCM.",
+   "Replacement: Generac says use only Generac fuse part number 10000005117, rated 240 VAC, 6.3 Amps, 10,000 AIC. The label drawn on the FCM in the manual's figures reads 'Replace with Littelfuse 021606.3XHP, Optifuse FCD-6.3A or Generac 10000005117 250 vac, 6.3A'.",
+   "Put the tool back in the FCM housing retainer directly above the fuses, large thumb tab facing out.",
+   "The manual does not say what blows these fuses or how to test the circuits behind them."
+  ],
+  "safety": "DANGER (Generac): high voltage is present at the transfer switch and terminals. Contact with live terminals will result in death or serious injury. Refer to NFPA 70E for PPE and safety equipment before work.",
+  "manual": "generac-ats-100-200a-fcm-owner-a0009313194",
+  "pages": [
+   25,
+   18,
+   17
+  ],
+  "source": "Transfer switch 100-200 A with Fuse Control Module (G0099280, G0099290, G0099300, G0099310, G0099320, G0099330, G0099340, G0099350) Generac Automatic Transfer Switch 100 - 200 Amp, Service Entrance and Non-Service Entrance - Owner's Manual (A0009313194 Rev. A 9/26/2025), p.25, p.18, p.17",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-generac-ats-100-200-auto-test",
+  "unit": "^(?:G0|0)099(28|29|30|31|32|33|34|35)-?0$",
+  "brand": "Generac",
+  "equipment": "Generator",
+  "title": "Testing automatic transfer and what should happen when - Generac 100-200 A switch (G0099280-G0099350)",
+  "summary": "Generac's own automatic-operation check, with the timings the manual prints. The timers live in the generator controller.",
+  "steps": [
+   "Generac's order (CAUTION: do the functional tests in the exact order printed): manual operation check, voltage checks, generator test under load, then this automatic test.",
+   "Voltage at the switch with the generator running at no load: 240-246 VAC across E1 to E2, 120-123 VAC from each to neutral, 60-62 Hz. Under full rated load: greater than 230 VAC and greater than 59 Hz. Do NOT proceed until the no-load voltage and frequency are within these limits.",
+   "Use the meter's LowZ (low input impedance) setting so ghost voltages do not fool you.",
+   "Generator OFF. Utility service disconnect breaker of the switch OFF. Verify the switch is de-energized and install the front cover.",
+   "Utility service disconnect breaker ON, generator main breaker ON, generator panel in AUTO.",
+   "Now turn the utility service disconnect breaker of the switch OFF. It is this breaker that simulates the outage - shutting off the main disconnect in a subpanel fed from the switch will NOT simulate an outage.",
+   "The engine should crank and start after a five second delay (factory default setting). After starting, the switch should connect the load to the generator after a five second warm-up delay.",
+   "With the generator carrying the load, turn the utility breaker back ON. After approximately 15 seconds the switch should transfer back to utility; approximately one minute after re-transfer the generator should shut down.",
+   "Generac notes that timer durations may differ between generators and settings."
+  ],
+  "safety": "CAUTION (Generac): perform the functional tests in the exact order they are presented in the manual. DANGER: high voltage is present at the transfer switch and terminals.",
+  "manual": "generac-ats-100-200a-fcm-owner-a0009313194",
+  "pages": [
+   24,
+   23,
+   22,
+   21
+  ],
+  "source": "Transfer switch 100-200 A with Fuse Control Module (G0099280, G0099290, G0099300, G0099310, G0099320, G0099330, G0099340, G0099350) Generac Automatic Transfer Switch 100 - 200 Amp, Service Entrance and Non-Service Entrance - Owner's Manual (A0009313194 Rev. A 9/26/2025), p.24, p.23, p.22, p.21",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-generac-ats-100-200-shutdown-during-outage",
+  "unit": "^(?:G0|0)099(28|29|30|31|32|33|34|35)-?0$",
+  "brand": "Generac",
+  "equipment": "Generator",
+  "title": "Shutting the generator down during an outage and bringing it back - Generac 100-200 A switch (G0099280-G0099350)",
+  "summary": "Generac's order for shutting down under load (maintenance or to save fuel) and restarting, to avoid equipment damage.",
+  "steps": [
+   "To turn the generator OFF: set the utility main line circuit breaker to OFF (OPEN).",
+   "Set the generator main line circuit breaker to OFF (OPEN).",
+   "Let the generator run for cool-down for approximately five minutes.",
+   "Set the generator to OFF at the controller, then remove the 7.5A fuse from the controller.",
+   "To turn it back ON: install the 7.5A fuse in the controller and verify the generator main breaker is OFF (OPEN).",
+   "Set the generator to AUTO at the controller. It will start and run - let it warm up for a few minutes.",
+   "Set the generator main breaker to ON (CLOSED), then set the utility main line circuit breaker to ON (CLOSED). The system is back in automatic."
+  ],
+  "safety": "DANGER (Generac): automatic start-up. Disconnect utility power and render the unit inoperable before working on it. Follow the steps in order during utility outages.",
+  "manual": "generac-ats-100-200a-fcm-owner-a0009313194",
+  "pages": [
+   24,
+   25
+  ],
+  "source": "Transfer switch 100-200 A with Fuse Control Module (G0099280, G0099290, G0099300, G0099310, G0099320, G0099330, G0099340, G0099350) Generac Automatic Transfer Switch 100 - 200 Amp, Service Entrance and Non-Service Entrance - Owner's Manual (A0009313194 Rev. A 9/26/2025), p.24, p.25",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-generac-ats-300-400-position-windows",
+  "unit": "^(?:G0|0)099(78|79)-?0$",
+  "brand": "Generac",
+  "equipment": "Generator",
+  "title": "Which side is it on, and moving it by hand - Generac 300 / 400 A service entrance switch (G0099780, G0099790)",
+  "summary": "The 300 / 400 A mechanism shows its position in two windows, A and B, and is moved with a handle on the actuating shaft.",
+  "steps": [
+   "Verify the generator is OFF. Then turn OFF (OPEN) both the utility and emergency (generator) supplies to the switch, by whatever means is provided (such as the main line circuit breakers).",
+   "Read the windows. Window A ON and window B OFF = load terminals T1 / T2 are on utility N1 / N2. Window A OFF and window B ON = load is on generator E1 / E2.",
+   "To close to the utility (normal) side when window A reads OFF: attach the handle to the actuating shaft and move it in the direction of the arrow on the switch cover until it stops - DO NOT FORCE. Release the handle slowly so the spring in the switch box relaxes. Window A now shows ON and window B OFF.",
+   "To close to the generator (standby) side when window B reads OFF: same motion, in the direction of the arrow on the switch cover until it stops, release slowly. Window A shows OFF and window B ON.",
+   "Manual operation must be checked BEFORE the switch is operated electrically.",
+   "If automatic operation does not occur, the manual's direction is to have a Generac dealer investigate."
+  ],
+  "safety": "DANGER (Generac): do not manually transfer under load. Disconnect the transfer switch from all power sources before a manual transfer. Do not use excessive force.",
+  "manual": "generac-ats-300-400a-se-spd-owner-a0010615792",
+  "pages": [
+   19,
+   20,
+   21
+  ],
+  "source": "Transfer switch 300 / 400 A service entrance with surge protection device (G0099780, G0099790) Generac Automatic Transfer Switch 300-400 Amp, Service Entrance with Surge Protection Device (SPD) - Owner's Manual (A0010615792 Rev. A (Initial Release) 07/08/2026), p.19, p.20, p.21",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-generac-ats-200-ilc-ghost-voltage",
+  "unit": "^(?:G0|0)099(39|43)-?0$",
+  "brand": "Generac",
+  "equipment": "Generator",
+  "title": "Voltage showing on the utility side while on generator - Generac 200 A load center switch (G0099390, G0099430)",
+  "summary": "A high-impedance meter can show a 'ghost' voltage on the dead utility side. Generac explains where it comes from and what meter setting to use.",
+  "steps": [
+   "Commissioning may require the inspector to verify that no voltage is present on the utility side of the switch while the generator is supplying the load.",
+   "Only a meter with a low impedance (LoZ) setting can measure that accurately.",
+   "'Ghost' voltages may appear on meters with high input impedance because the sensing wires N1 and N2 couple capacitively with the charging voltage from T1.",
+   "The manual's note on simulating an outage (printed with its automatic-operation test): the Utility Power Circuit Breaker in the transfer switch must be turned OFF - shutting off the main disconnect in a subpanel connected to the switch will NOT simulate an outage.",
+   "Contact the meter manufacturer for more about the LoZ setting."
+  ],
+  "safety": "DANGER (Generac): high voltage is present at the transfer switch and terminals. Contact with live terminals will result in death or serious injury.",
+  "manual": "generac-ats-200a-se-load-center-owner-a0010615780",
+  "pages": [
+   22,
+   20
+  ],
+  "source": "Transfer switch 200 A service entrance with integrated load center and surge protection device (G0099390, G0099430) Generac Automatic Transfer Switch Service Rated, 200 Amp, 20 Space 40 Circuit Outdoor Rated and 42 Circuit Indoor Rated Load Centers with Surge Protection Device (SPD) - Owner's Manual (A0010615780 Rev. A (Initial Release) 06/03/2026), p.22, p.20",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-generac-ats-100-16ckt-fcm-fuse",
+  "unit": "^(?:G0|0)099(47)-?0$",
+  "brand": "Generac",
+  "equipment": "Generator",
+  "title": "FCM replacement and its alternates - Generac 100 A 16 circuit transfer switch (G0099470)",
+  "summary": "Same three 6.3 A fuses as the other Generac switches; this manual also prints two alternate fuse numbers.",
+  "steps": [
+   "The integrated FCM holds the transfer relay, the sensing and battery charge fuses and the connection points for the start circuit wires.",
+   "Fuses: T1 (fused) = battery charge, N1 (fused) and N2 (fused) = utility sense. 240 VAC, 6.3A fuses.",
+   "A fuse removal and installation tool is included in the control housing. Snap it free with an appropriate tool such as diagonal pliers and use it to replace the fuse.",
+   "Replacement: Generac part number 10000005117, rated 240 VAC, 6.3 Amps, 10,000 AIC. Alternative fuses printed in this manual: Littelfuse 021606.3MXHP or Optifuse FCD-6.3.",
+   "Store the tool in the control housing retainer directly above the fuses, large thumb tab facing out."
+  ],
+  "safety": "DANGER (Generac): high voltage is present at the transfer switch and terminals. Contact with live terminals will result in death or serious injury. Refer to NFPA 70E for PPE and safety equipment before work.",
+  "manual": "generac-ats-100a-16-circuit-owner-a0010615774",
+  "pages": [
+   20,
+   13,
+   9,
+   6
+  ],
+  "source": "Transfer switch 100 A non-service entrance with 16 circuit load center (G0099470) Generac Automatic Transfer Switch 100 Amp Non-Service Entrance with 16 Circuit Load Center - Owner's Manual (A0010615774 Rev. A (Initial Release) 06/23/2026), p.20, p.13, p.9, p.6",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-ft5a-fg5a-blower-wont-stop",
+  "unit": "^FT5AN[XB][BCD](24|36|48|60)|^FG5AN[XB][BCD](24|36|48|60)",
+  "brand": "Carrier",
+  "equipment": "Air Handler",
+  "title": "Blower runs and will not shut off, compressor and heat locked out - FT5 / FG5",
+  "summary": "Check the separate leak dissipation board first: in dissipation mode it runs the blower and opens W and Y (electric heat and compressor off). Read its yellow LED.",
+  "steps": [
+   "Find the leak dissipation board (separate from the fan coil control board) and look at its yellow LED. Solid = normal operation - the dissipation board is not the cause.",
+   "Flashing: count the flashes. 1 = sensor at 20% LFL or more, 2 = sensor open, 3 = normal mitigation after a leak, 5 = fault with the A2L digital sensor, 6 = test button stuck - all of these run dissipation mode (blower on, W and Y opened so electric heat and the outdoor compressor are off). 4 = no power to G output: dissipation with no blower.",
+   "For all flash codes, first try power cycling the system to remove the code.",
+   "Flashing 1 or 3: check for refrigerant leaks using an independent R-454B detector. Flashing 1 with no leak present: replace the sensor.",
+   "Flashing 2: check both ends of the sensor wire harness, power cycle; still there = replace the sensor.",
+   "Flashing 4 or 6 that will not clear after a power cycle: replace the dissipation board (6: press the test button repeatedly first).",
+   "Flashing 7 or 8 (Y or W wiring inverted / shorted) leave the unit in normal operation: verify all Y and W wires against the wiring diagram.",
+   "Hold the Test button 5-29 seconds to display the flash code history; 3 rapid presses clear it."
+  ],
+  "safety": "Flammable refrigerant (R-454B). To be repaired only by trained service personnel. Do not puncture refrigerant tubing. Do not service A2L refrigerant fan coils while the vapor header or vapor line is hot.",
+  "manual": "carrier-ft5-fg5-install-im-ft5-fg5-02",
+  "pages": [
+   15,
+   18
+  ],
+  "source": "FT5 / FG5 fan coils (R-454B) FT5, FG5 Fan Coil, 2-Stage, for R-454B Refrigerant, 2 thru 5 Ton - Installation Instructions (IM-FT5-FG5-02, Edition 10/24), p.15, p.18",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-ft5a-fg5a-dissipation-self-test",
+  "unit": "^FT5AN[XB][BCD](24|36|48|60)|^FG5AN[XB][BCD](24|36|48|60)",
+  "brand": "Carrier",
+  "equipment": "Air Handler",
+  "title": "Leak dissipation self-test at start-up - FT5 / FG5",
+  "summary": "One-second press of the Test button, then six checks.",
+  "steps": [
+   "Power on the unit. The yellow LED on the dissipation board should be steady. Test mode is only possible if no faults exist on the dissipation board.",
+   "Press the Test button for roughly ONE second. The system enters Dissipation Mode for 60 seconds. Longer presses do other things: 5-29 s shows flash code history, 30 s or more sets flash code 6.",
+   "Normal operation checks - no call: compressor off, indoor fan off, heat off. Cool call: compressor on, fan on, heat off. Heat call: compressor off, fan on, electric heat on.",
+   "Dissipation activated - with no call, a cool call and a heat call: compressor off, indoor fan on, heat off each time.",
+   "Make sure the fan coil can meet the minimum dissipation airflow for the total system charge: 5 lb 133 CFM, 10 lb 266, 15 lb 399, 20 lb 532, 25 lb 665 (Table 4 has every pound from 5 to 25).",
+   "If flash codes are present, troubleshoot them before leaving."
+  ],
+  "safety": "Failure to follow proper R-454B mitigation system installation instructions can result in property damage, personal injury, or death.",
+  "manual": "carrier-ft5-fg5-install-im-ft5-fg5-02",
+  "pages": [
+   15
+  ],
+  "source": "FT5 / FG5 fan coils (R-454B) FT5, FG5 Fan Coil, 2-Stage, for R-454B Refrigerant, 2 thru 5 Ton - Installation Instructions (IM-FT5-FG5-02, Edition 10/24), p.15",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-ft5a-fg5a-motor-wont-run",
+  "unit": "^FT5AN[XB][BCD](24|36|48|60)|^FG5AN[XB][BCD](24|36|48|60)",
+  "brand": "Carrier",
+  "equipment": "Air Handler",
+  "title": "ECM blower motor does not run - FT5 / FG5",
+  "summary": "The manual's order: fuse, 24 V, plugs, 230 V, then the control signals. Do not assume the motor or module is bad.",
+  "steps": [
+   "Turn off power. Check the 5 amp fuse on the board.",
+   "Check for 24 VAC on SEC1 and SEC2. No voltage = check the transformer.",
+   "Check all plugs and receptacles for deformation that could cause loose connections; be sure plugs are fully seated.",
+   "Verify approximately 230 VAC is present at the motor.",
+   "Thermostat check: remove all thermostat wires from the board and jumper, one at a time, R-G, R-Y/Y2, R-Y1, R-W1. Motor runs in all cases = thermostat mis-wired, configured incorrectly or defective. Runs in some but not others = go on to the harness and board.",
+   "Harness check: shut off power and wait 5 min. Remove the 5-pin, 16-pin and 4-pin plugs from the motor, put the 5-pin plug back, turn power on and check the 16-pin connector with the screw terminals jumpered. Printed example: R to Y/Y2 gives (-)12 VDC between pin 14 and pin 1 (common).",
+   "Signal correct and the motor still does not run: inspect the harness for loose pins; connections good = the control module or the motor is defective. Signal missing at the 16-pin plug: check the board 12-pin plug PL-1 (pin 2 to pin 9 for the same example) - present at the board but not at the 16-pin plug = wiring harness; not present at the board = replace the board.",
+   "Before replacing the control module, check the windings with the module removed and unplugged: resistance between any 2 motor leads similar, and any lead to the unpainted motor end plate greater than 100K ohms. Fail either = the winding section must be replaced."
+  ],
+  "safety": "High voltage is always present at the motor. Disconnect power before removing or replacing connectors or servicing the motor. Wait at least 5 min after disconnecting power before opening the motor.",
+  "manual": "carrier-ft5-fg5-install-im-ft5-fg5-02",
+  "pages": [
+   19
+  ],
+  "source": "FT5 / FG5 fan coils (R-454B) FT5, FG5 Fan Coil, 2-Stage, for R-454B Refrigerant, 2 thru 5 Ton - Installation Instructions (IM-FT5-FG5-02, Edition 10/24), p.19",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-ft5a-fg5a-set-select-taps",
+  "unit": "^FT5AN[XB][BCD](24|36|48|60)|^FG5AN[XB][BCD](24|36|48|60)",
+  "brand": "Carrier",
+  "equipment": "Air Handler",
+  "title": "Setting the six select taps for the system - FT5 / FG5",
+  "summary": "Move the six select wires to the pins that match the equipment. Factory settings are the largest heater range, the largest outdoor size, AC, NOM, 0/90 and LO fan.",
+  "steps": [
+   "AUX HEAT KW/CFM (violet): pick the narrowest heater range that covers the heater installed (skip if no heater). Size 24: A 0-20 kW 1200 CFM, B 0-15 1050, C 0-10 750, D 0-5 700. Size 36: A 0-20 1225, B 0-15 1050, C 0-10 750, D 0-5 700. Size 48: A 0-30 1500, B 0-20 1350, C 0-15 1200, D 0-10 1000. Size 60: A 0-30 1750, B 0-20 1350, C 0-15 1250, D 0-10 1200.",
+   "AC/HP SIZE (blue): set to the outdoor unit size. Size 24: A 036, B 030, C 024, D 018. Size 36: A 042, B 036, C 030, D 024. Size 48: A 048, B 042, C 036, D 030. Size 60: A 060, B 048, C 042, D 036.",
+   "SYSTEM TYPE (orange): AC, HP-COMFORT (about 315 CFM per ton heating, about 350 cooling) or HP-EFF (about 350 CFM per ton both). Factory setting is AC; HP-EFF gives the rated heat pump performance.",
+   "AC/HP CFM ADJUST (black): NOM, LO (10% below nominal) or HI (15% over).",
+   "ON/OFF DELAY (white): 0/90 factory; 0/0 no delay; 30/90; ENH = 30-second on-delay, then 150 seconds at 70% airflow, no off-delay.",
+   "CONTINUOUS FAN (yellow): LO 50%, MED 80%, HI 100% of cooling airflow. With a 2-speed outdoor unit do not select HI.",
+   "2-stage outdoor unit: remove jumper J4 (as shipped it ties Y1 to Y/Y2). Heat staging with a staged heater: remove J2. Dehumidify with a humidistat or thermidistat: remove J1.",
+   "The electric heat airflow must stay above the minimum CFM for the heater and system size (Table 12)."
+  ],
+  "safety": "Before installing or servicing the unit, always turn off all power - there may be more than 1 disconnect switch. Turn off accessory heater power if applicable.",
+  "manual": "carrier-ft5-fg5-install-im-ft5-fg5-02",
+  "pages": [
+   9,
+   16,
+   17,
+   23
+  ],
+  "source": "FT5 / FG5 fan coils (R-454B) FT5, FG5 Fan Coil, 2-Stage, for R-454B Refrigerant, 2 thru 5 Ton - Installation Instructions (IM-FT5-FG5-02, Edition 10/24), p.9, p.16, p.17, p.23",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-ft5a-fg5a-horizontal-sensor",
+  "unit": "^FT5AN[XB][BCD](24|36|48|60)|^FG5AN[XB][BCD](24|36|48|60)",
+  "brand": "Carrier",
+  "equipment": "Air Handler",
+  "title": "Converting to horizontal right or downflow - where the A2L sensor goes - FT5 / FG5",
+  "summary": "The sensor harness comes off first, and on A-coil sizes the sensor moves from the delta plate to the drain pan clip.",
+  "steps": [
+   "Before moving any component, disconnect the sensor wiring harness and place the whole harness in the control box.",
+   "Slope coil (size 36), horizontal right: disconnect the sensor on the drain pan and cut the wire tie holding the harness to the coil; remove the coil mounting screw and the coil assembly; lay the fan coil on its right side and reinstall the coil with the condensate pan down; refit the mounting screw; reconnect the sensor harness along the routing shown. A gasket kit is required for the slope coil conversion.",
+   "A-coil (sizes 24, 48, 60), horizontal right: disconnect and remove the sensor from the delta plate and install it on the horizontal drain pan clip; move the horizontal drain pan support bracket to the right-side coil support rail; convert the air seal assembly (swap the filler plate and air splitter, move the condensate troughs to the opposite tube sheets); install the horizontal pan on the right side and slide the coil back in.",
+   "A-coil units used horizontal LEFT also need the sensor moved from the delta plate to the drain pan clip.",
+   "Sensor must be installed with the connector facing down or facing horizontally - never upward. Incorrect position could result in premature failure.",
+   "Downflow: field conversion with the accessory downflow kit plus the base kit, per the kit instructions. Remove the plastic cap covering the vertical drains only, remove the plug from the overflow hole, and caulk the vertical pan fitting to door joint when finished.",
+   "Make sure the liquid and suction tube grommets are in place (install them after brazing), and keep the unit within 1/8 in. of level along length and width for horizontal drainage."
+  ],
+  "safety": "Before installing or servicing the unit, always turn off all power - there may be more than 1 disconnect switch. Turn off accessory heater power if applicable.",
+  "manual": "carrier-ft5-fg5-install-im-ft5-fg5-02",
+  "pages": [
+   3,
+   5,
+   7,
+   14
+  ],
+  "source": "FT5 / FG5 fan coils (R-454B) FT5, FG5 Fan Coil, 2-Stage, for R-454B Refrigerant, 2 thru 5 Ton - Installation Instructions (IM-FT5-FG5-02, Edition 10/24), p.3, p.5, p.7, p.14",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-ft5a-fg5a-txv-replace",
+  "unit": "^FT5AN[XB][BCD](24|36|48|60)|^FG5AN[XB][BCD](24|36|48|60)",
+  "brand": "Carrier",
+  "equipment": "Air Handler",
+  "title": "Replacing the TXV - torque and reassembly - FT5 / FG5",
+  "summary": "Mechanical-fitting TXV. Nuts 10-20 ft-lb, equalizer about 12 ft-lb, insulation between aluminum and copper.",
+  "steps": [
+   "The replacement TXV part number for each size is in the Product Data specification table (Maintenance Figures card).",
+   "Loosen the TXV outlet brass nut with an adjustable wrench and a backup wrench, then the TXV inlet the same way. Loosen the equalizer line with a backup wrench.",
+   "Cut the wire tie and remove the black insulation; remove the band from the TXV bulb. Cut the wire tie holding the equalizer line and bulb to the aluminum vapor header tube.",
+   "Remove the 2 screws from the TXV bracket and lift the TXV out.",
+   "Reassemble: mount the bracket and TXV with the 2 screws. Connect outlet and inlet and tighten each nut to between 10 and 20 ft-lb - do not exceed 20 ft-lb. Tighten the equalizer flare nut to approximately 12 ft-lb.",
+   "Clamp the bulb back on and reinstall the insulation around the bulb and vapor tube. Wire-tie the 1/8 in. equalizer and bulb tubes to the vapor header with insulation between the aluminum vapor tube and the copper tube - without it galvanic corrosion will cause a refrigerant leak.",
+   "Leak test the TXV fittings, then evacuate and charge the system to the required subcooling per the outdoor unit rating plate."
+  ],
+  "safety": "Flammable refrigerant (R-454B). To be repaired only by trained service personnel. Do not puncture refrigerant tubing. Do not service A2L refrigerant fan coils while the vapor header or vapor line is hot.",
+  "manual": "carrier-ft5-fg5-install-im-ft5-fg5-02",
+  "pages": [
+   12
+  ],
+  "source": "FT5 / FG5 fan coils (R-454B) FT5, FG5 Fan Coil, 2-Stage, for R-454B Refrigerant, 2 thru 5 Ton - Installation Instructions (IM-FT5-FG5-02, Edition 10/24), p.12",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-ft5a-fg5a-208v-and-heat",
+  "unit": "^FT5AN[XB][BCD](24|36|48|60)|^FG5AN[XB][BCD](24|36|48|60)",
+  "brand": "Carrier",
+  "equipment": "Air Handler",
+  "title": "208 volt supply, electric heat hook-up and the big heaters - FT5 / FG5",
+  "summary": "Transformer tap, heater plug, and what 20-30 kW heaters need.",
+  "steps": [
+   "Transformer is factory wired for 230 V. For 208 V the Installation Instructions say: disconnect the black wire from the 230V terminal on the transformer and connect it to the 208V terminal. (The unit label words it: transformer primary leads, blue 208V, red 230V - go by the terminal markings.)",
+   "The transformer secondary is protected by a 5-amp fuse on the printed-circuit board.",
+   "Adding a heater: remove and discard the power plug from the fan coil and connect the heater plug to the plug from the unit wiring harness. Use only a heater listed on the unit rating plate.",
+   "Some heater sizes need the two screws that hold the blower housing to the fan deck removed (it does not affect performance).",
+   "24 kW and 30 kW heaters: the factory location of the dissipation board interferes - move the board into the enclosure supplied with the heater kit, on the outside of the unit, per the Electric Heat Instructions.",
+   "20, 24 and 30 kW heaters: keep 1 in. clearance from combustibles to the discharge plenum and ductwork for 36 in. from the unit.",
+   "Set the AUX HEAT KW/CFM tap to the range for the heater. A disconnect kit is available for single phase 3-10 kW heaters; with circuit breaker heaters the breaker can serve as the disconnect.",
+   "Dual or multiple supply circuits: ground each circuit to the ground lugs on the unit and heaters."
+  ],
+  "safety": "Before installing or servicing the unit, always turn off all power - there may be more than 1 disconnect switch. Turn off accessory heater power if applicable. The cabinet must have an uninterrupted or unbroken ground; if the conduit connection uses reducing washers, a separate ground wire must be used.",
+  "manual": "carrier-ft5-fg5-install-im-ft5-fg5-02",
+  "pages": [
+   2,
+   8,
+   9,
+   11
+  ],
+  "source": "FT5 / FG5 fan coils (R-454B) FT5, FG5 Fan Coil, 2-Stage, for R-454B Refrigerant, 2 thru 5 Ton - Installation Instructions (IM-FT5-FG5-02, Edition 10/24), p.2, p.8, p.9, p.11",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-fj5a-blower-wont-stop",
+  "unit": "^FJ5AN[XB][ABCD](18|24|30|36|42|48|60)",
+  "brand": "Carrier",
+  "equipment": "Air Handler",
+  "title": "Blower runs and will not shut off, compressor and heat locked out - FJ5",
+  "summary": "The leak dissipation board is holding the unit in dissipation mode. Read its yellow LED.",
+  "steps": [
+   "Look at the yellow LED on the dissipation board. Solid = normal operation.",
+   "Flashing: count the flashes. 1 = sensor at 20% LFL or more, 2 = sensor open, 3 = normal mitigation after a leak, 5 = fault with the A2L digital sensor, 6 = test button stuck - all of these run dissipation mode (the board energizes G for the blower and opens W and Y, so electric heat and the outdoor compressor are off). 4 = no power to G output: dissipation with no blower.",
+   "For all flash codes, first try power cycling the system to remove the code.",
+   "Flashing 1 or 3: check for refrigerant leaks using an independent R-454B detector. Flashing 1 with no leak present: replace the sensor.",
+   "Flashing 2: check both ends of the sensor wire harness, power cycle; still there = replace the sensor. Flashing 5 that will not clear: replace the sensor.",
+   "Flashing 4 or 6 that will not clear after a power cycle: replace the dissipation board (6: press the test button repeatedly first).",
+   "Flashing 7 or 8 (Y or W wiring inverted / shorted): verify all Y and W wires against the wiring diagram.",
+   "No power at the board (LED not lit): verify the wiring to / from pins 1 and 8 on the power harness plug and check the 24 V system wiring from the transformer. The low-voltage fuse is in-line on the wire harness - 3 A in the Installation Instructions; the unit wiring labels say replace it with no greater than a 5 amp fuse."
+  ],
+  "safety": "Flammable refrigerant (R-454B). To be repaired only by trained service personnel. Do not puncture refrigerant tubing. Do not service A2L refrigerant fan coils while the vapor header or vapor line is hot.",
+  "manual": "carrier-fj5-install-im-fj5-04",
+  "pages": [
+   6,
+   12,
+   14
+  ],
+  "source": "FJ5 fan coil (R-454B) FJ5 Fan Coil for Puron Advance Refrigerant - Installation Instructions (IM-FJ5-04, Edition 10/25), p.6, p.12, p.14",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-fj5a-dissipation-self-test",
+  "unit": "^FJ5AN[XB][ABCD](18|24|30|36|42|48|60)",
+  "brand": "Carrier",
+  "equipment": "Air Handler",
+  "title": "Leak dissipation self-test at start-up - FJ5",
+  "summary": "One-second press of the Test button, then six checks.",
+  "steps": [
+   "Power on the unit. The yellow LED on the dissipation board should be steady. Test mode only works if no faults exist on the board.",
+   "Press the Test button for roughly ONE second: Dissipation Mode for 60 seconds. 5-29 s shows flash code history; 30 s or more sets flash code 6; 3 rapid presses clear the history.",
+   "Normal operation checks - no call: compressor off, indoor fan off, heat off. Cool call: compressor on, fan on, heat off. Heat call: compressor off, fan on, electric / gas heat on.",
+   "Dissipation activated - with no call, a cool call and a heat call: compressor off, indoor fan on, heat off each time.",
+   "Make sure the fan coil can meet the minimum dissipation airflow for the total system charge: 5 lb 133 CFM, 10 lb 266, 15 lb 399, 20 lb 532, 25 lb 665 (Table 4 has every pound from 5 to 25).",
+   "When charging, the conditioned space must be larger than the minimum floor area in Table 6 (for example 10 lb = 152 sq ft, 15 lb = 228 sq ft); outside the table use A_min = 15 x total charge in pounds."
+  ],
+  "safety": "Failure to follow proper R-454B mitigation system installation instructions can result in property damage, personal injury, or death.",
+  "manual": "carrier-fj5-install-im-fj5-04",
+  "pages": [
+   11,
+   12,
+   14
+  ],
+  "source": "FJ5 fan coil (R-454B) FJ5 Fan Coil for Puron Advance Refrigerant - Installation Instructions (IM-FJ5-04, Edition 10/25), p.11, p.12, p.14",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-fj5a-change-blower-speed",
+  "unit": "^FJ5AN[XB][ABCD](18|24|30|36|42|48|60)",
+  "brand": "Carrier",
+  "equipment": "Air Handler",
+  "title": "Changing blower speed - FJ5",
+  "summary": "Speed is chosen at the motor connector: move the blue lead. White stays on tap 4.",
+  "steps": [
+   "The speed taps are on the motor, or on a plug close to the motor.",
+   "Tap 1 low, tap 2 medium, tap 3 high (90 second off delay on each). Tap 4 electric heat - same CFM as tap 3 with a 0 second off delay. Tap 5 max, for high static, 0 second off delay.",
+   "Disconnect the BLUE fan lead from tap 2 (factory position) and move it to tap 1, 2, 3 or 5.",
+   "Leave the WHITE wire on tap 4 - it is for electric heat only.",
+   "Units with or without electric heaters require a minimum CFM: check the unit wiring label so the tap chosen is not lower than the minimum fan speed indicated (the minimum CFM table by heater size is in the Product Data - Maintenance Figures card).",
+   "Check the result against the airflow table: size 36 wet coil at 0.5 in. w.c. - tap 1 881, tap 2 1051, tap 3 1207, tap 5 1282 CFM.",
+   "Limits: return static under 0.40 in. w.c.; horizontal 42-60 sizes need supply static above 0.20 in. w.c.; above 400 CFM per ton on 48-60 can blow condensate off the coil. In low static applications use a lower tap."
+  ],
+  "safety": "Before installing or servicing the unit, always turn off all power - there may be more than 1 disconnect switch. Turn off accessory heater power if applicable.",
+  "manual": "carrier-fj5-install-im-fj5-04",
+  "pages": [
+   8,
+   15,
+   16
+  ],
+  "source": "FJ5 fan coil (R-454B) FJ5 Fan Coil for Puron Advance Refrigerant - Installation Instructions (IM-FJ5-04, Edition 10/25), p.8, p.15, p.16",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-fj5a-line-set-pressure-test",
+  "unit": "^FJ5AN[XB][ABCD](18|24|30|36|42|48|60)",
+  "brand": "Carrier",
+  "equipment": "Air Handler",
+  "title": "Line set connection, pressure test and evacuation - FJ5",
+  "summary": "The R-454B numbers the manual prints: 700 psig joints, about 200 psi nitrogen for 1 hour, 500 microns holding under 1500.",
+  "steps": [
+   "Make the suction tube connection first. Cut tubing to length and insert it into the sweat connection until it bottoms.",
+   "All fittings need to withstand 700 PSIG (mechanical fittings or brazing). When brazing use silver bearing or non-silver bearing brazing material - no solder (nothing that melts below 800 F).",
+   "A brazing shield MUST be used to protect the unit surface and condensate pan fitting caps; wrap a wet cloth around the rear of the fitting to protect the TXV and factory joints.",
+   "Pressure check with a nitrogen charge of about 200 psi. The nitrogen holding charge must not decrease in pressure for 1 hour.",
+   "Leak check, then vacuum to 500 microns. Isolated from the pump, the pressure shall not rise above 1500 microns in 10 minutes.",
+   "ALWAYS evacuate the coil and field tubing to 500 microns before opening the outdoor unit service valves.",
+   "Mechanical or crimp-type connections: follow the crimp tool manufacturer's instructions. A failure of the fittings or the equipment caused by mechanical fittings is not covered under the standard warranty.",
+   "Charging and start-up: outdoor unit Installation Instructions. Do not vent refrigerant - recover it."
+  ],
+  "safety": "Flammable refrigerant (R-454B). To be repaired only by trained service personnel. Do not puncture refrigerant tubing. Do not service A2L refrigerant fan coils while the vapor header or vapor line is hot.",
+  "manual": "carrier-fj5-install-im-fj5-04",
+  "pages": [
+   8,
+   9
+  ],
+  "source": "FJ5 fan coil (R-454B) FJ5 Fan Coil for Puron Advance Refrigerant - Installation Instructions (IM-FJ5-04, Edition 10/25), p.8, p.9",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-fj5a-horizontal-sensor",
+  "unit": "^FJ5AN[XB][ABCD](18|24|30|36|42|48|60)",
+  "brand": "Carrier",
+  "equipment": "Air Handler",
+  "title": "Converting to horizontal right or downflow - where the A2L sensor goes - FJ5",
+  "summary": "Slope coil sizes 18-24 keep the sensor on the drain pan clip; A-coil sizes 30-60 need it moved off the delta plate.",
+  "steps": [
+   "Before moving any component, disconnect the sensor wiring harness and place the whole harness in the control box.",
+   "Slope coil (sizes 18, 24), horizontal right: disconnect the sensor on the drain pan and cut the wire tie holding the harness to the coil; remove the coil mounting screw and coil assembly; lay the fan coil on its right side and reinstall the coil with the condensate pan down; refit the screw; reconnect the harness along the routing shown; add the gaskets from the gasket kit (required).",
+   "A-coil (sizes 30-60), horizontal right: disconnect and remove the sensor from the delta plate and install it on the horizontal drain pan clip; move the horizontal drain pan support bracket to the right-side coil support rail; convert the air seal assembly; install the horizontal pan on the right side and slide the coil back in.",
+   "A-coil units used horizontal LEFT also need the sensor moved from the delta plate to the drain pan clip.",
+   "Sensor connector facing down or facing horizontally - never upward.",
+   "Never install the unit with the access panels facing up or down.",
+   "Horizontal installations: level the unit along its length and width for condensate drainage (manufacturer caution - product or property damage).",
+   "Downflow: accessory downflow kit, base kit and gasket kit. Remove the plastic cap covering the vertical drains only, remove the plug from the overflow hole, and caulk the vertical pan fitting to door joint when finished.",
+   "High return static with humid return air in horizontal: the Water Management Kit may be needed."
+  ],
+  "safety": "Before installing or servicing the unit, always turn off all power - there may be more than 1 disconnect switch. Turn off accessory heater power if applicable.",
+  "manual": "carrier-fj5-install-im-fj5-04",
+  "pages": [
+   3,
+   4,
+   11
+  ],
+  "source": "FJ5 fan coil (R-454B) FJ5 Fan Coil for Puron Advance Refrigerant - Installation Instructions (IM-FJ5-04, Edition 10/25), p.3, p.4, p.11",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-fj5a-float-switch-and-drain",
+  "unit": "^FJ5AN[XB][ABCD](18|24|30|36|42|48|60)",
+  "brand": "Carrier",
+  "equipment": "Air Handler",
+  "title": "Drain traps and where the float switch may be wired - FJ5",
+  "summary": "Both drains trapped, no CPVC, and the float switch never breaks R at the transformer.",
+  "steps": [
+   "Units have primary and secondary 3/4 in. FPT drain connections. Remove the cap opening (knife at the tab, pull the disk with pliers) and caulk around the lines where they exit.",
+   "Install BOTH primary and secondary drain lines with properly sized traps. Use only full size P-traps - shallow running traps do not drain properly.",
+   "Do not use CPVC in field drain lines - potential reaction with POE oil.",
+   "PVC fittings on the plastic pan: finger-tight plus 1-1/2 turns, pipe dope, do not over-tighten.",
+   "Traps as close to the coil as possible, outlet below the pan connection; prime all traps and test for leaks; pitch the lines at least 1 in. per 10 ft.",
+   "Float switch: one listed to UL508, wired in the field R circuit from the R field connection terminal leading to the thermostat.",
+   "DO NOT wire a float switch to break the 24 V power directly from the transformer R circuit - this defeats the refrigerant leak dissipation and mitigation functions."
+  ],
+  "safety": "FIRE HAZARD as printed: a float switch wired to break 24 V directly at the transformer R circuit defeats the leak dissipation and mitigation functions.",
+  "manual": "carrier-fj5-install-im-fj5-04",
+  "pages": [
+   10
+  ],
+  "source": "FJ5 fan coil (R-454B) FJ5 Fan Coil for Puron Advance Refrigerant - Installation Instructions (IM-FJ5-04, Edition 10/25), p.10",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-f55a-115v-no-electric-heat",
+  "unit": "^F55AA[XB][ABCD](18|24|30|36|42|48|60)",
+  "brand": "Carrier",
+  "equipment": "Air Handler",
+  "title": "115 volt hook-up - and why no heat strips - F55",
+  "summary": "115 V fan coil. It cannot take an accessory electric heater.",
+  "steps": [
+   "Do not install electric heat in this unit. It is wired for 115 V operation and can not accommodate an accessory electric heater.",
+   "Connect the 115 V power leads from the field disconnect to the white and black stripped leads; ground wire to the unit ground lug.",
+   "The transformer is factory wired for 115 V operation.",
+   "Leave the factory-supplied sheet metal block-off plate over the heater opening - it reduces air leakage and exterior condensation.",
+   "Low voltage is protected by a 3 A automotive type fuse in-line on the wire harness.",
+   "Make certain supply voltage, frequency, phase and ampacity are as specified on the unit rating plate; the unit needs its own branch circuit with a field-supplied disconnect within sight (MCA by size is in the Product Data - Maintenance Figures card).",
+   "Heat from a hydronic coil is possible in single stage applications: a W call runs the blower and energizes the white/violet wire labeled \"W or Y/Y2\". The installer sources the interface parts; follow the hydronic coil instructions. (F55-01PD p.1; IM-F55-03 p.13)"
+  ],
+  "safety": "Before installing or servicing the unit, always turn off all power - there may be more than 1 disconnect switch. Turn off accessory heater power if applicable.",
+  "manual": "carrier-f55-install-im-f55-03",
+  "pages": [
+   2,
+   6,
+   7,
+   8,
+   13,
+   14
+  ],
+  "source": "F55 115 V fan coil (R-454B) F55 Fan Coil (115 V) for Puron Advance Refrigerant - Installation Instructions (IM-F55-03, Edition 10/25), p.2, p.6, p.7, p.8, p.13, p.14",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-f55a-blower-wont-stop",
+  "unit": "^F55AA[XB][ABCD](18|24|30|36|42|48|60)",
+  "brand": "Carrier",
+  "equipment": "Air Handler",
+  "title": "Blower runs and will not shut off, compressor locked out - F55",
+  "summary": "The leak dissipation board is holding the unit in dissipation mode. Read its yellow LED.",
+  "steps": [
+   "Look at the yellow LED on the dissipation board. Solid = normal operation.",
+   "Flashing: count the flashes. 1 = sensor at 20% LFL or more, 2 = sensor open, 3 = normal mitigation after a leak, 5 = fault with the A2L digital sensor, 6 = test button stuck - all of these run dissipation mode (the board energizes G for the blower and opens W and Y, so heat and the outdoor compressor are off). 4 = no power to G output: dissipation with no blower.",
+   "For all flash codes, first try power cycling the system to remove the code.",
+   "Flashing 1 or 3: check for refrigerant leaks using an independent R-454B detector. Flashing 1 with no leak present: replace the sensor.",
+   "Flashing 2: check both ends of the sensor wire harness, power cycle; still there = replace the sensor. Flashing 5 that will not clear: replace the sensor.",
+   "Flashing 4 or 6 that will not clear after a power cycle: replace the dissipation board (6: press the test button repeatedly first).",
+   "Flashing 7 or 8 (Y or W wiring inverted / shorted): verify all Y and W wires against the wiring diagram.",
+   "LED off: verify the wiring to / from pins 1 (R) and 8 (Common) on the power harness plug and the 24 V wiring from the transformer (3 A in-line fuse on the harness)."
+  ],
+  "safety": "Flammable refrigerant (R-454B). To be repaired only by trained service personnel. Do not puncture refrigerant tubing. Do not service A2L refrigerant fan coils while the vapor header or vapor line is hot.",
+  "manual": "carrier-f55-install-im-f55-03",
+  "pages": [
+   6,
+   7,
+   12,
+   15
+  ],
+  "source": "F55 115 V fan coil (R-454B) F55 Fan Coil (115 V) for Puron Advance Refrigerant - Installation Instructions (IM-F55-03, Edition 10/25), p.6, p.7, p.12, p.15",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-f55a-dissipation-self-test",
+  "unit": "^F55AA[XB][ABCD](18|24|30|36|42|48|60)",
+  "brand": "Carrier",
+  "equipment": "Air Handler",
+  "title": "Leak dissipation self-test at start-up - F55",
+  "summary": "One-second press of the Test button, then six checks.",
+  "steps": [
+   "Power on the unit. The yellow LED on the dissipation board should be steady. Test mode only works if no faults exist on the board.",
+   "Press the Test button for roughly ONE second: Dissipation Mode for 60 seconds. 5-29 s shows flash code history; 30 s or more sets flash code 6; 3 rapid presses clear the history.",
+   "Normal operation checks - no call: compressor off, indoor fan off, heat off. Cool call: compressor on, fan on, heat off. Heat call: compressor off, fan on, heat on.",
+   "Dissipation activated - with no call, a cool call and a heat call: compressor off, indoor fan on, heat off each time.",
+   "Make sure the fan coil can meet the minimum dissipation airflow for the total system charge: 5 lb 133 CFM, 10 lb 266, 15 lb 399, 20 lb 532, 25 lb 665 (Table 4 has every pound from 5 to 25).",
+   "When charging, the conditioned space must be larger than the minimum floor area in Table 6 (for example 10 lb = 152 sq ft, 15 lb = 228 sq ft); outside the table use A_min = 15 x total charge in pounds."
+  ],
+  "safety": "Failure to follow proper R-454B mitigation system installation instructions can result in property damage, personal injury, or death.",
+  "manual": "carrier-f55-install-im-f55-03",
+  "pages": [
+   11,
+   12,
+   15
+  ],
+  "source": "F55 115 V fan coil (R-454B) F55 Fan Coil (115 V) for Puron Advance Refrigerant - Installation Instructions (IM-F55-03, Edition 10/25), p.11, p.12, p.15",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-f55a-change-blower-speed",
+  "unit": "^F55AA[XB][ABCD](18|24|30|36|42|48|60)",
+  "brand": "Carrier",
+  "equipment": "Air Handler",
+  "title": "Changing blower speed and 2-stage wiring - F55",
+  "summary": "Blue lead ships on tap 2, white lead on tap 4. Move them at the motor connector.",
+  "steps": [
+   "The speed taps are on the motor, or on a plug close to the motor.",
+   "Tap 1 low, tap 2 medium, tap 3 high (90 second off delay on each). Tap 4 high - same CFM as tap 3 with a 0 second off delay. Tap 5 max, for high static, 0 second off delay.",
+   "Disconnect the BLUE and / or WHITE fan lead from tap 2 and / or tap 4 (factory positions) and move to the tap wanted for the application.",
+   "Single stage: G runs the motor on the blue lead (tap 2). The wiring layouts show the W call on the white lead (tap 4).",
+   "2-stage AC or heat pump without aux heat: the layouts show thermostat Y2 through the dissipation board to the white lead (Y2 on tap 4), with G on tap 2.",
+   "Check the unit wiring label so the tap is not lower than the minimum fan speed. Check the result against the airflow table: size 36 wet coil at 0.5 in. w.c. - tap 1 881, tap 2 1051, tap 3 and 4 1207, tap 5 1282 CFM.",
+   "Limits: return static under 0.40 in. w.c.; horizontal 42-60 sizes need supply static above 0.20 in. w.c.; above 400 CFM per ton on 48-60 can blow condensate off the coil. In low static applications use a lower tap."
+  ],
+  "safety": "Before installing or servicing the unit, always turn off all power - there may be more than 1 disconnect switch. Turn off accessory heater power if applicable.",
+  "manual": "carrier-f55-install-im-f55-03",
+  "pages": [
+   7,
+   8,
+   16,
+   17
+  ],
+  "source": "F55 115 V fan coil (R-454B) F55 Fan Coil (115 V) for Puron Advance Refrigerant - Installation Instructions (IM-F55-03, Edition 10/25), p.7, p.8, p.16, p.17",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-f55a-line-set-pressure-test",
+  "unit": "^F55AA[XB][ABCD](18|24|30|36|42|48|60)",
+  "brand": "Carrier",
+  "equipment": "Air Handler",
+  "title": "Line set connection, pressure test and evacuation - F55",
+  "summary": "The R-454B numbers the manual prints: 700 psig joints, about 200 psi nitrogen for 1 hour, 500 microns holding under 1500.",
+  "steps": [
+   "Make the suction tube connection first. Cut tubing to length and insert it into the sweat connection until it bottoms.",
+   "All fittings need to withstand 700 PSIG (mechanical fittings or brazing). When brazing use silver bearing or non-silver bearing brazing material - no solder (nothing that melts below 800 F).",
+   "A brazing shield MUST be used; wrap a wet cloth around the rear of the fitting to protect the TXV and factory joints.",
+   "Pressure check with a nitrogen charge of about 200 psi. The nitrogen holding charge must not decrease in pressure for 1 hour.",
+   "Leak check, then vacuum to 500 microns. Isolated from the pump, the pressure shall not rise above 1500 microns in 10 minutes.",
+   "ALWAYS evacuate the coil and field tubing to 500 microns before opening the outdoor unit service valves.",
+   "Charging and start-up: outdoor unit Installation Instructions. Do not vent refrigerant - recover it."
+  ],
+  "safety": "Flammable refrigerant (R-454B). To be repaired only by trained service personnel. Do not puncture refrigerant tubing. Do not service A2L refrigerant fan coils while the vapor header or vapor line is hot.",
+  "manual": "carrier-f55-install-im-f55-03",
+  "pages": [
+   8,
+   9
+  ],
+  "source": "F55 115 V fan coil (R-454B) F55 Fan Coil (115 V) for Puron Advance Refrigerant - Installation Instructions (IM-F55-03, Edition 10/25), p.8, p.9",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-f55a-horizontal-sensor-and-float",
+  "unit": "^F55AA[XB][ABCD](18|24|30|36|42|48|60)",
+  "brand": "Carrier",
+  "equipment": "Air Handler",
+  "title": "Horizontal right conversion, the A2L sensor and the float switch - F55",
+  "summary": "A-coil sizes 30-60 need the sensor moved off the delta plate; a float switch never breaks R at the transformer.",
+  "steps": [
+   "Before moving any component, disconnect the sensor wiring harness and place the whole harness in the control box.",
+   "Sizes 18-24 (slope coil): the sensor is always on the drain pan clip. Sizes 30-60 (A-coil): it ships on the delta plate and has to be moved to the drain pan clip for horizontal right and left.",
+   "Sensor connector facing down or facing horizontally - never upward.",
+   "Modular units (42, 48, 60): before splitting the cabinet disconnect the 4-pin sensor wire harness at the dissipation board and undo the wire routing.",
+   "Downflow needs the accessory downflow kit, base kit and gasket kit; never install with the access panels facing up or down.",
+   "Horizontal installations: level the unit along its length and width for condensate drainage (manufacturer caution - product or property damage).",
+   "Float switch: one listed to UL508, wired in the field R circuit leading to the thermostat. DO NOT wire it to break 24 V directly from the transformer R circuit - this defeats the refrigerant leak dissipation and mitigation functions.",
+   "Do not use CPVC in field drain lines - potential reaction with POE oil."
+  ],
+  "safety": "Before installing or servicing the unit, always turn off all power - there may be more than 1 disconnect switch. Turn off accessory heater power if applicable.",
+  "manual": "carrier-f55-install-im-f55-03",
+  "pages": [
+   2,
+   3,
+   4,
+   10,
+   11
+  ],
+  "source": "F55 115 V fan coil (R-454B) F55 Fan Coil (115 V) for Puron Advance Refrigerant - Installation Instructions (IM-F55-03, Edition 10/25), p.2, p.3, p.4, p.10, p.11",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-yh9-read-display",
+  "unit": "^[YX]H9(36|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Reading the board: status, fault codes and the push button - YH9 / XH9",
+  "summary": "One LED, three 7-segment displays and one button. Status shows when nothing is wrong; a fault replaces it.",
+  "steps": [
+   "Green LED 2 s on / 2 s off with blank displays = standby. Fast green flash = anti-short-cycle delay in cooling, fast amber = in heating (5 min) (p.49-50).",
+   "Running: C = cooling, qC = quick cool (green LED on); H = heating, qH = quick heat, AH = auxiliary heat, AL = auxiliary lockout, EH = emergency heat, dF = defrost (the same dF is printed for forced defrost), tt = time temp defrost, dd = demand defrost, Sd = sacrificial defrost (amber LED on) (p.50-51).",
+   "A fault shows as a dash and two digits, repeated with a 2 second off period. Only the highest priority fault is displayed; the other active errors are reached with the push button (p.51).",
+   "Solid red LED = fault; two red flashes = soft lockout; three red flashes = hard lockout (p.54).",
+   "With no call, press the button 0.5-3 s: it displays current / stored fault codes. An active fault keeps showing until it is cleared; stored faults show only after that. 2 green flashes = no fault codes in memory (p.49-50).",
+   "Hold 7-12 s to clear fault codes and lockouts (also resets the 6 hour defrost timer). 3 green flashes = fault code memory cleared (p.49-50).",
+   "After a fault shutdown the unit retries by itself after 5 minutes if the fault is gone. A soft lockout retries after 1 hour, or sooner with the push button or a 24V power cycle. A hard lockout needs the push button or a 24V power cycle (p.54)."
+  ],
+  "manual": "york-yh9-xh9-install-6515371-uim-b-0526",
+  "pages": [
+   49,
+   50,
+   51,
+   54
+  ],
+  "source": "YH9 / XH9 (variable-speed communicating heat pump, 3 and 5 ton) Installation Manual: R-454B Outdoor Split-System Single-Phase Variable Speed Heat Pump - YH9 and XH9 Series (6515371-UIM-B-0526, 2026-05-12), p.49, p.50, p.51, p.54",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-yh9-charge-service-mode",
+  "unit": "^[YX]H9(36|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Checking or adjusting charge (service mode, subcooling) - YH9 / XH9",
+  "summary": "The charts only work with the unit locked in service mode at the right tonnage.",
+  "steps": [
+   "Set the outdoor unit tonnage first (thermostat setup or S3 switches): the system must be set to the correct tonnage when charging (p.41).",
+   "At the thermostat enter the service menu, scroll to SERVICE MODE and change it from OFF to ON, then call for heating or cooling (p.40). Or on the board: remove 24 V, set S1 position 4 ON (1-2-3 OFF), reapply power (p.41).",
+   "Charge with the compressor at full capacity: all pressures and subcool values shown are with the compressor on high stage (p.41).",
+   "Confirm gauges are accurate (Table 12 gives R-454B saturation pressures, for example 205 psig = 75°F liquid / 77°F vapor) (p.42).",
+   "Read liquid pressure and subcooling at the liquid base valve and compare with the chart for the indoor match: Table 13 = 2 ton, Table 14 = 3 ton, Table 15 = 4 ton, Table 16 = 5 ton. Rows are outdoor dry bulb 55 to 125°F, columns indoor wet bulb 57 / 62 / 67 / 72°F at 80°F dry bulb (p.43-44).",
+   "Add or subtract refrigerant to obtain the chart pressure, always in liquid form, and mark the total charge on the data plate (p.38-39).",
+   "When done end the call and switch SERVICE MODE back to OFF (or S1 position 4 OFF with 24 V removed). It reverts on its own after 24 hours; code 24 / 25 points at a unit left in service or test mode (p.40-41, p.59).",
+   "At 55°F outdoor or below the preferred method is to weigh in the charge (p.16)."
+  ],
+  "safety": "Always charge in liquid form. Take care not to slug the compressor. Do not attempt to pump total system charge into the outdoor unit for maintenance or service - recover and weigh the charge into a recovery cylinder.",
+  "manual": "york-yh9-xh9-install-6515371-uim-b-0526",
+  "pages": [
+   16,
+   38,
+   59
+  ],
+  "source": "YH9 / XH9 (variable-speed communicating heat pump, 3 and 5 ton) Installation Manual: R-454B Outdoor Split-System Single-Phase Variable Speed Heat Pump - YH9 and XH9 Series (6515371-UIM-B-0526, 2026-05-12), p.16, p.38, p.59",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-yh9-tonnage-setup",
+  "unit": "^[YX]H9(36|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Setting a 3 ton to run as 2 ton, or a 5 ton as 4 ton - YH9 / XH9",
+  "summary": "No 2 ton or 4 ton outdoor unit is offered - the 3 and 5 ton are converted to lower capacity mode.",
+  "steps": [
+   "If the 5 ton outdoor unit is used in a 4 ton application with a 4 ton indoor unit match, or the 3 ton with a 2 ton indoor match, the outdoor unit must be converted to lower capacity mode (p.5).",
+   "Preferred: at the thermostat during setup - outdoor unit tonnage must be selected (3 ton model as 2 or 3 ton; 5 ton model as 4 or 5 ton) (p.40). The manual recommends leaving the board dipswitches in their factory positions and making changes at the room thermostat (p.41).",
+   "On the board: de-energize the 24V power to the controls and set the S3 bank. Positions 1-2-3: 2 ton = OFF ON OFF, 3 ton = OFF OFF OFF, 4 ton = OFF ON OFF, 5 ton = OFF OFF OFF (p.41).",
+   "Use the charging chart for the tonnage it is set to: Table 13 (2 ton, JHC24*C or CT(F,M,U)30*C), Table 15 (4 ton, JHC48*G or CT(F,M,U)60*G) (p.43)."
+  ],
+  "manual": "york-yh9-xh9-install-6515371-uim-b-0526",
+  "pages": [
+   5,
+   40,
+   41,
+   43
+  ],
+  "source": "YH9 / XH9 (variable-speed communicating heat pump, 3 and 5 ton) Installation Manual: R-454B Outdoor Split-System Single-Phase Variable Speed Heat Pump - YH9 and XH9 Series (6515371-UIM-B-0526, 2026-05-12), p.5, p.40, p.41, p.43",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-yh9-defrost",
+  "unit": "^[YX]H9(36|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Defrost: how it decides, termination setting and forcing one - YH9 / XH9",
+  "summary": "Adaptive demand defrost. After a power-up it is un-calibrated and runs a sacrificial defrost first.",
+  "steps": [
+   "Defrost can only start with the coil below 32°F. Above 32°F the defrost run timer does not accumulate (p.64-65).",
+   "After power is applied the system is un-calibrated: it starts a sacrificial defrost (Sd) after 31 min of accumulated heating run time with the coil below 32°F, then calibrates its frost-free temperature difference (ambient minus coil) (p.65).",
+   "Normal: demand defrost (dd) - started by frost detection when ambient minus coil exceeds the learned value for 5 s, not sooner than 31 min of run time. If the last defrost ended on time with the coil not above 32°F for 4 min it uses time / temperature defrost (tt) at 31 min instead (p.65-67).",
+   "Ends when the coil goes above the termination temperature for 2 s, or after 12 min (p.67).",
+   "Termination temperature: 50°F default, 60, 70 or 80°F - thermostat service menu, or S2 positions 1-2-3: 50 = OFF OFF OFF, 60 = OFF ON OFF, 70 = ON OFF OFF, 80 = ON ON OFF (p.64, p.67).",
+   "If 6 h of compressor run time pass in heating without a defrost, one is started unless the coil is above 32°F (p.64).",
+   "To force one: with an active heating call, 4 minutes after start-up, hold the push button more than 12 s. Forced defrost continues as long as the button is pressed and energizes aux heat. Hold 3-7 s to display the current defrost mode (p.49).",
+   "In defrost the outdoor fan is off, the reversing valve is energized, the outdoor EEV is fully open and aux heat is called. The suction pressure fault is ignored during defrost and for 300 s after (p.66-67)."
+  ],
+  "manual": "york-yh9-xh9-install-6515371-uim-b-0526",
+  "pages": [
+   49,
+   64,
+   65,
+   66,
+   67
+  ],
+  "source": "YH9 / XH9 (variable-speed communicating heat pump, 3 and 5 ton) Installation Manual: R-454B Outdoor Split-System Single-Phase Variable Speed Heat Pump - YH9 and XH9 Series (6515371-UIM-B-0526, 2026-05-12), p.49, p.64, p.65, p.66, p.67",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-yh9-pressure-lockout",
+  "unit": "^[YX]H9(36|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Codes 01 to 04: pressure switch trips and lockouts - YH9 / XH9",
+  "summary": "01 HPS OPEN, 02 HPS-NORMAL, 03 HPS-DEFROST, 04 LOW SUCTION PRESSURE.",
+  "steps": [
+   "High pressure switch input open more than 40 ms: the control de-energizes the compressor, then applies the 5 min anti-short-cycle delay once the switch is closed (p.68).",
+   "Low pressure switch open for 5 s = low pressure switch fault. It is ignored during defrost, after system start up, for 300 s after a defrost and when outdoor ambient is below 20° (p.68).",
+   "After a switch fault a 6 h compressor-runtime timer starts. Another opening longer than 160 ms before it expires = soft lockout (two red flashes). An opening between 40 ms and 160 ms stops the compressor without a lockout (p.68).",
+   "01 causes in order: cooling - reduced or no outdoor airflow, motor limits, outdoor temperature out of range; heating - reduced or no indoor airflow (filter, blower, dirty coil, zoning minimum CFM, static), motor limits, indoor temperature out of range; defrost - reversing valve did not switch, coil sensor faulty; then switch unplugged, switch faulty, faulty EEV or restriction, system overcharged, wiring, board (p.55).",
+   "Ohm out the high pressure switch: continuity when the system pressure is below 650 PSIG (p.55).",
+   "04 adds: check that the switch is properly seated and torqued down and the schrader valve is depressed; system undercharged (p.56).",
+   "Soft lockout clears by itself after 1 hour; push button or cycling 24V clears it sooner. Three red flashes = hard lockout, manual reset only (p.54)."
+  ],
+  "manual": "york-yh9-xh9-install-6515371-uim-b-0526",
+  "pages": [
+   54,
+   55,
+   56,
+   68
+  ],
+  "source": "YH9 / XH9 (variable-speed communicating heat pump, 3 and 5 ton) Installation Manual: R-454B Outdoor Split-System Single-Phase Variable Speed Heat Pump - YH9 and XH9 Series (6515371-UIM-B-0526, 2026-05-12), p.54, p.55, p.56, p.68",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-yh9-comm-wiring",
+  "unit": "^[YX]H9(36|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Code 08 / will not find the outdoor unit: communication wiring - YH9 / XH9",
+  "summary": "A communicating system on a four-wire A-R-C-B bus with the Smart Home Control S1-TSHC510.",
+  "steps": [
+   "With communicating systems you must use the Smart Home Control (S1-TSHC510) with a variable speed air handler or furnace that has a fully communicating control (p.33).",
+   "All A+ terminals together, all B- together, all C together, all R together - thermostat, indoor control and outdoor unit (p.36).",
+   "Power up outdoor first, then indoor. The thermostat shows SETUP when it communicates with the indoor section, then searches for the outdoor section (p.40).",
+   "08 COM ERROR TSTAT (shutdown after more than 60 sec): first check if the refrigerant mitigation system is in alarm - certain wiring configurations cut thermostat communication when A2L is detected (p.51, p.57).",
+   "Then check all wiring between OD control, low voltage terminal strip, indoor system and thermostat, and that 24V is on the board. 05 = control voltage below 19 VAC, 06 = below 16 VAC (p.51, p.56-57).",
+   "With Y82V, Z8VT, Y92V, Z9VT, Y9VV or Z9VV furnaces connect only C (blue), R (red) and A2L (green with black stripe) from the 10-pin mitigation harness to the equipment; there are no wires between the thermostat and the mitigation board (p.13).",
+   "With YP9C, TP9C, LP9C, CP9C, YPLC, TPLC, TM9V, TM8V furnaces: A+ and B- do not connect to the mitigation control; harness W1 (white) to furnace R, harness G (green) to furnace G; do not connect the room thermostat R terminal to the furnace R terminal (p.37).",
+   "Shielded cable is strongly recommended where interference is likely; ground the drain wire at the indoor unit chassis only (p.34)."
+  ],
+  "manual": "york-yh9-xh9-install-6515371-uim-b-0526",
+  "pages": [
+   13,
+   33,
+   34,
+   36,
+   37,
+   40,
+   51,
+   56,
+   57
+  ],
+  "source": "YH9 / XH9 (variable-speed communicating heat pump, 3 and 5 ton) Installation Manual: R-454B Outdoor Split-System Single-Phase Variable Speed Heat Pump - YH9 and XH9 Series (6515371-UIM-B-0526, 2026-05-12), p.13, p.33, p.34, p.36, p.37, p.40, p.51, p.56, p.57",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-yh9-sensor-checks",
+  "unit": "^[YX]H9(36|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Codes 09 to 16: checking the sensors and the pressure transducer - YH9 / XH9",
+  "summary": "Three thermistors (ambient, coil, discharge) and one pressure transducer plug into the outdoor control.",
+  "steps": [
+   "09 / 10 ambient sensor shorted / open, 11 / 12 coil sensor, 13 / 14 discharge line sensor: two red flashes, immediate shutdown (p.51).",
+   "Check the sensor against the temperature vs. resistance curve (Table 22, p.63-64 - the troubleshooting table calls it Table 10): 32°F = 32654, 50°F = 19903, 68°F = 12493, 77°F = 10000, 86°F = 8056, 104°F = 5327.",
+   "Then the wiring lead from sensor to board, and that the sensor is plugged in with secure terminations. If leads and sensor show no defects the board may be faulty (p.57).",
+   "15 / 16 pressure transducer low / high voltage: measure the supply across BLK and RED/WHT - it must be 4.5 VDC to 5.5 VDC, otherwise replace the OD control board (p.57).",
+   "With good supply, the signal across WHT and BLK must be between 0.5 VDC and 4.5 VDC, otherwise replace the sensor. If it is in range and the fault still exists, replace the OD control board (p.57).",
+   "Verify the harness is plugged into the board and the transducer and that the rubber seals are properly seated (p.57).",
+   "Plug names on the board: DIS, LPS, RV, COIL, AMB, PT, EEV (wiring diagram p.70)."
+  ],
+  "safety": "Disconnect and lock out power before servicing. Wait 5 min to ensure that drive capacitors are discharged (p.7). The wiring diagram on the unit prints: wait 2 minutes (p.70). The two figures differ.",
+  "manual": "york-yh9-xh9-install-6515371-uim-b-0526",
+  "pages": [
+   51,
+   57,
+   63,
+   64,
+   70
+  ],
+  "source": "YH9 / XH9 (variable-speed communicating heat pump, 3 and 5 ton) Installation Manual: R-454B Outdoor Split-System Single-Phase Variable Speed Heat Pump - YH9 and XH9 Series (6515371-UIM-B-0526, 2026-05-12), p.51, p.57, p.63, p.64, p.70",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-yh9-low-ambient",
+  "unit": "^[YX]H9(36|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Code 21 or no cooling on a cool day; cold-weather start - YH9 / XH9",
+  "summary": "The unit will not cool below 55°F outdoor, and needs stator heat before a cold start.",
+  "steps": [
+   "21 = OD AMBIENT < 55°F (Cooling Mode): solid red, shutdown until the outdoor ambient is above 55°F (p.52).",
+   "Do not operate the unit in cooling mode at outdoor temperatures below 55°F (p.17).",
+   "If the ambient really is above 55°F (+/-2°F), check for a failed ambient sensor against the resistance curve (p.58).",
+   "Heating works down to -10°F outdoor; make sure balance point and auxiliary heat are set and sized for it (p.18).",
+   "Stator heat is used instead of a crankcase heater. It runs when outdoor ambient is below 55°F for 30 seconds and it has been more than 10 minutes since the compressor ran; thermostat OFF and the disconnect closed (p.40).",
+   "An attempt to start the compressor at low ambient conditions without at least 8 h of stator heat may damage the compressor (p.40)."
+  ],
+  "manual": "york-yh9-xh9-install-6515371-uim-b-0526",
+  "pages": [
+   17,
+   18,
+   40,
+   52,
+   58
+  ],
+  "source": "YH9 / XH9 (variable-speed communicating heat pump, 3 and 5 ton) Installation Manual: R-454B Outdoor Split-System Single-Phase Variable Speed Heat Pump - YH9 and XH9 Series (6515371-UIM-B-0526, 2026-05-12), p.17, p.18, p.40, p.52, p.58",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-yd5-read-display",
+  "unit": "^[YX]D5(24|36|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Reading the display and the Check button - YD5 / XD5",
+  "summary": "A 3-digit display on the outdoor board shows ambient temperature in standby, compressor Hz when running, a letter code on a fault, and system values with the Check button.",
+  "steps": [
+   "Standby: the last two digits show outdoor ambient temperature. Running: compressor operating frequency (p.43).",
+   "A letter in the first digit followed by two digits (the compressor Hz) is a protection status - the unit keeps running in a limited condition: L = T3 limited, A = oil return, C = current limited, d = T5 limited, F = IPM temperature limited, r = compressor ratio limited, U = low voltage limited; a bar at the top = high pressure, a bar at the bottom = low pressure; dF = defrost (p.42).",
+   "Fault codes are letters and numbers such as E41, P21, b5 - see the unit code table. b9 and F2 need a hard restart (p.41).",
+   "Press Check (SW2) to step through the point check list: the number shows first and the value after 1 second; after 20 seconds it returns to normal (p.43).",
+   "Useful points: 0 = capacity (H5 = 5 ton, H3 = 3 ton), 1 = mode (0 standby, 2 cooling, 3 heating), 3 = last fault code, 4 = T3, 5 = T3L, 6 = T4, 7 = T5, 9 = evaporating pressure psig (cooling), 10 = condensing pressure psig (heating), 16 = discharge superheat, 17 = EEVA opening, 22 = input voltage, 23 = DC bus voltage (p.43).",
+   "LED1 green solid = board powered. LED2 (compressor) / LED3 (fan) red: solid = running, 2 s on 2 s off = standby, 0.2 s on 0.2 s off = communication fault with main control chip, blink = driver fault (p.61)."
+  ],
+  "safety": "Electrical hazard 380 volts DC: wait 5 minutes after disconnecting power before touching electrical components, then verify DC voltage is less than 42 VDC at inverter test points P-N.",
+  "manual": "york-yd5-xd5-install-btc910503201b",
+  "pages": [
+   41,
+   42,
+   43,
+   61
+  ],
+  "source": "YD5 / XD5 (15.2 SEER2 inverter heat pump, Bosch platform) Installation and Operating Instructions: Split System Heat Pump YD5 and XD5 Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910503201 B, 07.2026), p.41, p.42, p.43, p.61",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-yd5-charge-force-mode",
+  "unit": "^[YX]D5(24|36|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Checking or adjusting charge in Force mode - YD5 / XD5",
+  "summary": "Weigh in on install or after a repair; subcooling in cooling Force mode is the only approved way to validate charge.",
+  "steps": [
+   "Weigh-in: the install guide prints the factory charge as covering 25 ft of line - 2 ton 5 lb 3 oz, 3 ton 6 lb 1 oz, 5 ton 8 lb 8 oz. The product specification prints 4-13 / 5-11 / 8-2 lb-oz \"for 15 feet of 3/8 in. liquid line\" (BTC 910508201 A p.6) - go by the unit nameplate. Add 0.59 oz per foot over 25 ft. Under 25 ft recover the difference; under 15 ft only recover 6 oz (p.35).",
+   "Subcooling check needs outdoor 55 to 120°F and indoor 70 to 80°F. Below 55°F use weigh-in and return in warm weather (p.35-36).",
+   "Start the system in cooling, short press the FORCE button - a symbol appears on the display. It may take 10 minutes to ramp up; run at least 20 minutes (p.36).",
+   "It is at 100% when the compressor reaches: 2 ton 46 Hz, 3 ton 66 Hz, 4 ton 54 Hz, 5 ton 60 Hz (p.36).",
+   "Measure suction line temperature and pressure for superheat (Table 15), liquid line temperature and pressure for subcooling (Table 16) (p.36-37).",
+   "Design values (Table 17): 2/3 ton subcooling 6-10°F with superheat 6-8°F (optimized) or 8-12°F with 8-18°F; 4/5 ton 6-10°F with 8-10°F (optimized) or 10-12°F with 8-18°F. With a third party indoor unit keep superheat at 10-18°F (p.36-37).",
+   "Add refrigerant if subcooling is below the design value, recover if above. Wait 5 minutes between adjustments (p.37).",
+   "Record the charge on the outdoor unit label (p.38)."
+  ],
+  "safety": "Open the Suction Service Valve first, before the Liquid Service Valve. Leak check and evacuation must be completed before opening the service valves.",
+  "manual": "york-yd5-xd5-install-btc910503201b",
+  "pages": [
+   35,
+   36,
+   37,
+   38
+  ],
+  "source": "YD5 / XD5 (15.2 SEER2 inverter heat pump, Bosch platform) Installation and Operating Instructions: Split System Heat Pump YD5 and XD5 Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910503201 B, 07.2026), p.35, p.36, p.37, p.38",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-yd5-capacity-j2",
+  "unit": "^[YX]D5(24|36|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Setting the tonnage with the J2 switch - YD5 / XD5",
+  "summary": "One switch decides whether a 5 ton runs as 5 or 4 ton and a 3 ton as 3 or 2 ton.",
+  "steps": [
+   "If the intended capacity is 5 ton or 3 ton, no change is required. If it is 4 ton or 2 ton, the J2 DIP switch must be set to OFF (p.34).",
+   "J2 ON = 5 Ton / 3 Ton (factory default). J2 OFF = 4 Ton / 2 Ton (p.34).",
+   "Unit must be power cycled after a DIP switch change for it to take effect (p.34).",
+   "Check it on the display: Check button point 0 shows the outdoor unit capacity, for example H5 = heat pump 5 ton, H3 = heat pump 3 ton (p.43).",
+   "Force mode compressor frequency is listed by outdoor unit capacity: 2 ton 46 Hz, 3 ton 66 Hz, 4 ton 54 Hz, 5 ton 60 Hz (Table 14, p.36).",
+   "Code Eb (dipswitch setting does not match machine type) is about SW4-1 and SW4-2, which must stay in the default OFF position (p.38, p.49)."
+  ],
+  "manual": "york-yd5-xd5-install-btc910503201b",
+  "pages": [
+   34,
+   36,
+   38,
+   43,
+   49
+  ],
+  "source": "YD5 / XD5 (15.2 SEER2 inverter heat pump, Bosch platform) Installation and Operating Instructions: Split System Heat Pump YD5 and XD5 Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910503201 B, 07.2026), p.34, p.36, p.38, p.43, p.49",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-yd5-defrost",
+  "unit": "^[YX]D5(24|36|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Defrost: when it starts, when it ends, forcing one - YD5 / XD5",
+  "summary": "Demand defrost from the coil sensor (T3), the ambient sensor (T4), run time and high pressure.",
+  "steps": [
+   "Any one of three conditions starts a defrost (p.39).",
+   "One: ambient minus coil temperature held for 3 minutes - 18°F when T4 is 39°F or more, 16°F at 30°F or more, 14°F at 19°F or more. Below 19°F ambient with the coil below 9°F: after 80 minutes of accumulated compressor run time.",
+   "Two: minimum run time - 4 hours when T4 is below 23°F, 2 hours from 23°F to below 40°F, 50 minutes when the last defrost cycle lasted 8 minutes.",
+   "Three: high pressure saturation temperature below 82°F for 20 minutes when T4 is 14°F to below 29°F.",
+   "It ends when the coil (T3) reaches 64°F for 1 minute, or at 8 minutes.",
+   "SW5-1 ON reduces heating time 10%; SW5-2 ON extends defrosting 120 seconds. Power cycle after changing a switch (p.34, p.39).",
+   "Manual defrost: with a heat call that has run at least 8 minutes, press the Force button for 6 seconds. Defrost starts in about 40 seconds and the display shows dF; it ends by itself. Wait 5 minutes before a second test (p.39).",
+   "Reversing valve energizes during heat mode and de-energizes in cool mode on this unit (p.40)."
+  ],
+  "manual": "york-yd5-xd5-install-btc910503201b",
+  "pages": [
+   34,
+   39,
+   40
+  ],
+  "source": "YD5 / XD5 (15.2 SEER2 inverter heat pump, Bosch platform) Installation and Operating Instructions: Split System Heat Pump YD5 and XD5 Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910503201 B, 07.2026), p.34, p.39, p.40",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-yd5-comm-b5",
+  "unit": "^[YX]D5(24|36|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Code b5 or thermostat wiring: conventional and communicating hook-up - YD5 / XD5",
+  "summary": "The unit takes ordinary 24 VAC heat pump wiring; P Q communication is used with the matched air handlers.",
+  "steps": [
+   "There is no low-voltage terminal block: splices are made with wire nuts (22-16 gauge) inside the control board access panel (p.25).",
+   "B terminal goes to the thermostat O/B wire - the reversing valve energizes in heating. The outdoor W signal goes to the electric auxiliary heat or its first stage (p.25).",
+   "Communicating (P Q) mode is the factory default: indoor DIP SW7-1 ON and outdoor DIP SW5-4 ON. It only functions with a JDE AHU, a JDP AHU, a T92V Furnace or a Communication Accessory Kit (p.26).",
+   "P Q is non-polar, 16/18 AWG, 150 ft maximum. With two systems side by side make sure the low voltage wires go to the unit on the same refrigerant line (p.25-26).",
+   "b5 flow chart: is P or Q incorrectly connected - correct wiring at CN12 on the ODU and CN30 on the IDU. Are ODU SW5-4 and IDU SW7-1 correct. Is P or Q shorted or touching sheet metal. Then replace the IDU control board; if the fault stays, the ODU control board (p.47).",
+   "SHC350 is optional: when the system is controlled by an SHC350 the homeowner pairs the thermostat with the outdoor unit in the GoTemp Home app (p.35)."
+  ],
+  "manual": "york-yd5-xd5-install-btc910503201b",
+  "pages": [
+   25,
+   26,
+   35,
+   47
+  ],
+  "source": "YD5 / XD5 (15.2 SEER2 inverter heat pump, Bosch platform) Installation and Operating Instructions: Split System Heat Pump YD5 and XD5 Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910503201 B, 07.2026), p.25, p.26, p.35, p.47",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-yd5-sensor-checks",
+  "unit": "^[YX]D5(24|36|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Checking T3, T4, T3L and T5 sensors and the transducer - YD5 / XD5",
+  "summary": "Four plug-in thermistors on two different curves, one pressure transducer and one high pressure switch.",
+  "steps": [
+   "Power off and wait 3 minutes before measuring resistance (p.46).",
+   "T3 (coil, CN19), T3L (liquid line, CN20) and T4 (ambient, CN23) use Table 24: 32°F is not printed - 30°F = 36.71, 40°F = 27.39, 50°F = 20.61, 60°F = 15.65, 70°F = 11.99, 80°F = 9.27, 90°F = 7.23 kOhm (p.59).",
+   "T5 (discharge, CN14) uses Table 25, a much higher curve: 50°F = 110.71, 70°F = 65.41, 80°F = 50.90, 100°F = 31.81, 150°F = 11.21, 200°F = 4.65 kOhm (p.60).",
+   "E41 / E42 / E43 / E44 flow charts: wire connection at the board, sensor open or shorted, sensor failed - otherwise replace the control board (p.49-50).",
+   "C3 (coil sensor not reading correctly in cooling): is T4 exposed to heat, is T3 in the wrong place or wired wrong, then both resistances against Table 24 (p.48).",
+   "E7: is the T5 sensor in the wrong location, are T5 and Tf wired correctly, is T5 in the range of Table 25 (p.52).",
+   "Pressure transducer (CN16): compare gauge pressure with Check button point 9 (cooling) or 10 (heating) - within 50 psi is good (p.43, p.56).",
+   "High pressure switch (CN10): opens at 580 psig or more, closes below 435 psig (p.40)."
+  ],
+  "safety": "Electrical hazard 380 volts DC: wait 5 minutes after disconnecting power before touching electrical components, then verify DC voltage is less than 42 VDC at inverter test points P-N.",
+  "manual": "york-yd5-xd5-install-btc910503201b",
+  "pages": [
+   40,
+   43,
+   46,
+   48,
+   49,
+   50,
+   52,
+   56,
+   59,
+   60
+  ],
+  "source": "YD5 / XD5 (15.2 SEER2 inverter heat pump, Bosch platform) Installation and Operating Instructions: Split System Heat Pump YD5 and XD5 Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910503201 B, 07.2026), p.40, p.43, p.46, p.48, p.49, p.50, p.52, p.56, p.59, p.60",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-ydv-charge-force-mode",
+  "unit": "^[YX]DV(36|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Checking or adjusting charge in Force mode - YDV / XDV",
+  "summary": "Same method as the YD5 but its own charge, frequency and target figures.",
+  "steps": [
+   "Weigh-in: the install guide prints the factory charge as covering 25 ft of line - 3 ton 7 lb 1 oz, 5 ton 10 lb 9 oz. The product specification prints 6-11 and 10-3 lb-oz \"for 15 feet of 3/8 in. liquid line\" (BTC 910108201 A p.6) - go by the unit nameplate. Add 0.59 oz per foot over 25 ft; under 15 ft only recover 6 oz (p.38).",
+   "Subcooling check: cooling Force mode only, outdoor 55 to 120°F, indoor 70 to 80°F (p.38).",
+   "Short press FORCE after starting in cooling; allow up to 10 minutes to ramp up and run at least 20 minutes (p.39).",
+   "Force mode compressor frequency: 2 ton 52 Hz, 3 ton 75 Hz, 4 ton 58 Hz, 5 ton 66 Hz (p.39).",
+   "Design values (Table 16): 2/3 ton subcooling 6-10°F with superheat 7-10°F (optimized) or 8-12°F with 10-18°F; 4 ton 4-8°F with 7-9°F (optimized) or 6-10°F with 9-18°F; 5 ton 4-8°F with 6-8°F (optimized) or 6-10°F with 8-18°F (p.40).",
+   "Add if subcooling is below the design value, recover if above; wait 5 minutes between adjustments (p.40).",
+   "Tonnage: J2 ON = 5 ton / 3 ton, OFF = 4 ton / 2 ton, power cycle after a change (p.36)."
+  ],
+  "safety": "Open the Suction Service Valve first, before the Liquid Service Valve.",
+  "manual": "york-ydv-xdv-install-btc910103201b",
+  "pages": [
+   36,
+   38,
+   39,
+   40
+  ],
+  "source": "YDV / XDV (20-21 SEER2 inverter heat pump, Bosch platform) Installation and Operating Instructions: Split System Heat Pump YDV and XDV Series Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910103201 B, 07.2026), p.36, p.38, p.39, p.40",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-ydc-cold-climate",
+  "unit": "^YDC(36|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Charge, base pan heater and Hyper-Link on the cold climate unit - YDC",
+  "summary": "The YDC has its own charge figures, a base pan heater (E49) and two possible communication plugs.",
+  "steps": [
+   "Weigh-in: factory charge covers 25 ft of line - 3 ton 8 lbs 6 oz, 4/5 ton 10 lbs 14 oz; 0.59 oz per foot over 25 ft (p.41).",
+   "Subcooling check: cooling Force mode only, outdoor 50 to 120°F, indoor 70 to 80°F. Frequency in Force mode: 3 ton 46 Hz, 4 ton / 5 ton 60 Hz. Press Force again for 1 second to exit (p.41-42).",
+   "Design values (Table 17): 3 ton subcooling 6-10°F with superheat 7-13°F (optimized) or 8-12°F with 10-18°F; 4/5 ton 4-8°F with 7-13°F (optimized) or 6-10°F with 10-18°F (p.43).",
+   "In force cooling the display can show a refrigerant amount indication: o31 no result, o33 slightly overcharge, o34 normal, o35 slightly insufficient, o36 significantly insufficient (wiring diagram, p.68).",
+   "Base pan heater: on when T4 is below 36°F in heating and it has been off 10 minutes; off at 39°F or more for over 1 minute, or in cooling (p.45).",
+   "E49 base pan heater fault: plug at CN42; heater resistance 290-325 ohm; replace the current sensor at CN15; line voltage 187-253 V; below 35°F outdoor there should be 187-253 V at CN42, otherwise replace the outdoor control board (p.57).",
+   "Communication: Hyper-Link (M1 M2) on CN10 with a matched indoor unit, or P Q on CN11 (for example a T92V furnace). Factory default DIP positions for communicating mode are indoor SW7-1 OFF and outdoor SW5-4 OFF (p.29).",
+   "Do not cross-connect Hyper-Link (M1 M2) and P Q terminals - this can damage the control board (p.37). Pb1 = Hyper-Link over current protection (p.65)."
+  ],
+  "safety": "Electrical hazard 380 volts DC: wait 5 minutes after disconnecting power before touching electrical components, then verify DC voltage is less than 42 VDC at inverter test points P-N.",
+  "manual": "york-ydc-install-btc910803201b",
+  "pages": [
+   29,
+   37,
+   41,
+   42,
+   43,
+   45,
+   57,
+   65,
+   68
+  ],
+  "source": "YDC (cold climate inverter heat pump, Bosch platform) Installation and Operating Instructions: Split System Heat Pump YDC Series Condensing Unit, 3-5 Ton, R-454B (BTC 910803201 B, 07.2026), p.29, p.37, p.41, p.42, p.43, p.45, p.57, p.65, p.68",
+  "confidence": "manual"
  }
 ];

@@ -30109,7 +30109,7 @@ const BRAND_SENSOR_MAPS = [
   "title": "Carrier / Bryant / Payne single-stage heat pump defrost board (defrost thermostat type, HK32EA family)",
   "side": "outdoor",
   "brand": "Carrier / Bryant / Payne",
-  "models": "Carrier 25HBC5, 25HCE4, 25HCC5, 25HPB6, CH14NB, CH16NA, 25SCA5, 27SCA5, 27SPA6, GH5SAN5; Payne PH13NB, PH14NB, PH14*B, PH15NB, PH16NC. Boards HK32EA001/007 (Comfort, copper coil, PSC fan), 009 (=001/007 with ECM fan), 003/008 (Performance, Quiet Shift), 010 (=003/008 with ECM fan), 011/012 (Comfort aluminum coil, Quiet Shift-2).; Carrier 25HCB3 (HK32EA003 on diagram 331526-101); Bryant 213A, 213B (HK32EA001 on diagram 336749-101), 215B (same diagram 339697-101 rev B as Carrier 25HCE), 225B (same diagram 339202-101 rev A as Carrier 25HPB6 sizes 18-48).",
+  "models": "Carrier 25HBC5, 25HCE4, 25HCC5, 25HPB6, CH14NB, CH16NA, 25SCA5, 27SCA5, 27SPA6, GH5SAN5; Payne PH13NB, PH14NB, PH14*B, PH15NB, PH16NC. Boards HK32EA001/007 (Comfort, copper coil, PSC fan), 009 (=001/007 with ECM fan), 003/008 (Performance, Quiet Shift), 010 (=003/008 with ECM fan), 011/012 (Comfort aluminum coil, Quiet Shift-2).; Carrier 25HCB3 (HK32EA003 on diagram 331526-101); Bryant 213A, 213B (HK32EA001 on diagram 336749-101), 215B (same diagram 339697-101 rev B as Carrier 25HCE), 225B (same diagram 339202-101 rev A as Carrier 25HPB6 sizes 18-48).; Bryant 246SAN (= 27SPA6), 235SAN / 235SAP / 235SAE (= 27SCA5) - the 246SAN is a Preferred Series unit but has this defrost-thermostat board, like the Carrier 27SPA6 (II246S-02 p3, p9-10)",
   "match": [
    "25HBC5",
    "25HCE4",
@@ -30130,7 +30130,11 @@ const BRAND_SENSOR_MAPS = [
    "213A",
    "213B",
    "215B",
-   "225B"
+   "225B",
+   "246SAN",
+   "235SAN",
+   "235SAP",
+   "235SAE"
   ],
   "sizes": [
    "all"
@@ -30384,12 +30388,13 @@ const BRAND_SENSOR_MAPS = [
   "title": "Carrier / Payne two-stage heat pump, non-communicating (25HCB6, PH16NA, 27TPA8) - DFT defrost board",
   "side": "outdoor",
   "brand": "Carrier / Bryant / Payne",
-  "models": "Carrier 25HCB6 (Comfort and Performance 16 2-stage), 27TPA8 (R-454B Performance 2-stage); Payne PH16NA; Bryant 226A Preferred 2-stage HP (wiring drawing 339130-101 rev A, the same drawing as Carrier 25HCB6-2W)",
+  "models": "Carrier 25HCB6 (Comfort and Performance 16 2-stage), 27TPA8 (R-454B Performance 2-stage); Payne PH16NA; Bryant 226A Preferred 2-stage HP (wiring drawing 339130-101 rev A, the same drawing as Carrier 25HCB6-2W); Bryant 248TAN (R-454B Preferred 2-stage, same drawing as Carrier 27TPA8-1W)",
   "match": [
    "25HCB6",
    "27TPA8",
    "PH16NA",
-   "226A"
+   "226A",
+   "248TAN"
   ],
   "sizes": [
    "all"
@@ -31725,13 +31730,18 @@ const BRAND_SENSOR_MAPS = [
   "title": "Carrier R-454B variable speed 26VNA1 / 27VNA0 / 27VNA1 / 27VNA3 Infinity and 27VPA9 Performance - PCM + VFD",
   "side": "outdoor",
   "brand": "Carrier",
-  "models": "26VNA1 (AC), 27VNA0, 27VNA1 (154 cold climate), 27VNA3 (HP), 27VPA9 (Performance VS HP)",
+  "models": "26VNA1 (AC), 27VNA0, 27VNA1 (154 cold climate), 27VNA3 (HP), 27VPA9 (Performance VS HP); Bryant 191VAN (= 26VNA1), 290VAN (= 27VNA0), 291VAN (= 27VNA1), 293VAN (= 27VNA3), 249VAN (= 27VPA9) - same wiring drawings (Bryant 191VAN-1W, 291VAN-1W, 293VAN-1W, 249VAN-1W; the public 290VAN-1W file is the Carrier 27VNA0-1W); on a Bryant the wall control is the Evolution Connex System Control where this map says Infinity System Control (PDS293VAN-04 p3)",
   "match": [
    "26VNA1",
    "27VNA0",
    "27VNA1",
    "27VNA3",
-   "27VPA9"
+   "27VPA9",
+   "191VAN",
+   "290VAN",
+   "291VAN",
+   "293VAN",
+   "249VAN"
   ],
   "sizes": [
    "24",
@@ -32151,12 +32161,16 @@ const BRAND_SENSOR_MAPS = [
   "title": "Carrier Performance InteliSense units (26SPA6, 26TPA8, 27SPA6, 27TPA8) - Sensor Communication Module HK32EA013",
   "side": "outdoor",
   "brand": "Carrier",
-  "models": "26SPA6, 26TPA8 (AC), 27SPA6, 27TPA8 (HP) - R-454B Performance with InteliSense",
+  "models": "26SPA6, 26TPA8 (AC), 27SPA6, 27TPA8 (HP) - R-454B Performance with InteliSense; Bryant 146SAN, 148TAN (AC), 246SAN, 248TAN (HP) - same wiring drawings (146SAN-2W, 148TAN-1W, 246SAN-1W, 248TAN-1W)",
   "match": [
    "26SPA6",
    "26TPA8",
    "27SPA6",
-   "27TPA8"
+   "27TPA8",
+   "146SAN",
+   "148TAN",
+   "246SAN",
+   "248TAN"
   ],
   "sizes": [
    "all"
@@ -126412,6 +126426,1325 @@ const BRAND_SENSOR_MAPS = [
     "what": ""
    }
   ]
+ },
+ {
+  "id": "carrier-ft5a-fancoil",
+  "title": "Carrier / Bryant FT5 fan coil, R-454B (FT5AN..., sizes 24-60) - select-tap control board + leak dissipation board + A2L sensor",
+  "side": "indoor",
+  "brand": "Carrier / Bryant",
+  "models": "FT5ANXB24, FT5ANXC36, FT5ANBC36, FT5ANXC48, FT5ANBC48, FT5ANBD60",
+  "match": [
+   "FT5ANXB24",
+   "FT5ANXC36",
+   "FT5ANBC36",
+   "FT5ANXC48",
+   "FT5ANBC48",
+   "FT5ANBD60",
+   "FT5AN"
+  ],
+  "sizes": [
+   "24",
+   "36",
+   "48",
+   "60"
+  ],
+  "board": "Fan coil control board (EASY SELECT printed on it, 5 AMP MAX fuse): low-voltage terminal block DH, R, W1, W2, Y1, Y/Y2, G, O, C; SEC1 (24 VAC) / SEC2 (COM); six select rows (AUX HEAT KW/CFM violet, AC/HP SIZE blue, SYSTEM TYPE orange, AC/HP CFM ADJUST black, ON/OFF DELAY white, CONTINUOUS FAN yellow); jumpers J1, J2, J4; AUX1 / AUX2 / HUM1 / HUM2; 12-pin HEATER/MOTOR connector PL1; 4-pin dissipation connector. A 16x4 motor signal translator sits on the back of the PCB bracket. Separate leak dissipation board with a yellow status LED and Test button.",
+  "replacement": [
+   {
+    "board": "EZ SELECT replacement control board (kit instructions IIK-EZSLCT-01)",
+    "kit": "",
+    "replaces": "The kit instructions show the FT5 blower-label connections \"when replacing HK38EA060\" (label 350734-201) and \"when replacing HK38EA071\" (label 351632-201). The kit part number itself is not printed in the instructions.",
+    "differences": "For FG4, FT4, PF4T, FG5, FT5 and PF5T no label installation is needed on the new board (other fan coils need the matching airflow label fitted first). The refrigerant leak functions are on the separate dissipation board, so the control board instructions give no refrigerant setting.",
+    "steps": [
+     "Before performing service, turn off and lock out / tag the main power switch to the unit.",
+     "Prior to installing the replacement control board, mark each wire at every connection to the installed board.",
+     "Replace the board by removing the screws and wiring, mounting the new board to its bracket, and rewiring per the wiring diagram on the blower.",
+     "Not in the kit sheet - from the Installation Instructions: move the 6 select wires to the pins which match the components used and set jumpers J1 / J2 / J4 for the system.",
+     "Operate the unit in Heating and Cooling to ensure proper unit and blower operation."
+    ],
+    "source": "IIK-EZSLCT-01.pdf p.1, p.6, p.8; carrier-ft5-fg5-install-im-ft5-fg5-02.pdf p.9, p.16"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "A2L sensor wiring harness (sensor to the dissipation board)",
+    "pins": "Pin functions are not printed",
+    "code": "A2L",
+    "name": "A2L (R-454B) leak detection sensor",
+    "location": "Shipped in the upflow position. Sizes 36 (slope coil): on the drain pan clip. Sizes 24, 48 and 60 (A-coil): on the delta plate; moved to the horizontal drain pan clip for horizontal right and left. Connector facing down or facing horizontally, never upward.",
+    "kind": "other",
+    "spec": "Board goes to dissipation mode when the sensor reads 20% LFL or more (yellow LED flashing 1). No voltage or resistance values are printed. Required minimum dissipation airflow by total system charge: 5 lb 133 CFM, 10 lb 266, 15 lb 399, 20 lb 532, 25 lb 665 (Table 4, one row per pound).",
+    "errorCodes": [
+     "Flashing 1 - sensor >= 20% LFL",
+     "Flashing 2 - sensor open",
+     "Flashing 3 - normal mitigation after leak",
+     "Flashing 5 - fault with A2L digital sensor",
+     "Flashing 12 - sensor power draw defect (unit label only)"
+    ],
+    "test": "For all flash codes, first try power cycling the system. Flashing 1: check for refrigerant leaks using an independent R-454B detector; if no leaks are present, replace the sensor. Flashing 2: check both ends of the sensor wire harness, power cycle, still present = replace the sensor. Flashing 3: check for leaks with an independent R-454B detector. Flashing 5: does not clear after a power cycle = replace the sensor. Keep the sensor away from significant dust / dirt - it can clog the sensor.",
+    "source": "carrier-ft5-fg5-install-im-ft5-fg5-02.pdf p.14, p.15"
+   },
+   {
+    "plug": "Dissipation board power / thermostat harness (8-pin)",
+    "pins": "Pin 1 24VAC; pin 2 G-OUT; pin 3 W-IN; pin 4 Y-OUT; pin 5 Y-IN; pin 6 G-IN; pin 7 W-OUT; pin 8 Common. The field wiring figures show the 8-pin connector (pins 1, 4, 7, 8) and a 4-pin connector (R, Y, W, C).",
+    "code": "DISS",
+    "name": "Leak dissipation board (yellow status LED, Test button)",
+    "location": "Factory installed inside the unit on its bracket (position not described); with a 24 or 30 kW heater it is moved into the enclosure supplied with the heater kit, on the outside of the unit",
+    "kind": "other",
+    "spec": "Thermostat G, Y and W pass through the board. In dissipation mode it energizes its G output (fan relay on the PCB / indoor blower on) and opens its switches for W and Y, dropping electric heat and the outdoor compressor.",
+    "errorCodes": [
+     "No Power (troubleshooting heading; LED state not printed)",
+     "Flashing 4 - no power to G output (dissipation with no blower)",
+     "Flashing 6 - test button stuck (>30 s)",
+     "Flashing 7 - Y or W wiring inverted",
+     "Flashing 8 - Y or W shorted"
+    ],
+    "test": "Yellow LED steady = normal. Press the Test button roughly ONE second: Dissipation Mode for 60 seconds (only works with no faults on the board). Hold 5-29 s: flash code history. 3 rapid presses: clear the history. Holding 30 s or more sets flash code 6. No power: verify the wiring to / from pins 1 and 8 on the power harness plug and the 24 V wiring from the transformer. Flashing 4 or 6 that will not clear after a power cycle: replace the dissipation board. Flashing 7 or 8: verify all Y and W wires against the wiring diagram.",
+    "source": "carrier-ft5-fg5-install-im-ft5-fg5-02.pdf p.9-11, p.15, p.18"
+   },
+   {
+    "plug": "ECM motor 16-pin control plug / board 12-pin plug PL-1",
+    "pins": "Printed example only: with R jumpered to Y/Y2, 16-pin connector pin 14 to pin 1 (common) = (-)12 VDC; the same signal is pin 2 to pin 9 (or 10, common) on the board 12-pin plug PL-1",
+    "code": "ECM",
+    "name": "Variable-speed ECM blower motor (control module + winding section)",
+    "location": "Blower section; 5-pin power plug, 16-pin control plug and 4-pin plug at the motor",
+    "kind": "other",
+    "spec": "Approximately 230 VAC at the motor. Windings (module removed and unplugged): resistance between any 2 motor leads similar; any lead to the unpainted motor end plate greater than 100K ohms.",
+    "errorCodes": [],
+    "test": "Power off: check the 5 amp fuse on the board, 24 VAC on SEC1 and SEC2, all plugs fully seated. Remove all thermostat wires and jumper R-G, R-Y/Y2, R-Y1, R-W1 one at a time: runs every time = thermostat side. Harness check: shut off power and wait 5 min, remove the 5-pin, 16-pin and 4-pin plugs from the motor, replace the 5-pin plug, power on and check the 16-pin connector voltages with the terminals jumpered. Signal present at the 16-pin plug and motor still dead = control module or motor; present at the board PL-1 but not at the 16-pin plug = wiring harness; not at the board = replace the board. High voltage is always present at the motor - wait at least 5 min after disconnecting power before opening it.",
+    "source": "carrier-ft5-fg5-install-im-ft5-fg5-02.pdf p.19"
+   },
+   {
+    "plug": "Low-voltage fuse (board)",
+    "pins": "In series with transformer 24 VAC (SEC1) and the R circuit",
+    "code": "FUSE",
+    "name": "5 amp blade-type automotive fuse",
+    "location": "On the fan coil control board, marked 5 AMP MAX",
+    "kind": "other",
+    "spec": "5 amp. Unit label: replace the low voltage fuse with no greater than a 5 amp fuse.",
+    "errorCodes": [],
+    "test": "Motor does not run: check the 5 amp fuse first, then 24 VAC on SEC1 and SEC2 - no voltage = check the transformer.",
+    "source": "carrier-ft5-fg5-install-im-ft5-fg5-02.pdf p.11, p.16, p.17, p.19"
+   }
+  ],
+  "test": "Leak dissipation self-test: power on, yellow LED steady, press the Test button about one second, then run the six checks of Table 3 (normal: no call / cool / heat; dissipation activated: no call / cool / heat).",
+  "notes": [
+   "The board drawing shows SAT and RAT terminals; the installation instructions do not describe them.",
+   "Two FT5 wiring labels exist: minor series 2 (351632-201) and minor series 1 (350734-201)."
+  ],
+  "gaps": [
+   "No A2L sensor voltage / resistance values are printed.",
+   "No pin-by-pin voltage table for the 12-pin / 16-pin motor plugs is printed in IM-FT5-FG5-02 (the text refers to Fig. 22, which has none).",
+   "Replacement board kit number and dissipation board / A2L sensor part numbers are not printed in the documents read."
+  ],
+  "sources": [
+   {
+    "file": "carrier-ft5-fg5-install-im-ft5-fg5-02.pdf",
+    "pages": "9-11, 14-19",
+    "what": ""
+   },
+   {
+    "file": "WD-FCA2L-01.pdf",
+    "pages": "11-12",
+    "what": ""
+   },
+   {
+    "file": "IIK-EZSLCT-01.pdf",
+    "pages": "1",
+    "what": ""
+   }
+  ]
+ },
+ {
+  "id": "carrier-fg5a-fancoil",
+  "title": "Carrier / Bryant FG5 Sentry fan coil, R-454B (FG5AN..., sizes 24-60) - Easy Select board + leak dissipation board + A2L sensor",
+  "side": "indoor",
+  "brand": "Carrier / Bryant",
+  "models": "FG5ANXB24L, FG5ANXC36L, FG5ANXC48L, FG5ANBD60L",
+  "match": [
+   "FG5ANXB24",
+   "FG5ANXC36",
+   "FG5ANXC48",
+   "FG5ANBD60",
+   "FG5AN"
+  ],
+  "sizes": [
+   "24",
+   "36",
+   "48",
+   "60"
+  ],
+  "board": "Fan coil control board (EASY SELECT printed on it, 5 AMP MAX fuse): low-voltage terminal block DH, R, W1, W2, Y1, Y/Y2, G, O, C; SEC1 (24 VAC) / SEC2 (COM); six select rows (AUX HEAT KW/CFM violet, AC/HP SIZE blue, SYSTEM TYPE orange, AC/HP CFM ADJUST black, ON/OFF DELAY white, CONTINUOUS FAN yellow); jumpers J1, J2, J4; AUX1 / AUX2 / HUM1 / HUM2; 12-pin HEATER/MOTOR connector PL1; 4-pin dissipation connector. A 16x4 motor signal translator sits on the back of the PCB bracket. Separate leak dissipation board with a yellow status LED and Test button.",
+  "replacement": [
+   {
+    "board": "EZ SELECT replacement control board (kit instructions IIK-EZSLCT-01)",
+    "kit": "",
+    "replaces": "The kit instructions show the FG5 / PF5T blower-label connections \"when replacing HK61EA024\" (label 350735-201) and \"when replacing HK61EA025\" (label 351633-201). The kit part number itself is not printed in the instructions.",
+    "differences": "For FG4, FT4, PF4T, FG5, FT5 and PF5T no label installation is needed on the new board (other fan coils need the matching airflow label fitted first). The refrigerant leak functions are on the separate dissipation board, so the control board instructions give no refrigerant setting.",
+    "steps": [
+     "Before performing service, turn off and lock out / tag the main power switch to the unit.",
+     "Prior to installing the replacement control board, mark each wire at every connection to the installed board.",
+     "Replace the board by removing the screws and wiring, mounting the new board to its bracket, and rewiring per the wiring diagram on the blower.",
+     "Not in the kit sheet - from the Installation Instructions: move the 6 select wires to the pins which match the components used and set jumpers J1 / J2 / J4 for the system.",
+     "Operate the unit in Heating and Cooling to ensure proper unit and blower operation."
+    ],
+    "source": "IIK-EZSLCT-01.pdf p.1, p.5, p.7; carrier-ft5-fg5-install-im-ft5-fg5-02.pdf p.9, p.16"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "A2L sensor wiring harness (sensor to the dissipation board)",
+    "pins": "Pin functions are not printed",
+    "code": "A2L",
+    "name": "A2L (R-454B) leak detection sensor",
+    "location": "Shipped in the upflow position. Sizes 36 (slope coil): on the drain pan clip. Sizes 24, 48 and 60 (A-coil): on the delta plate; moved to the horizontal drain pan clip for horizontal right and left. Connector facing down or facing horizontally, never upward.",
+    "kind": "other",
+    "spec": "Board goes to dissipation mode when the sensor reads 20% LFL or more (yellow LED flashing 1). No voltage or resistance values are printed. Required minimum dissipation airflow by total system charge: 5 lb 133 CFM, 10 lb 266, 15 lb 399, 20 lb 532, 25 lb 665 (Table 4, one row per pound).",
+    "errorCodes": [
+     "Flashing 1 - sensor >= 20% LFL",
+     "Flashing 2 - sensor open",
+     "Flashing 3 - normal mitigation after leak",
+     "Flashing 5 - fault with A2L digital sensor",
+     "Flashing 12 - sensor power draw defect (unit label only)"
+    ],
+    "test": "For all flash codes, first try power cycling the system. Flashing 1: check for refrigerant leaks using an independent R-454B detector; if no leaks are present, replace the sensor. Flashing 2: check both ends of the sensor wire harness, power cycle, still present = replace the sensor. Flashing 3: check for leaks with an independent R-454B detector. Flashing 5: does not clear after a power cycle = replace the sensor. Keep the sensor away from significant dust / dirt - it can clog the sensor.",
+    "source": "carrier-ft5-fg5-install-im-ft5-fg5-02.pdf p.14, p.15"
+   },
+   {
+    "plug": "Dissipation board power / thermostat harness (8-pin)",
+    "pins": "Pin 1 24VAC; pin 2 G-OUT; pin 3 W-IN; pin 4 Y-OUT; pin 5 Y-IN; pin 6 G-IN; pin 7 W-OUT; pin 8 Common. The field wiring figures show the 8-pin connector (pins 1, 4, 7, 8) and a 4-pin connector (R, Y, W, C).",
+    "code": "DISS",
+    "name": "Leak dissipation board (yellow status LED, Test button)",
+    "location": "Factory installed inside the unit on its bracket (position not described); with a 24 or 30 kW heater it is moved into the enclosure supplied with the heater kit, on the outside of the unit",
+    "kind": "other",
+    "spec": "Thermostat G, Y and W pass through the board. In dissipation mode it energizes its G output (fan relay on the PCB / indoor blower on) and opens its switches for W and Y, dropping electric heat and the outdoor compressor.",
+    "errorCodes": [
+     "No Power (troubleshooting heading; LED state not printed)",
+     "Flashing 4 - no power to G output (dissipation with no blower)",
+     "Flashing 6 - test button stuck (>30 s)",
+     "Flashing 7 - Y or W wiring inverted",
+     "Flashing 8 - Y or W shorted"
+    ],
+    "test": "Yellow LED steady = normal. Press the Test button roughly ONE second: Dissipation Mode for 60 seconds (only works with no faults on the board). Hold 5-29 s: flash code history. 3 rapid presses: clear the history. Holding 30 s or more sets flash code 6. No power: verify the wiring to / from pins 1 and 8 on the power harness plug and the 24 V wiring from the transformer. Flashing 4 or 6 that will not clear after a power cycle: replace the dissipation board. Flashing 7 or 8: verify all Y and W wires against the wiring diagram.",
+    "source": "carrier-ft5-fg5-install-im-ft5-fg5-02.pdf p.9-11, p.15, p.18"
+   },
+   {
+    "plug": "ECM motor 16-pin control plug / board 12-pin plug PL-1",
+    "pins": "Printed example only: with R jumpered to Y/Y2, 16-pin connector pin 14 to pin 1 (common) = (-)12 VDC; the same signal is pin 2 to pin 9 (or 10, common) on the board 12-pin plug PL-1",
+    "code": "ECM",
+    "name": "Variable-speed ECM blower motor (control module + winding section)",
+    "location": "Blower section; 5-pin power plug, 16-pin control plug and 4-pin plug at the motor",
+    "kind": "other",
+    "spec": "Approximately 230 VAC at the motor. Windings (module removed and unplugged): resistance between any 2 motor leads similar; any lead to the unpainted motor end plate greater than 100K ohms.",
+    "errorCodes": [],
+    "test": "Power off: check the 5 amp fuse on the board, 24 VAC on SEC1 and SEC2, all plugs fully seated. Remove all thermostat wires and jumper R-G, R-Y/Y2, R-Y1, R-W1 one at a time: runs every time = thermostat side. Harness check: shut off power and wait 5 min, remove the 5-pin, 16-pin and 4-pin plugs from the motor, replace the 5-pin plug, power on and check the 16-pin connector voltages with the terminals jumpered. Signal present at the 16-pin plug and motor still dead = control module or motor; present at the board PL-1 but not at the 16-pin plug = wiring harness; not at the board = replace the board. High voltage is always present at the motor - wait at least 5 min after disconnecting power before opening it.",
+    "source": "carrier-ft5-fg5-install-im-ft5-fg5-02.pdf p.19"
+   },
+   {
+    "plug": "Low-voltage fuse (board)",
+    "pins": "In series with transformer 24 VAC (SEC1) and the R circuit",
+    "code": "FUSE",
+    "name": "5 amp blade-type automotive fuse",
+    "location": "On the fan coil control board, marked 5 AMP MAX",
+    "kind": "other",
+    "spec": "5 amp. Unit label: replace the low voltage fuse with no greater than a 5 amp fuse.",
+    "errorCodes": [],
+    "test": "Motor does not run: check the 5 amp fuse first, then 24 VAC on SEC1 and SEC2 - no voltage = check the transformer.",
+    "source": "carrier-ft5-fg5-install-im-ft5-fg5-02.pdf p.11, p.16, p.17, p.19"
+   }
+  ],
+  "test": "Leak dissipation self-test: power on, yellow LED steady, press the Test button about one second, then run the six checks of Table 3 (normal: no call / cool / heat; dissipation activated: no call / cool / heat).",
+  "notes": [
+   "The board drawing shows SAT and RAT terminals; the installation instructions do not describe them.",
+   "The FG5 label 351633-201 names the jumpers F1, F2, F4 where the installation instructions say J1, J2, J4.",
+   "Blower label 350735-201 prints SEC 1 (COM) and SEC 2 (24VAC); the installation instructions board drawing and label 351633-201 print SEC1 (24VAC) and SEC2 (COM)."
+  ],
+  "gaps": [
+   "No A2L sensor voltage / resistance values are printed.",
+   "No pin-by-pin voltage table for the 12-pin / 16-pin motor plugs is printed in IM-FT5-FG5-02 (the text refers to Fig. 22, which has none).",
+   "Replacement board kit number and dissipation board / A2L sensor part numbers are not printed in the documents read."
+  ],
+  "sources": [
+   {
+    "file": "carrier-ft5-fg5-install-im-ft5-fg5-02.pdf",
+    "pages": "9-11, 14-19",
+    "what": ""
+   },
+   {
+    "file": "IIK-EZSLCT-01.pdf",
+    "pages": "5, 7",
+    "what": ""
+   },
+   {
+    "file": "IIK-EZSLCT-01.pdf",
+    "pages": "1",
+    "what": ""
+   }
+  ]
+ },
+ {
+  "id": "carrier-fj5a-fancoil",
+  "title": "Carrier / Bryant FJ5 fan coil, R-454B (FJ5AN..., sizes 18-60) - 5-tap ECM + leak dissipation board + A2L sensor",
+  "side": "indoor",
+  "brand": "Carrier / Bryant",
+  "models": "FJ5ANXA18L00, FJ5ANXA18L05, FJ5ANXA18L08, FJ5ANXB24L00, FJ5ANXB24L05, FJ5ANXB24L10, FJ5ANXB30L00, FJ5ANXB30L08, FJ5ANXB30L10, FJ5ANXB36L00, FJ5ANXB36L10, FJ5ANXB36L15, FJ5ANBC42L00, FJ5ANXC42L00, FJ5ANXC42L10, FJ5ANXC42L15, FJ5ANBC48L00, FJ5ANXC48L00, FJ5ANXC48L10, FJ5ANXC48L15, FJ5ANBD60L00, FJ5ANXD60L00",
+  "match": [
+   "FJ5ANXA18",
+   "FJ5ANXB24",
+   "FJ5ANXB30",
+   "FJ5ANXB36",
+   "FJ5ANXC42",
+   "FJ5ANBC42",
+   "FJ5ANXC48",
+   "FJ5ANBC48",
+   "FJ5ANXD60",
+   "FJ5ANBD60",
+   "FJ5AN"
+  ],
+  "sizes": [
+   "18",
+   "24",
+   "30",
+   "36",
+   "42",
+   "48",
+   "60"
+  ],
+  "board": "Motor speeds and the time delay function are built into the multi-tap ECM. Product Data: integrated motor controls have replaced the integrated circuit board; the sequence of operation text still says G energizes \"the fan relay on the PCB\" - both are printed. Leak dissipation board with a yellow status LED and Test button; thermostat G, Y and W pass through it.",
+  "replacement": [],
+  "sensors": [
+   {
+    "plug": "A2L sensor harness (4-pin at the dissipation board)",
+    "pins": "Pin functions are not printed",
+    "code": "A2L",
+    "name": "A2L (R-454B) leak detection sensor",
+    "location": "Shipped in the upflow position. Sizes 18-24 (slope coil): on the drain pan clip. Sizes 30-60 (A-coil): on the delta plate; moved to the horizontal drain pan clip for horizontal right and left. Connector facing down or facing horizontally, never upward.",
+    "kind": "other",
+    "spec": "Board goes to dissipation mode when the sensor reads 20% LFL or more (yellow LED flashing 1). No voltage or resistance values are printed. Required minimum dissipation airflow by total system charge: 5 lb 133 CFM, 10 lb 266, 15 lb 399, 20 lb 532, 25 lb 665 (Table 4, one row per pound).",
+    "errorCodes": [
+     "Flashing 1 - sensor >= 20% LFL",
+     "Flashing 2 - sensor open",
+     "Flashing 3 - normal mitigation after leak",
+     "Flashing 5 - fault with A2L digital sensor",
+     "Flashing 12 - sensor power draw defect (unit label only)"
+    ],
+    "test": "For all flash codes, first try power cycling the system. Flashing 1: check for refrigerant leaks using an independent R-454B detector; if no leaks are present, replace the sensor. Flashing 2: check both ends of the sensor wire harness, power cycle, still present = replace the sensor. Flashing 3: check for leaks with an independent R-454B detector. Flashing 5: does not clear after a power cycle = replace the sensor. Keep the sensor away from significant dust / dirt - it can clog the sensor.",
+    "source": "carrier-fj5-install-im-fj5-04.pdf p.11, p.12"
+   },
+   {
+    "plug": "Dissipation board power / thermostat harness (the manual names pins 1 and 8 on the power harness plug)",
+    "pins": "Terminals as drawn: R, G_out, G_in, W/_out, W/_in, C, Y_in, Y_out. Thermostat-side leads: R red, G green, W white, C brown, Y yellow. G_out gray to the fan coil G; W/_out white to W/_2, W/_3 and E. Pin numbers are not printed (the text names pins 1 and 8 on the power harness plug for power).",
+    "code": "DISS",
+    "name": "Leak dissipation board (yellow status LED, Test button)",
+    "location": "Drawn in the blower section beside the blower (Fig. 6 callout DISSIPATION BOARD); the system includes a bracket for it",
+    "kind": "other",
+    "spec": "Thermostat G, Y and W pass through the board. In dissipation mode it energizes its G output (fan relay on the PCB / indoor blower on) and opens its switches for W and Y, dropping electric heat and the outdoor compressor.",
+    "errorCodes": [
+     "LED off - no power",
+     "Flashing 4 - no power to G output (dissipation with no blower)",
+     "Flashing 6 - test button stuck (>30 s)",
+     "Flashing 7 - Y or W wiring inverted",
+     "Flashing 8 - Y or W shorted"
+    ],
+    "test": "Yellow LED steady = normal. Press the Test button roughly ONE second: Dissipation Mode for 60 seconds (only works with no faults on the board). Hold 5-29 s: flash code history. 3 rapid presses: clear the history. Holding 30 s or more sets flash code 6. No power: verify the wiring to / from pins 1 and 8 on the power harness plug and the 24 V wiring from the transformer. Flashing 4 or 6 that will not clear after a power cycle: replace the dissipation board. Flashing 7 or 8: verify all Y and W wires against the wiring diagram.",
+    "source": "carrier-fj5-install-im-fj5-04.pdf p.7, p.12, p.14"
+   },
+   {
+    "plug": "Motor speed-tap connector (taps 1-5) and power connector (C, L, G, N)",
+    "pins": "Tap 1 low, tap 2 medium (BLUE lead as shipped), tap 3 high, tap 4 electric heat (WHITE lead - leave it on tap 4), tap 5 max. Label 350357-201 (sizes 24-36, 60): C brown (24 V), L black, G green/yellow, N yellow.",
+    "code": "ECM",
+    "name": "Multi-tap (5 speed) ECM blower motor",
+    "location": "Speed taps on the motor, or on a plug close to the motor",
+    "kind": "other",
+    "spec": "Taps 1, 2 and 3: 90 second blower off delay. Taps 4 and 5: 0 second off delay. No winding resistance or tap voltage values are printed.",
+    "errorCodes": [],
+    "test": "To change speed move the BLUE fan lead from tap 2 to tap 1, 2, 3 or 5; check the wiring label so the tap is not below the minimum fan speed. Sequence: G energizes the fan relay; W runs the blower through the normally-closed contacts on the fan relay.",
+    "source": "carrier-fj5-install-im-fj5-04.pdf p.8, p.13; WD-FCA2L-01.pdf p.9"
+   },
+   {
+    "plug": "Low-voltage fuse (in-line)",
+    "pins": "In-line on the wire harness",
+    "code": "FUSE",
+    "name": "3 A automotive type fuse",
+    "location": "In-line on the wire harness",
+    "kind": "other",
+    "spec": "3 A per the installation instructions; the unit label (350357-201) says replace with no greater than a 5 amp fuse.",
+    "errorCodes": [],
+    "test": "No power at the dissipation board (manual): verify the wiring to / from pins 1 and 8 on the board power harness plug, then check the 24 V system wiring from the transformer. This fuse protects that low voltage circuit.",
+    "source": "carrier-fj5-install-im-fj5-04.pdf p.6, p.12; WD-FCA2L-01.pdf p.9"
+   }
+  ],
+  "test": "Leak dissipation self-test: power on, yellow LED steady, press the Test button about one second, then run the six checks of Table 3 (normal: no call / cool / heat; dissipation activated: no call / cool / heat).",
+  "notes": [
+   "Size 18 with electric heat has a special 6-pin heater connector - do not modify wiring."
+  ],
+  "gaps": [
+   "No A2L sensor voltage / resistance values are printed.",
+   "No motor tap voltage or winding values are printed.",
+   "Dissipation board and A2L sensor part numbers are not printed in the documents read."
+  ],
+  "sources": [
+   {
+    "file": "carrier-fj5-install-im-fj5-04.pdf",
+    "pages": "6-8, 11-14",
+    "what": ""
+   },
+   {
+    "file": "WD-FCA2L-01.pdf",
+    "pages": "1, 9",
+    "what": ""
+   }
+  ]
+ },
+ {
+  "id": "carrier-f55a-fancoil",
+  "title": "Carrier / Bryant F55 115 V fan coil, R-454B (F55AA..., sizes 18-60) - 5-tap 115 V ECM + leak dissipation board + A2L sensor",
+  "side": "indoor",
+  "brand": "Carrier / Bryant",
+  "models": "F55AAXA18L00, F55AAXB24L00, F55AAXB30L00, F55AAXB36L00, F55AABC42L00, F55AABC48L00, F55AABD60L00",
+  "match": [
+   "F55AAXA18",
+   "F55AAXB24",
+   "F55AAXB30",
+   "F55AAXB36",
+   "F55AABC42",
+   "F55AABC48",
+   "F55AABD60",
+   "F55AA"
+  ],
+  "sizes": [
+   "18",
+   "24",
+   "30",
+   "36",
+   "42",
+   "48",
+   "60"
+  ],
+  "board": "Motor speeds and the time delay function are built into the multi-tap ECM. Product Data: integrated motor controls have replaced the integrated circuit board; the sequence of operation text still says G energizes \"the fan relay on the PCB\" - both are printed. Leak dissipation board with a yellow status LED and Test button; thermostat G, Y and W pass through it.",
+  "replacement": [],
+  "sensors": [
+   {
+    "plug": "A2L sensor harness (4-pin at the dissipation board)",
+    "pins": "Pin functions are not printed",
+    "code": "A2L",
+    "name": "A2L (R-454B) leak detection sensor",
+    "location": "Shipped in the upflow position. Sizes 18-24 (slope coil): on the drain pan clip. Sizes 30-60 (A-coil): on the delta plate; moved to the horizontal drain pan clip for horizontal right and left. Connector facing down or facing horizontally, never upward.",
+    "kind": "other",
+    "spec": "Board goes to dissipation mode when the sensor reads 20% LFL or more (yellow LED flashing 1). No voltage or resistance values are printed. Required minimum dissipation airflow by total system charge: 5 lb 133 CFM, 10 lb 266, 15 lb 399, 20 lb 532, 25 lb 665 (Table 4, one row per pound).",
+    "errorCodes": [
+     "Flashing 1 - sensor >= 20% LFL",
+     "Flashing 2 - sensor open",
+     "Flashing 3 - normal mitigation after leak",
+     "Flashing 5 - fault with A2L digital sensor"
+    ],
+    "test": "For all flash codes, first try power cycling the system. Flashing 1: check for refrigerant leaks using an independent R-454B detector; if no leaks are present, replace the sensor. Flashing 2: check both ends of the sensor wire harness, power cycle, still present = replace the sensor. Flashing 3: check for leaks with an independent R-454B detector. Flashing 5: does not clear after a power cycle = replace the sensor. Keep the sensor away from significant dust / dirt - it can clog the sensor.",
+    "source": "carrier-f55-install-im-f55-03.pdf p.11, p.12"
+   },
+   {
+    "plug": "Dissipation board power / thermostat harness (8-pin)",
+    "pins": "R pin 1 (red); G-OUT pin 2 (blue, to motor G / tap 2); W pin 3 (white, thermostat W or Y2); Y-OUT pin 4 (yellow/violet); Y-IN pin 5 (yellow); G-IN pin 6 (green); W pin 7 (white/violet, to motor tap 4); Common pin 8 (black / brown).",
+    "code": "DISS",
+    "name": "Leak dissipation board (yellow status LED, Test button)",
+    "location": "Drawn in the blower section beside the blower (Fig. 6 callout DISSIPATION BOARD); the system includes a bracket for it",
+    "kind": "other",
+    "spec": "Thermostat G, Y and W pass through the board. In dissipation mode it energizes its G output (fan relay on the PCB / indoor blower on) and opens its switches for W and Y, dropping heat and the outdoor compressor.",
+    "errorCodes": [
+     "LED off - no power",
+     "Flashing 4 - no power to G output (dissipation with no blower)",
+     "Flashing 6 - test button stuck (>30 s)",
+     "Flashing 7 - Y or W wiring inverted",
+     "Flashing 8 - Y or W shorted"
+    ],
+    "test": "Yellow LED steady = normal. Press the Test button roughly ONE second: Dissipation Mode for 60 seconds (only works with no faults on the board). Hold 5-29 s: flash code history. 3 rapid presses: clear the history. Holding 30 s or more sets flash code 6. No power: verify the wiring to / from pins 1 and 8 on the power harness plug and the 24 V wiring from the transformer. Flashing 4 or 6 that will not clear after a power cycle: replace the dissipation board. Flashing 7 or 8: verify all Y and W wires against the wiring diagram.",
+    "source": "carrier-f55-install-im-f55-03.pdf p.7, p.12, p.15"
+   },
+   {
+    "plug": "Motor speed-tap connector (taps 1-5) and power connector (C, L, G, N)",
+    "pins": "Tap 1 low, tap 2 medium (BLUE lead as shipped), tap 3 high, tap 4 high with no off delay (WHITE lead as shipped), tap 5 max.",
+    "code": "ECM",
+    "name": "Multi-tap (5 speed) ECM blower motor",
+    "location": "Speed taps on the motor, or on a plug close to the motor",
+    "kind": "other",
+    "spec": "Taps 1, 2 and 3: 90 second blower off delay. Taps 4 and 5: 0 second off delay. No winding resistance or tap voltage values are printed.",
+    "errorCodes": [],
+    "test": "To change speed move the BLUE and / or WHITE fan lead from tap 2 and / or tap 4 to the tap wanted; check the wiring label so the tap is not below the minimum fan speed.",
+    "source": "carrier-f55-install-im-f55-03.pdf p.8, p.12-14"
+   },
+   {
+    "plug": "Low-voltage fuse (in-line)",
+    "pins": "In-line on the wire harness",
+    "code": "FUSE",
+    "name": "3 A automotive type fuse",
+    "location": "In-line on the wire harness",
+    "kind": "other",
+    "spec": "3 A.",
+    "errorCodes": [],
+    "test": "No power at the dissipation board (manual): verify the wiring to / from pins 1 and 8 on the board power harness plug, then check the 24 V system wiring from the transformer. This fuse protects that low voltage circuit.",
+    "source": "carrier-f55-install-im-f55-03.pdf p.6, p.12"
+   }
+  ],
+  "test": "Leak dissipation self-test: power on, yellow LED steady, press the Test button about one second, then run the six checks of Table 3 (normal: no call / cool / heat; dissipation activated: no call / cool / heat).",
+  "notes": [
+   "115 V unit: no electric heat. The white/violet wire labeled \"W or Y/Y2\" can drive a hydronic coil in single stage applications only."
+  ],
+  "gaps": [
+   "No A2L sensor voltage / resistance values are printed.",
+   "No motor tap voltage or winding values are printed.",
+   "Dissipation board and A2L sensor part numbers are not printed in the documents read.",
+   "No F55 unit wiring diagram was found on the public host (WD-FCA2L-01 lists FJ5, FT5 and FE5 only)."
+  ],
+  "sources": [
+   {
+    "file": "carrier-f55-install-im-f55-03.pdf",
+    "pages": "6-8, 11-15",
+    "what": ""
+   }
+  ]
+ },
+ {
+  "id": "york-yh9-outdoor-control",
+  "title": "York YH9 / XH9 outdoor control board (status LED, three 7-segment displays, push button, S1 / S2 / S3 switch banks) and inverter",
+  "side": "outdoor",
+  "brand": "York",
+  "models": "YH936E2C11, YH960E2C11, XH936, XH960 (install manual 6515371-UIM-B-0526)",
+  "match": [
+   "YH936",
+   "YH960",
+   "XH936",
+   "XH960"
+  ],
+  "sizes": [
+   "all"
+  ],
+  "board": "Outdoor control (\"Defrost control module\", Figure 18 p.48): plugs for discharge sensor, low pressure switch, reversing valve, coil temperature sensor, ambient temperature sensor, pressure transducer and electronic expansion valve; communication port to inverter, communication bus connector, communication port to field wiring block; S1, S2, S3 switch banks, 7-segment display, pushbutton. Separate inverter with HPS and RS485 COMM plugs, L1 / L2 / E input and U V W outputs to compressor and fan motor (wiring diagram 6515493-UWD-A-0425, p.70).",
+  "replacement": [
+   {
+    "board": "York YH9 / XH9 outdoor control board - replacement",
+    "kit": "",
+    "replaces": "The factory outdoor control. The manual prints no part number for the board or the inverter.",
+    "differences": "The manual gives no board-replacement procedure. What it does print about setup: the outdoor unit tonnage must be selected at the thermostat (3 ton as 2 or 3 ton, 5 ton as 4 or 5 ton) and the S1 / S2 / S3 switch banks are meant to stay in their factory positions with changes made at the room thermostat. The refrigerant is R-454B only; the manual prints no refrigerant-type or R-410A / A2L selection on this board. The A2L leak sensor is on the indoor side - code 72 reports a leak detected at the indoor unit.",
+    "steps": [
+     "Disconnect and lock out power. Wait 5 min to ensure that drive capacitors are discharged before servicing (p.7). The wiring diagram on the unit prints: wait 2 minutes (p.70). The two figures differ.",
+     "Before removing the old board note the three switch banks: S1 all OFF = normal mode (position 4 ON = service mode); S2 = defrost termination temperature; S3 = tonnage (OFF OFF OFF = 3 or 5 ton, OFF ON OFF = 2 or 4 ton) (p.41, p.67). Set the new board the same.",
+     "Move the plugs one at a time: DIS, LPS, RV, COIL, AMB, PT, EEV, the RS485 COMM harness to the inverter and the B- C R A+ harness to the low-voltage terminal block (p.70).",
+     "Power up outdoor first, then indoor. The equipment must be set up at the indoor thermostat: it shows SETUP, finds the indoor section, then searches for the outdoor section - select the outdoor unit tonnage (p.40).",
+     "Confirm the charge in SERVICE MODE and switch SERVICE MODE back OFF (p.40)."
+    ],
+    "source": "york-yh9-xh9-install-6515371-uim-b-0526.pdf p.7, p.40, p.41, p.48, p.67, p.70"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "AMB (3-pin housing, 2 wires BLK / BLK)",
+    "code": "09 / 10",
+    "name": "Ambient temperature sensor (AMB)",
+    "location": "Outdoor air; position on the unit is not described in the manual",
+    "kind": "thermistor",
+    "chart": "york-yh9-thermistor-table22",
+    "spec": "Resistance curve: Table 22 (10000 at 77°F). The table does not name the sensors it covers; the troubleshooting table sends all three temperature sensors to the same curve (printed there as \"Table 10\").",
+    "errorCodes": [
+     "09 = AMBIENT SENSOR SHORTED",
+     "10 = AMBIENT SENSOR OPEN",
+     "21 = OD AMBIENT < 55°F (Cooling Mode): if ambient is above 55°F (+/-2°F), check for failed sensor"
+    ],
+    "test": "Check temperature vs. resistance curve. Check wiring lead from sensor to board; check that the sensor is plugged into board and the wire terminations are secure. If leads and sensor show no defects, board may be faulty.",
+    "source": "york-yh9-xh9-install-6515371-uim-b-0526.pdf p.48, p.57-58, p.63-64, p.70"
+   },
+   {
+    "plug": "COIL (2 wires BLU / BLU)",
+    "code": "11 / 12",
+    "name": "Coil temperature sensor (CS)",
+    "location": "On the outdoor coil circuit near the heating EEV (flow diagram, Figure 17 p.48)",
+    "kind": "thermistor",
+    "chart": "york-yh9-thermistor-table22",
+    "spec": "Resistance curve: Table 22 (see the note on the ambient sensor). Defrost uses it: enable 32°F, terminate 50 / 60 / 70 / 80°F.",
+    "errorCodes": [
+     "11 = COIL SENSOR SHORTED",
+     "12 = COIL SENSOR OPEN",
+     "01 HPS OPEN lists \"Defrost - Coil sensor faulty\""
+    ],
+    "test": "Verify coil sensor is plugged in and wires are in good condition. Check that the sensor is in correct location. Check sensor is securely fastened to the tube and well insulated. Check temperature vs. resistance curve.",
+    "source": "york-yh9-xh9-install-6515371-uim-b-0526.pdf p.48, p.55, p.57, p.63-64, p.70"
+   },
+   {
+    "plug": "DIS (2 wires BLK / BLK)",
+    "code": "13 / 14",
+    "name": "Discharge line temperature sensor (DIS)",
+    "location": "On the discharge line between compressor and reversing valve (Figure 17 p.48)",
+    "kind": "thermistor",
+    "chart": "york-yh9-thermistor-table22",
+    "spec": "Resistance curve: Table 22 (see the note on the ambient sensor - the manual prints one thermistor table and sends the discharge sensor faults to the same curve). Code 68 = discharge temp above 227°F (compressor speed limited).",
+    "errorCodes": [
+     "13 = DISCHARGE LINE SENSOR SHORTED",
+     "14 = DISCHARGE LINE SENSOR OPEN",
+     "18 = HIGH DISCHARGE TEMP",
+     "19 = LOW DISCHARGE TEMP",
+     "68 = DISCHARGE TEMP > 227°F"
+    ],
+    "test": "Check temperature vs. resistance curve. Check wiring lead from sensor to board. Check sensor is securely fastened to the discharge tube, well insulated and the insulation intact.",
+    "source": "york-yh9-xh9-install-6515371-uim-b-0526.pdf p.48, p.54, p.57-58, p.63-64, p.70"
+   },
+   {
+    "plug": "PT (3 wires BLK, WHT, RED/WHT)",
+    "pins": "BLK = common, RED/WHT = supply, WHT = signal",
+    "code": "15 / 16",
+    "name": "Pressure transducer (PT)",
+    "location": "On the line between the charge compensator and the field-connected line (Figure 17 p.48)",
+    "kind": "pressure",
+    "spec": "Supply across BLK and RED/WHT 4.5 VDC to 5.5 VDC. Signal across WHT and BLK between 0.5 VDC and 4.5 VDC. The manual refers to a \"voltage to pressure chart\" but does not print one.",
+    "errorCodes": [
+     "15 = PRESSURE TRANSDUCER LOW VOLTAGE",
+     "16 = PRESSURE TRANSDUCER HIGH VOLTAGE",
+     "22 / 23 list the transducer causes first"
+    ],
+    "test": "If supply across BLK and RED/WHT does not read 4.5 to 5.5 VDC replace OD control board. If supply is good and WHT to BLK is not between 0.5 and 4.5 VDC replace sensor. If WHT to BLK reads 0.5 to 4.5 VDC but the fault still exists, replace OD control board. Verify that the rubber seals are properly seated.",
+    "source": "york-yh9-xh9-install-6515371-uim-b-0526.pdf p.48, p.57, p.70"
+   },
+   {
+    "plug": "HPS on the INVERTER (2 wires YEL / YEL)",
+    "code": "01 / 02 / 03 / 34",
+    "name": "High pressure switch (HPS)",
+    "location": "Wiring diagram shows it wired to the HPS plug on the inverter; the text on p.68 says both pressure switches connect to the control at the pressure switch terminals",
+    "kind": "switch",
+    "spec": "Continuity when the system pressure is below 650 PSIG. Open more than 40 ms: compressor de-energized.",
+    "errorCodes": [
+     "01 = HPS OPEN",
+     "02 = HPS-NORMAL",
+     "03 = HPS-DEFROST",
+     "34 = INV: HIGH PRESSURE SWITCH PROTECT"
+    ],
+    "test": "Ohm out the switch to confirm continuity when the system pressure is below 650 PSIG. Check wiring lead from switch to board; check that the switch is plugged in and the wire terminations are secure.",
+    "source": "york-yh9-xh9-install-6515371-uim-b-0526.pdf p.55, p.68, p.70"
+   },
+   {
+    "plug": "LPS (2 wires BLK/PNK / BLK/PNK)",
+    "code": "04",
+    "name": "Low pressure switch (LPS)",
+    "location": "Position not described",
+    "kind": "switch",
+    "spec": "Set point not printed. Fault if open 5 s; ignored during defrost, after start up, 300 s after defrost and below 20° outdoor. With no faults present, holding the push button 7-12 s during an active call ignores the LPS for 10 minutes.",
+    "errorCodes": [
+     "04 = LOW SUCTION PRESSURE"
+    ],
+    "test": "Check that switch is properly seated and torqued down and schrader valve is depressed. Check wiring lead from switch to board.",
+    "source": "york-yh9-xh9-install-6515371-uim-b-0526.pdf p.49, p.56, p.68, p.70"
+   },
+   {
+    "plug": "RV (2 wires BLK / BLK)",
+    "code": "17",
+    "name": "Reversing valve solenoid (RV)",
+    "location": "Four-way reversing valve",
+    "kind": "other",
+    "spec": "Energized in defrost (defrost mode is equivalent to cooling mode with the outdoor fan off). Coil resistance not printed.",
+    "errorCodes": [
+     "17 = REVERSING VALVE NOT DETECTED"
+    ],
+    "test": "Check harness for continuity. Verify harness is plugged into the control board and RV. Check RV solenoid for continuity.",
+    "source": "york-yh9-xh9-install-6515371-uim-b-0526.pdf p.57, p.66, p.70"
+   },
+   {
+    "plug": "EEV (5 wires WHT, ORG, YEL, BLU, RED)",
+    "code": "22 / 23",
+    "name": "Outdoor electronic expansion valve (EEV, heating)",
+    "location": "Liquid line at the outdoor coil (Figure 17 p.48)",
+    "kind": "other",
+    "spec": "White/Red, Orange/Red, Yellow/Red and Blue/Red should each read between 42 ohms and 50 ohms. 12 VDC output signal from OD control board.",
+    "errorCodes": [
+     "22 = HIGH SUPERHEAT",
+     "23 = LOW SUPERHEAT"
+    ],
+    "test": "Check coil windings. Verify the system has been running at least 30 minutes and superheat has leveled out. Check for response by manually adjusting superheat with EEV service tool.",
+    "source": "york-yh9-xh9-install-6515371-uim-b-0526.pdf p.59, p.70"
+   },
+   {
+    "plug": "RS485 COMM (3 wires RED, WHT, YEL) control board to inverter",
+    "code": "07 / 31",
+    "name": "Inverter communication harness",
+    "location": "Between outdoor control and inverter",
+    "kind": "other",
+    "spec": "Fault after more than 60 sec without communication (07: shutdown after >60 sec).",
+    "errorCodes": [
+     "07 = COM ERROR INVERTER",
+     "31 = INV: COMM FAULT"
+    ],
+    "test": "Check wiring from OD control to inverter. Check that inverter has power applied. Remove 24V power, then high voltage power, to the drive for 2 min or until LEDs on drive are off; reapply.",
+    "source": "york-yh9-xh9-install-6515371-uim-b-0526.pdf p.56, p.61, p.70"
+   },
+   {
+    "plug": "COMM B- C R A+ to LV TB (WHT, BLK, RED, YEL)",
+    "code": "08",
+    "name": "Communication bus to indoor unit and thermostat",
+    "location": "Low voltage field wiring terminal block",
+    "kind": "other",
+    "spec": "A+ R C B- four-wire bus. 05 = low voltage below 19 VAC, 06 = below 16 VAC (lockout until above 19.5 VAC).",
+    "errorCodes": [
+     "08 = COM ERROR TSTAT",
+     "05 / 06 = LOW VOLTAGE"
+    ],
+    "test": "Check if the mitigation system is in alarm (certain wiring configurations cut thermostat communication on A2L detection). Check all wiring between OD control, low voltage terminal strip, indoor system and thermostat.",
+    "source": "york-yh9-xh9-install-6515371-uim-b-0526.pdf p.51, p.56-57, p.70"
+   }
+  ],
+  "test": "Push button (Table 18, p.49): 0.5-3 s with no call = show current / stored fault codes; 0.5-3 s with a call = bypass ASCD or show compressor speed (Hz) 5 s then outdoor fan RPM 5 s; 3-7 s = show current defrost mode; 7-12 s = clear fault codes and lockouts and reset the 6 hour defrost timer; more than 12 s with a call = bypass ASCD / force defrost. 2 green flashes = no fault codes in memory.",
+  "notes": "Wire colours are from wiring diagram 6515493-UWD-A-0425 (p.70). Pin numbers are not printed.",
+  "gaps": [
+   "Pressure transducer volts-to-pressure chart not printed",
+   "Low pressure switch set point not printed",
+   "Board / inverter part numbers not printed",
+   "Thermistor table does not name its sensors; resistance unit not printed"
+  ],
+  "sources": [
+   {
+    "file": "york-yh9-xh9-install-6515371-uim-b-0526.pdf",
+    "pages": "7,40,41,48-64,66-68,70",
+    "what": "control board drawing, push button, status and fault tables, troubleshooting table, thermistor table, switch logic, wiring diagram"
+   }
+  ]
+ },
+ {
+  "id": "york-yd5-xd5-outdoor-board",
+  "title": "York YD5 / XD5 outdoor main control board (Bosch platform)",
+  "side": "outdoor",
+  "brand": "York",
+  "models": "YD524E2D11, YD536E2D11, YD560E2D11, XD524E2D11, XD536E2D11, XD560E2D11 (install guide BTC 910503201 B)",
+  "match": [
+   "YD524",
+   "YD536",
+   "YD560",
+   "XD524",
+   "XD536",
+   "XD560"
+  ],
+  "sizes": [
+   "all"
+  ],
+  "board": "One main control board with the inverter on it (separate drawings for the 2/3 ton and 4/5 ton boards, p.44-45): 3-digit display DSP1, SW2 Check and SW1 Force buttons, J2 / SW4 / SW5 DIP switches, LED1 green and LED2 / LED3 red, USB port CN31, gateway connector CN30, compressor U V W, power in CN1 L1 / CN2 L2, DC bus test point CN8 (N P).",
+  "replacement": [
+   {
+    "board": "York YD5 / XD5 outdoor main control board (Bosch platform) - replacement",
+    "kit": "",
+    "replaces": "The factory outdoor control board. The guide prints no part number.",
+    "differences": "The guide gives no board-replacement procedure and no part number. What it prints that matters after a swap: code Eb = dipswitch setting does not match machine type (SW4-1 and SW4-2 must be in the default position); code EA = control program does not match drive program in outdoor unit (replace the control board). J2 sets capacity: ON = 5 ton / 3 ton (factory default), OFF = 4 ton / 2 ton. No refrigerant-type, R-410A or A2L setting is printed for this board - the unit is R-454B only and the refrigerant leak sensor is on the indoor unit (codes b3, b4, b7, b8, b9).",
+    "steps": [
+     "Disconnect power and wait 5 minutes, then verify DC voltage is less than 42 VDC at the inverter test points P-N before touching the board.",
+     "Note the DIP switches on the old board and set the new one the same: J2 (capacity), SW4 and SW5.",
+     "Move the plugs one at a time: CN10 HPS, CN14 T5, CN20 T3L, CN19 T3, CN23 T4, CN16 Pc/PT, CN73 EEVA, CN6 CCH, CN5 PEV, CN7 RV (220 V), CN12 P Q communication, fan motor plug CN396, compressor leads GRAY/W, BROWN/V, BLACK/U, power CN1 L1 / CN2 L2.",
+     "Components on the back of the outdoor control board must be evenly coated with thermal paste, and the compressor module IPM1 screws tight (P0 flow chart).",
+     "Unit must be power cycled after a DIP switch change for it to take effect.",
+     "Check with the Check button: point 0 shows the outdoor unit capacity (H5 = heat pump 5 ton, H3 = heat pump 3 ton)."
+    ],
+    "source": "york-yd5-xd5-install-btc910503201b.pdf p.4, p.34, p.43-45, p.49, p.52, p.54, p.61"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "CN19",
+    "code": "E41 / C3 / P5",
+    "name": "T3 outdoor coil temperature sensor",
+    "location": "Outdoor coil",
+    "kind": "thermistor",
+    "chart": "york-bosch-ids-t3-t4-thermistor",
+    "spec": "Table 24. For example 77°F is between 11.99 (70°F) and 9.27 (80°F) kOhm. Used for high/low temperature protection, outdoor fan control in cooling and defrost control in heating. Compressor off at 147°F or more.",
+    "errorCodes": [
+     "E41 = Temperature sensor fault (T3)",
+     "C3 = The coil sensor is unplugged in cooling (T3)",
+     "P5 = Condensor coil temperature protection in cooling (T3)"
+    ],
+    "test": "Flow chart: check the connection at CN19, check for open or short circuit, then replace the sensor; if the sensor is good replace the control board. Power off and wait 3 minutes before measuring resistance.",
+    "source": "york-yd5-xd5-install-btc910503201b.pdf p.39, p.40, p.48, p.49, p.59, p.61"
+   },
+   {
+    "plug": "CN20",
+    "code": "E42",
+    "name": "T3L liquid line (outdoor coil outlet) temperature sensor",
+    "location": "Outdoor coil outlet / liquid line",
+    "kind": "thermistor",
+    "chart": "york-bosch-ids-t3-t4-thermistor",
+    "spec": "Table 24. Point check No. 5.",
+    "errorCodes": [
+     "E42 = Temperature sensor fault (T3L)"
+    ],
+    "test": "Flow chart: check the connection at CN20, check for open or short circuit, then replace the sensor; if the sensor is good replace the control board. Power off and wait 3 minutes before measuring resistance.",
+    "source": "york-yd5-xd5-install-btc910503201b.pdf p.39, p.43, p.49, p.59, p.61"
+   },
+   {
+    "plug": "CN23",
+    "code": "E43 / AtL",
+    "name": "T4 outdoor ambient temperature sensor",
+    "location": "Outdoor air",
+    "kind": "thermistor",
+    "chart": "york-bosch-ids-t3-t4-thermistor",
+    "spec": "Table 24. Operating and defrost permission, outdoor fan control in heating. Shown on the display in standby.",
+    "errorCodes": [
+     "E43 = Temperature sensor fault (T4)",
+     "AtL = Ambient Temperature Limited (T4)"
+    ],
+    "test": "Flow chart: check the connection at CN23, check for open or short circuit, then replace the sensor; if the sensor is good replace the control board. Power off and wait 3 minutes before measuring resistance. AtL: is T4 seated correctly, is its resistance in the range of Table 24.",
+    "source": "york-yd5-xd5-install-btc910503201b.pdf p.39, p.43, p.46, p.50, p.59, p.61"
+   },
+   {
+    "plug": "CN14",
+    "code": "E44 / E7 / P4",
+    "name": "T5 compressor discharge temperature sensor",
+    "location": "Compressor discharge",
+    "kind": "thermistor",
+    "chart": "york-bosch-ids-t5-thermistor",
+    "spec": "Table 25 - a different curve from the other sensors (77°F is between 65.41 at 70°F and 50.90 at 80°F kOhm). Compressor stops at 230°F or more, restarts below 185°F. Also switches the crankcase heater (on below 53°F, off at 61°F).",
+    "errorCodes": [
+     "E44 = Temperature sensor fault (T5)",
+     "E7 = Compressor discharge sensor is unplugged (T5)",
+     "P4 = High compressor discharge temperature protection (T5)",
+     "PH = Low discharge superheat protection"
+    ],
+    "test": "Flow chart: check the connection at CN14, check for open or short circuit, then replace the sensor; if the sensor is good replace the control board. Power off and wait 3 minutes before measuring resistance. E7: is the T5 location wrong, are the T5 and Tf sensors wired correctly, is T5 in the range of Table 25.",
+    "source": "york-yd5-xd5-install-btc910503201b.pdf p.39, p.40, p.50, p.52, p.60, p.61"
+   },
+   {
+    "plug": "On the board",
+    "code": "P0",
+    "name": "Tf control board (compressor IPM) temperature",
+    "location": "On the outdoor control board",
+    "kind": "other",
+    "spec": "Not a plug-in part. Control board overheat protection. Point check No. 8.",
+    "errorCodes": [
+     "P0 = Compressor IPM temperature protection (TF)"
+    ],
+    "test": "P0 flow chart: fault in standby = replace the control board; IPM1 screws tight; radiator air duct of the control box clean; thermal paste on the back of the board.",
+    "source": "york-yd5-xd5-install-btc910503201b.pdf p.39, p.43, p.54"
+   },
+   {
+    "plug": "CN16 (Pc / PT)",
+    "code": "F4 / P11 / P21",
+    "name": "Pressure transducer (PT)",
+    "location": "Refrigerant circuit; position not described",
+    "kind": "pressure",
+    "spec": "No volts-to-pressure table is printed. Read it on the board instead: point check No. 9 = Pe evaporating pressure (cooling only), No. 10 = Pc condensing pressure (heating only), in psig. P21 flow chart: suction pressure by gauge should be within 50 psi of that reading, otherwise replace the transducer. Low pressure protection below 21.8 psig for 3 seconds in cooling. The guide also prints flow charts for F41 (CN16) and F42 (CN15).",
+    "errorCodes": [
+     "F4 = Pressure transducer fault (PT)",
+     "P11 = High pressure protection in heating (PT); the P11 flow chart is headed \"High pressure protection in cooling/heating (Pc)\"",
+     "P21 = Low pressure protection in cooling (PT)",
+     "F2 = 5 times (P21) protection in 100 minutes, system lockout"
+    ],
+    "test": "F4: is the wire connection secure (CN16); is the transducer damaged - replace it; otherwise replace the control board.",
+    "source": "york-yd5-xd5-install-btc910503201b.pdf p.39, p.40, p.43, p.53, p.56, p.61"
+   },
+   {
+    "plug": "CN10",
+    "code": "F1 / P1",
+    "name": "High pressure switch (HPS)",
+    "location": "High side; position not described",
+    "kind": "switch",
+    "spec": "Opens at 580 psig or more, closes below 435 psig.",
+    "errorCodes": [
+     "F1 = High pressure switch fault (HPS)",
+     "P1 = High pressure switch protection"
+    ],
+    "test": "F1: poor or wrong connection at CN10; did the switch fail; overcharge or non-condensable gas; otherwise replace the control board.",
+    "source": "york-yd5-xd5-install-btc910503201b.pdf p.40, p.52, p.55, p.61"
+   },
+   {
+    "plug": "CN73",
+    "code": "E81",
+    "name": "EEVA electronic expansion valve coil",
+    "location": "Outdoor unit (heating mode metering)",
+    "kind": "other",
+    "spec": "Opening shown at point check No. 17 (0-480 P). Coil resistance not printed.",
+    "errorCodes": [
+     "E81 = EEVA solenoid coil fault"
+    ],
+    "test": "Is the EEV coil wiring seated normally; replace the EEV coil and restart; if not cleared replace the outdoor unit control board.",
+    "source": "york-yd5-xd5-install-btc910503201b.pdf p.43, p.52, p.61"
+   },
+   {
+    "plug": "CN7 (RV 220V)",
+    "name": "Reversing valve coil",
+    "location": "Reversing valve",
+    "kind": "other",
+    "spec": "Energized in heating, 220 V input.",
+    "errorCodes": [],
+    "test": "On a first heat call the unit runs about 1 minute in cooling to build pressure for the valve to change.",
+    "source": "york-yd5-xd5-install-btc910503201b.pdf p.40, p.61"
+   },
+   {
+    "plug": "CN5",
+    "name": "Pressure equalizer valve (PEV)",
+    "location": "Refrigerant circuit",
+    "kind": "other",
+    "spec": "Used to balance the pressure in the system before compressor start up.",
+    "errorCodes": [],
+    "test": "No test printed.",
+    "source": "york-yd5-xd5-install-btc910503201b.pdf p.39, p.61"
+   },
+   {
+    "plug": "CN6",
+    "name": "Compressor crankcase heater (CCH)",
+    "location": "Lower half of the compressor shell",
+    "kind": "other",
+    "spec": "On when T5 is below 53°F at first power or after 3 hours off; off at T5 61°F or more.",
+    "errorCodes": [],
+    "test": "No test printed.",
+    "source": "york-yd5-xd5-install-btc910503201b.pdf p.39, p.61"
+   },
+   {
+    "plug": "CN12 (P Q, class 2)",
+    "code": "b5",
+    "name": "Indoor unit communication bus",
+    "location": "Spliced with wire nuts in the control board access panel",
+    "kind": "other",
+    "spec": "Non-polar. 16/18 AWG, 150 ft maximum. Communicating mode needs outdoor SW5-4 ON and indoor SW7-1 ON.",
+    "errorCodes": [
+     "b5 = Communication fault between indoor unit and outdoor unit"
+    ],
+    "test": "b5: wiring at CN12 on the ODU and CN30 on the IDU; DIP switches SW5-4 / SW7-1; P or Q shorted or touching sheet metal; replace IDU board, then ODU board.",
+    "source": "york-yd5-xd5-install-btc910503201b.pdf p.25, p.26, p.47, p.61"
+   }
+  ],
+  "test": "Check button (SW2): each press steps to the next point - the number shows first, the value after 1 second; back to normal after 20 seconds. 0 capacity, 1 mode (0 standby, 2 cooling, 3 heating), 2 set compressor speed Hz, 3 last fault code, 4 T3, 5 T3L, 6 T4, 7 T5, 8 Tf, 9 Pe psig, 10 Pc psig, 16 discharge superheat, 17 EEVA opening, 22 input voltage, 23 DC bus voltage (Table 23, p.43). Force button (SW1): 1 s = forced cooling/heating (charge mode), 6 s = forced defrost (p.61). LED1 green solid = main board powered; LED2 (compressor) and LED3 (fan) red: solid = running, 2 s on / 2 s off = standby, 0.2 s on / 0.2 s off = communication fault with main control chip, blink = driver fault (p.61).",
+  "notes": "Connector numbers are from the wiring diagram (Figure 97, p.61) and the flow charts. The point check list on the wiring diagram has the same numbers, 0 to 31, as Table 23 on p.43; a few lines are worded differently (No. 8 is \"Compressor IPM temp.\" on the diagram and \"Tf: control board temperature\" in the table).",
+  "gaps": [
+   "Pressure transducer volts-to-pressure table not printed",
+   "EEV and reversing valve coil resistance not printed",
+   "Board part numbers not printed",
+   "Sensor positions on the unit not described"
+  ],
+  "sources": [
+   {
+    "file": "york-yd5-xd5-install-btc910503201b.pdf",
+    "pages": "4,25,26,34,38-61",
+    "what": "sensor list, protections, fault table, status codes, point check table, board overviews, flow charts, resistance tables, wiring diagram"
+   }
+  ]
+ },
+ {
+  "id": "york-ydv-xdv-outdoor-board",
+  "title": "York YDV / XDV outdoor main control board (Bosch platform)",
+  "side": "outdoor",
+  "brand": "York",
+  "models": "YDV36E2D11, YDV60E2D11, XDV36E2D11, XDV60E2D11 (install guide BTC 910103201 B)",
+  "match": [
+   "YDV36",
+   "YDV60",
+   "XDV36",
+   "XDV60"
+  ],
+  "sizes": [
+   "all"
+  ],
+  "board": "Main control board with 3-digit display, Check and Force buttons, J2 (select capacity), SW4 and SW5 DIP switches, high and low pressure transducer ports, Th sensor port, ECM motor port (board overviews p.46-47).",
+  "replacement": [
+   {
+    "board": "York YDV / XDV outdoor main control board (Bosch platform) - replacement",
+    "kit": "",
+    "replaces": "The factory outdoor control board. The guide prints no part number.",
+    "differences": "The guide gives no board-replacement procedure and no part number. What it prints that matters after a swap: code Eb = dipswitch setting does not match machine type (SW4-1 and SW4-2 must be in the default position); code EA = control program does not match drive program in outdoor unit (replace the control board). J2 selects capacity: ON = 5 ton / 3 ton (factory default), OFF = 4 ton / 2 ton. No refrigerant-type, R-410A or A2L setting is printed for this board - the unit is R-454B only and the refrigerant leak sensor is on the indoor unit (codes b3, b4, b7, b8, b9).",
+    "steps": [
+     "Disconnect power and wait 5 minutes, then verify DC voltage is less than 42 VDC at the inverter test points P-N before touching the board.",
+     "Note the DIP switches on the old board and set the new one the same: J2 (capacity), SW4 and SW5.",
+     "Move the plugs one at a time. Connectors named in the flow charts: CN19 T3, CN20 T3L, CN23 T4, CN14 T5, CN21 Th, CN10 high pressure switch, CN16 high pressure transducer, CN15 low pressure transducer.",
+     "Components on the back of the outdoor control board must be evenly coated with thermal paste, and the compressor module IPM1 screws tight (P0 flow chart).",
+     "Unit must be power cycled after a DIP switch change for it to take effect.",
+     "Check with the Check button: point 0 shows the outdoor unit capacity (H5 = heat pump 5 ton, H3 = heat pump 3 ton)."
+    ],
+    "source": "york-ydv-xdv-install-btc910103201b.pdf p.4, p.36, p.46-47, p.51, p.55, p.56"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "CN19",
+    "code": "E41 / C3 / P5",
+    "name": "T3 outdoor coil temperature sensor",
+    "location": "Outdoor coil",
+    "kind": "thermistor",
+    "chart": "york-bosch-ids-t3-t4-thermistor",
+    "spec": "Table 23 in this guide (the flow charts print it as Table 24). Compressor off at 151°F or more, back on below 133°F.",
+    "errorCodes": [
+     "E41 = Temperature sensor fault (T3)",
+     "C3 = The coil sensor is unplugged in cooling (T3)",
+     "P5 = Condenser coil temperature protection in cooling (T3)"
+    ],
+    "test": "Flow chart: check the connection at CN19, check for open or short circuit, then replace the sensor; if the sensor is good replace the control board. Power off and wait 3 minutes before measuring resistance.",
+    "source": "york-ydv-xdv-install-btc910103201b.pdf p.41, p.42, p.50, p.51, p.61"
+   },
+   {
+    "plug": "CN20",
+    "code": "E42",
+    "name": "T3L liquid line temperature sensor",
+    "location": "Liquid line",
+    "kind": "thermistor",
+    "chart": "york-bosch-ids-t3-t4-thermistor",
+    "spec": "Table 23.",
+    "errorCodes": [
+     "E42 = Temperature sensor fault (T3L)"
+    ],
+    "test": "Flow chart: check the connection at CN20, check for open or short circuit, then replace the sensor; if the sensor is good replace the control board. Power off and wait 3 minutes before measuring resistance.",
+    "source": "york-ydv-xdv-install-btc910103201b.pdf p.41, p.51, p.61"
+   },
+   {
+    "plug": "CN23",
+    "code": "E43 / AtL",
+    "name": "T4 outdoor ambient temperature sensor",
+    "location": "Outdoor air",
+    "kind": "thermistor",
+    "chart": "york-bosch-ids-t3-t4-thermistor",
+    "spec": "Table 23. Cooling allowed 15 to below 125°F, heating -4 to below 86°F.",
+    "errorCodes": [
+     "E43 = Temperature sensor fault (T4)",
+     "AtL = Ambient Temperature Limited (T4)"
+    ],
+    "test": "Flow chart: check the connection at CN23, check for open or short circuit, then replace the sensor; if the sensor is good replace the control board. Power off and wait 3 minutes before measuring resistance.",
+    "source": "york-ydv-xdv-install-btc910103201b.pdf p.41, p.42, p.48, p.52, p.61"
+   },
+   {
+    "plug": "CN14",
+    "code": "E44 / E7 / P4",
+    "name": "T5 compressor discharge temperature sensor",
+    "location": "Compressor discharge",
+    "kind": "thermistor",
+    "chart": "york-bosch-ids-t5-thermistor",
+    "spec": "Table 24 in this guide (the flow charts print it as Table 25). Stops at 230°F or more, restarts below 185°F.",
+    "errorCodes": [
+     "E44 = Temperature sensor fault (T5)",
+     "E7 = Compressor discharge sensor is unplugged (T5)",
+     "P4 = High compressor discharge temperature protection (T5)"
+    ],
+    "test": "Flow chart: check the connection at CN14, check for open or short circuit, then replace the sensor; if the sensor is good replace the control board. Power off and wait 3 minutes before measuring resistance.",
+    "source": "york-ydv-xdv-install-btc910103201b.pdf p.41, p.42, p.52, p.54, p.62"
+   },
+   {
+    "plug": "CN21",
+    "code": "E45",
+    "name": "Th compressor return (suction) temperature sensor",
+    "location": "Compressor suction",
+    "kind": "thermistor",
+    "chart": "york-bosch-ids-t3-t4-thermistor",
+    "spec": "Table 23 (\"for T3, T4, Th, T3L\").",
+    "errorCodes": [
+     "E45 = Temperature sensor fault (Th)"
+    ],
+    "test": "Flow chart: check the connection at CN21, check for open or short circuit, then replace the sensor; if the sensor is good replace the control board. Power off and wait 3 minutes before measuring resistance.",
+    "source": "york-ydv-xdv-install-btc910103201b.pdf p.41, p.53, p.61"
+   },
+   {
+    "plug": "CN16",
+    "code": "F41 / P11",
+    "name": "Pc condensing (high) pressure transducer",
+    "location": "High side; position not described",
+    "kind": "pressure",
+    "spec": "No volts-to-pressure table is printed; read Pc on the Check button point check list (p.45).",
+    "errorCodes": [
+     "F41 = High pressure sensor fault",
+     "P11 = High pressure protection in cooling/heating (Pc)"
+    ],
+    "test": "F41 flow chart: connection at CN16 and obvious damage; did the transducer fail; did the control board fail.",
+    "source": "york-ydv-xdv-install-btc910103201b.pdf p.41, p.45, p.55, p.57"
+   },
+   {
+    "plug": "CN15",
+    "code": "F42 / P21",
+    "name": "Pe evaporating (low) pressure transducer",
+    "location": "Low side; position not described",
+    "kind": "pressure",
+    "spec": "No volts-to-pressure table is printed. Low pressure protection below 21.8 psi for 3 seconds in cooling, below 10.2 psi for 3 seconds in heating. P21 flow chart: gauge suction pressure within 50 psi of the point check reading, otherwise replace the transducer.",
+    "errorCodes": [
+     "F42 = Low pressure sensor fault",
+     "P21 = Low pressure protection in cooling/heating (Pe)",
+     "F2 = 5 times (P21) protection in 100 minutes, system lockout"
+    ],
+    "test": "F42 flow chart: connection at CN15 and obvious damage; did the transducer fail; did the control board fail.",
+    "source": "york-ydv-xdv-install-btc910103201b.pdf p.41, p.42, p.55, p.57"
+   },
+   {
+    "plug": "CN10",
+    "code": "F1 / P1",
+    "name": "High pressure switch (HPS)",
+    "location": "High side",
+    "kind": "switch",
+    "spec": "Opens at 580 psi or more, closes below 435 psi.",
+    "errorCodes": [
+     "F1 = High pressure switch fault (HPS)",
+     "P1 = High pressure switch protection"
+    ],
+    "test": "F1: poor or wrong connection at CN10; did the switch fail; overcharge or non-condensable gas; otherwise replace the control board.",
+    "source": "york-ydv-xdv-install-btc910103201b.pdf p.42, p.55, p.56"
+   }
+  ],
+  "test": "Check button steps through the point check list (p.45); Force button 6 seconds = forced defrost (p.42). The GoTemp Pro app can also be used for troubleshooting (p.41).",
+  "notes": "Connector numbers are those printed in the troubleshooting flow charts and on the wiring diagram (Figure 97, p.63), which agree. The wiring diagram also shows CN73 EEVA, CN6 crankcase heater (CCH), CN5 pressure equalizing valve (PEV), CN7 reversing valve (RV 220V), CN12 P Q communication, CN396 fan motor and CN8 N / P.",
+  "gaps": [
+   "Pressure transducer volts-to-pressure tables not printed",
+   "Board part numbers not printed"
+  ],
+  "sources": [
+   {
+    "file": "york-ydv-xdv-install-btc910103201b.pdf",
+    "pages": "4,36,41-62",
+    "what": "sensor list, protections, fault table, status codes, point check table, flow charts, resistance tables"
+   }
+  ]
+ },
+ {
+  "id": "york-ydc-outdoor-board",
+  "title": "York YDC cold climate outdoor main control board (Bosch platform)",
+  "side": "outdoor",
+  "brand": "York",
+  "models": "YDC36E2D11, YDC60E2D11 (install guide BTC 910803201 B)",
+  "match": [
+   "YDC36",
+   "YDC60"
+  ],
+  "sizes": [
+   "all"
+  ],
+  "board": "Main control board (p.49): baseplate heater port, solenoid valve ports SV8 and SV5, J2 capacity DIP, current sensor port, Hyper-Link (M1 M2) and P Q communication ports, SW4 / SW5 DIP switches, high and low pressure transducer ports, T7, T6A T6B and Th sensor ports, EEVA and EEVC ports, 3-digit display, Check and Force buttons.",
+  "replacement": [
+   {
+    "board": "York YDC cold climate outdoor main control board (Bosch platform) - replacement",
+    "kit": "",
+    "replaces": "The factory outdoor control board. The guide prints no part number.",
+    "differences": "The guide gives no board-replacement procedure and no part number. What it prints that matters after a swap: code Eb = dipswitch setting does not match machine type (SW4-1 and SW4-2 must be in the default position); code EA = control program does not match drive program in outdoor unit (replace the control board). J2 sets capacity: ON = 3 ton / 5 ton (factory default), OFF = 4 ton. SW5-4 OFF = communicating mode on this unit. No refrigerant-type, R-410A or A2L setting is printed for this board - the unit is R-454B only and the refrigerant leak sensor is on the indoor unit (codes b3, b4, b7, b8, b9).",
+    "steps": [
+     "Disconnect power and wait 5 minutes, then verify DC voltage is less than 42 VDC at the inverter test points P-N before touching the board.",
+     "Note the DIP switches on the old board and set the new one the same: J2 (capacity), SW4 and SW5.",
+     "Move the plugs one at a time. Connectors named in the flow charts and wiring diagram: CN4 T3, CN47 T3L, CN5 T4, CN7 T5, CN8 Th, CN25 T6A / T6B, CN46 T7, CN18 high pressure switch, CN3 Pc, CN14 Pe, CN44 EEVC, CN42 base pan heater, CN15 current sensor, CN10 Hyper-Link M1 M2, CN11 P Q. Only one of CN10 and CN11 can be connected to the indoor unit.",
+     "Components on the back of the outdoor control board must be evenly coated with thermal paste, and the compressor module IPM1 screws tight (P0 flow chart).",
+     "Unit must be power cycled after a DIP switch change for it to take effect.",
+     "Check with the Check button: point 0 shows the outdoor unit capacity (H5 = heat pump 5 ton, H3 = heat pump 3 ton)."
+    ],
+    "source": "york-ydc-install-btc910803201b.pdf p.4, p.39, p.44-45, p.49, p.53, p.59, p.61, p.68"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "CN4",
+    "code": "E41 / C3 / P5",
+    "name": "T3 outdoor coil temperature sensor",
+    "location": "Outdoor coil",
+    "kind": "thermistor",
+    "chart": "york-bosch-ids-t3-t4-thermistor",
+    "spec": "Table 24. Compressor off above 150.8°F, back on below 133°F.",
+    "errorCodes": [
+     "E41 = Temperature sensor fault (T3)",
+     "C3 = The coil sensor is unplugged in cooling (T3)",
+     "P5 = Condenser coil temperature protection in cooling (T3)"
+    ],
+    "test": "Flow chart: check the connection at CN4, check for open or short circuit, then replace the sensor; if the sensor is good replace the control board. Power off and wait 3 minutes before measuring resistance.",
+    "source": "york-ydc-install-btc910803201b.pdf p.44, p.45, p.53, p.66"
+   },
+   {
+    "plug": "CN47",
+    "code": "E42",
+    "name": "T3L liquid line temperature sensor",
+    "location": "Liquid line",
+    "kind": "thermistor",
+    "chart": "york-bosch-ids-t3-t4-thermistor",
+    "spec": "Table 24.",
+    "errorCodes": [
+     "E42 = Temperature sensor fault (T3L)"
+    ],
+    "test": "Flow chart: check the connection at CN47, check for open or short circuit, then replace the sensor; if the sensor is good replace the control board. Power off and wait 3 minutes before measuring resistance.",
+    "source": "york-ydc-install-btc910803201b.pdf p.44, p.54, p.66"
+   },
+   {
+    "plug": "CN5",
+    "code": "E43 / AtL",
+    "name": "T4 outdoor ambient temperature sensor",
+    "location": "Outdoor air",
+    "kind": "thermistor",
+    "chart": "york-bosch-ids-t3-t4-thermistor",
+    "spec": "Table 24. Cooling allowed 14 to below 125°F in the install guide (the product specification prints 15 to 125, BTC 910808201 A p.6), heating -13 to below 86°F. Switches the base pan heater (on below 36°F in heating).",
+    "errorCodes": [
+     "E43 = Temperature sensor fault (T4)",
+     "AtL = Ambient Temperature Limited (T4)"
+    ],
+    "test": "Flow chart: check the connection at CN5, check for open or short circuit, then replace the sensor; if the sensor is good replace the control board. Power off and wait 3 minutes before measuring resistance.",
+    "source": "york-ydc-install-btc910803201b.pdf p.44, p.45, p.50, p.54, p.66"
+   },
+   {
+    "plug": "CN7",
+    "code": "E44 / E7 / P4",
+    "name": "T5 compressor discharge temperature sensor",
+    "location": "Compressor discharge",
+    "kind": "thermistor",
+    "chart": "york-bosch-ids-t5-thermistor",
+    "spec": "Table 25. Stops at 230°F or more, restarts below 189°F.",
+    "errorCodes": [
+     "E44 = Temperature sensor fault (T5)",
+     "E7 = Compressor discharge sensor is unplugged (T5)",
+     "P4 = High compressor discharge temperature protection (T5)"
+    ],
+    "test": "Flow chart: check the connection at CN7, check for open or short circuit, then replace the sensor; if the sensor is good replace the control board. Power off and wait 3 minutes before measuring resistance.",
+    "source": "york-ydc-install-btc910803201b.pdf p.44, p.45, p.55, p.59, p.67"
+   },
+   {
+    "plug": "CN8",
+    "code": "E45",
+    "name": "Th compressor return (suction) temperature sensor",
+    "location": "Compressor suction",
+    "kind": "thermistor",
+    "chart": "york-bosch-ids-t3-t4-thermistor",
+    "spec": "Table 24.",
+    "errorCodes": [
+     "E45 = Temperature sensor fault (Th)"
+    ],
+    "test": "Flow chart: check the connection at CN8, check for open or short circuit, then replace the sensor; if the sensor is good replace the control board. Power off and wait 3 minutes before measuring resistance.",
+    "source": "york-ydc-install-btc910803201b.pdf p.44, p.55, p.66"
+   },
+   {
+    "plug": "CN25",
+    "code": "E46",
+    "name": "T6A plate heat exchanger inlet (injection inlet) temperature sensor",
+    "location": "Inlet of the plate heat exchanger",
+    "kind": "thermistor",
+    "chart": "york-bosch-ids-t3-t4-thermistor",
+    "spec": "Table 24. Used for EEVC control in heating.",
+    "errorCodes": [
+     "E46 = Temperature sensor fault (T6A)"
+    ],
+    "test": "Flow chart: is the sensor correctly plugged into the control board at CN25; open or short circuit in the wires; does the resistance match the table - if it does, replace the outdoor unit control board.",
+    "source": "york-ydc-install-btc910803201b.pdf p.44, p.56, p.66"
+   },
+   {
+    "plug": "CN25",
+    "code": "E47",
+    "name": "T6B plate heat exchanger outlet (injection outlet) temperature sensor",
+    "location": "Outlet of the plate heat exchanger",
+    "kind": "thermistor",
+    "chart": "york-bosch-ids-t3-t4-thermistor",
+    "spec": "Table 24. Used for EEVC control in heating.",
+    "errorCodes": [
+     "E47 = Temperature sensor fault (T6B)"
+    ],
+    "test": "Flow chart: plugged in at CN25; open or short circuit; resistance against the table; then the outdoor unit control board.",
+    "source": "york-ydc-install-btc910803201b.pdf p.44, p.56, p.66"
+   },
+   {
+    "plug": "CN46",
+    "code": "E48",
+    "name": "T7 liquid service valve (outdoor outlet) temperature sensor",
+    "location": "Liquid service valve",
+    "kind": "thermistor",
+    "chart": "york-bosch-ids-t3-t4-thermistor",
+    "spec": "Table 24. Used for subcooling measurement.",
+    "errorCodes": [
+     "E48 = Temperature sensor fault (T7)"
+    ],
+    "test": "Flow chart: plugged in at CN46; open or short circuit; resistance against the table; then the outdoor unit control board.",
+    "source": "york-ydc-install-btc910803201b.pdf p.44, p.57, p.66"
+   },
+   {
+    "plug": "CN3",
+    "code": "F41 / P11",
+    "name": "Pc condensing (high) pressure transducer",
+    "location": "High side",
+    "kind": "pressure",
+    "spec": "No volts-to-pressure table is printed; read Pc on the Check button list (p.48).",
+    "errorCodes": [
+     "F41 = High pressure sensor fault",
+     "P11 = High pressure protection in cooling/heating (Pc)"
+    ],
+    "test": "F41 flow chart: connection at CN3 and obvious damage; did the transducer fail; did the control board fail.",
+    "source": "york-ydc-install-btc910803201b.pdf p.44, p.48, p.60, p.62"
+   },
+   {
+    "plug": "CN14",
+    "code": "F42 / P21",
+    "name": "Pe evaporating (low) pressure transducer",
+    "location": "Low side",
+    "kind": "pressure",
+    "spec": "No volts-to-pressure table is printed. Low pressure protection below 29 psi for 3 seconds in cooling, below 10.2 psi for 3 seconds in heating. P21 flow chart: gauge suction pressure within 50 PSI of checkpoint No.15 (cooling) or No.16 (heating).",
+    "errorCodes": [
+     "F42 = Low pressure sensor fault",
+     "P21 = Low pressure protection in cooling/heating (Pe)",
+     "F2 = 5 times (P2) protection in 100 minutes, system lockout"
+    ],
+    "test": "F42 flow chart: connection at CN14 and obvious damage; did the transducer fail; did the control board fail.",
+    "source": "york-ydc-install-btc910803201b.pdf p.44, p.45, p.60, p.62"
+   },
+   {
+    "plug": "CN18",
+    "code": "F1 / P1",
+    "name": "High pressure switch (HPS)",
+    "location": "High side",
+    "kind": "switch",
+    "spec": "Opens at 580 psi or more, closes below 435 psi.",
+    "errorCodes": [
+     "F1 = High pressure switch fault (HPS)",
+     "P1 = High pressure switch protection (HPS)"
+    ],
+    "test": "F1: poor or wrong connection at CN18; did the switch fail; overcharge or non-condensable gas; otherwise replace the control board.",
+    "source": "york-ydc-install-btc910803201b.pdf p.45, p.60, p.61"
+   },
+   {
+    "plug": "CN42",
+    "code": "E49",
+    "name": "Base pan heater",
+    "location": "Base pan",
+    "kind": "other",
+    "spec": "Resistance 290-325 ohm. Line voltage (187-253 V) at CN42 when outdoor temperature is below 35°F. As printed: the E49 flow chart says to confirm the outdoor temperature at check point #6, but in this guide's check point table (Table 23, p.48) No. 6 is T3 outdoor coil temperature and No. 8 is T4 outdoor ambient temperature.",
+    "errorCodes": [
+     "E49 = Basepan heater fault"
+    ],
+    "test": "Plugged in at CN42; unplug and measure 290-325 ohm, else replace the heater; replace the current sensor at CN15; line voltage 187-253 V at L1 / L2; voltage at CN42 below 35°F, else replace the outdoor control board.",
+    "source": "york-ydc-install-btc910803201b.pdf p.45, p.57"
+   },
+   {
+    "plug": "CN15",
+    "code": "H14 / E49",
+    "name": "Outdoor unit current sensor (CS)",
+    "location": "On the power wiring (ferrite core / CS on the wiring diagram)",
+    "kind": "other",
+    "spec": "Measures total outdoor unit power consumption.",
+    "errorCodes": [
+     "H14 = Power consumption sensor fault in outdoor unit",
+     "H04 = Chip of power consumption sensor communication fault in outdoor unit"
+    ],
+    "test": "No flow chart is printed for H14. H04: replace the outdoor control board and restart the system.",
+    "source": "york-ydc-install-btc910803201b.pdf p.44, p.46, p.57, p.60, p.68"
+   },
+   {
+    "plug": "CN44",
+    "code": "E82",
+    "name": "EEVC electronic expansion valve coil (vapor injection)",
+    "location": "Plate heat exchanger circuit",
+    "kind": "other",
+    "spec": "Coil resistance not printed.",
+    "errorCodes": [
+     "E82 = EEVC solenoid coil fault",
+     "E81 = EEVA solenoid coil fault (the other valve)"
+    ],
+    "test": "Is the EEVC coil correctly wired and attached to CN44; replace the coil; if not cleared replace the outdoor control board.",
+    "source": "york-ydc-install-btc910803201b.pdf p.59"
+   },
+   {
+    "plug": "CN10 (M1 M2) or CN11 (P Q)",
+    "code": "b5 / Pb1",
+    "name": "Indoor unit communication (Hyper-Link or P Q)",
+    "location": "Harness from the accessory bag, spliced to field wires",
+    "kind": "other",
+    "spec": "Hyper-Link 16/18 AWG 300 ft maximum; P Q 150 ft maximum. Never cross-connect the two.",
+    "errorCodes": [
+     "b5 = Communication fault between indoor unit and outdoor unit",
+     "Pb1 = Hyper-Link (M1 M2) over current protection"
+    ],
+    "test": "b5: wiring at CN10 on the ODU and CN26 on the IDU, DIP switches SW5-4 / SW7-1, shorted wires, then IDU board, then ODU board. Pb1: unplug the cables from CN10 - if the fault stays, replace the outdoor unit control board.",
+    "source": "york-ydc-install-btc910803201b.pdf p.28, p.29, p.37, p.51, p.65"
+   }
+  ],
+  "test": "Check button steps through the point check list (Table 23, p.48). The E49 flow chart sends you to check point 6 for the outdoor temperature, but in Table 23 No. 6 is T3 outdoor coil temperature and No. 8 is T4 outdoor ambient temperature. Force button: short press = force mode, 1 second again to exit, 6 seconds = forced defrost (p.42, p.45). In force cooling the display can show o31 to o36 refrigerant amount indications (wiring diagram, p.68).",
+  "notes": "Connector numbers are those printed in the flow charts and on the wiring diagram (Figure 114, p.68).",
+  "gaps": [
+   "Pressure transducer volts-to-pressure tables not printed",
+   "Coil resistances and board part numbers not printed (the EEVA plug is CN33 on the wiring diagram, p.68)",
+   "No flow chart for H14"
+  ],
+  "sources": [
+   {
+    "file": "york-ydc-install-btc910803201b.pdf",
+    "pages": "4,28,29,37,39,41-68",
+    "what": "sensor list, protections, fault table, status codes, board overview, flow charts, resistance tables, wiring diagram"
+   }
+  ]
  }
 ];
 const BRAND_SENSOR_CHARTS = [
@@ -144567,5 +145900,1004 @@ const BRAND_SENSOR_CHARTS = [
   ],
   "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.160 (Table 3-12)",
   "notes": "The -31 F row prints \"(35)\" for Celsius; -35 C is used. The ECM-unit WTS and OTS tables (Table 3-13 / 3-14, p.161) print the same four points 0 C 9,399, 25 C 2,795, 50 C 980, 100 C 178 ohms, each +/-10%. The same table is printed as Table 3-20 in the Evolution/Nexus liquid-cooled manual 0J1195 (generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.155)."
+ },
+ {
+  "id": "york-yh9-thermistor-table22",
+  "name": "York YH9 / XH9 outdoor thermistor - resistance vs temperature (install manual Table 22)",
+  "kind": "thermistor",
+  "columns": [
+   "F",
+   "kOhm"
+  ],
+  "rows": [
+   [
+    -40,
+    336
+   ],
+   [
+    -38.2,
+    314.49
+   ],
+   [
+    -36.4,
+    294.52
+   ],
+   [
+    -34.6,
+    275.97
+   ],
+   [
+    -32.8,
+    258.73
+   ],
+   [
+    -31,
+    242.7
+   ],
+   [
+    -29.2,
+    227.61
+   ],
+   [
+    -27.4,
+    213.57
+   ],
+   [
+    -25.6,
+    200.51
+   ],
+   [
+    -23.8,
+    188.34
+   ],
+   [
+    -22,
+    177
+   ],
+   [
+    -20.2,
+    166.342
+   ],
+   [
+    -18.4,
+    156.404
+   ],
+   [
+    -16.6,
+    147.134
+   ],
+   [
+    -14.8,
+    138.482
+   ],
+   [
+    -13,
+    130.402
+   ],
+   [
+    -11.2,
+    122.807
+   ],
+   [
+    -9.4,
+    115.71
+   ],
+   [
+    -7.6,
+    109.075
+   ],
+   [
+    -5.8,
+    102.868
+   ],
+   [
+    -4,
+    97.06
+   ],
+   [
+    -2.2,
+    91.588
+   ],
+   [
+    -0.4,
+    86.463
+   ],
+   [
+    1.4,
+    81.662
+   ],
+   [
+    3.2,
+    77.162
+   ],
+   [
+    5,
+    72.94
+   ],
+   [
+    6.8,
+    68.957
+   ],
+   [
+    8.6,
+    65.219
+   ],
+   [
+    10.4,
+    61.711
+   ],
+   [
+    12.2,
+    58.415
+   ],
+   [
+    14,
+    55.319
+   ],
+   [
+    15.8,
+    52.392
+   ],
+   [
+    17.6,
+    49.64
+   ],
+   [
+    19.4,
+    47.052
+   ],
+   [
+    21.2,
+    44.617
+   ],
+   [
+    23,
+    42.324
+   ],
+   [
+    24.8,
+    40.153
+   ],
+   [
+    26.6,
+    38.109
+   ],
+   [
+    28.4,
+    36.182
+   ],
+   [
+    30.2,
+    34.367
+   ],
+   [
+    32,
+    32.654
+   ],
+   [
+    33.8,
+    31.03
+   ],
+   [
+    35.6,
+    29.498
+   ],
+   [
+    37.4,
+    28.052
+   ],
+   [
+    39.2,
+    26.686
+   ],
+   [
+    41,
+    25.396
+   ],
+   [
+    42.8,
+    24.171
+   ],
+   [
+    44.6,
+    23.013
+   ],
+   [
+    46.4,
+    21.918
+   ],
+   [
+    48.2,
+    20.883
+   ],
+   [
+    50,
+    19.903
+   ],
+   [
+    51.8,
+    18.972
+   ],
+   [
+    53.6,
+    18.09
+   ],
+   [
+    55.4,
+    17.255
+   ],
+   [
+    57.2,
+    16.464
+   ],
+   [
+    59,
+    15.714
+   ],
+   [
+    60.8,
+    15
+   ],
+   [
+    62.6,
+    14.323
+   ],
+   [
+    64.4,
+    13.681
+   ],
+   [
+    66.2,
+    13.071
+   ],
+   [
+    68,
+    12.493
+   ],
+   [
+    69.8,
+    11.942
+   ],
+   [
+    71.6,
+    11.418
+   ],
+   [
+    73.4,
+    10.921
+   ],
+   [
+    75.2,
+    10.449
+   ],
+   [
+    77,
+    10
+   ],
+   [
+    78.8,
+    9.571
+   ],
+   [
+    80.6,
+    9.164
+   ],
+   [
+    82.4,
+    8.776
+   ],
+   [
+    84.2,
+    8.407
+   ],
+   [
+    86,
+    8.056
+   ],
+   [
+    87.8,
+    7.72
+   ],
+   [
+    89.6,
+    7.401
+   ],
+   [
+    91.4,
+    7.096
+   ],
+   [
+    93.2,
+    6.806
+   ],
+   [
+    95,
+    6.53
+   ],
+   [
+    96.8,
+    6.266
+   ],
+   [
+    98.6,
+    6.014
+   ],
+   [
+    100.4,
+    5.774
+   ],
+   [
+    102.2,
+    5.546
+   ],
+   [
+    104,
+    5.327
+   ],
+   [
+    105.8,
+    5.117
+   ],
+   [
+    107.6,
+    4.918
+   ],
+   [
+    109.4,
+    4.727
+   ],
+   [
+    111.2,
+    4.544
+   ],
+   [
+    113,
+    4.37
+   ],
+   [
+    114.8,
+    4.203
+   ],
+   [
+    116.6,
+    4.042
+   ],
+   [
+    118.4,
+    3.889
+   ],
+   [
+    120.2,
+    3.743
+   ],
+   [
+    122,
+    3.603
+   ],
+   [
+    123.8,
+    3.469
+   ],
+   [
+    125.6,
+    3.34
+   ],
+   [
+    127.4,
+    3.217
+   ],
+   [
+    129.2,
+    3.099
+   ],
+   [
+    131,
+    2.986
+   ],
+   [
+    132.8,
+    2.878
+   ],
+   [
+    134.6,
+    2.774
+   ],
+   [
+    136.4,
+    2.675
+   ],
+   [
+    138.2,
+    2.579
+   ],
+   [
+    140,
+    2.488
+   ],
+   [
+    141.8,
+    2.4
+   ],
+   [
+    143.6,
+    2.315
+   ],
+   [
+    145.4,
+    2.235
+   ],
+   [
+    147.2,
+    2.157
+   ],
+   [
+    149,
+    2.083
+   ],
+   [
+    150.8,
+    2.011
+   ],
+   [
+    152.6,
+    1.943
+   ],
+   [
+    154.4,
+    1.876
+   ],
+   [
+    156.2,
+    1.813
+   ],
+   [
+    158,
+    1.752
+   ],
+   [
+    159.8,
+    1.693
+   ],
+   [
+    161.6,
+    1.637
+   ],
+   [
+    163.4,
+    1.582
+   ],
+   [
+    165.2,
+    1.53
+   ],
+   [
+    167,
+    1.48
+   ],
+   [
+    168.8,
+    1.431
+   ],
+   [
+    170.6,
+    1.385
+   ],
+   [
+    172.4,
+    1.34
+   ],
+   [
+    174.2,
+    1.297
+   ],
+   [
+    176,
+    1.255
+   ],
+   [
+    177.8,
+    1.215
+   ],
+   [
+    179.6,
+    1.177
+   ],
+   [
+    181.4,
+    1.14
+   ],
+   [
+    183.2,
+    1.104
+   ],
+   [
+    185,
+    1.07
+   ],
+   [
+    186.8,
+    1.037
+   ],
+   [
+    188.6,
+    1.005
+   ],
+   [
+    190.4,
+    0.974
+   ],
+   [
+    192.2,
+    0.944
+   ],
+   [
+    194,
+    0.915
+   ],
+   [
+    195.8,
+    0.889
+   ],
+   [
+    197.6,
+    0.861
+   ],
+   [
+    199.4,
+    0.836
+   ],
+   [
+    201.2,
+    0.811
+   ],
+   [
+    203,
+    0.787
+   ],
+   [
+    204.8,
+    0.764
+   ],
+   [
+    206.6,
+    0.742
+   ],
+   [
+    208.4,
+    0.721
+   ],
+   [
+    210.2,
+    0.7
+   ],
+   [
+    212,
+    0.68
+   ],
+   [
+    213.8,
+    0.661
+   ],
+   [
+    215.6,
+    0.643
+   ],
+   [
+    217.4,
+    0.626
+   ],
+   [
+    219.2,
+    0.609
+   ],
+   [
+    221,
+    0.592
+   ],
+   [
+    222.8,
+    0.576
+   ],
+   [
+    224.6,
+    0.561
+   ],
+   [
+    226.4,
+    0.546
+   ],
+   [
+    228.2,
+    0.531
+   ],
+   [
+    230,
+    0.517
+   ],
+   [
+    231.8,
+    0.503
+   ],
+   [
+    233.6,
+    0.489
+   ],
+   [
+    235.4,
+    0.476
+   ],
+   [
+    237.2,
+    0.463
+   ],
+   [
+    239,
+    0.45
+   ],
+   [
+    240.8,
+    0.437
+   ],
+   [
+    242.6,
+    0.425
+   ],
+   [
+    244.4,
+    0.413
+   ],
+   [
+    246.2,
+    0.401
+   ],
+   [
+    248,
+    0.39
+   ],
+   [
+    249.8,
+    0.379
+   ],
+   [
+    251.6,
+    0.369
+   ],
+   [
+    253.4,
+    0.359
+   ],
+   [
+    255.2,
+    0.349
+   ],
+   [
+    257,
+    0.34
+   ],
+   [
+    258.8,
+    0.332
+   ],
+   [
+    260.6,
+    0.323
+   ],
+   [
+    262.4,
+    0.315
+   ],
+   [
+    264.2,
+    0.308
+   ],
+   [
+    266,
+    0.3
+   ],
+   [
+    267.8,
+    0.293
+   ],
+   [
+    269.6,
+    0.285
+   ],
+   [
+    271.4,
+    0.278
+   ],
+   [
+    273.2,
+    0.272
+   ],
+   [
+    275,
+    0.265
+   ],
+   [
+    276.8,
+    0.259
+   ],
+   [
+    278.6,
+    0.253
+   ],
+   [
+    280.4,
+    0.247
+   ],
+   [
+    282.2,
+    0.241
+   ],
+   [
+    284,
+    0.235
+   ],
+   [
+    285.8,
+    0.23
+   ],
+   [
+    287.6,
+    0.224
+   ],
+   [
+    289.4,
+    0.219
+   ],
+   [
+    291.2,
+    0.214
+   ],
+   [
+    293,
+    0.209
+   ]
+  ],
+  "source": "york-yh9-xh9-install-6515371-uim-b-0526.pdf p.63-64 (Table 22, 6515371-UIM-B-0526)",
+  "notes": "All 186 rows as printed, -40°C to 145°C in 1°C steps (10000 at 25°C / 77.0°F). The table heads the column \"Resistance\" with no unit; the values are entered here as ohms / 1000. The table does not name the sensors it covers, and the troubleshooting table refers to the curve as \"Table 10\" (p.57-58) although it is printed as Table 22."
+ },
+ {
+  "id": "york-bosch-ids-t3-t4-thermistor",
+  "name": "York YD5 / YDV / YDC (Bosch platform) coil, ambient, liquid-line thermistors - resistance vs temperature",
+  "kind": "thermistor",
+  "columns": [
+   "F",
+   "kOhm"
+  ],
+  "rows": [
+   [
+    -20,
+    218.11
+   ],
+   [
+    -15,
+    154.74
+   ],
+   [
+    -10,
+    129.74
+   ],
+   [
+    -5,
+    107.73
+   ],
+   [
+    0,
+    99.54
+   ],
+   [
+    10,
+    71.8
+   ],
+   [
+    20,
+    49.65
+   ],
+   [
+    30,
+    36.71
+   ],
+   [
+    40,
+    27.39
+   ],
+   [
+    50,
+    20.61
+   ],
+   [
+    60,
+    15.65
+   ],
+   [
+    70,
+    11.99
+   ],
+   [
+    80,
+    9.27
+   ],
+   [
+    90,
+    7.23
+   ],
+   [
+    100,
+    5.68
+   ],
+   [
+    110,
+    4.51
+   ],
+   [
+    120,
+    3.61
+   ],
+   [
+    130,
+    2.9
+   ],
+   [
+    140,
+    2.35
+   ],
+   [
+    150,
+    1.91
+   ],
+   [
+    160,
+    1.57
+   ],
+   [
+    170,
+    1.28
+   ],
+   [
+    180,
+    1
+   ],
+   [
+    190,
+    0.91
+   ],
+   [
+    200,
+    0.76
+   ],
+   [
+    210,
+    0.65
+   ],
+   [
+    220,
+    0.56
+   ]
+  ],
+  "source": "york-yd5-xd5-install-btc910503201b.pdf p.59 (Table 24 \"for T3, T4, T3L\", BTC 910503201 B); same numbers in BTC 910103201 B p.61 (Table 23 \"for T3, T4, Th, T3L\") and BTC 910803201 B p.66 (Table 24 \"for T3, T3L, T4, T6A, T6B, T7, T1, T2 sensors\")",
+  "notes": "All 27 rows as printed, -20°F to 220°F. Printed as-is: 0°F = 99.54 and -5°F = 107.73, 150°F = 65.67°C."
+ },
+ {
+  "id": "york-bosch-ids-t5-thermistor",
+  "name": "York YD5 / YDV / YDC (Bosch platform) compressor discharge thermistor T5 - resistance vs temperature",
+  "kind": "thermistor",
+  "columns": [
+   "F",
+   "kOhm"
+  ],
+  "rows": [
+   [
+    -20,
+    862
+   ],
+   [
+    -15,
+    725.82
+   ],
+   [
+    -10,
+    612.41
+   ],
+   [
+    -5,
+    600.13
+   ],
+   [
+    0,
+    505.55
+   ],
+   [
+    10,
+    362.74
+   ],
+   [
+    20,
+    265.4
+   ],
+   [
+    30,
+    195.6
+   ],
+   [
+    40,
+    146.7
+   ],
+   [
+    50,
+    110.71
+   ],
+   [
+    60,
+    84.47
+   ],
+   [
+    70,
+    65.41
+   ],
+   [
+    80,
+    50.9
+   ],
+   [
+    90,
+    40.15
+   ],
+   [
+    100,
+    31.81
+   ],
+   [
+    110,
+    25.51
+   ],
+   [
+    120,
+    20.53
+   ],
+   [
+    130,
+    16.71
+   ],
+   [
+    140,
+    13.64
+   ],
+   [
+    150,
+    11.21
+   ],
+   [
+    160,
+    9.31
+   ],
+   [
+    170,
+    7.75
+   ],
+   [
+    180,
+    6.5
+   ],
+   [
+    190,
+    5.47
+   ],
+   [
+    200,
+    4.65
+   ],
+   [
+    210,
+    3.95
+   ],
+   [
+    220,
+    3.38
+   ]
+  ],
+  "source": "york-yd5-xd5-install-btc910503201b.pdf p.60 (Table 25 \"for T5\", BTC 910503201 B); same numbers in BTC 910103201 B p.62 (Table 24) and BTC 910803201 B p.67 (Table 25)",
+  "notes": "All 27 rows as printed. Printed as-is: -5°F = 600.13 sits close to -10°F = 612.41."
  }
 ];

@@ -1,4 +1,4 @@
-const CACHE_NAME = "bfc-cache-v449";
+const CACHE_NAME = "bfc-cache-v450";
 // v286: library files that never change between versions (OCR engine, barcode
 // reader, PDF viewer, icons, Education PDFs) live in their own cache, kept from
 // one version to the next. A version update now downloads only the app's own
@@ -85,27 +85,27 @@ const APP_SHELL = [
 const SHELL_HASHES = {
   "./index.html": "18adf7ceccf085c2a359",
   "./style.css": "3f6aed80648576b6f6b0",
-  "./app.js": "751e225ada6d02a07ecf",
+  "./app.js": "5e934a14d36800422d81",
   "./pt-data.js": "683d0d877945d72a0b2a",
-  "./data.js": "e94b21fe931c43d5fc3e",
+  "./data.js": "cad25c6586a5b4c819e7",
   "./symptoms.js": "4ce6858d02dbe05f95dd",
-  "./unit-scenarios.js": "39112afe7eb50b61ab9c",
+  "./unit-scenarios.js": "2eb4bfee0fc309e0a7a2",
   "./followups.js": "00cb8c95c37206b41583",
   "./charging-charts.js": "daec2cb65dd460da0f69",
   "./daikin-sensors.js": "9e76c4d5d59b3b9bc604",
-  "./brand-sensors.js": "23a3ebfccd2d8fcabe65",
+  "./brand-sensors.js": "9f61173e3ef0981185db",
   "./sensors.js": "f69d869703aa04352c9f",
   "./toolbox.js": "c67328fc6c22100d95ec",
   "./thermostats.js": "f68157265c336cdbf604",
   "./generators.js": "13e9e85a4154d9bba9c0",
-  "./kohler-gens.js": "e16661411a2fbac2b479",
+  "./kohler-gens.js": "4ac18582a2f40b48ea12",
   "./weather.js": "5b9215e305c303ac986f",
-  "./maint.js": "45cfa4165378fce4de6e",
+  "./maint.js": "7087a3310831e6a4eb22",
   "./bulletins.js": "94788fdf3ce91f3eb5cd",
   "./inventory.js": "5cfc7dc549d17149b4a9",
   "./dchecker/index.html": "2487e203cbdae9ed9c1d",
   "./guides/daikin-checker-guide.html": "0d7a518082b6f948041a",
-  "./manuals-seed/seed-index.js": "84f438bb92db0744b58e",
+  "./manuals-seed/seed-index.js": "d452ecb9e23f1d26b896",
   "./manifest.json": "15eb1fe115900d4110be",
 };
 // SHELL_HASHES:END

@@ -21702,6 +21702,347 @@ const KOHLER_GENERATORS = [
   "sourceNotes": "Models/ratings TP-7193 p.12, 22, 28, 41. Sensing/delays TP-7193 p.45, 52; TP-7199 p.46, 50, 78-80. Load management TP-7193 p.17, 35-41, 46-51. RBUS wiring TP-7193 p.31-33; TP-7239 p.1-2; TP-7199 p.13, 51-57. Faults/notices TP-7199 p.59 (same table in TP-6808 Sect 4.5). Troubleshooting charts TP-7199 p.60-63, 67-69; comm flowcharts p.54-55. Component tests TP-7199 p.71-88. Maintenance/schedule TP-7199 p.34-40; TP-6808 p.37. Torques TP-7193 p.30; TP-7199 p.35, 174-175. Not available as text (skipped): G11-152 spec sheet, TT-1585/TT-1609/TT-1646/TT-1574 kit sheets, SB-773 (RXT-JFNC-0100ASE), SB-810 (RDT and RXT ATS, Service Immediately), SB-813 (RDC2 and RXT RBUS connection), wiring diagrams GM80663 etc."
  },
  {
+  "id": "kohler-ats-trx",
+  "brand": "Kohler",
+  "series": "Kohler Transfer Switch",
+  "family": "Kohler Model TRX 100-200 A ATS (RBUS combined interface/load management board; logic in generator RDC2/DC2)",
+  "controller": "RDC2 / DC2 (on generator)",
+  "kw": [],
+  "engine": "N/A (transfer switch)",
+  "fuel": "N/A (transfer switch)",
+  "years": "Documents dated 11/26: G11-154, TP-7442, TP-7443, TT-1837 (TT-1837 prints 'Original issue date: 11/26')",
+  "sort": 199,
+  "models": [
+   {
+    "k": "TRX-JFNC",
+    "desc": "TRX, combined interface/load management board for RDC2/DC2, 240 V / 60 Hz single-phase, 2-pole 3-wire solid neutral, NEMA 3R. Amps 0100 / 0150 / 0200; suffix A = standard (no load center), ASE = service entrance, CSE = service entrance with CSA certification (not 150 A). 150 A is service entrance only. Example TRX-JFNC-0200A (G11-154 p.4; TP-7442 p.14)"
+   }
+  ],
+  "specs": {
+   "controllerDetail": "Combined interface/load management board in the switch; every ATS decision is made by the RDC2 or DC2 controller on the generator set over RBUS (G11-154 p.1; TP-7442 p.12, p.33). The DC2 controller was discontinued in 2019 (TP-7442 p.12). There are no engine start terminals on the TRX; generator terminals 3 and 4 are not used (TP-7442 p.24).",
+   "firmware": "RDC2 / DC2 controller firmware version 5.04 or higher is required - check the version on the controller and update it if needed before installing (TP-7442 p.27). The service manual also lists the firmware version as an initial troubleshooting check (TP-7443 p.33).",
+   "ratings": "100 A and 200 A standard; 100, 150 and 200 A service entrance. 240 V / 60 Hz single-phase, 2-pole / 3-wire solid neutral, NEMA 3R aluminum enclosure, standard transition (G11-154 p.1, p.4). Standard models are 100% rated; service entrance models have a utility-side disconnect breaker and continuous load must not exceed 80% of the switch rating (G11-154 p.1, p.3). UL 1008, cULus (G11-154 p.1).",
+   "wcr": "Standard (suffix A): 10,000 A RMS symmetrical, 240 V max, with any breaker (0.025 seconds max). Service entrance (ASE / CSE): 22,000 A RMS symmetrical at 240 VAC (G11-154 p.3, p.4).",
+   "cableSizes": "Standard models: normal 100 A (1) #14-1/0 AWG; 200 A (1) #6-250 KCMIL (TP-7442 p.22; G11-154 p.1). The service manual heads that second row '150 - 200' (TP-7443 p.16); no 150 A standard model is in the Available Models table (G11-154 p.4). Emergency and load, from the spec sheet: 100 A (1) #14-1/0 AWG; 200 A (1) #6-250 KCMIL (G11-154 p.1). Service entrance models: 100 A normal (1) #12-2/0 AWG, emergency / load (1) #14-1/0 AWG; 150-200 A normal (1) #4-300 KCMIL, emergency / load (1) #6-250 KCMIL (TP-7442 p.22). All models: neutral (5) #12-250 KCMIL (Cu) or (5) #10-250 KCMIL (Al); ground (9) #14-6 AWG, (4) #14-1/0 AWG (TP-7442 p.22; G11-154 p.1 prints 'or' between the two). Clean cables with a wire brush and use joint compound on aluminum conductors (TP-7442 p.22).",
+   "torque": "Use the torque label on the switch first (TP-7442 p.23). Contactor / main breaker lugs - standard models: 100 A #14-10 AWG 50 in-lb (4.1 ft-lb, 5.6 Nm); 100 A #8-1/0 AWG 120 in-lb (10.3 ft-lb, 14 Nm); 150-200 A row, all sizes, 225 in-lb (18.7 ft-lb, 25.4 Nm). Service entrance models: 100 A main breaker lugs 50 in-lb (4.1 ft-lb, 5.6 Nm); 100 A contactor lugs #14-10 AWG 50 in-lb (4.1 ft-lb, 5.6 Nm) and #8-1/0 AWG 120 in-lb; 150-200 A main breaker lugs 250 in-lb (20.8 ft-lb, 28.2 Nm); 150-200 A contactor lugs 225 in-lb (18.7 ft-lb, 25.4 Nm) (TP-7442 p.23 Table 8; TP-7443 p.16 Table 6). On the SE 100 A #8-1/0 row both manuals print 120 in-lb next to 1.0 ft-lb / 1.4 Nm; the same wire on the standard model is printed 120 in-lb / 10.3 ft-lb / 14 Nm - go by the label on the switch. Neutral lugs: #14-10 60 in-lb (5 ft-lb, 6.8 Nm); #8-3 120 (10, 13.6); #2-2/0 240 (20, 27.1); 3/0-250 KCMIL 275 (23, 31.3) (TP-7442 p.23 Table 9). Ground lugs, large hole: #14-10 35 in-lb (3 ft-lb, 4 Nm); #8 40 (3.3, 4.5); #6-4 45 (3.8, 5.1); #2-1/0 50 (4.1, 5.6). Ground lugs, small hole: #14-10 15 in-lb (1.3 ft-lb, 1.7 Nm); #8-6 25 (2.1, 2.8) (TP-7442 p.23 Table 10).",
+   "serviceTorque": "Bus bar mounting screws 10.9 Nm (96 in-lb); circuit breaker mounting screws (SE) 2.9 Nm (26 in-lb); contactor mounting screws 2.9 Nm (26 in-lb) - same for 100 A and 150/200 A (TP-7443 p.79-80). Position microswitch screws 6-8 in-lb (0.7-0.9 Nm) (TP-7443 p.82).",
+   "controlWiring": "Board connector P10 (RBUS) to the generator's field-connection terminal block: A and B = 5 VDC communication lines, PWR = 12 VDC positive, COM = DC negative (TP-7442 p.24, p.29). A and B: 20 AWG shielded twisted pair, Belden 9402 (two-pair) or 8762 (single-pair); outdoor or buried, Belden 1075A (TP-7442 p.24). PWR / COM maximum run: 20 AWG 46 m (150 ft) with 1 module, 15 m (50 ft) with 2, 5 m (17 ft) with 3, not allowed with 4; 14 AWG 137 m (450 ft) for 1-2 modules, 107 m (350 ft) for 3-4; 12 AWG 137 m (450 ft) for 1-4 modules. 12 / 14 AWG is for PWR and COM only (TP-7442 p.24 Table 14; TP-7443 p.38). A module is a TRX, a PIM or a load management device; the combined board counts as two RBUS devices (TP-7443 p.38, p.39). The cable table has a 4-module column, but the text above it speaks of 1, 2 or 3 modules per cable run (TP-7443 p.38) and the communication flowchart says to verify that no more than three (3) RBUS modules are connected (TP-7443 p.41). Shield: ground one end at the generator set, join the shields through, leave the end open at the last device (TP-7442 p.24; TP-7443 p.39). RBUS power 0.5 A at 12 VDC (TP-7443 p.16). Wiring diagram GM125450 shows P10 pin 1 A- green, 2 B+ blue, 3 PWR red, 4 COM black (TP-7443 p.75). Reversed connections do not damage anything but the switch and accessories will not operate (TP-7443 p.38). Run low-voltage wiring in its own conduit (TP-7442 p.21).",
+   "leds": "The interface board carries LEDs for power, source availability, load control relay operation and communication. The board drawing labels LED2 emergency, LED3 lcm, LED4 communication, LED5 power (TP-7443 p.53 Figure 26). The communication flowchart uses a 'Power LED' and an 'Online LED': both should be steady ON; an Online LED blinking faster than once a second points to the A and B connections, blinking slower than that says to verify only one ATS is connected (TP-7443 p.40). Power LED not lit: PWR to COM should be between 10 and 16 VDC (TP-7443 p.41). LED colors are not printed, and the board drawing does not label an LED1 or say which LED is the normal-source one. Source-available and position LEDs are also on the RDC2 controller on the generator (TP-7443 p.57).",
+   "loadManagement": "Combined board runs up to six loads: four pilot relay outputs (Loads A-D on TB2) and two HVAC relays (HVAC A, HVAC B on TB3) (TP-7442 p.17, p.29). Relay contacts 125 VAC 10 A general purpose / 120 VAC 125 VA pilot duty; the four load relay outputs together cannot exceed 10 A (TP-7442 p.26, p.29). 120 VAC for the relays lands on TB2 AC1 and N and must come from a generator-backed circuit that is not itself shed (TP-7442 p.29). HVAC: splice the cooling wire (Y) in series through the TB3 relay; HVAC relays have a 5-minute start delay (TP-7442 p.27, p.29). Priority 1 adds first and sheds last, priority 6 adds last and sheds first; priorities are hard-wired at installation (TP-7442 p.27; G11-154 p.2). P11 jumper: pins 2-3 = load management on (factory position), pins 1-2 = load management off (TP-7443 p.53; TP-7442 p.29). TP-7442 p.25-26 (section 2.6.2, Table 15) also describes P11 as a load control contact (P11-1 LC1, P11-2 LC2); the time delay tables say the load control contact is on the standard interface board only (TP-7442 p.37; TP-7443 p.20), and the TRX ships with the combined board (TP-7442 p.16). Only one load management option can be used with the generator (TP-7442 p.26). Kohler's documents disagree on adding a second device: TP-7442 p.16 says not to install a load shed kit or a load control module (LCM) on a system that has the combined board, and TP-7443 p.20 and p.49 say not to install the load shed kit on a switch with the combined board; TP-7442 p.25-26 says to disable load management on the combined board if a load shed kit is connected, and TP-7443 p.48 gives the LCM procedure - move P11 to 1-2 and land the CT, power relays and HVAC wires on the LCM, not on the combined board. Single-phase generator sets with the RDC2 or DC2 controller only (TP-7442 p.26; p.16 of the same manual words it 'RDC2 controller only'). Defaults: Generator Maximum Percent Capacity 70%, Generator Overloaded Percent 85%; keep the overload setting at least 10% above the maximum capacity setting; both are changed with SiteTech (TP-7442 p.34-36). The Genset Power Rating in the controller is factory-set to the natural gas rating - after an LP conversion confirm fuel type and rating or loads shed at the wrong kW (TP-7442 p.35).",
+   "powerRelay": "Kohler power relay module GM92001-KP1-QS: 50 A, up to four modules (TP-7442 p.17). Spec sheet: 50 amp DPST relay in a NEMA 3R enclosure, 172 x 233 x 92 mm (6.8 x 9.2 x 3.6 in.), spec sheet G6-143 (G11-154 p.4); install sheet TT-1646 (TP-7442 p.13). Customer-supplied relays: 50 A @ 240 VAC, DPST-NC or DPDT, 120 VAC coil, load on the normally closed contacts (TP-7442 p.17, p.26-27). Two 120 VAC loads (shed together) or one 240 VAC load per relay (TP-7442 p.26).",
+   "currentTransformer": "A CT is required for load management. Kohler's documents disagree on whether it comes with the switch: the spec sheet lists all three CTs as 'Sold Separately' and the installation manual calls it 'an optional current transformer' (G11-154 p.2; TP-7442 p.27), but the same manual also says the CT is 'provided with the combined interface/load management board' (TP-7442 p.33) - check what shipped with the switch. Standard CT GM83929: 400 A primary, 3 VAC secondary, 16 ohm internal burden resistor, OD 63.5 mm (2.50 in.), ID 28.7 mm (1.13 in.). Larger-diameter CT GM17250, kit GM17250-KP1-QS: 400 A, OD 111.8 mm (4.40 in.), ID 57.2 mm (2.25 in.). 500 A CT GM60264, kit GM17250-KP2-QS, for the 60RCL: OD 171.5 mm (6.75 in.), ID 108.0 mm (4.25 in.) (TP-7442 p.27; G11-154 p.2). With all power sources disconnected, fit it on the emergency source leads inside the ATS; the two emergency leads must pass through the CT from opposite sides; confirm the dot or H1 mark on the CT is on the correct side as shown in Figure 9 of the manual; CT leads go to TB1 (TP-7442 p.28).",
+   "surgeKit": "Surge protector kit GM123207-KP1-QS, instruction sheet TT-1837 (11/26), for 100-200 A switches: surge protector GM123382, mounting bracket GM125262, harness GM126294, DIN rail GM21339, four screws X-67-133 (TT-1837 p.1, p.5). All power off first - the utility may have to pull the service (TT-1837 p.1, p.3). DIN rail to bracket: two screws at 1.4 Nm (12 in-lb). On a TRX the bracket goes on the contactor mounting plate (TT-1837 p.3). Harness: E10 to LL2 and E9 to LL1 at the contactor; E7 to the ground terminal and E8 to the neutral terminal as shown in Figure 3 (TT-1837 p.4). The sheet prints 'Do not connect the surge protective devices to ground' directly under that step; both are printed, so work from Figure 3 on the sheet (TT-1837 p.4).",
+   "sourceSensing": "Voltage sensing accuracy +/-5%; undervoltage pickup 90% of nominal; undervoltage dropout 90% of pickup (TP-7442 p.33; TP-7443 p.19). On 240 V: pickup 216 VAC, dropout 194 VAC, normal and emergency (TP-7443 p.57, p.58). Emergency (Source 2) pickup 85-100%, dropout 75-98% and debounce 0.1-9.9 s are adjustable in SiteTech; normal (Source 1) pickup / dropout are not adjustable (TP-7443 p.37). Frequency sensing accurate to +/-2% (TP-7443 p.59). Undervoltage dropout time 0.5 s (TP-7443 p.59).",
+   "timeDelays": "Engine start 3 s (1-10 s); transfer normal to emergency 3 s (1-10 s); retransfer emergency to normal 2 min (1 s - 10 min) (TP-7443 p.59 Table 31; TP-7442 p.37). Changed by a dealer with SiteTech, or in the RDC2 ATS Configuration menu (TP-7443 p.34).",
+   "exercise": "The exerciser is set at the RDC2 / DC2 controller on the generator set (TP-7442 p.31; TP-7443 p.45). SiteTech defaults: weekly, 20 min (10-30 min), mode Unloaded Cycle, exercise warning enabled (TP-7443 p.37). Use a loaded exercise to test the switch (TP-7442 p.31).",
+   "auxContacts": "Position-indicating contacts: one closed on normal, one closed on emergency, 15 A @ 250 VAC, 1/4 in. fast-on terminals (TP-7442 p.30; G11-154 p.4). Auxiliary circuit breaker: single-pole 15 A is standard on service entrance models (generator battery charger); 15 A or 20 A QO breakers optional (TP-7442 p.30; G11-154 p.4).",
+   "contactResistance": "Yearly millivolt drop test: maximum contact resistance 0.250 milliohm (100-200 A). Balanced load of at least 10% of the switch rating; R (milliohm) = millivolts / amps. If 2 times the table value or more: power off, check connections and lug torque, retest; still high = replace the contactor (TP-7443 p.30). This is a live test - hazardous voltage: trained and qualified personnel only, adequately rated test equipment with electrically insulated probes, and be prepared for the system to operate automatically (TP-7443 p.30).",
+   "insulation": "Every three years: open all source and load breakers, unplug the switch harness from the interface board, hi-pot (500 VAC max, 1 second max) or megger phase-to-phase and phase-to-neutral (phase-to-ground if neutral and ground are isolated). Must exceed 1.24 megohms (TP-7443 p.30).",
+   "coil": "Solenoid coils are energized about 0.5 second per transfer; the rectifier is sealed in the coil assembly. Checking coil voltage needs a fast (250 microsecond) digital meter with max recording. The controller tries to transfer 3 times before the fail-to-transfer fault (TP-7443 p.47, p.61).",
+   "environment": "Operating -20 to 70 C (-4 to 158 F); storage -40 to 85 C (-40 to 185 F); 5-95% RH noncondensing; 0-3050 m (10,000 ft) without derating (TP-7442 p.19; TP-7443 p.16).",
+   "dimensions": "All models 723 x 343 x 170 mm (28.5 x 13.5 x 7.0 in.) H x W x D, depth without the padlock hasp. Weights on the spec sheet: 100 A standard 11.1 kg (24.5 lb); 100 A ASE 12.2 kg (27 lb); 100 A CSE 12.4 kg (27.5 lb); 150 A ASE 12.7 kg (28 lb); 200 A standard 11.7 kg (25.75 lb); 200 A ASE 12.7 kg (28 lb); 200 A CSE 13.8 kg (30.5 lb) (G11-154 p.3). The installation manual prints 200 A ASE as 12.7 kg / 26 lb and 200 A CSE as 13.6 kg / 30.5 lb (TP-7442 p.19). Dimension drawings ADV-10144 (standard), ADV-10143 (service entrance)."
+  },
+  "maintenance": [
+   {
+    "interval": "Weekly",
+    "task": "Look over the outside: vibration, leakage, noise, heat, dirt. Vacuum or dry-wipe only - no compressed air. Tighten loose external hardware (TP-7443 p.27)."
+   },
+   {
+    "interval": "Monthly",
+    "task": "Test the automatic control system with a loaded exercise or simulated outage; confirm the transfer and retransfer sequence (TP-7443 p.29, p.31; TP-7442 p.31)."
+   },
+   {
+    "interval": "Monthly",
+    "task": "Inspect outside and inside for vibration, heat, contamination, discoloration, melted plastic, burning odor; check external and internal hardware (TP-7443 p.31)."
+   },
+   {
+    "interval": "Yearly (dealer)",
+    "task": "Check for overheating or loose connections; clean the external operating mechanism; inspect wiring insulation; check the switching mechanism; tighten control and power connections to specification (TP-7443 p.31)."
+   },
+   {
+    "interval": "Yearly (dealer)",
+    "task": "Slide off the arc chute covers and inspect the main contacts; clean with a cloth only, never emery cloth or a file; replace contacts that are pitted, overheated or worn through the silver layer; replace arc chutes that are breaking down (TP-7443 p.29)."
+   },
+   {
+    "interval": "Yearly (dealer)",
+    "task": "Millivolt drop test on both sources, 0.250 milliohm maximum (TP-7443 p.29-31)."
+   },
+   {
+    "interval": "Yearly (dealer)",
+    "task": "Test all LED indicators, time delays and remote control systems (TP-7443 p.31)."
+   },
+   {
+    "interval": "Every 3 years (dealer)",
+    "task": "Wire and cable insulation test, over 1.24 megohms (TP-7443 p.30-31)."
+   },
+   {
+    "interval": "Periodically",
+    "task": "Oil the enclosure door locks and screws (TP-7443 p.27)."
+   }
+  ],
+  "alarms": [],
+  "warnings": [
+   {
+    "code": "ATS ComError",
+    "name": "ATS communication error",
+    "display": "RDC2/DC2 message 'ATS ComError' (Warning); OFF LED flashes quickly",
+    "meaning": "The controller has lost communications with the TRX ATS that had previously been communicating properly. (TP-7443 p.43)",
+    "causes": [],
+    "steps": [
+     "Check connections from ATS interface module to generator set.",
+     "Check the power LED on the interface board.",
+     "See 5.1 Interface Board (TP-7443 p.53)."
+    ],
+    "clear": "Reset method is not printed in TP-7443 - see the generator set manual."
+   },
+   {
+    "code": "ATS Fail Xfr",
+    "name": "ATS fail to transfer",
+    "display": "RDC2/DC2 message 'ATS Fail Xfr' (Warning); OFF LED flashes quickly",
+    "meaning": "The TRX ATS has reported a fail to transfer, the digital output for ATS Fail To Transfer (PIM) is active (contacts closed). (TP-7443 p.43)",
+    "causes": [],
+    "steps": [
+     "See the troubleshooting charts in 4.6 Troubleshooting Charts (TP-7443 p.43-47).",
+     "Also see 4.7 Transfer Switch Troubleshooting (TP-7443 p.47)."
+    ],
+    "clear": "TP-7443 p.61 (coil test): the unit attempts to transfer 3 times before the fault; 'Press OFF button to stop generator set and reset fault condition.'"
+   },
+   {
+    "code": "Emerg Pwr On",
+    "name": "Emergency Power System Supplying Load (notice)",
+    "display": "RDC2/DC2 message 'Emerg Pwr On' (Notice)",
+    "meaning": "The digital output for EPS Supplying Load (PIM) is active (contacts closed), indicating there is current output (>5%) from the alternator, only if CTs are installed. (TP-7443 p.43)",
+    "causes": [],
+    "steps": [],
+    "clear": "Status notice, not a fault. No check is printed."
+   },
+   {
+    "code": "NormSrcUnavl",
+    "name": "Normal source unavailable (notice)",
+    "display": "RDC2/DC2 message 'NormSrcUnavl' (Notice)",
+    "meaning": "The normal power source (source1) is disconnected, unavailable or unacceptable. (TP-7443 p.43)",
+    "causes": [],
+    "steps": [
+     "Check for utility source power outage.",
+     "Check wiring and connections to the ATS."
+    ],
+    "clear": "Status notice, not a fault."
+   },
+   {
+    "code": "Rmt StartCmd",
+    "name": "RemoteStart Command Issued (notice)",
+    "display": "RDC2/DC2 message 'Rmt StartCmd' (Notice)",
+    "meaning": "The controller has received a remote start signal while the controller is in AUTO, and will go to normal running. (TP-7443 p.43)",
+    "causes": [],
+    "steps": [
+     "Verify remote start signal."
+    ],
+    "clear": "Status notice, not a fault."
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "ATS fails to operate and no LEDs are lit",
+    "causes": [
+     "No power to the transfer switch / controller"
+    ],
+    "fixes": [
+     "Close circuit breakers leading from power sources to the transfer switch. Troubleshoot power to the system (TP-7443 p.43)"
+    ]
+   },
+   {
+    "symptom": "Generator set does not start when the normal source fails",
+    "causes": [
+     "Generator set is OFF, or the batteries are not charged or connected",
+     "Generator set is malfunctioning"
+    ],
+    "fixes": [
+     "Press the AUTO button on the generator set controller. Check that the generator set batteries are charged and connected",
+     "See the generator set operation or service manual (TP-7443 p.44)"
+    ]
+   },
+   {
+    "symptom": "Transfer switch mechanism is binding",
+    "causes": [
+     "Debris is in the transfer switch mechanism",
+     "Transfer switch mechanism is damaged"
+    ],
+    "fixes": [
+     "Clean the transfer switch assembly",
+     "Replace the transfer switch (contactor) assembly (TP-7443 p.44, p.80)"
+    ]
+   },
+   {
+    "symptom": "ATS operates erratically or out of specifications",
+    "causes": [
+     "Power supply problems / loose connection",
+     "Incorrect transfer switch controller operation / calibration"
+    ],
+    "fixes": [
+     "Check wiring for loose connections, especially those that supply power to the controller or in the affected circuit; check the power supply",
+     "Run the operation sequence test for time delay problems; check the voltage calibration on the RDC2; check normal and emergency source sensing for dropout / pickup problems (TP-7443 p.44, p.57-60)"
+    ]
+   },
+   {
+    "symptom": "ATS ComError / generator does not see the switch",
+    "causes": [
+     "Work Kohler's RBUS communication flowchart from the interface board's Power and Online LEDs before replacing a board."
+    ],
+    "fixes": [
+     "Confirm the generator has an RDC2 or DC2 controller in AUTO with a connected, charged battery, and check the controller firmware version (TP-7443 p.33). The installation manual requires firmware 5.04 or higher (TP-7442 p.27).",
+     "Look at the interface board in the switch. Power LED steady ON? If it is not lit, check the power connections at the interface board, the generator connection terminal block and the starting battery, then measure PWR to COM: it should be between 10 and 16 VDC (TP-7443 p.40-41).",
+     "PWR to COM low but not zero: check the cable size and length against the installation manual table. Zero: check for 10-16 VDC at PWR and COM on the generator set; if it is there, check the wire run to the ATS; if not, check the connections from the controller to the customer connections on the generator (TP-7443 p.41).",
+     "Power LED on: is the Online LED steady ON? If it is blinking faster than once a second, check the A and B connections at the interface board and at the generator terminal block, then make sure the cable runs are within specification. Blinking slower than that: verify that only one ATS is connected (TP-7443 p.40).",
+     "Match the wires to the labels on the interface board: A to A, B to B, PWR to PWR, COM to COM. Reversed connections do no damage, but the switch and other accessories will not operate (TP-7443 p.38).",
+     "Cable check: A and B on 20 AWG shielded twisted pair (Belden 9402, 8762, or 1075A outdoors). PWR / COM on 20 AWG is limited to 46 m (150 ft) with one module, 15 m (50 ft) with two, 5 m (17 ft) with three; longer runs need 14 or 12 AWG for PWR and COM (TP-7443 p.38).",
+     "On the RDC2, open the Networking menu and count the modules: the combined board counts as two RBUS devices (interface board plus load management device), plus a PIM if fitted. In SiteTech, ATS Source should read Local; Remote means no TRX is detected. If the ATS is not shown in SiteTech or the app at all, the flowchart says to verify the correct version of the PC software is installed (TP-7443 p.39, p.40, p.41).",
+     "Errors and timeouts still climbing, or the ATS ID changing over time: go back to the A and B connections and the cable. If problems persist, the flowchart ends at Kohler technical support (TP-7443 p.40)."
+    ]
+   },
+   {
+    "symptom": "Switch only works after cycling power",
+    "causes": [
+     "Kohler's third communication chart: too many RBUS modules, duplicate serial numbers or a USB cable left in the controller."
+    ],
+    "fixes": [
+     "If the ATS functions correctly only after cycling power, disconnect the RBUS modules and verify that SiteTech or the app shows no modules connected (TP-7443 p.41 Figure 16).",
+     "Verify that no more than three (3) RBUS modules are connected (TP-7443 p.41). The combined interface/load management board counts as two RBUS devices (TP-7443 p.39).",
+     "Verify that each RBUS module serial number is different (TP-7443 p.41).",
+     "If it does not act that way but works only when a module is connected by itself: verify that the USB cable is not connected to the generator controller during power cycles, then verify that all modules are seen by SiteTech after connecting them one at a time (TP-7443 p.41).",
+     "If problems persist, contact Kohler technical support (TP-7443 p.41)."
+    ]
+   },
+   {
+    "symptom": "Generator runs but the switch will not transfer",
+    "causes": [
+     "The manual's fail-to-transfer chart: breakers, exercise mode, time delay, source sensing, then the mechanism and the coil."
+    ],
+    "fixes": [
+     "Are the source circuit breakers / switches closed? Close the generator set circuit breaker and any breaker between the generator and the ATS (TP-7443 p.44, p.46).",
+     "Running on a scheduled exercise? The switch only transfers if the controller is programmed for a loaded exercise (TP-7443 p.46).",
+     "Wait out the normal-to-emergency time delay - 3 seconds from the factory (TP-7443 p.44, p.59).",
+     "Does the source connection LED on the RDC2 agree with the real switch position? If not, check the ATS interface board connection to the generator set controller (TP-7443 p.46).",
+     "With ALL power disconnected, operate the switch by hand. It must move smoothly without binding; if it does not, clean or service the mechanism. Never operate it by hand with power connected (TP-7443 p.46, p.23).",
+     "Check the generator voltage against pickup and dropout: on 240 V, pickup is 216 VAC and dropout 194 VAC. Out of range: repair or adjust the generator set. In range: check the voltage calibration on the RDC2 (ATS Status menu) and the emergency source sensing - AC voltage at interface connector P13 across P13-3 and P13-7, then lugs EL1 and EL2 (TP-7443 p.44, p.54, p.58).",
+     "Then check source-sensing wiring and the voltage to the solenoid coil: rated voltage should reach the coil leads as the controller tries to transfer. It tries 3 times before the fail-to-transfer fault; press OFF to stop the generator and reset the fault. A coil is powered for only about 0.5 second, so use a fast (250 microsecond) meter with max recording (TP-7443 p.46, p.47, p.61).",
+     "A burned coil usually means the mechanism was binding or the control circuit held the coil on too long. Check the neutral connection. If the solenoid is damaged, check the wiring, interface board and other components for signs of overheating (discolored metal, burning odor, melted plastic) and replace damaged parts. After a contactor replacement and before applying power, check that the contactor operates freely without binding (TP-7443 p.47)."
+    ]
+   },
+   {
+    "symptom": "Utility is back but the switch stays on generator",
+    "causes": [
+     "Retransfer needs a closed normal breaker, an in-range utility voltage the controller can see, and the 2 minute delay."
+    ],
+    "fixes": [
+     "Normal source circuit breaker open? Close the breakers leading from the normal source to the transfer switch. On a service entrance model that includes the utility disconnect breaker in the switch - a tripped handle sits in a middle position; move it fully OFF, then ON, after finding the cause of the trip (TP-7443 p.44; TP-7442 p.39).",
+     "Emergency-to-normal delay has not timed out: factory setting is 2 minutes, adjustable from 1 second to 10 minutes (TP-7443 p.44, p.59).",
+     "Check the normal source voltage and the voltage calibration on the RDC2, and the pickup / dropout settings: on 240 V, pickup 216 VAC, dropout 194 VAC (TP-7443 p.44, p.57).",
+     "Normal source sensing: nominal voltage at lugs NL1 and NL2? Then at the interface board connector across P13-1 and P13-5. No voltage there with voltage on the lugs = wiring from the contactor to the interface board (TP-7443 p.57-58).",
+     "Voltage above pickup at P13 but the Utility Available LED on the RDC2 is not lit: check the communication wiring from the interface board to the RDC2 (TP-7443 p.58).",
+     "Still no retransfer: go to transfer switch troubleshooting - neutral connection, manual operation with all power off, solenoid coil voltage (TP-7443 p.44, p.47)."
+    ]
+   },
+   {
+    "symptom": "Generator keeps running after utility returns",
+    "causes": [
+     "Kohler's 'generator set continues to run' chart for a TRX system."
+    ],
+    "fixes": [
+     "Is the utility source available? Check the utility source available LED on the RDC2 controller. If not, the ATS will not transfer because it does not see an acceptable source - check utility source voltage and source sensing (TP-7443 p.47 Figure 22).",
+     "Verify the transfer to normal: is the utility source position LED on the RDC2 lit? If not, follow the exerciser or failure-to-transfer checks (TP-7443 p.47).",
+     "Is the generator set controller in AUTO? A set left in RUN will not stop - press AUTO (TP-7443 p.44, p.47).",
+     "Is an exercise running? Wait for the exercise period to end (TP-7443 p.44).",
+     "Has the engine cooldown time delay expired? Wait for it; see the generator set operation manual (TP-7443 p.44, p.47).",
+     "All of the above good: troubleshoot the generator set from its own service manual (TP-7443 p.47)."
+    ]
+   },
+   {
+    "symptom": "Exercise does not start, or does not transfer the load",
+    "causes": [
+     "The exerciser is set at the generator's RDC2 / DC2 controller."
+    ],
+    "fixes": [
+     "Verify the generator set controller is in AUTO (AUTO LED on). If not, press AUTO on the RDC2 / DC2 (TP-7443 p.45 Figure 20).",
+     "Press RUN. If the generator set does not start and run, troubleshoot the generator set from its own manuals (TP-7443 p.45).",
+     "Check whether engine cooldown is running; if it is, wait for the cooldown delay to expire (TP-7443 p.45).",
+     "Is the utility source available LED lit on the RDC2 (or the optional ATS status indicator)? The exerciser will not transfer the load or stop the engine if the utility source is not available - check the source circuit breakers (TP-7443 p.45).",
+     "Exercise setting cleared: set the exerciser for the time and day again from the generator set operation manual. The board replacement procedure also ends with 'Set exerciser' (TP-7443 p.45, p.81).",
+     "Runs but never transfers: the SiteTech default exercise mode is Unloaded Cycle; a transfer during exercise needs the mode set to loaded (TP-7443 p.37, p.46)."
+    ]
+   },
+   {
+    "symptom": "Source available or position LED wrong",
+    "causes": [
+     "Checks the manual lists when an LED does not agree with what the meter and the switch show."
+    ],
+    "fixes": [
+     "Source available LED off with the source there: check switches and circuit breakers for an open circuit, the source connections to the ATS, and the connections from the interface board to the generator set controller (TP-7443 p.44).",
+     "Compare the source voltage with pickup and dropout: 216 VAC pickup and 194 VAC dropout on 240 V. Check the voltage calibration on the RDC2 (TP-7443 p.44, p.57).",
+     "If no LEDs light at all, troubleshoot power and connections to the controller (TP-7443 p.44). The position LED row words it: troubleshoot power connections at the ATS and from the generator (TP-7443 p.45).",
+     "Position LED not lit: check the position microswitches with power off - ohmmeter across NO and C, operate the switch by hand, contact must close when pressed and open when released; repeat for NC; no continuity between NO and NC (TP-7443 p.45, p.60-61).",
+     "Switch stuck in an intermediate position: with all power off, operate it by hand and watch the position LED; look for contactor damage; check the connections from the ATS interface board to the generator set controller (TP-7443 p.45).",
+     "Do not connect or disconnect the board harness with power connected (TP-7443 p.54)."
+    ]
+   },
+   {
+    "symptom": "Loads do not shed or do not come back on",
+    "causes": [
+     "Kohler's load management table for the combined board: recognition, CT, relay supply, then settings."
+    ],
+    "fixes": [
+     "First confirm the controller sees the load management device: RDC2 Networking menu module count (the combined board counts as two devices), SiteTech RBUS network screen, or a Load Module section in the app (TP-7443 p.41, p.49).",
+     "Check the P11 jumper on the board: pins 2-3 = load management on, pins 1-2 = off. With a separate load control module (LCM) it must be on 1-2, and the CT, power relays and HVAC wires go to the LCM, never to the combined board (TP-7443 p.48, p.53).",
+     "Load shed relays do not activate: verify the 120 VAC supply to the relays and the wiring to the board and relays (TP-7443 p.49).",
+     "Metering always reads 0% under load: verify the emergency feed goes through the CT correctly, the CT leads are on the board input (TB1), and the correct CT is used. Metering never reads 0%: verify CT wiring, twisted-pair cable, and CT wiring in separate conduit from AC leads (TP-7443 p.50).",
+     "HVAC units do not shed: verify the normally closed (NC) output is used to control the AC relays (TP-7443 p.50).",
+     "Does not shed at 100% load: the load must be steady at 100% for approximately 25 seconds; over 110%, wait at least 15 seconds and verify frequency is greater than 59 Hz. Verify the overload percent is set 10% or more below the indicated level (TP-7443 p.50).",
+     "Loads never add: verify % load is below 50%, the wiring between the board and the generator controller, and that the generator's maximum load capacity suits the job (TP-7443 p.50).",
+     "Load does not shed after transfer to emergency: verify frequency is greater than 59 Hz, that the switch is a model TRX, that the remote start signal is true, that the controller is configured as a single-phase unit, and that sensed load is less than 7% (TP-7443 p.50)."
+    ]
+   }
+  ],
+  "installNotes": [
+   "Works only with a Kohler generator set that has the RDC2 or DC2 controller; the controller needs firmware 5.04 or higher (TP-7442 p.12, p.27).",
+   "No engine start wires: connect A, B, PWR and COM only. Generator terminals 3 and 4 are not used (TP-7442 p.24-25).",
+   "Neutral bonding jumper (the manual's section is headed 'Service Entrance Models'): the transfer switch is shipped with the neutral-to-ground jumper installed. For non-service entrance applications, disconnect the neutral-to-ground bonding jumper (TP-7442 p.22).",
+   "Check manual operation before energizing: with both sources disconnected, put a screwdriver in the manual operating lever and move it to Emergency and back to Normal; it must move without binding. Leave it in Normal (TP-7442 p.20-21).",
+   "Do not use a single-phase transfer switch in a three-phase application (TP-7442 p.20).",
+   "Seal each mounting hole of the NEMA 3R enclosure with silicone; let the unit warm to room temperature for 24 hours before unpacking (TP-7442 p.19-20).",
+   "Only one load management option can be used with the generator (TP-7442 p.25). TP-7442 p.16 says not to install a load shed kit or a load control module (LCM) on a system that has the combined board; p.25 of the same manual says to disable load management on the combined board (P11 jumper to pins 1-2) if a load shed kit is connected, and TP-7443 p.48 gives that procedure for an LCM.",
+   "Service entrance disconnect: generator OFF, charger power off, battery negative off first, remove the outer door only, utility breaker OFF. The line side of that breaker stays live - leave the barrier over the utility lugs in place (TP-7442 p.39).",
+   "Register the unit within 60 days of startup (TP-7442 p.31)."
+  ],
+  "tips": [
+   "SiteTech 'ATS Source' reads Local when a TRX is communicating and Remote when none is detected (TP-7443 p.39).",
+   "ATS Status and ATS Configuration menus only appear on the RDC2 when a TRX is connected; with no TRX the status screen shows Remote ATS (TP-7443 p.34).",
+   "On a DC2 the ATS settings can only be changed with SiteTech (TP-7443 p.33).",
+   "Replace the interface board only when the tests point to it conclusively; check solenoid, microswitches, breakers, neutral and RBUS wiring first (TP-7443 p.80)."
+  ],
+  "manuals": [
+   {
+    "title": "TP-7442 Model TRX Installation and Operation (11/26)",
+    "docType": "install",
+    "seedFile": "kohler-tp-7442.pdf"
+   },
+   {
+    "title": "TP-7443 Model TRX Service (11/26)",
+    "docType": "service",
+    "seedFile": "kohler-tp-7443.pdf"
+   },
+   {
+    "title": "G11-154 Model TRX Specification Sheet (11/26)",
+    "docType": "spec",
+    "seedFile": "kohler-g11-154.pdf"
+   },
+   {
+    "title": "TT-1837 Surge Protector Kit GM123207-KP1-QS Installation Instructions (11/26)",
+    "docType": "install",
+    "seedFile": "kohler-tt-1837.pdf"
+   }
+  ],
+  "sourceNotes": "G11-154 (11/26) p.1 features and cable sizes, p.2 load shed and CT part numbers, p.3 WCR, dimensions and weights, p.4 accessories, available models and model designation. TP-7442 (11/26) p.12-14 introduction, literature list, nameplate, model designation; p.16-17 description and relay specs; p.19-23 installation, wire ranges, torque; p.24-25 interface connections and cable table; p.26-29 load management, firmware 5.04, CT, board connections; p.30-31 accessories, test, warranty; p.33-37 operation, load management timing, time delays; p.39 service disconnect. TP-7443 (11/26) p.16-17 specifications; p.19-23 operation; p.25-32 maintenance; p.33-52 troubleshooting (faults p.43, chart p.43-45, flowcharts p.40-41, p.45-47, load management p.48-51); p.53-63 component tests; p.75-77 wiring diagram GM125450; p.79-82 part replacement. TT-1837 (11/26) p.1-5. Tables were read from rendered pages (png folder). Conflicts between the documents are listed in sources.md and noted inline (SE 100 A lug torque row, 200 A SE weights, CT 'provided' vs 'sold separately', load priority order not printed)."
+ },
+ {
   "id": "kohler-ats-rdt-mpac500",
   "brand": "Kohler",
   "series": "Kohler Transfer Switch",
