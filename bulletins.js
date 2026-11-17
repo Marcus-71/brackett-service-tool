@@ -880,6 +880,19 @@ const BULLETINS = [
     source: "Carrier TIC2026-0007, Gas Furnace Bluetooth Module Removal, Mar 2026"
   },
   {
+    id: "carrier-tic2026-0008", brand: "Carrier", number: "TIC2026-0008", docNo: "", rev: "", date: "2026-08-21", type: "Technical",
+    title: "Variable speed outdoor units no longer get a Bluetooth module - update the software to clear 17-06",
+    applies: { modelRe: ["^26VNA1", "^27VNA0", "^27VNA1", "^27VNA3", "^191VAN", "^290VAN", "^291VAN", "^293VAN"], codes: ["17-06"] },
+    appliesText: "Deluxe-tier variable speed residential outdoor units: Carrier 26VNA1, 27VNA0, 27VNA1, 27VNA3; Bryant 191VAN, 290VAN, 291VAN, 293VAN.",
+    summary: "Carrier has stopped building communicating residential outdoor units with a Bluetooth module, and replacement modules will no longer be stocked. Units that already have a module can still be reached by Bluetooth through the Service Tech App. Existing outdoor units need the latest outdoor (PCM) software so the 17-06 Bluetooth module fault goes away.",
+    steps: [
+      "17-06 on one of these outdoor units: update the outdoor unit to the latest PCM software. Do not order a Bluetooth module - they are no longer stocked.",
+      "To see what the unit is doing without Bluetooth, use the wall control's service menu status screens or the Connected Portal."
+    ],
+    priority: "info",
+    source: "Carrier TIC2026-0008, Outdoor Splits Bluetooth Module Removal, Aug 21, 2026 (listed on HVACpartners 11/13/2026)"
+  },
+  {
     id: "carrier-tic2021-0004", brand: "Carrier", number: "TIC2021-0004", docNo: "", rev: "", date: "2021-02-11", type: "Technical",
     title: "Modulating inducer power connector pushed under the housing edge",
     applies: { modelRe: ["^59MN7[AB](060|080|100|120)", "^987M[AB](42|60|66)(060|080|100|120)"] },
@@ -2512,6 +2525,21 @@ const BULLETINS = [
     ],
     priority: "normal", confidential: true,
     source: "HVACpartners 101-26-20"
+  },
+  {
+    id: "carrier-101-26-45", brand: "Carrier", number: "101-26-45", docNo: "", rev: "", date: "2026-11-09", type: "Product",
+    title: "24V Ductless Interface (Mini) KSAIC0601230 open to order - which indoor units it fits",
+    applies: { modelRe: ["^KSAIC0[68]01230", "^45M(PHA|AHA|HHA|BCA|CCA|BDA|CFA|BFA|BAA|UAA|UHA)", "^40M(PHB|AHB|HHA|BC|CCA|BD|BF|UAA|BAB)", "^DHMVHA"] },
+    appliesText: "Carrier KSAIC0601230 24V Ductless Interface (Mini) and the ductless indoor units it is used with. For ductless equipment only - not for VRF systems.",
+    summary: "The KSAIC0601230 interface, which lets a 24V thermostat run a ductless indoor unit, is open to order; warehouse stock is expected from the end of November to early December 2026. One interface is needed for each compatible indoor unit. The 24V transformer is not included and must be field provided to suit the thermostat used. A second version, KSAIC0801230, does the same job on the same units and adds a built-in 24V transformer and a dehumidification (DH) on/off switch in one enclosure.",
+    steps: [
+      "Puron Advance (R-454B) indoor units - fits: high wall 45MPHA / 45MAHA / 45MHHAQ / 45MHHAC, cassette 45MBCA / 45MCCA, ducted 45MBDA, console 45MCFA / 45MBFA. Does NOT fit the air handlers 45MBAA / 45MUAA / 45MUHA.",
+      "Puron (R-410A) indoor units - fits: cassette 40MBC(A)Q / 40MCCA, ducted 40MBDA/Q (as the bulletin writes it), console 40MBFQ. Does NOT fit: high wall 40MPHB / 40MAHB / 40MHHAQ / 40MHHAC / DHMVHA, the console the bulletin lists as 40MB(FAQ), or the air handlers 40MUAA / 40MBAB.",
+      "Check the exact indoor unit model and size against the interface submittal before ordering or installing - the bulletin's list follows that submittal.",
+      "It has an HA/HB port (2-wire) and an RS485 port (4-wire), and works with the indoor multifunction board (XYE). There is an optional on/off connection for another heat source (12V, 20mA), and it supports an optional 24V thermostat, configured with DIP switches - follow the installation manual (IM-KSAICM)."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners 101-26-45"
   },
   {
     id: "carrier-101-26-05", brand: "Carrier", number: "101-26-05", docNo: "", rev: "v3 2026-08-07", date: "2026-03-24", type: "Product",

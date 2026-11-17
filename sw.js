@@ -1,4 +1,4 @@
-const CACHE_NAME = "bfc-cache-v448";
+const CACHE_NAME = "bfc-cache-v449";
 // v286: library files that never change between versions (OCR engine, barcode
 // reader, PDF viewer, icons, Education PDFs) live in their own cache, kept from
 // one version to the next. A version update now downloads only the app's own
@@ -85,7 +85,7 @@ const APP_SHELL = [
 const SHELL_HASHES = {
   "./index.html": "18adf7ceccf085c2a359",
   "./style.css": "3f6aed80648576b6f6b0",
-  "./app.js": "d082efc254f470a2031e",
+  "./app.js": "751e225ada6d02a07ecf",
   "./pt-data.js": "683d0d877945d72a0b2a",
   "./data.js": "e94b21fe931c43d5fc3e",
   "./symptoms.js": "4ce6858d02dbe05f95dd",
@@ -101,11 +101,11 @@ const SHELL_HASHES = {
   "./kohler-gens.js": "e16661411a2fbac2b479",
   "./weather.js": "5b9215e305c303ac986f",
   "./maint.js": "45cfa4165378fce4de6e",
-  "./bulletins.js": "c8a98c6d2a537dfc0418",
+  "./bulletins.js": "94788fdf3ce91f3eb5cd",
   "./inventory.js": "5cfc7dc549d17149b4a9",
   "./dchecker/index.html": "2487e203cbdae9ed9c1d",
   "./guides/daikin-checker-guide.html": "0d7a518082b6f948041a",
-  "./manuals-seed/seed-index.js": "e18976cf1390356969f9",
+  "./manuals-seed/seed-index.js": "84f438bb92db0744b58e",
   "./manifest.json": "15eb1fe115900d4110be",
 };
 // SHELL_HASHES:END
