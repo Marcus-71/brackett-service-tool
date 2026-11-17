@@ -5397,7 +5397,7 @@ const UNIT_SCENARIOS = [
  },
  {
   "id": "u-fhp-ec-dead",
-  "unit": "^EC0(?:07|09|12|15|19|24|30|36|41|42|48|60|70)-?[0-9][VH]",
+  "unit": "^EC0(?:07|09|12|15|18|24|30|36|41|42|48|51|60|61|70)-?[0-9](?:[VH]|CF)",
   "brand": "FHP (Bosch)",
   "equipment": "Other",
   "title": "Entire unit does not run — FHP EC Series",
@@ -5423,7 +5423,7 @@ const UNIT_SCENARIOS = [
  },
  {
   "id": "u-fhp-ec-blower-no-compressor",
-  "unit": "^EC0(?:07|09|12|15|19|24|30|36|41|42|48|60|70)-?[0-9][VH]",
+  "unit": "^EC0(?:07|09|12|15|18|24|30|36|41|42|48|51|60|61|70)-?[0-9](?:[VH]|CF)",
   "brand": "FHP (Bosch)",
   "equipment": "Other",
   "title": "Blower runs but the compressor does not — FHP EC Series",
@@ -5451,7 +5451,7 @@ const UNIT_SCENARIOS = [
  },
  {
   "id": "u-fhp-ec-high-pressure",
-  "unit": "^EC0(?:07|09|12|15|19|24|30|36|41|42|48|60|70)-?[0-9][VH]",
+  "unit": "^EC0(?:07|09|12|15|18|24|30|36|41|42|48|51|60|61|70)-?[0-9](?:[VH]|CF)",
   "brand": "FHP (Bosch)",
   "equipment": "Other",
   "title": "Off on high pressure (1 blink) — FHP EC Series",
@@ -5482,7 +5482,7 @@ const UNIT_SCENARIOS = [
  },
  {
   "id": "u-fhp-ec-low-pressure-freeze",
-  "unit": "^EC0(?:07|09|12|15|19|24|30|36|41|42|48|60|70)-?[0-9][VH]",
+  "unit": "^EC0(?:07|09|12|15|18|24|30|36|41|42|48|51|60|61|70)-?[0-9](?:[VH]|CF)",
   "brand": "FHP (Bosch)",
   "equipment": "Other",
   "title": "Off on low pressure or freeze sensor (2 or 3 blinks) — FHP EC Series",
@@ -5512,7 +5512,7 @@ const UNIT_SCENARIOS = [
  },
  {
   "id": "u-fhp-ec-condensate",
-  "unit": "^EC0(?:07|09|12|15|19|24|30|36|41|42|48|60|70)-?[0-9][VH]",
+  "unit": "^EC0(?:07|09|12|15|18|24|30|36|41|42|48|51|60|61|70)-?[0-9](?:[VH]|CF)",
   "brand": "FHP (Bosch)",
   "equipment": "Other",
   "title": "Locked out on condensate overflow (4 blinks) — FHP EC Series",
@@ -5537,7 +5537,7 @@ const UNIT_SCENARIOS = [
  },
  {
   "id": "u-fhp-ec-poor-capacity",
-  "unit": "^EC0(?:07|09|12|15|19|24|30|36|41|42|48|60|70)-?[0-9][VH]",
+  "unit": "^EC0(?:07|09|12|15|18|24|30|36|41|42|48|51|60|61|70)-?[0-9](?:[VH]|CF)",
   "brand": "FHP (Bosch)",
   "equipment": "Other",
   "title": "Short cycles, or not enough cooling or heating — FHP EC Series",
