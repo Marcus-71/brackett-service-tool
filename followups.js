@@ -36354,12 +36354,12 @@ const SYMPTOM_FOLLOWUPS = {
    ],
    "bands": [
     {
-     "under": 140,
-     "label": "Below 140 F",
+     "under": 140.1,
+     "label": "140 F or below",
      "verdict": "The sensor is within its operating temperature range, so the fault is real. Replace the A2L refrigerant sensor and power the unit back up."
     },
     {
-     "label": "140 F or higher",
+     "label": "Above 140 F",
      "verdict": "Above the sensor's 140F operating limit. The flowchart says no service is needed for the sensor itself - find and fix why the coil compartment is that hot (heat kit cycling, blocked return, sensor mounted in the wrong position after a cabinet conversion) and re-evaluate."
     }
    ]
@@ -37580,13 +37580,13 @@ const SYMPTOM_FOLLOWUPS = {
    ],
    "bands": [
     {
-     "under": 140,
-     "label": "Below 140 F",
+     "under": 140.1,
+     "label": "140 F or below",
      "verdict": "The sensor is inside its operating range, so the fault is real. Replace the A2L refrigerant sensor and power the unit back up."
     },
     {
-     "label": "140 F or higher",
-     "verdict": "At or above the sensor's 140F operating limit. Note the conflict: the IDP chart says to replace the sensor above 140F while the IDS 2026 chart says no service is needed at that temperature. Find and fix why the compartment is that hot first - blocked return, heat kit cycling, or a sensor relocated wrong after a cabinet conversion - then re-evaluate before ordering a sensor."
+     "label": "Above 140 F",
+     "verdict": "Above the sensor's 140F operating limit: the IDP and IDS charts both say no service is needed on the sensor at that temperature (IDP Premium IOM p.49, IDP Plus IOM p.47). Find and fix why the compartment is that hot first - blocked return, heat kit cycling, or a sensor relocated wrong after a cabinet conversion - then re-evaluate before ordering a sensor."
     }
    ]
   },

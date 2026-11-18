@@ -17922,7 +17922,7 @@ const SYMPTOMS = [
   "title": "Bosch IDP packaged unit - A2L sensor codes b3, b4, b8 and the b9 dip switch mismatch",
   "summary": "The leak sensor is faulted, unplugged, expired, or the dip switch does not match whether a sensor is fitted.",
   "steps": [
-   "b3 is a sensor fault: measure ambient temperature around the A2L sensor. Above 140F is outside the sensor's operating range - the IDP chart says to replace the sensor above 140F, while the IDS 2026 chart says no service is needed at that temperature. Check the actual ambient before ordering a sensor.",
+   "b3 is a sensor fault: measure ambient temperature around the A2L sensor. Above 140F is outside the sensor's operating range and the IDP chart says no service is needed (IDP Premium IOM p.49, IDP Plus IOM p.47) - fix the heat source, not the sensor. If ambient does not exceed 140F, replace the A2L refrigerant sensor and power the unit back up.",
    "b4 is a sensor communication fault: check that indoor dip switch SW7-2 is set to ON, then confirm the sensor is seated and its plug is home at CN26.",
    "b8 is the sensor past its 15 year service life. Replace it and power the unit back up - there is nothing to test.",
    "b9 is a configuration mismatch and requires a hard restart. Start by confirming outdoor dip switch SW4-1 is set to ON - it must always be ON on this platform.",

@@ -71452,12 +71452,14 @@ const BRAND_SENSOR_MAPS = [
  },
  {
   "id": "icp-n96msn-furnace",
-  "title": "ICP N96MSN 96% single-stage condensing gas furnace (3-digit display control, multi-speed ECM)",
+  "title": "ICP N96MSN / R96MSN / R92MSN single-stage condensing gas furnace (3-digit display control, multi-speed ECM)",
   "side": "indoor",
   "brand": "Heil / Tempstar / Comfortmaker / Day & Night / KeepRite / Arcoaire (ICP)",
-  "models": "N96MSN sizes 0261410, 0401410, 0401412, 0401712, 0601412, 0601716, 0801716, 0802120, 1002120, 1002122, 1202422, 1402422 (N96MSN-01SI, -02SI, -03SI).",
+  "models": "N96MSN sizes 0261410, 0401410, 0401412, 0401712, 0601412, 0601716, 0801716, 0802120, 1002120, 1002122, 1202422, 1402422 (N96MSN-01SI, -02SI, -03SI). R96MSN sizes 0401410, 0401712, 0601716, 0801716, 0802120, 1002120, 1202422 (R96MSN-03SI p.3). R92MSN sizes 0401412, 0601714, 0801716, 1002120 (R92MSN2-03SI p.3; R92MSN-65-02PD p.4). Page numbers in the rows are N96MSN-03SI pages: R96MSN-03SI: board figure p.29 (same page); from the menu tables on the pages are 2 lower (menu p.54, control replacement p.55, label p.56, wiring p.58, LPS test p.64, igniter p.68, troubleshooting p.73-75); R92MSN2-03SI: board figure p.27, wiring p.53, label p.51, igniter p.62, troubleshooting p.66-68.",
   "match": [
-   "N96MSN"
+   "N96MSN",
+   "R96MSN",
+   "R92MSN"
   ],
   "sizes": [
    "all"
@@ -71580,7 +71582,7 @@ const BRAND_SENSOR_MAPS = [
     "code": "GV",
     "name": "Gas valve, single stage (redundant)",
     "kind": "other",
-    "spec": "Inlet gas pressure 4.5-14 in. w.c. natural gas.",
+    "spec": "Natural gas inlet pressure: start-up text 4.5 to 14 in. w.c. (0.16-0.5 psig) (icp-n96msn-install-03si.pdf p.58); gas pressure check with burners on 4.5 to 13.6 in. w.c. (p.62). The manual prints both.",
     "errorCodes": [
      "21.1",
      "22.1",
@@ -71634,7 +71636,7 @@ const BRAND_SENSOR_MAPS = [
     "plug": "PL2-2",
     "pins": "PL2-2 = inducer 115 V (via relay IDR); inducer other lead to neutral",
     "code": "IDM",
-    "name": "Inducer (induced draft) motor, single speed",
+    "name": "Inducer (induced draft) motor, ECM - 115 VAC switched on / off by relay IDR",
     "location": "Inducer housing",
     "kind": "other",
     "spec": "Inducer has internal auto-reset thermal overload (note 11).",
@@ -71823,6 +71825,16 @@ const BRAND_SENSOR_MAPS = [
     "file": "icp-n96msn-install-01si.pdf",
     "pages": "54, 56",
     "what": "same label A210798 / wiring A210800 (rev -01)"
+   },
+   {
+    "file": "icp-r96msn-install-r96msn-03si.pdf",
+    "pages": "29, 55-58, 65, 68, 73-75",
+    "what": "same wiring diagram, board figure, service label and troubleshooting guide text as N96MSN-03SI"
+   },
+   {
+    "file": "icp-r92msn2-install-r92msn2-03si.pdf",
+    "pages": "27, 50-53, 59, 62, 66-68",
+    "what": "same wiring diagram, service label and troubleshooting guide text as N96MSN-03SI / N92MSN2-03SI"
    }
   ]
  },
@@ -74112,8 +74124,8 @@ const BRAND_SENSOR_MAPS = [
     "name": "Outdoor air temperature thermistor, 10k",
     "location": "In the control box, rotated and locked with the spherical nib end facing the front of the control box (Fig. 12)",
     "kind": "thermistor",
-    "chart": "icp-r454vs-10k-points",
-    "spec": "10k at 77F. Failed OAT: unit runs at fixed speed; OST value used in heating, OCT value reported otherwise. Check-charge modes need OAT 60-105F (CCC) or -8 to 75F (HCC).",
+    "chart": "icp-r454vs-10k-table9",
+    "spec": "10k at 77F. Failed OAT: unit runs at fixed speed; OST value used in heating, OCT value reported otherwise. Check-charge modes need OAT 60-105F (CCC) or -8 to 75F (HCC). Open fault: above 465 kohm for 1 second (clears below 465 kohm for 1 second); shorted: below 1 kohm for 1 second (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.30-31). Full 0-120 F table: chart Table 9 (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24). Check points with tolerance: 10.0 k +/-2.3% at 77F, 32.6 k +/-3.2% at 32F, 85.5 k +/-3.4% at 0F (installation instructions).",
     "errorCodes": [
      "51-01 OAT sensor open",
      "51-02 OAT sensor shorted",
@@ -74121,7 +74133,7 @@ const BRAND_SENSOR_MAPS = [
      "51-43 = OAT faulted with no valid substitution, permanent lockout (Table 10)"
     ],
     "test": "Power off, wait 2 min, verify 0 V at the VFD. Unplug the OAT/OCT plug from the PCM and ohm the thermistor leads; compare with the chart at the sensor temperature. Open or shorted = replace thermistor; good reading but code stays = check harness, then PCM.",
-    "source": "icp-n5h9v-01si.pdf p.9, 12 Fig. 10, 14 Fig. 12 / Table 6, 16-18 (Q5H9V-01SI identical, same pages)"
+    "source": "icp-n5h9v-01si.pdf p.9, 12 Fig. 10, 14 Fig. 12 / Table 6, 16-18 (Q5H9V-01SI identical, same pages); icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24, p.30-31"
    },
    {
     "plug": "OAT / OCT (5-pin header)",
@@ -74130,15 +74142,15 @@ const BRAND_SENSOR_MAPS = [
     "name": "Outdoor coil temperature thermistor, 10k (OCT-HP)",
     "location": "Stub tube on the outdoor coil (only one stub tube; on most units the bottom circuit) - Fig. 13",
     "kind": "thermistor",
-    "chart": "icp-r454vs-10k-points",
-    "spec": "10k at 77F. Used for low ambient, defrost. Failed OCT: defrost every 60 min, runs 10 min; saturated suction temp substituted in heating, discharge temp in cooling.",
+    "chart": "icp-r454vs-10k-table9",
+    "spec": "10k at 77F. Used for low ambient, defrost. Failed OCT: defrost every 60 min, runs 10 min; saturated suction temp substituted in heating, discharge temp in cooling. Open fault: above 465 kohm for 1 second (clears below 465 kohm for 1 second); shorted: below 1 kohm for 1 second (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.30-31). Full 0-120 F table: chart Table 9 (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24). Check points with tolerance: 10.0 k +/-2.3% at 77F, 32.6 k +/-3.2% at 32F, 85.5 k +/-3.4% at 0F (installation instructions).",
     "errorCodes": [
      "52-01 OCT-HP sensor open",
      "52-02 OCT-HP sensor shorted",
      "41-13 defrost overrun"
     ],
     "test": "Power off, wait 2 min, verify 0 V at the VFD. Unplug the OAT/OCT plug from the PCM and ohm the thermistor leads; compare with the chart at the sensor temperature. Open or shorted = replace thermistor; good reading but code stays = check harness, then PCM.",
-    "source": "icp-n5h9v-01si.pdf p.12 Fig. 10, 14-16 Fig. 13 / Table 6, 17 (Q5H9V-01SI identical, same pages)"
+    "source": "icp-n5h9v-01si.pdf p.12 Fig. 10, 14-16 Fig. 13 / Table 6, 17 (Q5H9V-01SI identical, same pages); icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24, p.30-31"
    },
    {
     "plug": "LLT (3-pin header)",
@@ -74147,14 +74159,14 @@ const BRAND_SENSOR_MAPS = [
     "name": "Liquid line temperature thermistor, 10k (LLT-HP)",
     "location": "Liquid tube between the liquid service valve and the EXV (Fig. 13 \"LLT-HP Location\")",
     "kind": "thermistor",
-    "chart": "icp-r454vs-10k-points",
-    "spec": "10k at 77F. Used for subcooling calculation in charging mode; failed LLT = no subcooling readout in charge mode.",
+    "chart": "icp-r454vs-10k-table9",
+    "spec": "10k at 77F. Used for subcooling calculation in charging mode; failed LLT = no subcooling readout in charge mode. Open fault: above 465 kohm for 1 second (clears below 465 kohm for 1 second); shorted: below 1 kohm for 1 second (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.30-31). Full 0-120 F table: chart Table 9 (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24). Check points with tolerance: 10.0 k +/-2.3% at 77F, 32.6 k +/-3.2% at 32F, 85.5 k +/-3.4% at 0F (installation instructions).",
     "errorCodes": [
      "55-01 LLT-HP sensor open/low temp",
      "55-02 LLT-HP sensor shorted/high temp"
     ],
     "test": "Power off, wait 2 min, verify 0 V at the VFD. Unplug the LLT plug from the PCM and ohm the thermistor leads; compare with the chart at the sensor temperature. Open or shorted = replace thermistor; good reading but code stays = check harness, then PCM.",
-    "source": "icp-n5h9v-01si.pdf p.12 Fig. 10, 15 Fig. 13, 16-17 (Q5H9V-01SI identical, same pages)"
+    "source": "icp-n5h9v-01si.pdf p.12 Fig. 10, 15 Fig. 13, 16-17 (Q5H9V-01SI identical, same pages); icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24, p.30-31"
    },
    {
     "plug": "OST (3-pin header)",
@@ -74163,14 +74175,14 @@ const BRAND_SENSOR_MAPS = [
     "name": "Outdoor suction temperature thermistor, 10k",
     "location": "Suction tube, aligned lengthwise along the tube (Fig. 14)",
     "kind": "thermistor",
-    "chart": "icp-r454vs-10k-points",
-    "spec": "10k at 77F. Used for EXV control. Failed OST: no heating (cooling continues), 47F substituted.",
+    "chart": "icp-r454vs-10k-table9",
+    "spec": "10k at 77F. Used for EXV control. Failed OST: no heating (cooling continues), 47F substituted. Open fault: above 465 kohm for 1 second (clears below 465 kohm for 1 second); shorted: below 1 kohm for 1 second (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.30-31). Full 0-120 F table: chart Table 9 (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24). Check points with tolerance: 10.0 k +/-2.3% at 77F, 32.6 k +/-3.2% at 32F, 85.5 k +/-3.4% at 0F (installation instructions).",
     "errorCodes": [
      "53-01 / 53-41 OST sensor open",
      "53-02 / 53-42 OST sensor shorted/high temp"
     ],
     "test": "Power off, wait 2 min, verify 0 V at the VFD. Unplug the OST plug from the PCM and ohm the thermistor leads; compare with the chart at the sensor temperature. Open or shorted = replace thermistor; good reading but code stays = check harness, then PCM.",
-    "source": "icp-n5h9v-01si.pdf p.12 Fig. 10, 15 Fig. 14, 16-18 (Q5H9V-01SI identical, same pages)"
+    "source": "icp-n5h9v-01si.pdf p.12 Fig. 10, 15 Fig. 14, 16-18 (Q5H9V-01SI identical, same pages); icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24, p.30-31"
    },
    {
     "plug": "ODT (4-pin header)",
@@ -74180,14 +74192,14 @@ const BRAND_SENSOR_MAPS = [
     "location": "Compressor discharge stub-out, inside the compressor sound blanket (Fig. 14); curved face must hug the tube, tied through the original slot",
     "kind": "thermistor",
     "chart": "icp-r454vs-50k-odt-points",
-    "spec": "50k at 25C/77F (Table 7). Failed ODT: fixed speed, 47F substituted. Do not disable.",
+    "spec": "50k at 25C/77F (Table 7). Failed ODT: fixed speed, 47F substituted. Do not disable. Open: above 310 kohm for 1 second (if it reads above 310 kohm while OAT and OCT read above 25F, look for a break in the wiring or connector); shorted: below 670 ohm for 1 second (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.31). Check points with tolerance: 50.15 k +/-5.0% at 25C (77F), 7.565 k +/-3.0% at 75C (167F), 1.7 k +/-1.4% at 125C (257F) (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.23 Table 8; installation instructions 50k table). Full 0-120 F table: chart Table 9 (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24).",
     "errorCodes": [
      "54-01 ODT sensor open/low temp",
      "54-02 ODT sensor shorted/high temp",
      "34-11 / 34-58 compressor high temperature limit"
     ],
     "test": "Power off, unplug ODT at the PCM, ohm the thermistor leads and compare with the 50k chart (it reads hot-tube temperature, not ambient). Check it is tight on the discharge stub inside the blanket.",
-    "source": "icp-n5h9v-01si.pdf p.8, 12 Fig. 10, 14 Table 7, 15 Fig. 14, 16-17 (Q5H9V-01SI identical, same pages)"
+    "source": "icp-n5h9v-01si.pdf p.8, 12 Fig. 10, 14 Table 7, 15 Fig. 14, 16-17 (Q5H9V-01SI identical, same pages); icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24, p.31"
    },
    {
     "plug": "P1 / P2 (4-pin headers)",
@@ -74196,7 +74208,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Discharge and suction pressure transducers (identical; either may go on P1 or P2)",
     "location": "Suction tube and compressor discharge (Fig. 14 shows \"Pressure Transducer (OPT)\")",
     "kind": "pressure",
-    "spec": "Range 0-620 psig. PCM uses the discharge transducer to keep the HPS from opening; pump-down ends below 20 psig suction.",
+    "spec": "Range 0-620 psig. PCM uses the discharge transducer to keep the HPS from opening; pump-down ends below 20 psig suction. Each transducer has 3 wires: ground BLK, +5V DC RED, signal GRN. Good signal 0.5-4.5 VDC. Above 4.5 VDC = 'open' code (57-01 / 57-41, 58-01 / 58-41; most likely the sensor wire disconnected), below 0.5 VDC = 'shorted' code (57-02 / 57-42, 58-02 / 58-42; most likely the sensor wire shorted to the chassis), 4.84-4.95 VDC = 57-43 / 58-43 (most likely a failed transducer). Swap the P1 and P2 harnesses: if the error follows the transducer replace it; if it stays with the input replace the PCM. Compare with a gauge at the matching service port before condemning one. (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.25, p.31-32)",
     "errorCodes": [
      "57-01 / 57-41 P1 open",
      "57-02 / 57-42 P1 shorted",
@@ -74207,7 +74219,7 @@ const BRAND_SENSOR_MAPS = [
      "31-11 / 31-58 high pressure limit"
     ],
     "test": "Compare unit pressure readout with gauges. Each transducer may be connected to either PCM input (p.13), so swapping the P1 and P2 plugs shows whether a fault follows the transducer (replace transducer) or stays on the input (PCM/harness).",
-    "source": "icp-n5h9v-01si.pdf p.8, 10, 12-13 Fig. 10, 14, 15 Fig. 14, 17-18 (Q5H9V-01SI identical, same pages)"
+    "source": "icp-n5h9v-01si.pdf p.8, 10, 12-13 Fig. 10, 14, 15 Fig. 14, 17-18 (Q5H9V-01SI identical, same pages); icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.25, p.31-32"
    },
    {
     "plug": "EXV-H (5-pin header)",
@@ -74215,14 +74227,14 @@ const BRAND_SENSOR_MAPS = [
     "code": "EXV-H",
     "name": "Heating electronic expansion valve (main EXV)",
     "kind": "eev",
-    "spec": "EVAC mode (DIP 1) drives the EXV open for recovery/evacuation and it stays open.",
+    "spec": "EVAC mode (DIP 1) drives the EXV open for recovery/evacuation and it stays open. EXV-H 5-wire plug (TE 1744498-5): pin 1 gray excitation, pin 2 black phase B-bar, pin 3 yellow phase A-bar, pin 4 red phase B, pin 5 orange phase A. Coil 43 to 49 ohms from common to each remaining terminal. 12 VDC 2-phase unipolar stepper, 475 steps closed to open, driven at 77 steps per second; the PCM drives it closed at power-up. (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.13, p.25 Fig. 23)",
     "errorCodes": [
      "64-41 EXV-H phase open (HP only)",
      "64-44 EXV-H power short to ground",
      "64-45 EXV-H phase short to ground"
     ],
     "test": "Use EVAC mode (DIP switch 1) to open the EXV before recovery or vacuum.",
-    "source": "icp-n5h9v-01si.pdf p.5, 10, 12 Fig. 10, 13, 17-18 (Q5H9V-01SI identical, same pages)"
+    "source": "icp-n5h9v-01si.pdf p.5, 10, 12 Fig. 10, 13, 17-18 (Q5H9V-01SI identical, same pages); icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.13, p.25"
    },
    {
     "plug": "RVS (3-pin header)",
@@ -74378,7 +74390,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Variable speed rotary compressor leads at the VFD",
     "location": "VFD terminals",
     "kind": "other",
-    "spec": "Winding to winding at 68F (Table 8): size 24 = 0.61, 36 = 0.61, 48 = 0.18, 60 = 0.18 ohm; terminal to ground >1 megohm. Never apply line voltage to the compressor. Do not megger.",
+    "spec": "Winding to winding at 68F (Table 8): size 24 = 0.61, 36 = 0.61, 48 = 0.18, 60 = 0.18 ohm; terminal to ground >1 megohm. Never apply line voltage to the compressor. Do not megger. Service manual Table 5: N5H9V24 / Q5H9V24 0.61, 36 0.61, 48 0.18, 60 0.18 ohm (same as the installation instructions); do not use a megger (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.22).",
     "errorCodes": [
      "38-13 / 38-53 compressor starting error",
      "38-54 compressor no pump",
@@ -74389,7 +74401,7 @@ const BRAND_SENSOR_MAPS = [
      "81-31 stator heat incorrect"
     ],
     "test": "Pull U/V/W off the VFD, ohm YEL-RED, YEL-BLK, RED-BLK (all equal, compare Table 8) and each to ground. If wrong, re-measure at the compressor fusite under the sound blanket.",
-    "source": "icp-n5h9v-01si.pdf p.13, 16 Table 8, 17-18 (Q5H9V-01SI identical, same pages)"
+    "source": "icp-n5h9v-01si.pdf p.13, 16 Table 8, 17-18 (Q5H9V-01SI identical, same pages); icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.22"
    },
    {
     "plug": "Fan motor (5 wires at VFD)",
@@ -74398,7 +74410,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Outdoor fan, brushless DC with integrated control, powered and speed-commanded (0-5 V) by the VFD",
     "location": "Outdoor fan, wired to the VFD",
     "kind": "other",
-    "spec": "All 5 wires carry high voltage (not earth referenced). Do not measure voltages while running. Fan off in defrost.",
+    "spec": "All 5 wires carry high voltage (not earth referenced). Do not measure voltages while running. Fan off in defrost. Fan harness at the VFD (Fig. 17): 4-pin plug 1 black GND, 2 orange Vcc, 3 yellow Vsp, 4 blue FG, plus a separate Vdc lead. Unplug the fan harness at the VFD and ohm to GND by motor part number (Table 6; read the number on the motor): 1208502 Vdc 1.04 megohm, Vcc 62.1k, Vsp 216k, FG open; 1192973 1.37 megohm / 43.7k / 119k / open; 1208504 1.22 megohm / 54.3k / 222k / open; 1192975 and 1208552 1.30 megohm / 45.9k / 119k / open. (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.22-23)",
     "errorCodes": [
      "39-13 / 39-53 fan start error",
      "39-14 fan speed error",
@@ -74406,7 +74418,7 @@ const BRAND_SENSOR_MAPS = [
      "28-73 VFD 15V shorted to ground"
     ],
     "test": "Check the blade turns freely and all connections are tight; no voltage tests while running.",
-    "source": "icp-n5h9v-01si.pdf p.13, 16, 17-18 (Q5H9V-01SI identical, same pages)"
+    "source": "icp-n5h9v-01si.pdf p.13, 16, 17-18 (Q5H9V-01SI identical, same pages); icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.22-23"
    }
   ],
   "test": "Read the codes on the PCM 5x7 display (Status Code Recall: short FORCED DEFROST pins with unit off, then power up). Ohm thermistors at the PCM plugs against Table 6/7. VFD: power off, wait 2 min, verify 0 V before touching.",
@@ -74472,14 +74484,14 @@ const BRAND_SENSOR_MAPS = [
     "name": "Outdoor air temperature thermistor, 10k",
     "location": "In the control box next to the MODEL / CCN plugs, rotated and locked with the spherical nib facing the front of the control box (Fig. 32)",
     "kind": "thermistor",
-    "chart": "icp-r454vs-10k-points",
-    "spec": "10k at 77F. Failed OAT: fixed speed; OST substituted in heating, OCT-HP reported otherwise.",
+    "chart": "icp-r454vs-10k-table9",
+    "spec": "10k at 77F. Failed OAT: fixed speed; OST substituted in heating, OCT-HP reported otherwise. Open fault: above 465 kohm for 1 second (clears below 465 kohm for 1 second); shorted: below 1 kohm for 1 second (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.30-31). Full 0-120 F table: chart Table 9 (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24). Check points with tolerance: 10.0 k +/-2.3% at 77F, 32.6 k +/-3.2% at 32F, 85.5 k +/-3.4% at 0F (installation instructions).",
     "errorCodes": [
      "51-01 OAT sensor open/low temp",
      "51-02 OAT sensor shorted/high temp"
     ],
     "test": "Power off, wait 2 min, verify 0 V at the VFD. Unplug the OAT/OCT plug from the PCM and ohm the thermistor leads; compare with the chart at the sensor temperature. Open/shorted = replace thermistor; good reading but code stays = check harness, then PCM.",
-    "source": "icp-b5h3v-01si.pdf p.16 Fig. 29, 19 Table 8, 20 Fig. 32, 21-22"
+    "source": "icp-b5h3v-01si.pdf p.16 Fig. 29, 19 Table 8, 20 Fig. 32, 21-22; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24, p.30-31"
    },
    {
     "plug": "OCT-HP / LLT-AC (5-pin OAT / OCT-HP header)",
@@ -74488,15 +74500,15 @@ const BRAND_SENSOR_MAPS = [
     "name": "Outdoor coil temperature thermistor, 10k",
     "location": "Stub tube on the outdoor coil (one stub tube, usually the bottom circuit) - Fig. 33",
     "kind": "thermistor",
-    "chart": "icp-r454vs-10k-points",
-    "spec": "10k at 77F. Low ambient, defrost. Failed OCT-HP: defrost every 60 min for 10 min; saturated suction temp substituted in heating, discharge temp in cooling.",
+    "chart": "icp-r454vs-10k-table9",
+    "spec": "10k at 77F. Low ambient, defrost. Failed OCT-HP: defrost every 60 min for 10 min; saturated suction temp substituted in heating, discharge temp in cooling. Open fault: above 465 kohm for 1 second (clears below 465 kohm for 1 second); shorted: below 1 kohm for 1 second (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.30-31). Full 0-120 F table: chart Table 9 (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24). Check points with tolerance: 10.0 k +/-2.3% at 77F, 32.6 k +/-3.2% at 32F, 85.5 k +/-3.4% at 0F (installation instructions).",
     "errorCodes": [
      "52-01 OCT-HP/LLT-AC sensor open/low temp",
      "52-02 OCT-HP/LLT-AC sensor shorted/high temp",
      "41-13 defrost overrun"
     ],
     "test": "Power off, wait 2 min, verify 0 V at the VFD. Unplug the OAT/OCT plug from the PCM and ohm the thermistor leads; compare with the chart at the sensor temperature. Open/shorted = replace thermistor; good reading but code stays = check harness, then PCM.",
-    "source": "icp-b5h3v-01si.pdf p.16 Fig. 29, 19-22 Fig. 33"
+    "source": "icp-b5h3v-01si.pdf p.16 Fig. 29, 19-22 Fig. 33; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24, p.30-31"
    },
    {
     "plug": "LLT-HP (3-pin header)",
@@ -74505,14 +74517,14 @@ const BRAND_SENSOR_MAPS = [
     "name": "Liquid line temperature thermistor, 10k",
     "location": "Liquid tube between the liquid service valve and the EXV (Fig. 33 \"LLT-HP Location\")",
     "kind": "thermistor",
-    "chart": "icp-r454vs-10k-points",
-    "spec": "10k at 77F. Heating control and subcooling in charge mode; failed = no subcooling calculation in charge mode.",
+    "chart": "icp-r454vs-10k-table9",
+    "spec": "10k at 77F. Heating control and subcooling in charge mode; failed = no subcooling calculation in charge mode. Open fault: above 465 kohm for 1 second (clears below 465 kohm for 1 second); shorted: below 1 kohm for 1 second (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.30-31). Full 0-120 F table: chart Table 9 (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24). Check points with tolerance: 10.0 k +/-2.3% at 77F, 32.6 k +/-3.2% at 32F, 85.5 k +/-3.4% at 0F (installation instructions).",
     "errorCodes": [
      "55-01 LLT-HP open/low temp (HP only)",
      "55-02 LLT-HP shorted/high temp (HP only)"
     ],
     "test": "Power off, wait 2 min, verify 0 V at the VFD. Unplug the LLT-HP plug from the PCM and ohm the thermistor leads; compare with the chart at the sensor temperature. Open/shorted = replace thermistor; good reading but code stays = check harness, then PCM.",
-    "source": "icp-b5h3v-01si.pdf p.16 Fig. 29, 20 Fig. 33, 21-22"
+    "source": "icp-b5h3v-01si.pdf p.16 Fig. 29, 20 Fig. 33, 21-22; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24, p.30-31"
    },
    {
     "plug": "OST (3-pin header)",
@@ -74521,14 +74533,14 @@ const BRAND_SENSOR_MAPS = [
     "name": "Outdoor suction temperature thermistor, 10k",
     "location": "Suction tube, aligned lengthwise (Fig. 34)",
     "kind": "thermistor",
-    "chart": "icp-r454vs-10k-points",
-    "spec": "10k at 77F. EXV control. Failed OST: no heating (cooling continues), 47F substituted.",
+    "chart": "icp-r454vs-10k-table9",
+    "spec": "10k at 77F. EXV control. Failed OST: no heating (cooling continues), 47F substituted. Open fault: above 465 kohm for 1 second (clears below 465 kohm for 1 second); shorted: below 1 kohm for 1 second (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.30-31). Full 0-120 F table: chart Table 9 (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24). Check points with tolerance: 10.0 k +/-2.3% at 77F, 32.6 k +/-3.2% at 32F, 85.5 k +/-3.4% at 0F (installation instructions).",
     "errorCodes": [
      "53-01 / 53-41 OST open/low temp",
      "53-02 / 53-42 OST shorted/high temp"
     ],
     "test": "Power off, wait 2 min, verify 0 V at the VFD. Unplug the OST plug from the PCM and ohm the thermistor leads; compare with the chart at the sensor temperature. Open/shorted = replace thermistor; good reading but code stays = check harness, then PCM.",
-    "source": "icp-b5h3v-01si.pdf p.16 Fig. 29, 20 Fig. 34, 21-23"
+    "source": "icp-b5h3v-01si.pdf p.16 Fig. 29, 20 Fig. 34, 21-23; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24, p.30-31"
    },
    {
     "plug": "ODT (4-pin header)",
@@ -74538,14 +74550,14 @@ const BRAND_SENSOR_MAPS = [
     "location": "Compressor discharge stub-out inside the sound blanket (Fig. 34); curved face hugging the tube",
     "kind": "thermistor",
     "chart": "icp-r454vs-50k-odt-points",
-    "spec": "50k at 25C/77F (Table 9). Failed ODT: fixed speed, 47F substituted.",
+    "spec": "50k at 25C/77F (Table 9). Failed ODT: fixed speed, 47F substituted. Open: above 310 kohm for 1 second (if it reads above 310 kohm while OAT and OCT read above 25F, look for a break in the wiring or connector); shorted: below 670 ohm for 1 second (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.31). Check points with tolerance: 50.15 k +/-5.0% at 25C (77F), 7.565 k +/-3.0% at 75C (167F), 1.7 k +/-1.4% at 125C (257F) (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.23 Table 8; installation instructions 50k table). Full 0-120 F table: chart Table 9 (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24).",
     "errorCodes": [
      "54-01 ODT open/low temp",
      "54-02 ODT shorted/high temp",
      "34-11 / 34-58 compressor high temperature limit"
     ],
     "test": "Power off, unplug ODT, ohm the leads, compare with the 50k chart (reads tube temperature). Check it is tight on the discharge stub inside the blanket.",
-    "source": "icp-b5h3v-01si.pdf p.16 Fig. 29, 19 Table 9, 20 Fig. 34, 21-22"
+    "source": "icp-b5h3v-01si.pdf p.16 Fig. 29, 19 Table 9, 20 Fig. 34, 21-22; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24, p.31"
    },
    {
     "plug": "P1 / P2 (4-pin headers)",
@@ -74554,7 +74566,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Discharge and suction pressure transducers (either may connect to either input)",
     "location": "Suction tube and compressor discharge (Fig. 34 shows two \"Pressure Transducer (OPT)\")",
     "kind": "pressure",
-    "spec": "Range 0-620 psig. PCM uses the discharge transducer to keep the HPS from opening.",
+    "spec": "Range 0-620 psig. PCM uses the discharge transducer to keep the HPS from opening. Each transducer has 3 wires: ground BLK, +5V DC RED, signal GRN. Good signal 0.5-4.5 VDC. Above 4.5 VDC = 'open' code (57-01 / 57-41, 58-01 / 58-41; most likely the sensor wire disconnected), below 0.5 VDC = 'shorted' code (57-02 / 57-42, 58-02 / 58-42; most likely the sensor wire shorted to the chassis), 4.84-4.95 VDC = 57-43 / 58-43 (most likely a failed transducer). Swap the P1 and P2 harnesses: if the error follows the transducer replace it; if it stays with the input replace the PCM. Compare with a gauge at the matching service port before condemning one. (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.25, p.31-32)",
     "errorCodes": [
      "57-01 / 57-41 P1 open",
      "57-02 / 57-42 P1 shorted",
@@ -74567,7 +74579,7 @@ const BRAND_SENSOR_MAPS = [
      "31-11 / 31-58 high pressure limit"
     ],
     "test": "Compare the Ion control / service app pressure with gauges. Since either transducer may go on either input, swapping P1 and P2 shows whether the fault follows the transducer or stays on the PCM input.",
-    "source": "icp-b5h3v-01si.pdf p.16 Fig. 29, 18-19, 20 Fig. 34, 22-23"
+    "source": "icp-b5h3v-01si.pdf p.16 Fig. 29, 18-19, 20 Fig. 34, 22-23; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.25, p.31-32"
    },
    {
     "plug": "EXV-H (5-pin header)",
@@ -74581,7 +74593,8 @@ const BRAND_SENSOR_MAPS = [
      "64-45 EXV-H phase short to ground"
     ],
     "test": "Use the Ion control evacuation/recovery mode to open the EXV before vacuum or recovery.",
-    "source": "icp-b5h3v-01si.pdf p.14-16 Fig. 29, 18, 22-23"
+    "source": "icp-b5h3v-01si.pdf p.14-16 Fig. 29, 18, 22-23; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.13, p.25",
+    "spec": "EXV-H 5-wire plug (TE 1744498-5): pin 1 gray excitation, pin 2 black phase B-bar, pin 3 yellow phase A-bar, pin 4 red phase B, pin 5 orange phase A. Coil 43 to 49 ohms from common to each remaining terminal. 12 VDC 2-phase unipolar stepper, 475 steps closed to open, driven at 77 steps per second; the PCM drives it closed at power-up. (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.13, p.25 Fig. 23)"
    },
    {
     "plug": "EXV-VI (6-pin header)",
@@ -74590,13 +74603,13 @@ const BRAND_SENSOR_MAPS = [
     "name": "Vapor injection electronic expansion valve (some models)",
     "location": "Vapor injection circuit with brazed plate heat exchanger (BPHE)",
     "kind": "eev",
-    "spec": "Only some models in the family have vapor injection (p.18).",
+    "spec": "Only some models in the family have vapor injection (p.18). EXV-VI 6-wire plug (TE 1744496-6): pin 1 empty, pin 2 gray excitation, pin 3 black phase B-bar, pin 4 yellow phase A-bar, pin 5 red phase B, pin 6 orange phase A. Coil 43 to 49 ohms from common to each remaining terminal (same stator as EXV-H). The 65-41 / 65-44 / 65-45 code sections are headed 'B5H3V60 Only'. (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.25 Fig. 24, p.32-33)",
     "errorCodes": [
      "65-41 EXV-VI phase open",
      "65-44 EXV-VI power short to ground",
      "65-45 EXV-VI phase short to ground"
     ],
-    "source": "icp-b5h3v-01si.pdf p.15-16 Fig. 29, 18, 22"
+    "source": "icp-b5h3v-01si.pdf p.15-16 Fig. 29, 18, 22; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.25, p.32-33"
    },
    {
     "plug": "PEV (4-pin header)",
@@ -74700,7 +74713,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "PCM-VFD Modbus communication and VFD low-voltage relay control",
     "location": "PCM top right (Fig. 29); VFD-PCM COMM LED just below it",
     "kind": "other",
-    "spec": "VFD-PCM COMM LED: flashes green on good VFD messages, red on bad/no messages.",
+    "spec": "VFD-PCM COMM LED: flashes green on good VFD messages, red on bad/no messages. VFD control relay: 12 VDC from PCM pins 6 and 7 to VFD pins 5 and 6 through the communication cable. Harness off the PCM (VFD end still connected): pins 6-7 about 720 ohms. Much higher = check each cable conductor end to end (a few ohms), then pins 5-6 at the VFD connector (well above 720 ohms = VFD). 24-58 check: harness off, 5 VDC between pin 3 (GND) and pin 4 at the VFD end. (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.27, p.33)",
     "errorCodes": [
      "86-06 / 86-46 VFD communication error",
      "87-13 / 87-53 VFD initialization error",
@@ -74708,7 +74721,7 @@ const BRAND_SENSOR_MAPS = [
      "66-42 VFD control relay coil shorted",
      "24-58 5V PCM external power out of range"
     ],
-    "source": "icp-b5h3v-01si.pdf p.15-17 Fig. 29, Fig. 30, 22-23"
+    "source": "icp-b5h3v-01si.pdf p.15-17 Fig. 29, Fig. 30, 22-23; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.27, p.33"
    },
    {
     "plug": "SERVICE PORT (6-pin)",
@@ -74832,7 +74845,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Outdoor fan, brushless DC, powered and speed-commanded (0-5 V) by the VFD",
     "location": "Wired to the VFD",
     "kind": "other",
-    "spec": "All 5 wires at high voltage (not earth referenced) - no voltage measurements while running. Fan off in defrost.",
+    "spec": "All 5 wires at high voltage (not earth referenced) - no voltage measurements while running. Fan off in defrost. Fan harness at the VFD (Fig. 17): 4-pin plug 1 black GND, 2 orange Vcc, 3 yellow Vsp, 4 blue FG, plus a separate Vdc lead. Unplug the fan harness at the VFD and ohm to GND by motor part number (Table 6; read the number on the motor): 1208502 Vdc 1.04 megohm, Vcc 62.1k, Vsp 216k, FG open; 1192973 1.37 megohm / 43.7k / 119k / open; 1208504 1.22 megohm / 54.3k / 222k / open; 1192975 and 1208552 1.30 megohm / 45.9k / 119k / open. (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.22-23)",
     "errorCodes": [
      "39-13 / 39-53 fan start error",
      "39-14 fan speed error",
@@ -74840,7 +74853,7 @@ const BRAND_SENSOR_MAPS = [
      "39-58 fan motor error"
     ],
     "test": "Check the blade turns freely and connections are tight.",
-    "source": "icp-b5h3v-01si.pdf p.18, 21-23"
+    "source": "icp-b5h3v-01si.pdf p.18, 21-23; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.22-23"
    }
   ],
   "test": "Read codes on the Ion Black control or the PCM 5x7 display (Status Code Recall via FORCED DEFROST pins). Ohm thermistors at the PCM against Table 8/9. VFD: wait for R1 LED out and verify 0 V before touching.",
@@ -74848,18 +74861,23 @@ const BRAND_SENSOR_MAPS = [
   "gaps": [
    "Pin-by-pin assignment of the OAT / OCT-HP 5-pin header only implied by label position in the board drawing; not stated in text.",
    "Wired pins of LLT-HP, OST, ODT, PEV, RVS headers not stated; no wire colours for any PCM plug.",
-   "P1/P2 pinout, supply/output volts and volts-to-psig not stated (only 0-620 psig).",
-   "EXV-H (and EXV-VI) pinout and coil resistance not stated.",
+   "P1/P2 pin numbers and volts-to-psig not stated; wire colours (BLK / RED / GRN) and 0.5-4.5 VDC signal range are in the service manual (p.31).",
+   "EXV-H / EXV-VI pinout and coil resistance: now from the service manual (p.25), not the installation instructions.",
    "SUMP, Temp7 XLT headers and the 4-position DIP switch functions not described.",
    "VFD COMMS 7-pin pinout not stated; HPS wiring point not stated.",
    "No unit wiring diagram in the installation instructions.",
-   "Which B5H3V sizes have vapor injection (EXV-VI) is not stated (\"some models\")."
+   "Vapor injection: the service manual heads the EXV-VI codes 'B5H3V60 Only' (p.32-33); the installation instructions still say 'some models'."
   ],
   "sources": [
    {
     "file": "icp-b5h3v-01si.pdf",
     "pages": "7-8, 15-23",
     "what": "PCM inputs/outputs, Fig. 29 board drawing, Fig. 30 board photo, Table 6 / Fig. 31 VFD LEDs, HPS 670/470, transducers 0-620 psig, Table 7 model plug, Tables 8-9 thermistors, Fig. 32-Fig. 34 sensor locations, Table 10 compressor, Table 11 codes (image), Table 12 lockouts"
+   },
+   {
+    "file": "icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf",
+    "pages": "13, 22-25, 27, 30-33",
+    "what": "Table 9 thermistor chart, open / short thresholds, transducer wiring and voltages, EXV pinouts and coil ohms, fan Table 6, VFD relay coil 720 ohms, B5H3V60-only EXV-VI codes"
    }
   ]
  },
@@ -74901,14 +74919,14 @@ const BRAND_SENSOR_MAPS = [
     "name": "Outdoor air temperature thermistor, 10k",
     "location": "In the control box next to the MODEL / CCN plugs, rotated and locked with the spherical nib facing the front of the control box (Fig. 31)",
     "kind": "thermistor",
-    "chart": "icp-r454vs-10k-points",
-    "spec": "10k at 77F. Failed OAT: fixed speed; OST substituted in heating, OCT-HP reported otherwise.",
+    "chart": "icp-r454vs-10k-table9",
+    "spec": "10k at 77F. Failed OAT: fixed speed; OST substituted in heating, OCT-HP reported otherwise. Open fault: above 465 kohm for 1 second (clears below 465 kohm for 1 second); shorted: below 1 kohm for 1 second (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.30-31). Full 0-120 F table: chart Table 9 (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24). Check points with tolerance: 10.0 k +/-2.3% at 77F, 32.6 k +/-3.2% at 32F, 85.5 k +/-3.4% at 0F (installation instructions).",
     "errorCodes": [
      "51-01 OAT sensor open/low temp",
      "51-02 OAT sensor shorted/high temp"
     ],
     "test": "Power off, wait 2 min, verify 0 V at the VFD. Unplug the OAT/OCT plug from the PCM and ohm the thermistor leads; compare with the chart at the sensor temperature. Open/shorted = replace thermistor; good reading but code stays = check harness, then PCM.",
-    "source": "icp-b5h0v-01si.pdf p.16 Fig. 28, 19 Table 8, 20 Fig. 31, 21-22"
+    "source": "icp-b5h0v-01si.pdf p.16 Fig. 28, 19 Table 8, 20 Fig. 31, 21-22; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24, p.30-31"
    },
    {
     "plug": "OCT-HP / LLT-AC (5-pin OAT / OCT-HP header)",
@@ -74917,15 +74935,15 @@ const BRAND_SENSOR_MAPS = [
     "name": "Outdoor coil temperature thermistor, 10k",
     "location": "Stub tube on the outdoor coil (one stub tube, usually the bottom circuit) - Fig. 32",
     "kind": "thermistor",
-    "chart": "icp-r454vs-10k-points",
-    "spec": "10k at 77F. Low ambient, defrost. Failed OCT-HP: defrost every 60 min for 10 min; saturated suction temp substituted in heating, discharge temp in cooling.",
+    "chart": "icp-r454vs-10k-table9",
+    "spec": "10k at 77F. Low ambient, defrost. Failed OCT-HP: defrost every 60 min for 10 min; saturated suction temp substituted in heating, discharge temp in cooling. Open fault: above 465 kohm for 1 second (clears below 465 kohm for 1 second); shorted: below 1 kohm for 1 second (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.30-31). Full 0-120 F table: chart Table 9 (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24). Check points with tolerance: 10.0 k +/-2.3% at 77F, 32.6 k +/-3.2% at 32F, 85.5 k +/-3.4% at 0F (installation instructions).",
     "errorCodes": [
      "52-01 OCT-HP/LLT-AC sensor open/low temp",
      "52-02 OCT-HP/LLT-AC sensor shorted/high temp",
      "41-13 defrost overrun"
     ],
     "test": "Power off, wait 2 min, verify 0 V at the VFD. Unplug the OAT/OCT plug from the PCM and ohm the thermistor leads; compare with the chart at the sensor temperature. Open/shorted = replace thermistor; good reading but code stays = check harness, then PCM.",
-    "source": "icp-b5h0v-01si.pdf p.16 Fig. 28, 19-22 Fig. 32"
+    "source": "icp-b5h0v-01si.pdf p.16 Fig. 28, 19-22 Fig. 32; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24, p.30-31"
    },
    {
     "plug": "LLT-HP (3-pin header)",
@@ -74934,14 +74952,14 @@ const BRAND_SENSOR_MAPS = [
     "name": "Liquid line temperature thermistor, 10k",
     "location": "Liquid tube between the liquid service valve and the EXV (Fig. 32 \"LLT-HP Location\")",
     "kind": "thermistor",
-    "chart": "icp-r454vs-10k-points",
-    "spec": "10k at 77F. Heating control and subcooling in charge mode; failed = no subcooling calculation in charge mode.",
+    "chart": "icp-r454vs-10k-table9",
+    "spec": "10k at 77F. Heating control and subcooling in charge mode; failed = no subcooling calculation in charge mode. Open fault: above 465 kohm for 1 second (clears below 465 kohm for 1 second); shorted: below 1 kohm for 1 second (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.30-31). Full 0-120 F table: chart Table 9 (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24). Check points with tolerance: 10.0 k +/-2.3% at 77F, 32.6 k +/-3.2% at 32F, 85.5 k +/-3.4% at 0F (installation instructions).",
     "errorCodes": [
      "55-01 LLT-HP open/low temp (HP only)",
      "55-02 LLT-HP shorted/high temp (HP only)"
     ],
     "test": "Power off, wait 2 min, verify 0 V at the VFD. Unplug the LLT-HP plug from the PCM and ohm the thermistor leads; compare with the chart at the sensor temperature. Open/shorted = replace thermistor; good reading but code stays = check harness, then PCM.",
-    "source": "icp-b5h0v-01si.pdf p.16 Fig. 28, 20 Fig. 32, 21-22"
+    "source": "icp-b5h0v-01si.pdf p.16 Fig. 28, 20 Fig. 32, 21-22; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24, p.30-31"
    },
    {
     "plug": "OST (3-pin header)",
@@ -74950,14 +74968,14 @@ const BRAND_SENSOR_MAPS = [
     "name": "Outdoor suction temperature thermistor, 10k",
     "location": "Suction tube, aligned lengthwise (Fig. 33)",
     "kind": "thermistor",
-    "chart": "icp-r454vs-10k-points",
-    "spec": "10k at 77F. EXV control. Failed OST: no heating (cooling continues), 47F substituted.",
+    "chart": "icp-r454vs-10k-table9",
+    "spec": "10k at 77F. EXV control. Failed OST: no heating (cooling continues), 47F substituted. Open fault: above 465 kohm for 1 second (clears below 465 kohm for 1 second); shorted: below 1 kohm for 1 second (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.30-31). Full 0-120 F table: chart Table 9 (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24). Check points with tolerance: 10.0 k +/-2.3% at 77F, 32.6 k +/-3.2% at 32F, 85.5 k +/-3.4% at 0F (installation instructions).",
     "errorCodes": [
      "53-01 / 53-41 OST open/low temp",
      "53-02 / 53-42 OST shorted/high temp"
     ],
     "test": "Power off, wait 2 min, verify 0 V at the VFD. Unplug the OST plug from the PCM and ohm the thermistor leads; compare with the chart at the sensor temperature. Open/shorted = replace thermistor; good reading but code stays = check harness, then PCM.",
-    "source": "icp-b5h0v-01si.pdf p.16 Fig. 28, 20 Fig. 33, 21-23"
+    "source": "icp-b5h0v-01si.pdf p.16 Fig. 28, 20 Fig. 33, 21-23; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24, p.30-31"
    },
    {
     "plug": "ODT (4-pin header)",
@@ -74967,14 +74985,14 @@ const BRAND_SENSOR_MAPS = [
     "location": "Compressor discharge stub-out inside the sound blanket (Fig. 33); curved face hugging the tube",
     "kind": "thermistor",
     "chart": "icp-r454vs-50k-odt-points",
-    "spec": "50k at 25C/77F (Table 9). Failed ODT: fixed speed, 47F substituted.",
+    "spec": "50k at 25C/77F (Table 9). Failed ODT: fixed speed, 47F substituted. Open: above 310 kohm for 1 second (if it reads above 310 kohm while OAT and OCT read above 25F, look for a break in the wiring or connector); shorted: below 670 ohm for 1 second (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.31). Check points with tolerance: 50.15 k +/-5.0% at 25C (77F), 7.565 k +/-3.0% at 75C (167F), 1.7 k +/-1.4% at 125C (257F) (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.23 Table 8; installation instructions 50k table). Full 0-120 F table: chart Table 9 (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24).",
     "errorCodes": [
      "54-01 ODT open/low temp",
      "54-02 ODT shorted/high temp",
      "34-11 / 34-58 compressor high temperature limit"
     ],
     "test": "Power off, unplug ODT, ohm the leads, compare with the 50k chart (reads tube temperature). Check it is tight on the discharge stub inside the blanket.",
-    "source": "icp-b5h0v-01si.pdf p.16 Fig. 28, 19 Table 9, 20 Fig. 33, 21-22"
+    "source": "icp-b5h0v-01si.pdf p.16 Fig. 28, 19 Table 9, 20 Fig. 33, 21-22; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24, p.31"
    },
    {
     "plug": "P1 / P2 (4-pin headers)",
@@ -74983,7 +75001,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Discharge and suction pressure transducers (either may connect to either input)",
     "location": "Suction tube and compressor discharge (Fig. 33 shows two \"Pressure Transducer (OPT)\")",
     "kind": "pressure",
-    "spec": "Range 0-620 psig. PCM uses the discharge transducer to keep the HPS from opening.",
+    "spec": "Range 0-620 psig. PCM uses the discharge transducer to keep the HPS from opening. Each transducer has 3 wires: ground BLK, +5V DC RED, signal GRN. Good signal 0.5-4.5 VDC. Above 4.5 VDC = 'open' code (57-01 / 57-41, 58-01 / 58-41; most likely the sensor wire disconnected), below 0.5 VDC = 'shorted' code (57-02 / 57-42, 58-02 / 58-42; most likely the sensor wire shorted to the chassis), 4.84-4.95 VDC = 57-43 / 58-43 (most likely a failed transducer). Swap the P1 and P2 harnesses: if the error follows the transducer replace it; if it stays with the input replace the PCM. Compare with a gauge at the matching service port before condemning one. (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.25, p.31-32)",
     "errorCodes": [
      "57-01 / 57-41 P1 open",
      "57-02 / 57-42 P1 shorted",
@@ -74996,7 +75014,7 @@ const BRAND_SENSOR_MAPS = [
      "31-11 / 31-58 high pressure limit"
     ],
     "test": "Compare the Ion control / service app pressure with gauges. Since either transducer may go on either input, swapping P1 and P2 shows whether the fault follows the transducer or stays on the PCM input.",
-    "source": "icp-b5h0v-01si.pdf p.16 Fig. 28, 18-19, 20 Fig. 33, 22-23"
+    "source": "icp-b5h0v-01si.pdf p.16 Fig. 28, 18-19, 20 Fig. 33, 22-23; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.25, p.31-32"
    },
    {
     "plug": "EXV-H (5-pin header)",
@@ -75010,7 +75028,8 @@ const BRAND_SENSOR_MAPS = [
      "64-45 EXV-H phase short to ground"
     ],
     "test": "Use the Ion control evacuation/recovery mode to open the EXV before vacuum or recovery.",
-    "source": "icp-b5h0v-01si.pdf p.14-16 Fig. 28, 18, 22-23"
+    "source": "icp-b5h0v-01si.pdf p.14-16 Fig. 28, 18, 22-23; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.13, p.25",
+    "spec": "EXV-H 5-wire plug (TE 1744498-5): pin 1 gray excitation, pin 2 black phase B-bar, pin 3 yellow phase A-bar, pin 4 red phase B, pin 5 orange phase A. Coil 43 to 49 ohms from common to each remaining terminal. 12 VDC 2-phase unipolar stepper, 475 steps closed to open, driven at 77 steps per second; the PCM drives it closed at power-up. (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.13, p.25 Fig. 23)"
    },
    {
     "plug": "EXV-VI (6-pin header)",
@@ -75126,7 +75145,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "PCM-VFD Modbus communication and VFD low-voltage relay control",
     "location": "PCM top right (Fig. 28); VFD-PCM COMM LED just below it",
     "kind": "other",
-    "spec": "VFD-PCM COMM LED: flashes green on good VFD messages, red on bad/no messages.",
+    "spec": "VFD-PCM COMM LED: flashes green on good VFD messages, red on bad/no messages. VFD control relay: 12 VDC from PCM pins 6 and 7 to VFD pins 5 and 6 through the communication cable. Harness off the PCM (VFD end still connected): pins 6-7 about 720 ohms. Much higher = check each cable conductor end to end (a few ohms), then pins 5-6 at the VFD connector (well above 720 ohms = VFD). 24-58 check: harness off, 5 VDC between pin 3 (GND) and pin 4 at the VFD end. (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.27, p.33)",
     "errorCodes": [
      "86-06 / 86-46 VFD communication error",
      "87-13 / 87-53 VFD initialization error",
@@ -75134,7 +75153,7 @@ const BRAND_SENSOR_MAPS = [
      "66-42 VFD control relay coil shorted",
      "24-58 5V PCM external power out of range"
     ],
-    "source": "icp-b5h0v-01si.pdf p.15-17 Fig. 28, Fig. 29, 22-23"
+    "source": "icp-b5h0v-01si.pdf p.15-17 Fig. 28, Fig. 29, 22-23; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.27, p.33"
    },
    {
     "plug": "SERVICE PORT (6-pin)",
@@ -75258,7 +75277,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Outdoor fan, brushless DC, powered and speed-commanded (0-5 V) by the VFD",
     "location": "Wired to the VFD",
     "kind": "other",
-    "spec": "All 5 wires at high voltage (not earth referenced) - no voltage measurements while running. Fan off in defrost.",
+    "spec": "All 5 wires at high voltage (not earth referenced) - no voltage measurements while running. Fan off in defrost. Fan harness at the VFD (Fig. 17): 4-pin plug 1 black GND, 2 orange Vcc, 3 yellow Vsp, 4 blue FG, plus a separate Vdc lead. Unplug the fan harness at the VFD and ohm to GND by motor part number (Table 6; read the number on the motor): 1208502 Vdc 1.04 megohm, Vcc 62.1k, Vsp 216k, FG open; 1192973 1.37 megohm / 43.7k / 119k / open; 1208504 1.22 megohm / 54.3k / 222k / open; 1192975 and 1208552 1.30 megohm / 45.9k / 119k / open. (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.22-23)",
     "errorCodes": [
      "39-13 / 39-53 fan start error",
      "39-14 fan speed error",
@@ -75266,7 +75285,7 @@ const BRAND_SENSOR_MAPS = [
      "39-58 fan motor error"
     ],
     "test": "Check the blade turns freely and connections are tight.",
-    "source": "icp-b5h0v-01si.pdf p.18, 21-23"
+    "source": "icp-b5h0v-01si.pdf p.18, 21-23; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.22-23"
    }
   ],
   "test": "Read codes on the Ion Black control or the PCM 5x7 display (Status Code Recall via FORCED DEFROST pins). Ohm thermistors at the PCM against Table 8/9. VFD: wait for R1 LED out and verify 0 V before touching.",
@@ -75286,6 +75305,11 @@ const BRAND_SENSOR_MAPS = [
     "file": "icp-b5h0v-01si.pdf",
     "pages": "7-8, 15-23",
     "what": "PCM inputs/outputs, Fig. 28 board drawing, Fig. 29 board photo, Table 6 / Fig. 30 VFD LEDs, HPS 670/470, transducers 0-620 psig, Table 7 model plug, Tables 8-9 thermistors, Fig. 31-Fig. 33 sensor locations, Table 10 compressor, Table 11 codes (image), Table 12 lockouts"
+   },
+   {
+    "file": "icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf",
+    "pages": "13, 22-25, 27, 30-33",
+    "what": "Table 9 thermistor chart, open / short thresholds, transducer wiring and voltages, EXV-H pinout and coil ohms, fan Table 6, VFD relay coil"
    }
   ]
  },
@@ -128750,6 +128774,645 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "notes": "Only the 32 F close / 65 F open points are carried; the tolerance characters on 50NT-04SI p.32 print as '?' on the rendered page too."
+ },
+ {
+  "id": "york-pc5-ah-board",
+  "title": "York PC5 two-stage air handler (AH) main control board (red status LED, A2L diagnostic LED, SW4 model ID, SW5 configuration, SW1 last-error button)",
+  "side": "outdoor",
+  "brand": "York",
+  "models": "PC5E24N00S21, PC5E36N00S21, PC5E48N00S21, PC5E60N00S21 (install manual 6598667-UIM-A-1225)",
+  "match": [
+   "PC5E24",
+   "PC5E36",
+   "PC5E48",
+   "PC5E60"
+  ],
+  "sizes": [
+   "all"
+  ],
+  "board": "Figure 3 (p.21): compressor / auto stage / control power supply header, 3 A ATC fuse, thermostat input / output header, indoor motor PWM / electric heat kit output header, SW5 configuration DIPs, SW4 model ID DIPs, A2L sensor connection, factory run test connector (not currently used), SW1 last error button, A2L diagnostic LED, status LED.",
+  "replacement": [
+   {
+    "board": "York PC5 main control board - replacement",
+    "kit": "",
+    "replaces": "The factory two-stage AH main control board (the install manual prints no part number; parts from the BHC Group parts distribution center, p.54).",
+    "differences": "A factory board has the model ID programmed with the DIP switches at 0; a replacement must have SW4 set by hand (8 red flashes = model ID wrong).",
+    "steps": [
+     "Note the SW5 configuration DIP positions (cool, heat, adjust, humidistat, delay) on the old board.",
+     "Fit the new board and move each plug, including the A2L sensor plug on PC5E48 / PC5E60.",
+     "Set SW4 model ID, switches 1 to 6 (1 = on): PC5E24 001011, PC5E36 001100, PC5E48 001101, PC5E60 001110 (p.40).",
+     "Power up: slow red heartbeat with the A2L LED off = standby (p.22, p.55)."
+    ],
+    "source": "york-pc5-install-6598667-uim-a-1225.pdf p.21, p.40, p.51, p.54-55"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "A2L sensor connection (PC5E48 / PC5E60 only)",
+    "name": "A2L refrigerant leak sensor",
+    "location": "Shown in Figure 15 (p.50); the text does not describe the position",
+    "kind": "other",
+    "spec": "Fitted only on PC5E48 / PC5E60 (over 3.915 lb charge). Leak above 15% LFL = solid red status LED + rapid red A2L LED; the board runs the blower at 95% and ignores calls.",
+    "errorCodes": [
+     "A2L LED rapid red = leak above 15% LFL",
+     "A2L LED 1 red flash = sensor bypassed",
+     "A2L LED 2 red flashes = sensor communications lost",
+     "A2L LED 3 red flashes = sensor failure"
+    ],
+    "test": "Field test (p.22): in standby unplug the sensor wire - after 15 s the blower must come on and the manual says the status LED shows 2 red flashes with the A2L LED solid red; in cooling the compressor and outdoor fan must stop; plug it back in and after 15 s the system must return to normal. Note: Table 35 (p.56) lists sensor communications lost the other way round (status solid red + A2L LED 2 red flashes) - read both LEDs.",
+    "source": "york-pc5-install-6598667-uim-a-1225.pdf p.21-22, p.50, p.55-56"
+   },
+   {
+    "plug": "Not named in the text - see the wiring diagram (p.59-60)",
+    "name": "High-pressure switch",
+    "location": "Refrigerant circuit",
+    "kind": "switch",
+    "spec": "Opens 650 ± 10 psig, closes 450 ± 15 psig. R-454B part - do not use R-22 switches.",
+    "source": "york-pc5-install-6598667-uim-a-1225.pdf p.52"
+   },
+   {
+    "plug": "Not named in the text - see the wiring diagram (p.59-60)",
+    "name": "Low-pressure switch",
+    "location": "Refrigerant circuit",
+    "kind": "switch",
+    "spec": "Opens 60 ± 5 psig, closes 90 ± 7 psig. R-454B part - do not use R-22 switches.",
+    "source": "york-pc5-install-6598667-uim-a-1225.pdf p.52"
+   },
+   {
+    "plug": "Electric heat kit (6HK)",
+    "name": "Electric heat limit switches",
+    "location": "In each heating element circuit of the heat kit",
+    "kind": "switch",
+    "spec": "One self-resetting and one non-self-resetting limit per element circuit; elements off, blower keeps running when either opens.",
+    "source": "york-pc5-install-6598667-uim-a-1225.pdf p.52-53"
+   }
+  ]
+ },
+ {
+  "id": "york-pg5-dsi-board",
+  "title": "York PG5 two-stage direct spark ignition (DSI) main control board (green / amber / red status LED, A2L diagnostic LED, SW1 ECM adjust, SW2 configuration, SW3 model ID, SW5 last-error button)",
+  "side": "outdoor",
+  "brand": "York",
+  "models": "PG5E24L05S21, PG5E24L07S21, PG5E36L07S21, PG5E36L10S21, PG5E48L06S21, PG5E48L10S21, PG5E48L12S21, PG5E60L06S21, PG5E60L12S21 (install manual 6598649-UIM-A-1225)",
+  "match": [
+   "PG5E24",
+   "PG5E36",
+   "PG5E48",
+   "PG5E60"
+  ],
+  "sizes": [
+   "all"
+  ],
+  "board": "Figure 3 (p.22): 24 V compressor output header, 3 A ATC fuse, 24 V multi-function input / output header, thermostat input / output header, SW1 ECM adjustment / SW2 configuration / SW3 model ID DIP banks, factory run test connector (not currently used), A2L sensor connection, indoor motor PWM output header, SW5 last error button, status LED, A2L diagnostic LED, spark ignition coil, high-voltage input / draft inducer output / flame sensor header.",
+  "replacement": [
+   {
+    "board": "York PG5 main control board - replacement",
+    "kit": "",
+    "replaces": "The factory two-stage DSI main control board (no part number printed in the install manual).",
+    "differences": "Model ID is factory programmed with the DIPs at 0; a replacement must have SW3 set by hand (12 red flashes = model ID wrong). The board is not field repairable (p.66).",
+    "steps": [
+     "Turn the thermostat OFF, turn off all electric power and set the gas valve switch OFF (p.64).",
+     "Note the SW1 (cool, heat, delay, adjust) and SW2 (blower off delay, humidistat, stage) DIP positions on the old board.",
+     "Fit the new board and move each plug, including the A2L sensor plug on PG5E48 / PG5E60.",
+     "Set SW3 model ID per Table 28 (p.48).",
+     "Power up: slow green heartbeat = standby (p.23, p.66)."
+    ],
+    "source": "york-pg5-install-6598649-uim-a-1225.pdf p.22, p.47-48, p.58, p.64, p.66"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "A2L sensor connection (PG5E48 / PG5E60 only)",
+    "name": "A2L refrigerant leak sensor",
+    "location": "Shown in Figure 17 (p.58, captioned PG3E48 / PG3E60); the text does not describe the position",
+    "kind": "other",
+    "spec": "Fitted only on PG5E48 / PG5E60. Leak = rapid red status LED + solid red A2L LED; may also react to natural gas or propane.",
+    "errorCodes": [
+     "Status rapid red + A2L solid red = leak",
+     "Status 1 red flash + A2L solid red = sensor bypassed",
+     "Status 2 red flashes + A2L solid red = sensor communications lost",
+     "Status 3 red flashes + A2L solid red = sensor failure"
+    ],
+    "test": "Field test (p.23): in standby unplug the sensor wire - after 15 s the blower comes on, status LED 2 red flashes with the A2L LED solid red; in cooling or gas heat the compressor / gas heat must stop; plug back in and it returns to normal after 15 s.",
+    "source": "york-pg5-install-6598649-uim-a-1225.pdf p.22-23, p.58, p.69"
+   },
+   {
+    "plug": "FS position on the high-voltage input / draft inducer output / flame sensor header (Figure 3, p.22)",
+    "name": "Flame sensor",
+    "location": "On the left-most burner",
+    "kind": "other",
+    "spec": "Rapid amber flash = flame current below 1.5 µA; verify more than 1.5 VDC at the flame current test pad.",
+    "errorCodes": [
+     "Rapid amber = low flame current",
+     "7 red = no flame in 3 trials",
+     "8 red = flame lost 5 times",
+     "1 red = flame with no call"
+    ],
+    "source": "york-pg5-install-6598649-uim-a-1225.pdf p.22, p.59, p.66, p.68"
+   },
+   {
+    "plug": "Not named in the text - see the wiring diagram (p.73-74)",
+    "name": "Inducer pressure switch",
+    "location": "Heat section",
+    "kind": "switch",
+    "spec": "Must be open at the start of a call (2 red flashes if closed) and close within 5 s of the inducer starting (3 red flashes if not).",
+    "errorCodes": [
+     "2 red = closed when it should be open",
+     "3 red = open when it should be closed",
+     "6 red = opened five times in one call"
+    ],
+    "source": "york-pg5-install-6598649-uim-a-1225.pdf p.59-61, p.66-67"
+   },
+   {
+    "plug": "Not named in the text - see the wiring diagram (p.73-74)",
+    "name": "High-temperature limit switch (auto reset)",
+    "location": "Inside the blower compartment, protruding into the heat exchanger compartment",
+    "kind": "switch",
+    "spec": "Opens to keep outlet air below the rating-plate maximum (180°F); resets automatically.",
+    "errorCodes": [
+     "4 red = open < 5 min",
+     "11 red = open 5-15 min",
+     "5 red = open > 15 min"
+    ],
+    "source": "york-pg5-install-6598649-uim-a-1225.pdf p.29, p.59, p.62, p.67-68"
+   },
+   {
+    "plug": "Not named in the text - see the wiring diagram (p.73-74)",
+    "name": "Rollout switch (manual reset)",
+    "location": "On the burner assembly",
+    "kind": "switch",
+    "spec": "Manual reset; closes the main gas valve on sustained flame rollout. Board stays locked out until power or the W call is removed after reset.",
+    "source": "york-pg5-install-6598649-uim-a-1225.pdf p.60, p.62"
+   },
+   {
+    "plug": "Not named in the text - see the wiring diagram (p.73-74)",
+    "name": "High-pressure switch",
+    "location": "Refrigerant circuit",
+    "kind": "switch",
+    "spec": "Opens 650 ± 10 psig, closes 450 ± 15 psig.",
+    "source": "york-pg5-install-6598649-uim-a-1225.pdf p.60"
+   },
+   {
+    "plug": "Not named in the text - see the wiring diagram (p.73-74)",
+    "name": "Low-pressure switch",
+    "location": "Refrigerant circuit",
+    "kind": "switch",
+    "spec": "Opens 60 ± 5 psig, closes 90 ± 7 psig.",
+    "source": "york-pg5-install-6598649-uim-a-1225.pdf p.60"
+   }
+  ]
+ },
+ {
+  "id": "trane-n5hp-a5hp-dfc-d158286b",
+  "title": "Trane Advantage N5HP4 / N5HP5 and RunTru / Ameristar A5HP4 / A5HP5 heat pump - demand defrost control (board drawing D158286B)",
+  "side": "outdoor",
+  "brand": "Trane",
+  "models": "N5HP4018A, 024A, 030A, 036B, 042B, 048B, 060A (ODR-SVX030B-EN); N5HP5018A, 024A, 030A, 042A, 048A, 060A (ODR-SVX031B-EN); A5HP4 and A5HP5 the same sizes (ODR-SVX010C-EN, ODR-SVX011C-EN). N5HP4 / A5HP4 042A and 048A show the same board drawing (ODR-SVX041A-EN / ODR-SVX038A-EN p.26). Size 036 of the N5HP5 / A5HP5 and the 036A of the N5HP4 / A5HP4 have a different '036 Model Only' board and are left out.",
+  "match": [
+   "N5HP4018",
+   "N5HP4024",
+   "N5HP4030",
+   "N5HP4042",
+   "N5HP4048",
+   "N5HP4060",
+   "N5HP4036B",
+   "N5HP5018",
+   "N5HP5024",
+   "N5HP5030",
+   "N5HP5042",
+   "N5HP5048",
+   "N5HP5060",
+   "A5HP4018",
+   "A5HP4024",
+   "A5HP4030",
+   "A5HP4042",
+   "A5HP4048",
+   "A5HP4060",
+   "A5HP4036B",
+   "A5HP5018",
+   "A5HP5024",
+   "A5HP5030",
+   "A5HP5042",
+   "A5HP5048",
+   "A5HP5060"
+  ],
+  "sizes": [
+   "018",
+   "024",
+   "030",
+   "036B (N5HP4 / A5HP4)",
+   "042",
+   "048",
+   "060"
+  ],
+  "board": "Demand defrost control, drawing D158286B (ODR-SVX030B-EN p.25 Figure 32 'Defrost control board (ECM)'; a PSC-fan board is drawn in Figure 33, p.26). Board labels: J4 low voltage B, B, Yo, R, O, O, Y, Y2, X2; J3 LPCO; J1 COIL T; J2 AMB T; J5 test pins FRC DFT, TEST COM, TEST; J7, J8, J9; JPR2 TERM and JPR1 SOFT SW; LEDs DS2 FAULT and DS1 STATUS; relays K1, K2A (N.C. / COM.), K3, K4.",
+  "replacement": [
+   {
+    "board": "Demand defrost control - replacement",
+    "kit": "",
+    "replaces": "The guides print no replacement part number or replacement procedure for this board.",
+    "differences": "The guide's demand defrost quick specs list two board versions: mnemonic CNT08177 (PSC outdoor fan, group D161244G01, supersedure CNT 07824) and CNT08176 (ECM outdoor fan, group D161246G02, supersedure CNT 07825) (ODR-SVX030B-EN p.27 Table 13; ODR-SVX031B-EN p.28 Table 15). Confirm against the label on the old board and the fan motor type. No refrigerant-type or A2L setting is printed for this board.",
+    "steps": [
+     "Termination jumper: as shipped 47°F; clip JPR2 for 70°F (ODR-SVX030B-EN p.25). Quick specs: cut jumper 1 = switch-over delay 0 seconds instead of 12 (ODR-SVX030B-EN p.27 Table 13).",
+     "After the swap run the guide's defrost control checkout: STATUS LED 1 flash per second in standby or 2 per second with a call; 24 V AC R to B; 24 V AC Y, Y0 and B with the unit operating; defrost starts when FRC_DFT is shorted to TEST_COMMON (ODR-SVX030B-EN p.26)."
+    ],
+    "source": "ODR-SVX030B-EN p.25-27; ODR-SVX031B-EN p.27-28"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "J1 COIL T",
+    "name": "Outdoor coil temperature sensor (also ends defrost)",
+    "location": "On the outdoor coil",
+    "kind": "thermistor",
+    "chart": "trane-dfc-coil-ambient-thermistor",
+    "spec": "Defrost control thermistor table: 83,247 ohms / 2.17 VDC at 0°F, 45,076 ohms / 1.69 VDC at 20°F, 19,405 ohms / 1.02 VDC at 50°F (Table 12).",
+    "errorCodes": [
+     "2 flash = coil temp sensor out of range (open/shorted)"
+    ],
+    "test": "Measure the temperature at the sensor (on a tube: temperature tester lead on the same tube near the sensor, bulb insulated). Unplug the sensor and read its resistance with a good quality ohmmeter as quickly as possible; it should be relatively close to the chart at that temperature (example: 19°F, 46K ohms = good).",
+    "source": "ODR-SVX030B-EN p.25-27 (Figure 32, Table 12, Table 14); ODR-SVX031B-EN p.27-28"
+   },
+   {
+    "plug": "J2 AMB T",
+    "name": "Outdoor ambient temperature sensor",
+    "location": "Outside the outdoor coil",
+    "kind": "thermistor",
+    "chart": "trane-dfc-coil-ambient-thermistor",
+    "spec": "Same table as the coil sensor (Table 12).",
+    "errorCodes": [
+     "1 flash = ambient temp sensor out of range (open/shorted)"
+    ],
+    "test": "Same test as the coil sensor: compare the ohms read quickly with the plug off against the chart at the measured temperature.",
+    "source": "ODR-SVX030B-EN p.25-27; ODR-SVX031B-EN p.27-28"
+   },
+   {
+    "plug": "J3 LPCO",
+    "name": "Low pressure cut-out (LPCO) input",
+    "location": "Board plug J3",
+    "kind": "switch",
+    "spec": "LPCO input to control: yes; LPCO bypass in / out of defrost: 3 minutes (Table 13).",
+    "errorCodes": [
+     "3 flash = low pressure switch open (clears when the LPCO closes)",
+     "5 flash = soft lockout (LPCO trips 1-8 in heating)",
+     "4 flash = hard lockout after the 9th LPCO trip (low voltage power cycle to clear)"
+    ],
+    "source": "ODR-SVX030B-EN p.25, p.27-28"
+   },
+   {
+    "plug": "J5 test pins (FRC DFT / TEST COM / TEST)",
+    "name": "Forced defrost and test pins",
+    "location": "Board plug J5",
+    "kind": "other",
+    "test": "Short TEST_COMMON to FRC_DFT for 2 seconds to start a forced defrost, then remove the short. Shorting TEST_COMMON to TST speeds up all defrost board timings. Pins left open = normal operation.",
+    "source": "ODR-SVX030B-EN p.25-26"
+   },
+   {
+    "plug": "J4 X2",
+    "name": "X2 output",
+    "location": "Board plug J4",
+    "kind": "other",
+    "spec": "During the low ambient soft lockout the Y signal passes through to the X2 output; during a hard lockout the X2 relay opens so the Y signal does not pass through.",
+    "source": "ODR-SVX030B-EN p.28 (notes 4-5)"
+   },
+   {
+    "plug": "J4 R / B / Y / Y0",
+    "name": "24 V AC in and Y out",
+    "location": "Board plug J4",
+    "kind": "other",
+    "test": "24 V AC between R and B; 24 V AC between Y, Y0 and B with the unit operating.",
+    "source": "ODR-SVX030B-EN p.26"
+   },
+   {
+    "plug": "DS1 STATUS / DS2 FAULT",
+    "name": "Status and fault LEDs",
+    "location": "Defrost board",
+    "kind": "other",
+    "spec": "STATUS flashes once each second when idle, twice each second with a call for heating or cooling. Faults flash on the FAULT LED (1-7 flashes).",
+    "source": "ODR-SVX030B-EN p.25"
+   }
+  ],
+  "source": "ODR-SVX030B-EN p.25-28; ODR-SVX031B-EN p.27-29; ODR-SVX010C-EN p.25-28; ODR-SVX011C-EN p.27-29"
+ },
+ {
+  "id": "icp-b5a1v-pcm",
+  "title": "ICP Ion R-454B variable speed air conditioner B5A1V - PCM + VFD (Ion Black communicating)",
+  "side": "outdoor",
+  "brand": "ICP (Heil / Tempstar / Comfortmaker etc.) Ion",
+  "models": "B5A1V24, B5A1V36, B5A1V48, B5A1V60 (2-5 ton) variable speed air conditioners, R-454B, Ion Black System Control (B5A1V-01SI Table 7; full models e.g. B5A1V24AKAWA in B5A1V-71-01PD)",
+  "match": [
+   "B5A1V"
+  ],
+  "sizes": [
+   "24",
+   "36",
+   "48",
+   "60"
+  ],
+  "board": "Primary Control Module (PCM) - board silkscreen CEBD431220-03-R in the Fig. 26 photo (the same PCM drawing as B5H3V / B5H0V, with heat pump headers that the B5A1V input / output list does not use) + separate VFD (2T/3T and 4T/5T layouts, Fig. 27), input filter board, 1 or 2 reactors. HK38EA069 is printed beside Fig. 26 in the drawing-number position; the text does not call it a part number.",
+  "replacement": [
+   {
+    "board": "Replacement PCM (Primary Control Module)",
+    "kit": "Factory service PCM; a set of physical model plugs for all sizes is available as a service component (p.17).",
+    "replaces": "The original PCM.",
+    "differences": "Electronic model plug. Set the model with the Ion Black System Control, the Service Tech App or the PCM DIP switches, or fit the physical HK70EZ plug from Table 7. A plug present at power-up overrides the stored value; a physical plug only takes effect after a power cycle; an electronically set configuration takes effect immediately (p.17-18). No refrigerant setting is mentioned.",
+    "steps": [
+     "Before touching anything: do NOT remove the control box cover for 2 minutes after power has been removed; verify zero voltage at the VFD connections shown on the control box cover (WARNING, p.17).",
+     "Fit the new PCM and reconnect every plug and wire as on the old one.",
+     "Set the model configuration (Table 7: B5A1V24 = 24K-AC, 36 = 36K-AC, 48 = 48K-AC, 60 = 60K-AC) with the Ion Black System Control, the Service Tech App or the PCM DIP switches (p.17).",
+     "Service manual DIP method (B5A1V / B5H0V / B5H3V): set DIP switch #4 ON, wait for the right model to scroll, set it OFF, then cycle power (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.21).",
+     "Or fit the physical model plug from Table 7 (check pins 1-4 and 2-3) and cycle power. Do not install an incorrect model plug - some units could operate incorrectly and fail prematurely (CAUTION, p.18)."
+    ],
+    "source": "icp-b5a1v-01si.pdf p.17-18 (model plug, Table 7, warnings); icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.21"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "OAT (5-pin OAT / OCT-HP / LLT-AC header)",
+    "pins": "5-pin header; Fig. 25 prints OAT beside the upper pins and OCT-HP / LLT-AC beside pins 4-5 (label position only)",
+    "code": "OAT",
+    "name": "Outdoor air temperature thermistor, 10k",
+    "location": "In the control box beside the MODEL / CCN plugs; rotate and lock it with the spherical nib end facing the front of the control box (Fig. 28)",
+    "kind": "thermistor",
+    "chart": "icp-r454vs-10k-table9",
+    "spec": "10k. Check points with tolerance: 10.0 k +/-2.3% at 77F, 32.6 k +/-3.2% at 32F, 85.5 k +/-3.4% at 0F (installation instructions). Open fault: above 465 kohm for 1 second (clears below 465 kohm for 1 second); shorted: below 1 kohm for 1 second (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.30-31). Full 0-120 F table: chart Table 9 (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24). Failed OAT: this manual says the unit runs at a fixed speed and the LLT-AC value is substituted for OAT (p.19); the service manual's general text says fixed speed with OST / OCT values substituted (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24) - the two documents differ.",
+    "errorCodes": [
+     "51-01 OAT sensor open/low temp",
+     "51-02 OAT sensor shorted/high temp"
+    ],
+    "test": "Power off, wait 2 minutes, verify 0 V at the VFD connections. Unplug the OAT plug at the PCM and ohm the thermistor; compare with the chart at the sensor temperature. Above 465 kohm = look for a break in the wiring or connector, else replace the sensor; below 1 kohm = look for a short; reading in range but code stays = replace PCM (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.30).",
+    "source": "icp-b5a1v-01si.pdf p.15 Fig. 25, p.18 Table 8, Fig. 28, p.19-20; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24, p.30"
+   },
+   {
+    "plug": "LLT-AC (5-pin OAT / OCT-HP / LLT-AC header)",
+    "pins": "Shared 5-pin header with OAT; Fig. 25 label OCT-HP / LLT-AC beside pins 4-5",
+    "code": "LLT-AC",
+    "name": "Liquid line temperature thermistor (air conditioner), 10k",
+    "location": "On the tube from the coil distributor or subcooler to the liquid service valve (Fig. 29)",
+    "kind": "thermistor",
+    "chart": "icp-r454vs-10k-table9",
+    "spec": "10k. Used for subcooling calculation. Failed LLT-AC: unit runs as expected but subcooling calculation in charging mode is not available (p.19). Check points with tolerance: 10.0 k +/-2.3% at 77F, 32.6 k +/-3.2% at 32F, 85.5 k +/-3.4% at 0F (installation instructions). Open fault: above 465 kohm for 1 second (clears below 465 kohm for 1 second); shorted: below 1 kohm for 1 second (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.30-31). Full 0-120 F table: chart Table 9 (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24).",
+    "errorCodes": [
+     "52-01 OCT-HP/LLT-AC sensor open/low temp",
+     "52-02 OCT-HP/LLT-AC sensor shorted/high temp"
+    ],
+    "test": "Power off, wait 2 minutes, verify 0 V at the VFD. Unplug the 5-pin plug at the PCM and ohm the LLT-AC leads against the chart. Make sure the thermistor's curved face hugs the pipe and is tight with the wire tie through the original slot (CAUTION, p.19).",
+    "source": "icp-b5a1v-01si.pdf p.15 Fig. 25, p.18 Table 8, p.19 Fig. 29; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24, p.30"
+   },
+   {
+    "plug": "OST (3-pin header)",
+    "pins": "3-pin header",
+    "code": "OST",
+    "name": "Outdoor suction temperature thermistor, 10k",
+    "location": "On the suction tube, aligned lengthwise to the vertical surface of the tube axis (p.18)",
+    "kind": "thermistor",
+    "chart": "icp-r454vs-10k-table9",
+    "spec": "10k. Check points with tolerance: 10.0 k +/-2.3% at 77F, 32.6 k +/-3.2% at 32F, 85.5 k +/-3.4% at 0F (installation instructions). Open fault: above 465 kohm for 1 second (clears below 465 kohm for 1 second); shorted: below 1 kohm for 1 second (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.30-31). Full 0-120 F table: chart Table 9 (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24). Failed OST: this manual says the unit continues to operate as normal (p.19).",
+    "errorCodes": [
+     "53-01 / 53-41 OST open/low temp",
+     "53-02 / 53-42 OST shorted/high temp"
+    ],
+    "test": "Power off, unplug OST at the PCM, ohm against the chart at the tube temperature.",
+    "source": "icp-b5a1v-01si.pdf p.15 Fig. 25, p.18, p.19-20; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24, p.31"
+   },
+   {
+    "plug": "ODT (4-pin header)",
+    "pins": "4-pin header",
+    "code": "ODT",
+    "name": "Outdoor discharge line temperature thermistor, 50k",
+    "location": "Compressor discharge, inside the compressor sound blanket (Fig. 30)",
+    "kind": "thermistor",
+    "chart": "icp-r454vs-50k-odt-points",
+    "spec": "50k. Check points: 50.15 k +/-5.0% at 25C, 7.565 k +/-3.0% at 75C, 1.7 k +/-1.4% at 125C (Table 9, p.18). Open: above 310 kohm for 1 second (if it reads above 310 kohm while OAT and OCT read above 25F, look for a break in the wiring or connector); shorted: below 670 ohm for 1 second (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.31). Full 0-120 F table: chart Table 9 (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24). Failed ODT: this manual says the unit continues to operate as normal (p.19); the service manual says fixed speed with 47F substituted (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24) - the two documents differ. Proper mounting is required for the unit to exit start-up mode (p.19).",
+    "errorCodes": [
+     "54-01 ODT open/low temp",
+     "54-02 ODT shorted/high temp",
+     "34-11 / 34-58 compressor high temperature limit"
+    ],
+    "test": "Power off, unplug ODT, ohm against the 50k chart. Check it is tight on the discharge line inside the sound blanket; reinstall the blanket with the discharge thermistor and compressor harness routed as from the factory (p.19).",
+    "source": "icp-b5a1v-01si.pdf p.15 Fig. 25, p.18 Table 9, p.19 Fig. 30, p.20; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24, p.31"
+   },
+   {
+    "plug": "P1 / P2 (4-pin headers)",
+    "pins": "Two 4-pin headers P1 and P2; transducer wires BLK ground, RED +5V DC, GRN signal (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.31)",
+    "code": "DPT / SPT",
+    "name": "Discharge and suction pressure transducers (either may connect to either input)",
+    "location": "One at the compressor discharge, one at the compressor suction (p.17)",
+    "kind": "pressure",
+    "spec": "Range 0-620 psig (p.17). The PCM watches the discharge transducer to keep the high pressure switch from opening (p.18). Each transducer has 3 wires: ground BLK, +5V DC RED, signal GRN. Good signal 0.5-4.5 VDC. Above 4.5 VDC = 'open' code (57-01 / 57-41, 58-01 / 58-41; most likely the sensor wire disconnected), below 0.5 VDC = 'shorted' code (57-02 / 57-42, 58-02 / 58-42; most likely the sensor wire shorted to the chassis), 4.84-4.95 VDC = 57-43 / 58-43 (most likely a failed transducer). Swap the P1 and P2 harnesses: if the error follows the transducer replace it; if it stays with the input replace the PCM. Compare with a gauge at the matching service port before condemning one. (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.25, p.31-32)",
+    "errorCodes": [
+     "57-01 / 57-41 P1 open",
+     "57-02 / 57-42 P1 shorted",
+     "57-43 P1 sensor malfunction",
+     "58-01 / 58-41 P2 open",
+     "58-02 / 58-42 P2 shorted",
+     "58-43 P2 sensor malfunction",
+     "32-15 / 32-55 low pressure limit",
+     "32-59 low pressure disable",
+     "31-11 / 31-58 high pressure limit"
+    ],
+    "test": "Compare the Ion Black System Control / Service Tech App pressure with a gauge at the matching service port; then swap P1 and P2 to see whether the error follows the transducer or stays with the PCM input (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.25).",
+    "source": "icp-b5a1v-01si.pdf p.14, p.15 Fig. 25, p.17-18, p.20; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.25, p.31-32"
+   },
+   {
+    "plug": "PEV (4-pin header)",
+    "pins": "4-pin header",
+    "code": "PEV",
+    "name": "Pressure equalization valve (PCM output)",
+    "location": "At the compressor discharge and the accumulator inlet (p.17)",
+    "kind": "other",
+    "spec": "Energized during the off-cycle so the compressor starts against equal pressures; a brief start delay is normal while it equalizes (p.14, p.17).",
+    "errorCodes": [
+     "62-01 PEV solenoid open",
+     "44-13 PEV timeout",
+     "38-18 high differential pressure start disable",
+     "28-71 Fuse 1 open (PEV / RVS)"
+    ],
+    "source": "icp-b5a1v-01si.pdf p.14, p.15 Fig. 25, p.17, p.20"
+   },
+   {
+    "plug": "LLS terminal",
+    "pins": "Terminal strip LLS (between C and UTIL)",
+    "code": "LLS",
+    "name": "Liquid line solenoid output (PCM output; 'LLV' on the code label)",
+    "kind": "other",
+    "errorCodes": [
+     "28-72 Fuse 2 open (LLV)"
+    ],
+    "source": "icp-b5a1v-01si.pdf p.14, p.15 Fig. 25, p.20"
+   },
+   {
+    "plug": "UTIL / UTIL terminals",
+    "pins": "Two UTIL terminals",
+    "name": "Utility curtailment relay input (relay wired between the two UTIL terminals)",
+    "kind": "other",
+    "spec": "A utility signal interrupts compressor operation; the Ion Black System Control shows 'Curtailment Active' (p.15).",
+    "source": "icp-b5a1v-01si.pdf p.15 Fig. 25"
+   },
+   {
+    "plug": "O / W / Y2 / Y1 / C terminals",
+    "pins": "Terminal strip O, W, Y2, Y1, C (Fig. 25)",
+    "name": "24 V terminal strip",
+    "kind": "other",
+    "spec": "The B5A1V runs from the Ion Black System Control (p.14); the manual gives no 24 V wiring use for these terminals.",
+    "source": "icp-b5a1v-01si.pdf p.14, p.15 Fig. 25"
+   },
+   {
+    "plug": "CCN",
+    "pins": "CCN connector (bottom of the PCM)",
+    "name": "Ion communication to the indoor unit / Ion Black System Control",
+    "kind": "other",
+    "spec": "Green COMM LED stays OFF until communication is established, then ON; OFF again if nothing valid is received for 2 minutes (p.15).",
+    "errorCodes": [
+     "13-82 / 13-53 system control upgrade recommended / required"
+    ],
+    "source": "icp-b5a1v-01si.pdf p.15 Fig. 25-26, p.20"
+   },
+   {
+    "plug": "SEC1 / SEC2",
+    "pins": "Two spade terminals",
+    "name": "24 VAC input power to the PCM",
+    "kind": "other",
+    "source": "icp-b5a1v-01si.pdf p.14, p.15 Fig. 25"
+   },
+   {
+    "plug": "FORCED DEFROST (2 pins, 'J2')",
+    "pins": "Pins 1-2 labelled FORCED DEFROST (text: labelled J2 on the board)",
+    "name": "5-minute delay bypass / status code recall",
+    "kind": "other",
+    "spec": "Shorted more than 1 and less than 5 seconds just after the system turned off with an active call for cooling = 5-minute initial on-time defeated. Unit OFF, pins shorted, then power on = Status Code Recall Mode (unit will not cool while shorted) (p.17-18, p.20).",
+    "test": "Clip-wire the pins with the unit OFF, power up, read the code, power down and remove the short (p.20).",
+    "source": "icp-b5a1v-01si.pdf p.15 Fig. 25, p.17-18, p.20"
+   },
+   {
+    "plug": "VFD COMMS (7-pin header)",
+    "pins": "7-pin header",
+    "name": "PCM-VFD Modbus communication and VFD low-voltage relay control",
+    "kind": "other",
+    "spec": "VFD-PCM communication LED just below the port: flashes green on good VFD messages, red on bad / no messages (p.16). VFD control relay: 12 VDC from PCM pins 6 and 7 to VFD pins 5 and 6 through the communication cable. Harness off the PCM (VFD end still connected): pins 6-7 about 720 ohms. Much higher = check each cable conductor end to end (a few ohms), then pins 5-6 at the VFD connector (well above 720 ohms = VFD). 24-58 check: harness off, 5 VDC between pin 3 (GND) and pin 4 at the VFD end. (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.27, p.33)",
+    "errorCodes": [
+     "86-06 / 86-46 VFD communication error",
+     "87-13 / 87-53 VFD initialization error",
+     "66-41 VFD control relay coil open",
+     "66-42 VFD control relay coil shorted",
+     "24-58 5V PCM external power out of range"
+    ],
+    "source": "icp-b5a1v-01si.pdf p.14, p.15 Fig. 25-26, p.16, p.20; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.27, p.33"
+   },
+   {
+    "plug": "SERVICE PORT (6-pin)",
+    "pins": "6-pin header",
+    "name": "Service interface communication port",
+    "kind": "other",
+    "source": "icp-b5a1v-01si.pdf p.14, p.15 Fig. 25"
+   },
+   {
+    "plug": "MP (model plug header)",
+    "pins": "Header labelled MP; Table 7 plug resistances pins 1-4 and 2-3",
+    "name": "Model plug (configuration is normally electronic; physical HK70EZ plugs are a service component)",
+    "kind": "other",
+    "spec": "Table 7: B5A1V24 HK70EZ009 5.1K / 91K 24K-AC; B5A1V36 HK70EZ021 11K / 39K 36K-AC; B5A1V48 HK70EZ033 18K / 11K 48K-AC; B5A1V60 HK70EZ045 18K / 220K 60K-AC (pins 1-4 / pins 2-3). Never run with the wrong plug (CAUTION p.18).",
+    "errorCodes": [
+     "25-61 invalid model configuration",
+     "25-62 model configuration missing",
+     "25-24 model configuration changed",
+     "25-63 VFD/equipment model mismatch"
+    ],
+    "test": "Pull the plug and ohm pins 1-4 and 2-3; compare with Table 7.",
+    "source": "icp-b5a1v-01si.pdf p.15 Fig. 25, p.17 Table 7, p.18, p.20"
+   },
+   {
+    "plug": "DIP switch (4-position)",
+    "pins": "4-position DIP on the PCM",
+    "name": "PCM DIP switches - one of the ways to set the model configuration",
+    "kind": "other",
+    "source": "icp-b5a1v-01si.pdf p.15 Fig. 25, p.17; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.21"
+   },
+   {
+    "plug": "STATUS / COMM LEDs, 5x7 display",
+    "name": "Status LED (text: amber; Fig. 26 callout: yellow), green CCN COMM LED, 5x7 LED code display",
+    "kind": "other",
+    "spec": "Status light: off = no power to the PCM or a fundamental PCM fault; on = standby, nothing limiting operation; 1 slow flash = low capacity; 2 slow flashes = high capacity; continuous slow = operation interrupted or limited; continuous fast = lockout or Diagnostic Code Recall mode (p.16). Flash code: short flashes = first digit, long flashes = second (0.25 s short, 1.0 s long, 2.5 s off between repeats), e.g. 3 short + 2 long = 32 (p.20). The 5x7 matrix scrolls the 4 highest-priority codes, 2 s apart, 5 s pause (p.16).",
+    "source": "icp-b5a1v-01si.pdf p.15 Fig. 26, p.16, p.20"
+   },
+   {
+    "plug": "VFD LEDs R1 / G1 / G2 / G3 / A1 / A2",
+    "name": "VFD indicator LEDs (Table 6)",
+    "location": "On the VFD; 2T/3T and 4T/5T layouts (Fig. 27)",
+    "kind": "other",
+    "spec": "R1 red = DC voltage above 40 V in the capacitors. G1 green blinks when the VFD receives a PCM message. G2 green on = VFD normal, off = VFD fault. G3 green on = VFD micro-controller relay closed (PCM controlled). A1 amber on = 12 V source normal. A2 amber on = main relay closed (p.16).",
+    "test": "Do not remove the control box cover for 2 minutes after power off; verify zero voltage at the VFD connections before touching (p.17).",
+    "source": "icp-b5a1v-01si.pdf p.16 Table 6, Fig. 27, p.17"
+   },
+   {
+    "plug": "High pressure switch (HPS)",
+    "code": "HPS",
+    "name": "High pressure switch - must be closed for the VFD to be powered",
+    "kind": "switch",
+    "spec": "Opens at 670 +/- 10 psig, closes at 470 +/- 25 psig; when open the VFD loses line power and the compressor and fan stop (p.18).",
+    "errorCodes": [
+     "31-16 high pressure switch trip",
+     "31-19 high pressure disable",
+     "31-11 / 31-58 compressor high pressure limit"
+    ],
+    "source": "icp-b5a1v-01si.pdf p.17-18, p.20"
+   },
+   {
+    "plug": "VFD U / V / W",
+    "pins": "U YEL, V RED, W BLK",
+    "code": "COMP",
+    "name": "Variable speed rotary compressor leads at the VFD",
+    "kind": "other",
+    "spec": "Table 10 winding to winding (printed '68F (20F)'; the service manual prints 68F / 20C): 24 = 1.630, 36 = 0.740, 48 = 0.460, 60 = 0.424 ohm; terminal to ground >1 megohm (p.19; same values icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.22 Table 5). Do not use a megger (p.19). Never apply line voltage to the compressor - it will destroy it (p.17).",
+    "errorCodes": [
+     "38-13 / 38-53 compressor starting error",
+     "38-54 compressor no pump",
+     "38-31 / 38-71 VFD estimator error",
+     "83-15 / 83-55 current limit 3 shutdown",
+     "83-16 / 83-56 current limit 4 shutdown",
+     "83-57 compressor underspeed shutdown"
+    ],
+    "test": "Pull U / V / W off the VFD, ohm YEL-RED, YEL-BLK, RED-BLK (equal, compare Table 10) and each to ground; if abnormal, remove the sound blanket and harness plug and measure at the fusite (p.19).",
+    "source": "icp-b5a1v-01si.pdf p.17, p.19 Table 10; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.22"
+   },
+   {
+    "plug": "Fan motor (5 wires at VFD)",
+    "pins": "DC BUS, GND, +15V DC, Vsp, FG",
+    "code": "OFM",
+    "name": "Outdoor fan, brushless DC, powered and speed-commanded (0-5 V) by the VFD",
+    "kind": "other",
+    "spec": "Note high voltage on ALL wires (not earth or chassis referenced) - do not measure voltages while running. The motor cannot be connected to line voltage. It may cycle off and on when very low airflow is requested (p.17, p.19). Fan harness at the VFD (Fig. 17): 4-pin plug 1 black GND, 2 orange Vcc, 3 yellow Vsp, 4 blue FG, plus a separate Vdc lead. Unplug the fan harness at the VFD and ohm to GND by motor part number (Table 6; read the number on the motor): 1208502 Vdc 1.04 megohm, Vcc 62.1k, Vsp 216k, FG open; 1192973 1.37 megohm / 43.7k / 119k / open; 1208504 1.22 megohm / 54.3k / 222k / open; 1192975 and 1208552 1.30 megohm / 45.9k / 119k / open. (icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.22-23)",
+    "errorCodes": [
+     "39-13 / 39-53 fan start error",
+     "39-14 fan speed error",
+     "39-15 / 39-55 unexpected fan shutdown",
+     "39-58 fan motor error"
+    ],
+    "test": "Verify the blade turns freely and connections are secure and undamaged (p.19).",
+    "source": "icp-b5a1v-01si.pdf p.17, p.19; icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.22-23"
+   }
+  ],
+  "test": "Read codes on the Ion Black System Control or the PCM 5x7 display (Status Code Recall via the FORCED DEFROST pins). Ohm thermistors at the PCM against Table 8 / 9 and the service manual Table 9 chart. VFD: wait 2 minutes and verify 0 V before touching.",
+  "notes": "The B5A1V PCM input list is ODT, OAT, LLT-AC, OST and the P1 / P2 transducers; outputs are VFD comms, VFD relay, PEV and LLS (p.14). The PCM drawing (Fig. 25) also shows LLT-HP, EXV-H, EXV-VI and RVS headers, which the B5A1V text does not list (heat pump headers on the shared board). Code label 351376-101 REV.A (Table 11, p.20); lockout durations Table 12 (p.21). Low ambient cooling to 0F when enabled on the Ion control, no kit (p.17).",
+  "gaps": [
+   "Pin-by-pin assignment of the 5-pin OAT / LLT-AC header is only implied by label position in Fig. 25.",
+   "P1 / P2 pin numbers and a volts-to-psig table are not printed.",
+   "Wire colours for the PCM thermistor plugs are not printed.",
+   "SUMP and Temp7 XLT headers are not described.",
+   "No unit wiring diagram in the installation instructions."
+  ],
+  "sources": [
+   {
+    "file": "icp-b5a1v-01si.pdf",
+    "pages": "14-21",
+    "what": "PCM inputs / outputs, Fig. 25 board drawing, Fig. 26 photo, Table 6 / Fig. 27 VFD LEDs, Table 7 model plugs, Tables 8-9 thermistors, Fig. 28-30 locations, Table 10 compressor, Table 11 codes, Table 12 lockouts, warnings"
+   },
+   {
+    "file": "icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf",
+    "pages": "13, 21-25, 27, 30-33",
+    "what": "Table 9 chart, failed-thermistor defaults, open / short thresholds, transducer wiring and voltages, fan Table 6, VFD relay coil, DIP #4 model setting"
+   }
+  ]
  }
 ];
 const BRAND_SENSOR_CHARTS = [
@@ -128919,7 +129582,7 @@ const BRAND_SENSOR_CHARTS = [
     0.19
    ]
   ],
-  "source": "trane-4twr4-servicefacts.pdf p.9 (Table 1, 4TWR4036G-SF-1H-EN)",
+  "source": "trane-4twr4-servicefacts.pdf p.9 (Table 1, 4TWR4036G-SF-1H-EN); same 31 rows (ohms and Volts DC) in ODR-SVX030B-EN p.26-27 Table 12 (N5HP4), ODR-SVX031B-EN p.28 Table 14 (N5HP5), ODR-SVX010C-EN p.26-27 Table 12 (A5HP4), ODR-SVX011C-EN p.28 Table 14 (A5HP5), ODR-SVX004D-EN p.24-25 (5TWR4) and PKGR-SVX010B-EN p.31 Table 11 (A5PH3 packaged heat pump)",
   "notes": "Resistance is the same sensor curve as the older demand-defrost checkout chart (B151963P04: 0°F 83.2K, 19°F 46.5K). The Volts DC column belongs to this board; older boards read different volts (see trane-dfc-sensor-legacy-volts)."
  },
  {
@@ -148076,5 +148739,135 @@ const BRAND_SENSOR_CHARTS = [
   ],
   "source": "york-vh4-install-6746765-uim-c-0526.pdf p.56 (Table 32, 6746765-UIM-C-0526)",
   "notes": "All 10 rows as printed. The manual prints °C only; the F column is converted. Heading as printed: R0=15k±2%, B0/100=3450k±2%. The lead-in line says these are the parameters for the 'suction, ambient, coil, and discharge sensors' while the table title says ambient and coil, and the discharge sensor has its own Table 31."
+ },
+ {
+  "id": "icp-r454vs-10k-table9",
+  "name": "ICP R-454B variable speed 10k thermistor (OAT / OCT / OST / LLT) - service manual Table 9",
+  "kind": "thermistor",
+  "columns": [
+   "F",
+   "kOhm"
+  ],
+  "rows": [
+   [
+    0,
+    85
+   ],
+   [
+    10,
+    62
+   ],
+   [
+    20,
+    46
+   ],
+   [
+    30,
+    35
+   ],
+   [
+    40,
+    26
+   ],
+   [
+    50,
+    20
+   ],
+   [
+    60,
+    15
+   ],
+   [
+    70,
+    11.9
+   ],
+   [
+    80,
+    9.3
+   ],
+   [
+    90,
+    7.3
+   ],
+   [
+    100,
+    5.8
+   ],
+   [
+    110,
+    4.7
+   ],
+   [
+    120,
+    3.8
+   ]
+  ],
+  "source": "icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24 Table 9",
+  "notes": "13 rows as printed (F only), 0-120 F in 10 F steps. The installation instructions' 3-point chart (icp-r454vs-10k-points: 10.0 k at 77F, 32.6 k at 32F, 85.5 k at 0F) carries the tolerances; Table 9 rounds 0F to 85."
+ },
+ {
+  "id": "icp-r454vs-50k-odt-table9",
+  "name": "ICP R-454B variable speed 50k discharge thermistor (ODT) - service manual Table 9",
+  "kind": "thermistor",
+  "columns": [
+   "F",
+   "kOhm"
+  ],
+  "rows": [
+   [
+    0,
+    430
+   ],
+   [
+    10,
+    310
+   ],
+   [
+    20,
+    230
+   ],
+   [
+    30,
+    170
+   ],
+   [
+    40,
+    130
+   ],
+   [
+    50,
+    99
+   ],
+   [
+    60,
+    77
+   ],
+   [
+    70,
+    59
+   ],
+   [
+    80,
+    46
+   ],
+   [
+    90,
+    37
+   ],
+   [
+    100,
+    29
+   ],
+   [
+    110,
+    23
+   ],
+   [
+    120,
+    19
+   ]
+  ],
+  "source": "icp-vs-r454b-service-manual-smicpachpvsr454-02.pdf p.24 Table 9",
+  "notes": "13 rows as printed (F only). The 3-point chart icp-r454vs-50k-odt-points (25C 50.15 k, 75C 7.565 k, 125C 1.7 k) stays for the high-temperature end; Table 9 stops at 120 F."
  }
 ];

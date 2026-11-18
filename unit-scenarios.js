@@ -10520,5 +10520,417 @@ const UNIT_SCENARIOS = [
   ],
   "source": "50NT-B (R-454B packaged heat pump) 50NT-B Comfort 13.4 SEER2 Single-Packaged Heat Pump (R-454B), 2-5 Tons - Installation Instruction (50NT-04SI, Ed. 12/24), p.21",
   "confidence": "manual"
+ },
+ {
+  "id": "u-york-p5-a2l-blower-no-call",
+  "unit": "^P[CG]5E(48|60)",
+  "brand": "York",
+  "equipment": "Other",
+  "title": "Blower running with no call, no cooling or heat - A2L leak response (PC5 / PG5 4 and 5 ton)",
+  "summary": "On the 4 and 5 ton PC5 / PG5 the board runs the blower at 95% and ignores every thermostat call while the A2L sensor reports a leak, then holds the blower 5 more minutes after it clears.",
+  "steps": [
+   "Look at both LEDs on the main control board. PG5: status rapid red + A2L solid red = leak (p.69). PC5: status solid red + A2L rapid red = leak (PC5 manual p.56).",
+   "While the leak fault is active the board energizes the 95% blower speed and ignores all thermostat calls; the blower stays on 5 min after the leak signal is removed (p.22).",
+   "Owner: keep power on and ventilate the space by opening windows if possible. Service: find and repair the leak, then adjust the charge (p.69).",
+   "PG5 only: the sensor may also detect natural gas or propane - if no refrigerant leak is found, check the gas piping and gas heat components (p.69).",
+   "Sensor problem, not a leak: PG5 - status LED 1 / 2 / 3 red flashes with the A2L LED solid red = sensor bypassed / communications lost / failure (p.69). PC5 - Table 35 prints these as status LED solid red with the A2L LED 1 / 2 / 3 red flashes (PC5 manual p.56), but the PC5 field test shows an unplugged sensor as status 2 red flashes + A2L solid red (PC5 manual p.22) - read both LEDs. Check the sensor plug and cable at the board's A2L terminal (p.69; PC5 manual p.56).",
+   "The 2 and 3 ton (P*5E24 / P*5E36) have no sensor - this cause does not apply to them (p.22)."
+  ],
+  "safety": "WARNING: troubleshooting requires opening the control box with power connected - use extreme care with a live circuit (p.65). R-454B only; use R-454B rated equipment (p.64).",
+  "manual": "york-pg5-install-6598649-uim-a-1225",
+  "pages": [
+   22,
+   64,
+   69,
+   21,
+   56
+  ],
+  "source": "PG5 15.2 SEER2 R-454B packaged AC with gas heat (PG5E24L05S21 - PG5E60L12S21) Installation Manual: PG5 Series - 208 V/230 V - 1 Phase, 15.2 SEER2 Packaged Air Conditioner with Gas Heat (6598649-UIM-A-1225, 2025-12-03), p.22, p.64, p.69, p.21, p.56",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-pg5-no-heat-sequence",
+  "unit": "^PG5E(24|30|36|42|48|60)",
+  "brand": "York",
+  "equipment": "Other",
+  "title": "No gas heat - walking the PG5 ignition sequence",
+  "summary": "The PG5 DSI board runs a fixed sequence; the step where it stops, plus the status LED, points to the part.",
+  "steps": [
+   "Call for heat (W): the board first checks the pressure switch is OPEN. If it is closed: 2 red flashes and it waits (p.60).",
+   "Inducer on: the pressure switch must close - not within 5 s = 3 red flashes; not within 60 s = inducer 60 s off / 60 s on, repeating (p.61).",
+   "15 s pre-purge, then a 5 s spark + gas valve trial. It lights on high fire and drops to low after 10 s if only W1 is calling (p.61).",
+   "No flame in three trials = 7 red flashes, 1 h soft lockout. Check the gas valve switch is ON, gas pressure, flame sensor, ignitor, wiring, burners (p.68).",
+   "Lights then drops out: flame lost five times in one call = 8 red flashes (p.61, p.68). Rapid amber = flame current below 1.5 µA - clean or replace the flame sensor (p.66).",
+   "Blower comes on 30 s after the flame proving period starts; 15 s post-purge at the end; heat blower-off delay 60 / 90 / 120 / 180 s (p.61-62).",
+   "Check gas pressures: natural gas inlet 4.5-10.5 in. W.C. (7 in. minimum for rated input), manifold 3.5 high / 1.6 low (p.45, p.47)."
+  ],
+  "safety": "DANGER: never run above the 180°F maximum supply air temperature - heat exchanger failure, carbon monoxide, fire (p.29, p.53). The manual reset rollout switch must be reset before allowing furnace operation (p.60); after a 5 or 11 red flash hard lockout, correct the problem, then cycle power to reset the board (p.67-68, p.70).",
+  "manual": "york-pg5-install-6598649-uim-a-1225",
+  "pages": [
+   45,
+   47,
+   53,
+   60,
+   66
+  ],
+  "source": "PG5 15.2 SEER2 R-454B packaged AC with gas heat (PG5E24L05S21 - PG5E60L12S21) Installation Manual: PG5 Series - 208 V/230 V - 1 Phase, 15.2 SEER2 Packaged Air Conditioner with Gas Heat (6598649-UIM-A-1225, 2025-12-03), p.45, p.47, p.53, p.60, p.66",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-p5-charge-check",
+  "unit": "^P[CG]5E(24|30|36|42|48|60)",
+  "brand": "York",
+  "equipment": "Other",
+  "title": "Checking the refrigerant charge - PC5 / PG5 (discharge superheat)",
+  "summary": "These packaged units are checked by discharge superheat against the charging chart on the compressor barrier, not by suction superheat or subcooling.",
+  "steps": [
+   "Only connect gauges if you suspect a refrigerant circuit problem - the unit is critically charged and several ounces are lost each time a gauge is connected (p.71).",
+   "Temperature probe on the compressor discharge line about 6 in. from the shell; high side gauge on the discharge pressure port (p.71).",
+   "Convert discharge pressure to saturation temperature with an R-454B chart; the difference between discharge saturation temperature and discharge line temperature is discharge superheat (p.71).",
+   "Read indoor entering wet bulb and outdoor dry bulb, and compare with the unit charging chart on the compressor barrier (p.19, p.71).",
+   "After hot work or a refrigerant circuit repair, read the A2L safety guidance in full before charging; where applicable charge the rating-plate amount after a good vacuum (p.71). Factory charge: 2-8, 3-11, 4-7, 5-3 lb-oz for 2 / 3 / 4 / 5 ton (p.29)."
+  ],
+  "safety": "CAUTION: R-454B only - gauge sets, hoses, cylinders and recovery equipment must be R-454B rated. WARNING: wear safety glasses and gloves (p.64). CAUTION: POE oil can damage roofing - protect the roof (p.59).",
+  "manual": "york-pg5-install-6598649-uim-a-1225",
+  "pages": [
+   19,
+   29,
+   59,
+   64,
+   71,
+   18,
+   28,
+   57
+  ],
+  "source": "PG5 15.2 SEER2 R-454B packaged AC with gas heat (PG5E24L05S21 - PG5E60L12S21) Installation Manual: PG5 Series - 208 V/230 V - 1 Phase, 15.2 SEER2 Packaged Air Conditioner with Gas Heat (6598649-UIM-A-1225, 2025-12-03), p.19, p.29, p.59, p.64, p.71, p.18, p.28, p.57",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-n5hp4-defrost",
+  "unit": "^N5HP4(?!036A)",
+  "brand": "Trane",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Defrost - fault LED, forced defrost, termination jumper - Trane Advantage N5HP4 heat pump",
+  "summary": "The N5HP4 demand defrost board reads an ambient and a coil sensor; faults flash on the FAULT LED (1-7), the STATUS LED shows it is alive.",
+  "steps": [
+   "The control measures outdoor ambient with a sensor outside the outdoor coil and coil temperature with a second sensor on the coil; the difference (delta-T) decides when to defrost, and the coil sensor ends the defrost.",
+   "Normal: STATUS LED flashes once a second idle, twice a second with a call for heating or cooling. A fault flashes on the FAULT LED - 1 ambient sensor, 2 coil sensor, 3 low pressure switch open, 4 hard lockout, 5 soft lockout, 6 defrost cycles too close together, 7 low ambient soft lockout (Table 14). There is no 8 flash on this board.",
+   "Checkout: 24 V AC between R and B; 24 V AC between Y, Y0 and B with the unit operating.",
+   "Forced defrost: short TEST_COMMON to FRC_DFT for 2 seconds, remove the short after defrost starts. Shorting TEST_COMMON to TST speeds up all board timings.",
+   "Termination is 47°F as shipped; clip resistor JPR2 for 70°F. Termination table: as shipped above 22°F outdoor = 47°F, 10-22°F = ODT + 25°F, 6-10°F = 35°F; JPR2 cut above 30°F = 47°F, 6-30°F = 70°F; below 6°F = 12 min. or 35°F every 3 hrs (Table 17).",
+   "Sensor test: measure the temperature at the sensor, unplug it, read the ohms quickly and compare with the Defrost control thermistor table (19°F = about 46K ohms is good).",
+   "The N5HP4 036A (guide ODR-SVX041A-EN) has a different 036-only defrost board with no fault table; this scenario does not apply to it."
+  ],
+  "safety": "When it is necessary to work with live electrical components, have a qualified licensed electrician or other individual who has been properly trained in handling live electrical components perform these tasks.",
+  "manual": "trane-n5hp4-iom-odr-svx030b",
+  "pages": [
+   6,
+   25,
+   26,
+   27,
+   28
+  ],
+  "source": "N5HP4 (036B / 042B / 048B) Heat Pumps N5HP4018A, 024A, 030A, 036B, 042B, 048B, 060A - Installation, Operation, and Maintenance (ODR-SVX030B-EN, September 2026), p.6, p.25, p.26, p.27, p.28",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-n5hp5-defrost",
+  "unit": "^N5HP5(?!036)",
+  "brand": "Trane",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Defrost - fault LED, forced defrost, termination jumper - Trane Advantage N5HP5 heat pump",
+  "summary": "Same demand defrost board and 1-7 flash table as the N5HP4; the N5HP5 036 has its own board (see the last step).",
+  "steps": [
+   "Normal: STATUS LED flashes once a second idle, twice a second with a call. A fault flashes on the FAULT LED - 1 ambient sensor, 2 coil sensor, 3 low pressure switch open, 4 hard lockout, 5 soft lockout, 6 defrost cycles too close together, 7 low ambient soft lockout (Table 16).",
+   "Checkout: 24 V AC between R and B; 24 V AC between Y, Y0 and B with the unit operating; defrost starts when FRC_DFT is shorted to TEST_COMMON.",
+   "Forced defrost: short TEST_COMMON to FRC_DFT on J5 for 2 seconds, remove the short after defrost starts.",
+   "Termination: 47°F as shipped; cut Jumper J2 for 70°F (termination table Table 6).",
+   "Sensor test: measure the temperature at the sensor, unplug it, read the ohms quickly and compare with the Defrost control thermistor table (Table 14).",
+   "N5HP5036A: the guide prints a separate 'Defrost Control - 036 Model Only' board - TST / FRC_DFT / TEST_COMMON pins, 'LED on board flashing 1 time/second', Jumper 2 for 70°F at or below 30°F ambient - and no fault table for it."
+  ],
+  "safety": "When it is necessary to work with live electrical components, have a qualified licensed electrician or other individual who has been properly trained in handling live electrical components perform these tasks.",
+  "manual": "trane-n5hp5-iom-odr-svx031b",
+  "pages": [
+   6,
+   19,
+   20,
+   27,
+   28,
+   29
+  ],
+  "source": "Heat Pumps N5HP5018A-060A - Installation, Operation, and Maintenance (ODR-SVX031B-EN, September 2026), p.6, p.19, p.20, p.27, p.28, p.29",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-n5hp4-charge-cold",
+  "unit": "^N5HP4",
+  "brand": "Trane",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Charging below 55°F outdoor - weigh-in, then 10° subcooling in heating - Trane Advantage N5HP4",
+  "summary": "Below 55°F the guide says weigh in the charge, check for at least 10° subcooling in heating, and come back in warm weather.",
+  "steps": [
+   "Subcooling in cooling is not recommended below 55°F outdoor; the recommended method below 55°F is weighing in the charge.",
+   "The nameplate charge is the refrigerant shipped in the outdoor unit and is compatible with 10 ft of AHRI rated lines and the smallest AHRI rated coil (the same guide's Factory Charge section says 15 ft and the nominal rated coil).",
+   "Measure the line from the service valve to the indoor unit and subtract 10 ft. Charge multiplier: 0.47 oz per foot for 3/8 in. liquid line, 0.30 oz per foot for 5/16 in.",
+   "Wait 20 minutes for the system to stabilize between adjustments.",
+   "In heating, check liquid line temperature and liquid gauge pressure for a minimum of 10° subcooling; add charge if it is not reached with the nameplate charge plus the charge already added.",
+   "Write the factory, added and total charge on the Total System Charge label, and return in the spring or summer to charge in cooling with outdoor above 55°F."
+  ],
+  "safety": "Use only R-454B refrigerant and approved compressor oil. When opening the suction and liquid line service valve, turn the valve stem counterclockwise only until the stem contacts the rolled edge. Do not apply torque.",
+  "manual": "trane-n5hp4-iom-odr-svx030b",
+  "pages": [
+   6,
+   9,
+   19,
+   21,
+   22,
+   23
+  ],
+  "source": "N5HP4 (036B / 042B / 048B) Heat Pumps N5HP4018A, 024A, 030A, 036B, 042B, 048B, 060A - Installation, Operation, and Maintenance (ODR-SVX030B-EN, September 2026), p.6, p.9, p.19, p.21, p.22, p.23",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-r96msn-read-status-codes",
+  "unit": "^R96MSN",
+  "brand": "ICP",
+  "equipment": "Gas Furnace",
+  "title": "Reading the 3-digit display and status light - R96MSN",
+  "summary": "The R96MSN control shows a major.minor status code; the light through the door only flashes the major part.",
+  "steps": [
+   "Status light off: the status LED display stays off for 1 minute whenever MENU or NEXT is pressed - wait, then check 115V at L1 and L2, the door switch, the breaker, and 24V at SEC-1 / SEC-2 (no 24V = replace transformer; 24V present = replace furnace control).",
+   "Rapid flash without a pause = check line voltage polarity; if twinned, check the 24V transformer phasing (code 10.1).",
+   "Slow short / long flashes = the major code: short flashes are the first digit, long flashes the second. To see major and minor on the 3-digit display the door must be removed and the door switch closed.",
+   "Last 7 faults: no thermostat call and all blower-off delays done, door off, hold the door switch in, press MENU/SELECT until FLt shows, then NEXT/OPTION to scroll. Faults stay 72 hours of powered operation; CLr clears them. 'non' = no stored faults.",
+   "Do not tape the door switch or leave it bypassed - hold it in with one hand while pressing the buttons with the other, and do not touch uninsulated electrical components."
+  ],
+  "safety": "Blower access door switch removes 115V power to the control. Do not tape or permanently bypass the door switch. Do not touch uninsulated electrical components.",
+  "manual": "icp-r96msn-install-r96msn-03si",
+  "pages": [
+   56,
+   57,
+   65,
+   73
+  ],
+  "source": "R96MSN Installation, Start-up, Operating and Service and Maintenance Instructions (R96MSN-03SI, Edition 7/26, replaces R96MSN-02SI REV E), p.56, p.57, p.65, p.73",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-r96msn-no-ignition-34",
+  "unit": "^R96MSN",
+  "brand": "ICP",
+  "equipment": "Gas Furnace",
+  "title": "No heat - igniter / gas valve / flame sensor check (codes 34.1, 14.1) - R96MSN",
+  "summary": "Uses the component test to split an ignition problem between igniter, gas valve and flame sensor.",
+  "steps": [
+   "Remove the R thermostat connection at the control and start the component test (Ct, idle mode, no W / Y / G). Does the igniter glow orange/white by the end of the 15 second warm-up?",
+   "No glow: unplug the igniter harness from the control and start another component test. Check for 115V between pin 1 and NEUTRAL-L2 on the control for the 15 second period. No 115V = replace furnace control. 115V present = check for continuity in the harness and igniter; replace the defective component.",
+   "Glows: reconnect the R thermostat lead and call for heat. Does the gas valve receive 24V across its connections? No = check connections; if OK, replace control.",
+   "Does the gas valve open and allow gas to flow? No = check that all gas valves are turned on; replace valve.",
+   "Do the main burners ignite? No = check for inadequate flame carryover or rough ignition, low inlet gas pressure, proper firing rate, blocked or incorrect carry-over gap (.045\" nominal).",
+   "Burners stay on = allow the blower to come on and repeat the test to check for intermittent operation.",
+   "Burners do not stay on: repeat the call for heat and check flame sensor current during the trial for ignition period. Below 0.5 DC microamps = clean the flame sensor with fine steel wool and recheck (nominal 4.0 to 6.0 microamps); still not near typical = replace electrode; burners still will not ignite and stay on = replace furnace control.",
+   "Not below 0.5 microamps = check connections and retry. If current is near typical value (4.0-6.0 nominal) and burners will not stay on, replace control."
+  ],
+  "safety": "Temporarily depress the door switch with one hand; do not tape or bypass it; do not touch uninsulated electrical components.",
+  "manual": "icp-r96msn-install-r96msn-03si",
+  "pages": [
+   57,
+   75
+  ],
+  "source": "R96MSN Installation, Start-up, Operating and Service and Maintenance Instructions (R96MSN-03SI, Edition 7/26, replaces R96MSN-02SI REV E), p.57, p.75",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-r96msn-replace-control",
+  "unit": "^R96MSN",
+  "brand": "ICP",
+  "equipment": "Gas Furnace",
+  "title": "Replacing the furnace control - programming the model number - R96MSN",
+  "summary": "A new control must be programmed with the rating plate Model Program Number before the furnace will run.",
+  "steps": [
+   "Read the Model Program Number on the furnace rating plate.",
+   "Program the new board by one of the two approved methods: the supported mobile app over NFC (QR code on the front of the manual), or the correct Super Plug for the control.",
+   "Further details come with the replacement control board.",
+   "On start-up the display alternates the Model Program Number (PRG) and software version (uEr) - check PRG matches the rating plate."
+  ],
+  "safety": "CAUTION - furnace overheating hazard: do NOT program the control board with a Model Program Number different than what is specified on the rating plate. Parameter options will not match design values.",
+  "manual": "icp-r96msn-install-r96msn-03si",
+  "pages": [
+   54,
+   55
+  ],
+  "source": "R96MSN Installation, Start-up, Operating and Service and Maintenance Instructions (R96MSN-03SI, Edition 7/26, replaces R96MSN-02SI REV E), p.54, p.55",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-r92msn-read-status-codes",
+  "unit": "^R92MSN",
+  "brand": "ICP",
+  "equipment": "Gas Furnace",
+  "title": "Reading the status codes and fault history - R92MSN",
+  "summary": "Same 3-digit display control and service label as the R96MSN.",
+  "steps": [
+   "The major status code is the first 2 digits of the display, the minor code the third digit; the LED through the door flashes only the major code (short flashes = first digit, long flashes = second).",
+   "Improper 115V polarity = rapid flashing light and status code 10.1; the furnace will NOT operate.",
+   "Last 7 faults: no thermostat call, door off, hold the door switch in, MENU/SELECT until FLt, NEXT/OPTION to scroll. Faults remain 72 hours of powered operation after the last fault.",
+   "Codes and their checks are in Error Codes under ICP R-Series R96MSN / R92MSN."
+  ],
+  "safety": "Do not tape or permanently bypass the door switch; do not touch uninsulated electrical components.",
+  "manual": "icp-r92msn2-install-r92msn2-03si",
+  "pages": [
+   51,
+   59
+  ],
+  "source": "R92MSN Installation, Start-up, Operating and Service and Maintenance Instructions (R92MSN2-03SI, Edition 07/26, replaces R92MSN2-02SI), p.51, p.59",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-r92msn-no-ignition-34",
+  "unit": "^R92MSN",
+  "brand": "ICP",
+  "equipment": "Gas Furnace",
+  "title": "No heat - igniter / gas valve / flame sensor check (codes 34.1, 14.1) - R92MSN",
+  "summary": "Same troubleshooting artwork as the R96MSN manual (drawing A221120).",
+  "steps": [
+   "Remove the R thermostat connection at the control and start the component test. Does the igniter glow orange/white by the end of the 15 second warm-up?",
+   "No glow: unplug the igniter harness from the control and start another component test. Check for 115V between pin 1 and NEUTRAL-L2 on the control for the 15 second period. No 115V = replace furnace control. 115V present = check for continuity in the harness and igniter; replace the defective component.",
+   "Glows: reconnect the R thermostat lead and call for heat. Does the gas valve receive 24V across its connections? No = check connections; if OK, replace control.",
+   "Does the gas valve open and allow gas to flow? No = check that all gas valves are turned on; replace valve.",
+   "Do the main burners ignite? No = check for inadequate flame carryover or rough ignition, low inlet gas pressure, proper firing rate, blocked or incorrect carry-over gap (.045\" nominal).",
+   "Burners stay on = allow the blower to come on and repeat the test to check for intermittent operation.",
+   "Burners do not stay on: repeat the call for heat and check flame sensor current during the trial for ignition period. Below 0.5 DC microamps = clean the flame sensor with fine steel wool and recheck (nominal 4.0 to 6.0 microamps); still not near typical = replace electrode; burners still will not ignite and stay on = replace furnace control.",
+   "Not below 0.5 microamps = check connections and retry. If current is near typical value (4.0-6.0 nominal) and burners will not stay on, replace control."
+  ],
+  "safety": "Temporarily depress the door switch with one hand; do not tape or bypass it.",
+  "manual": "icp-r92msn2-install-r92msn2-03si",
+  "pages": [
+   68
+  ],
+  "source": "R92MSN Installation, Start-up, Operating and Service and Maintenance Instructions (R92MSN2-03SI, Edition 07/26, replaces R92MSN2-02SI), p.68",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-r95msu-pressure-transducer",
+  "unit": "^R95MSU",
+  "brand": "ICP",
+  "equipment": "Gas Furnace",
+  "title": "Codes 23.3 / 31.4 / 31.5 - pressure transducer - R95MSU",
+  "summary": "The R95MSU proves draft with a pressure transducer: about 0.50 Vdc at 0 in. w.c.",
+  "steps": [
+   "23.3 over pressure at start-up: transducer output above 0.65 Vdc at the start of the heating sequence; ignition waits until the signal returns to range. Nominal output at 0 in. w.c. is about 0.50 Vdc.",
+   "23.3 check for: proper vent sizing, obstruction in pressure tubing, defective transducer, defective transducer wiring, excessive wind.",
+   "31.4 / 31.5 loss of pressure before / after the blower comes on: transducer does not sense target pressure or pressure is out of range of the operating stage.",
+   "31.4 / 31.5 check for: proper vent sizing, low inducer voltage (115V), inadequate combustion air supply, disconnected or obstructed pressure tubing, defective inducer motor, defective pressure transducer, excessive wind, restricted vent system.",
+   "Cleaning the collector box: disconnect the transducer tube from the transducer port and keep it higher than the collector box opening; clean the port with a small wire and shake water out of the tube; do NOT blow into the tube with it connected to the transducer."
+  ],
+  "safety": "Turn off gas and electrical supplies before cleaning. Do not bypass the pressure switch / pressure transducer or any other safety control.",
+  "manual": "icp-r95msu-install-r95msu-03si",
+  "pages": [
+   4,
+   48,
+   58,
+   63,
+   64
+  ],
+  "source": "R95MSU Installation, Start-up, Operating and Service Maintenance Instructions (R95MSU-03SI, Edition 7/26, replaces R95MSU-02SI), p.4, p.48, p.58, p.63, p.64",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-r95msu-bts-lockout",
+  "unit": "^R95MSU",
+  "brand": "ICP",
+  "equipment": "Gas Furnace",
+  "title": "Code 26.1 - burner thermal switch (BTS) permanent lockout - R95MSU",
+  "summary": "An open BTS during a call for heat locks the furnace out until power is cycled.",
+  "steps": [
+   "Code 26.1: BTS open during a call for heat = permanent lockout. Cycle power to reset.",
+   "At power-up with the BTS open, the inducer runs during the 90-second blower-on period; if the BTS does not reset in that time a permanent lockout results (power must be cycled).",
+   "Check for a blocked burner inlet, a blocked burner mesh, a power loss during heating that made the BTS open, and correct manifold pressure and gas firing rate."
+  ],
+  "safety": "Do not bypass any safety control, including the rollout or burner thermal switch (WARNING p.4).",
+  "manual": "icp-r95msu-install-r95msu-03si",
+  "pages": [
+   4,
+   48,
+   60,
+   64
+  ],
+  "source": "R95MSU Installation, Start-up, Operating and Service Maintenance Instructions (R95MSU-03SI, Edition 7/26, replaces R95MSU-02SI), p.4, p.48, p.60, p.64",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-r95msu-no-ignition",
+  "unit": "^R95MSU",
+  "brand": "ICP",
+  "equipment": "Gas Furnace",
+  "title": "No heat - igniter at PL8 / gas valve / flame sensor (codes 34.x, 14.x) - R95MSU",
+  "summary": "The R95MSU guide tests the igniter at PL8 and checks igniter resistance 40-70 ohms.",
+  "steps": [
+   "To find whether the problem is the gas valve, igniter or flame sensor, run the component test: first remove the R thermostat connection from the furnace control.",
+   "Unplug the igniter at PL8 and start the component test. The inducer starts, and after 10 seconds the igniter output is energized for 15 seconds. Check for 115V between PL8-1 and NEUTRAL-L2 on the control. No 115V = replace furnace control.",
+   "115V present: check for continuity in the igniter harness - is the resistance between 40 and 70 ohms? No = replace the defective component.",
+   "Yes: reconnect the igniter harness, reconnect the R thermostat lead and call for heat. Does the gas valve receive 24V? No = check connections; if OK, replace control.",
+   "Does the gas valve open and allow gas to flow? No = check that all gas valves are turned on; replace valve.",
+   "Do the main burners ignite? No = check for rough ignition, low inlet gas pressure, proper firing rate.",
+   "Burners stay on = allow the blower to come on and repeat the test to check for intermittent operation.",
+   "Burners do not stay on: check flame sensor current during the trial for ignition. Below 0.5 DC microamps = clean the flame sensor with fine steel wool and recheck (nominal 4.0 to 6.0 microamps); not near typical = replace electrode; still will not ignite and stay on = replace furnace control. Not below 0.5 = check connections and retry; near typical (4.0-6.0) and burners will not stay on = replace control.",
+   "When servicing the flame sensor use only the factory-provided 1/4-in. length screws - alternate screws will damage unit components (WARNING, p.57)."
+  ],
+  "safety": "Use only the factory-provided 1/4-in. screws on the flame sensor (WARNING p.57).",
+  "manual": "icp-r95msu-install-r95msu-03si",
+  "pages": [
+   57,
+   64
+  ],
+  "source": "R95MSU Installation, Start-up, Operating and Service Maintenance Instructions (R95MSU-03SI, Edition 7/26, replaces R95MSU-02SI), p.57, p.64",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-r80msu-inducer-rpm",
+  "unit": "^R80MSU",
+  "brand": "ICP",
+  "equipment": "Gas Furnace",
+  "title": "Codes 42.1 / 42.2 / 42.3 - inducer RPM feedback - R80MSU",
+  "summary": "The control watches inducer RPM pulses; no pulses or too-high RPM sets a 42 code.",
+  "steps": [
+   "Inducer motor fault: RPM pulses not detected within 20 seconds after a heat request, inducer outside its valid range, RPM signal lost for 5 seconds during operation, or RPM above the model-specific limit.",
+   "42.1 = no RPM feedback at start-up or before ignition proved; 42.2 = after ignition proved; 42.3 = exceeding the inducer RPM limit.",
+   "Check for: proper vent sizing, restricted combustion air supply, failed inducer motor, improper or loose motor wiring or bad connection, frozen or blocked drain."
+  ],
+  "safety": "Do not bypass any of the safety controls, including the main limit switch, rollout or burner thermal switch and the pressure switch / pressure transducer (WARNING, R80MSU-03SI p.3).",
+  "manual": "icp-r80msu-install-r80msu-03si",
+  "pages": [
+   24,
+   39
+  ],
+  "source": "R80MSU Installation, Start-up, Operating and Service and Maintenance Instructions (R80MSU-03SI, Edition 11/25, replaces R80MSU-02SI), p.24, p.39",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-r80msu-no-ignition",
+  "unit": "^R80MSU",
+  "brand": "ICP",
+  "equipment": "Gas Furnace",
+  "title": "No heat - ignition fault 34.1 / lockout 14 - R80MSU",
+  "summary": "Check list first, then the component-test flowchart.",
+  "steps": [
+   "Check for: Oxide buildup on flame sensor (clean with fine steel wool); Proper flame sense microamps (.5 microamps D.C. min., 4.0 - 6.0 nominal); Gas valve defective or turned off; Low inlet gas pressure; Control ground continuity; Manual shut-off valve; Green/Yellow wire MUST be connected to furnace sheet metal; Flame sensor must not be grounded or touching casing; Inadequate flame carryover or rough ignition.",
+   "IGNITION PROVING FAILURE (guide): if flame is not sensed during the trial for ignition period, the control will repeat the ignition sequence 3 more times before lockout #14 occurs. If flame signal is lost during the blower on-delay period, the blower will come on for the selected blower off-delay.",
+   "Component test check of the igniter: first remove the R thermostat connection from the control and start the component test sequence. Does the igniter glow orange/white by the end of the 15 second warm-up period?",
+   "No glow: unplug the igniter harness from the control and start another component test. Check for 115V between pin 1 and NEUTRAL-L2 on the control for the 15 second period. No 115V = replace furnace control. 115V present = check for continuity in the harness and igniter; replace the defective component.",
+   "Glows: reconnect the R thermostat lead and call for heat. Does the gas valve receive 24V? No = check connections; if OK, replace control.",
+   "Does the gas valve open and allow gas to flow? No = check that all gas valves are turned on; replace valve.",
+   "Do the main burners ignite? No = check for rough ignition, low inlet gas pressure, proper firing rate, blocked or incorrect carry-over gap (.045\" nominal).",
+   "Burners stay on = allow the blower to come on and repeat the test to check for intermittent operation.",
+   "Burners do not stay on: check flame sensor current during the trial for ignition. Below 0.5 DC microamps = clean the flame sensor with fine steel wool and recheck (nominal 4.0 to 6.0 microamps); not near typical = replace electrode; still will not ignite and stay on = replace furnace control. Not below 0.5 = check connections and retry; near typical (4.0-6.0) and burners will not stay on = replace control."
+  ],
+  "safety": "Do not bottom out the gas valve regulator adjusting screw; do not redrill orifices (p.26).",
+  "manual": "icp-r80msu-install-r80msu-03si",
+  "pages": [
+   26,
+   40
+  ],
+  "source": "R80MSU Installation, Start-up, Operating and Service and Maintenance Instructions (R80MSU-03SI, Edition 11/25, replaces R80MSU-02SI), p.26, p.40",
+  "confidence": "manual"
  }
 ];
