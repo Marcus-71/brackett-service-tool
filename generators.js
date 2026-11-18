@@ -22937,6 +22937,11 @@ const GENERATORS = [
     "g": "G0058921",
     "digits": "5892",
     "desc": "10KW/530 CENT+12C T/SW"
+   },
+   {
+    "g": "G0060511",
+    "digits": "6051",
+    "desc": "10KW/530 GRD+200A SE T/SW"
    }
   ],
   "specs": {
@@ -23346,7 +23351,9 @@ const GENERATORS = [
   ],
   "tips": [
    "V-twin models (10 kW and up) have external red Alarm / yellow Warning LEDs visible without opening the lid.",
-   "G0058921 has no owner's or install manual of its own; grouped with G0058920."
+   "G0058921 has no owner's or install manual of its own; grouped with G0058920.",
+   "G0060511 (Guardian 10 kW with a 200 A service-entrance transfer switch; the data tag prints 0060511) uses the same 2011 parts lists as G0058921: control panel 0J3707, enclosure 0J4730, GT-530 engine 0J4643A, generator 0J3899. Generac lists no owner's manual of its own for it.",
+   "G0060511 transfer switch documents in Generac's lookup: owner's manual 0J2119 (100-200 A service-entrance switch), install 0H4905 (200 A switch) and 0J0814 (air-cooled RTSD 2008), interconnect diagram 0H7454, ID RTS 2010 0H8676, switch wiring/schematic 0H7254, switch parts lists 0H7264A (100 A), 0J2006A (150 A), 0H7265A (200 A), generator wiring/schematic 0J3000 (V-twin, no aux outlet)."
   ],
   "manuals": [
    { "title": "Diagnostic Repair Manual - 50/60 Hz Air-Cooled Product with Evolution or Nexus Control (0H9172 Rev M)", "docType": "service", "seedFile": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf" },

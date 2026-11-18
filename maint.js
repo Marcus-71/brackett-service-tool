@@ -4466,7 +4466,9 @@ const MAINT_GEN_TUNEUP = [
    "G0058921",
    "0058921",
    "005892",
-   "G005892"
+   "G005892",
+   "G0060511",
+   "0060511"
   ],
   "source": "Nexus owner's manual 0H8358 (2010); Evolution/Nexus dealer manual 0H9172 Rev M",
   "flags": [
