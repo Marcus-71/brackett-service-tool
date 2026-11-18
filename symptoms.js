@@ -3588,7 +3588,7 @@ const SYMPTOMS = [
  {
   "id": "s-hp-thermostat-lockout-balance-point-generic",
   "equipment": "Condenser/Heat Pump",
-  "title": "Heat pump thermostat compressor lockout and balance point settings (generic reference)",
+  "title": "Heat pump ambient lockout - the thermostat compressor lockout (low ambient lockout) and balance point settings (generic reference)",
   "summary": "Most heat pump-capable thermostats have configurable compressor lockout and balance point/backup-heat settings that are easy to leave at a default that doesn't match the installed equipment or climate.",
   "steps": [
    "Locate the installer/equipment settings menu (not the homeowner schedule menu) — compressor lockout and balance point settings are typically buried under an installer or advanced settings section",
@@ -15707,7 +15707,7 @@ const SYMPTOMS = [
  {
   "id": "s-hp-defrosting-too-often-mild-wet-weather",
   "equipment": "Condenser/Heat Pump",
-  "title": "Heat pump defrosts constantly in mild wet weather - normal or a fault?",
+  "title": "Heat pump keeps defrosting - defrosts constantly or too often in mild wet weather, normal or a fault?",
   "summary": "Customer complains the unit is defrosting all the time in the 30s and 40s with rain or fog, and the house feels cool because backup heat keeps coming on. Damp weather just above freezing is the worst frosting condition there is, so frequent defrosts can be entirely normal - but a time-initiated board with too short an interval, or a coil sensor reading low, will also defrost on schedule whether the coil needs it or not.",
   "steps": [
    "Log the actual pattern - how often defrost starts, how long each one lasts, and what the outdoor temperature and humidity are.",
@@ -18210,7 +18210,7 @@ const SYMPTOMS = [
  {
   "id": "s-fh-df-lennox-balance-points",
   "equipment": "Other",
-  "title": "Lennox S30/S40 dual fuel - setting and checking the high and low balance points",
+  "title": "Lennox S30/S40 dual fuel - changing the ambient lockout (alert 18 low ambient heat pump lockout): setting and checking the high and low balance points",
   "summary": "Balance Point Control is what decides heat pump vs gas furnace on a Lennox communicating dual fuel system. The defaults are 50 F high and 25 F low, and the manual's own guidance is to set them close together.",
   "steps": [
    "Get to the setting: Menu > Settings > Advanced Settings > View Support Service Control Center > Ok > Equipment Settings > Thermostat > Balance Point Control > Enabled > Back.",
@@ -22617,5 +22617,57 @@ const SYMPTOMS = [
   ],
   "safety": "Disconnect all power to the furnace before wiring at the control board. Before handling the control board, touch your hand and tools to bare metal on the furnace to discharge static. A float switch is a water-damage safety - never leave it bypassed or jumpered out. Cut W914 only for a communicating thermostat float switch (or for a dehumidification thermostat / Harmony III as the manual directs); if W914 is cut by mistake, put a jumper back between DS and R on the terminal strip.",
   "confidence": "common"
+ },
+ {
+  "id": "s-hsi-ohms-reading-good-or-bad",
+  "equipment": "Gas Furnace",
+  "title": "Hot surface igniter (ignitor) ohms - is my reading bad? What a good igniter reads cold, and why a reading in kilohms (k ohms, kohms) means a failed igniter",
+  "summary": "Ohm the igniter cold and unplugged, then compare with the range for that igniter type. Every published range in the app is in plain ohms (tens to a few hundred), so a reading in kilohms - thousands of ohms - is far outside all of them. Check the meter's scale first, then treat a true kilohm reading as a failed igniter.",
+  "steps": [
+   "Power off, unplug the igniter, and let it cool to room temperature before you ohm it. Igniter resistance is affected by temperature and the reading goes up as the igniter gets hotter (Carrier 59MN7 manual), so a warm reading is not valid.",
+   "Read across the two igniter leads at the igniter connector. On Lennox the terminals differ by model (1 and 5 on several EL/ML models, 2 and 4 on ML180UHE). If the reading there is 0 or infinity, re-read at the 2-pin jack-plug near the manifold before blaming the igniter or the board.",
+   "Check the meter's display before judging: a k or kΩ (kilohms) on the screen means thousands of ohms - 45 kΩ is 45,000 ohms. A plain Ω reading of 45 is 45 ohms. Make sure the meter is on an ohms range.",
+   "Compare to the range for that igniter: 120 V silicon nitride on Goodman/Amana 96-97 furnaces 37-68 ohms; Carrier gas furnaces (59MN7, 59TP6, 59SP5/6, 59SC2/5/6) 40-70 ohms; Trane S9V2-VS 37-70 ohms at about 75 F; Lennox EL/ML nitride igniters 39-70 ohms; Goodman 0130F00717 20-100 ohms; silicon-carbide mini igniters 30-300 ohms. Use the figure printed for the furnace in front of you.",
+   "A true reading in kilohms, or OL / open, is far above every range above: the igniter has failed. A reading below the range or near 0 (shorted) also condemns it. Replace it with the correct part number for that furnace - igniters are not universal and draw different current.",
+   "A reading inside the range means the element is not open cold, but a hairline crack can still open once hot. On Goodman/Amana 96-97 also clamp the igniter lead: 0.37-0.68 amps steady state at 120 V.",
+   "If it still does not glow, check for line voltage at the igniter plug during the warm-up (Lennox: 120 volts plus or minus 10 percent), using small probes so the plug contacts are not spread. No voltage: check the furnace supply voltage first, then the wiring and the control board's igniter relay.",
+   "On Carrier furnaces the manual says the cold resistance stays stable over the igniter's life and should be checked before the igniter is removed."
+  ],
+  "safety": "Line voltage reaches the igniter plug during a heat call - kill power before unplugging or ohming it. Handle the igniter by its base; the element cracks easily. Never touch the element with bare fingers - skin oils shorten its life.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-flame-sensor-low-microamps-general",
+  "equipment": "Gas Furnace",
+  "title": "Low flame sensor reading - only 0.3 microamps DC (low flame signal, weak flame sense): what is too low, and what to check next",
+  "summary": "0.3 microamps DC is below the failure point on Carrier, ICP and Trane (0.5), Goodman/Daikin (1-4 spec) and York TM9V (1.5 warning), so on those it explains a furnace that lights and drops out. Several Lennox boards drop out far lower (0.06-0.23), so on a Lennox use that board's own table. Clean and recheck, then work the ground, the flame and the wiring before replacing a board.",
+  "steps": [
+   "Read it right: break the flame sensor lead and put the meter in series, set to DC microamps. Carrier and ICP manuals read it during the trial for ignition; Lennox reads it with the burners lit and stable. Some boards give another way: Trane A951X has FP test pads read on DC volts (1 V DC = 1 microamp), York TM9V has a flame current test pad, and Lennox 7-segment boards show flame current on the display from the diagnostic button.",
+   "Compare to that brand's numbers: Carrier and ICP flash-code furnaces 4.0-6.0 microamps nominal, below 0.5 is a fault; Trane A951X / S9V2-VS 0.75-3.0 typical, code 8 is below 0.5; Goodman/Daikin 1-4 microamps (GR9S96-U and DR96TN 3-8); York TM9V warns below 1.5; Lennox 7-segment boards normal 2.6 or more, low 2.5 or less, drop out 1.1 (EL280UHE 0.06), 103217 boards 1.5, G60/G61 below 0.23, 32M88 below 0.18.",
+   "0.3 is a fault on Carrier, ICP, Trane, Goodman/Daikin and York, and on Lennox boards with a 1.1 or 1.5 limit. It is above the drop-out on G60/G61, 32M88 and older Lennox boards, so look elsewhere on those.",
+   "Clean the sensor rod with fine steel wool or an abrasive pad (not sandpaper) and recheck. A rod can look clean and still carry a nearly invisible insulating film.",
+   "Still low: check the ground. The green/yellow ground wire must be landed on furnace sheet metal, line polarity must be right, and the flame sensor itself must not be grounded. With power off, neutral to the burner nearest the sensor should read under 2 ohms. A poor ground drags flame current down.",
+   "Look at the flame and the rod: the rod has to sit in a steady blue flame. A lazy or yellow flame, low inlet gas pressure, dirty burners or poor carryover reads low even with a clean rod. A cracked ceramic insulator can leak the signal to ground.",
+   "Check the sensor wire and its terminals end to end for a loose or high-resistance connection.",
+   "If cleaning does not hold, replace the flame sensor. Carrier and ICP manuals replace the control only when the current is near normal and the burners still will not stay on (ICP: repeat the check in high heat first); Goodman's when there is no reading at all and every part of the sense circuit checks good."
+  ],
+  "safety": "Gas is flowing and line voltage is present during the trial for ignition - keep meter leads clear of the burners and igniter, do not defeat the door interlock, and kill power before moving leads. More than one power source may be present.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-lennox-hp-keeps-defrosting",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Lennox heat pump keeps defrosting - defrosts too often or every 30 minutes: normal adaptive timing or a fault",
+  "summary": "Lennox demand defrost controls (for example ML16KP2 and SL22KLV; other models' thresholds vary) do not defrost on a fixed timer. They count run time only while the outdoor coil is cold, start from a 90 minute target, and shorten the interval after long defrosts - down to 30 minutes when a defrost ran 200 percent or more of target or hit the 14 minute maximum. So in dry or cold weather, a unit defrosting very often usually means the coil is not clearing quickly or the coil sensor is reading wrong. In damp weather just above freezing, frequent defrosts can be normal.",
+  "steps": [
+   "Watch a full cycle and log it: how long between defrosts, how long each defrost runs, outdoor temperature and humidity. Damp weather just above freezing frosts a coil fast, so frequent defrosts can be normal then - look at the coil right before a defrost starts: frosted is a system doing its job, clean is the problem.",
+   "Know the logic: frost accumulation time only counts in heating with the outdoor coil below about 35-37 F (35 F on SL22KLV, 37 F on ML16KP2). The first target is 90 minutes; it goes up 30 minutes after a short defrost and down 30 minutes after a long one, and drops to 30 minutes after a defrost that ran 200 percent or more of target or ended at the 14 minute maximum. A changing interval by itself is normal. On the ML16KP2, below 10 F outdoor the interval is stretched to 360 minutes on purpose.",
+   "If defrosts are running long or timing out at 14 minutes, the coil is not clearing: check the charge (distinct bands of frost on the outdoor coil point to low charge), outdoor airflow and fan, and a dirty or blocked coil before touching the control.",
+   "Check the defrost termination setting. The ML16KP2 board's termination shunt is factory set at 50 F (90 F if the shunt is missing), and the S40 thermostat's Heat Pump Defrost Termination Temp defaults to 50 F - Lennox recommends 90 F (100 F in cold climates) on the S40. Raising it helps clear the coil, but it does not change how the board times the interval (cycle time is measured to 50 F coil).",
+   "Check the outdoor coil sensor and the ambient sensor: seated at the board's sensor header (P4 on the ML16KP2 A108 control), clamped tight on the tubing where the manual shows, and reading right against a separate thermometer at the same spot. A coil sensor that reads cold makes the control call defrost far more often than the frost justifies. But first confirm the reading is actually wrong: a sensor correctly reporting a coil that really is icing is not the fault.",
+   "Read the board's LEDs against that model's own table before replacing anything. On the A108 demand defrost control (ML14KP1, EL16KP1, ML16KP2, ML16XP1, EL15XP1, EL16XP1): simultaneous slow = normal, alternating slow = 5-minute anti-short-cycle delay, simultaneous fast = ambient sensor fault, alternating fast = coil sensor fault. A 100269-XX CMC1 board and the SL22KLV use different tables.",
+   "Confirm on the unit's own installation/service manual: the accumulation thresholds and shunt settings differ between Lennox models."
+  ],
+  "confidence": "manual"
  }
 ];

@@ -1670,6 +1670,11 @@ const ASK_KNOWN_TYPOS = [
   // v453: "flashing 2 times" / "blinking 3 times" is how techs say it; the code rows print "2 flashes" (MG1E and Goodman
   // furnace questions both missed - vendor sweep 11-17).
   [/\b(?:flash(?:ing|es|ed)?|blink(?:ing|s|ed)?)\s+(\d{1,2})\s*(?:times?|x)\b/gi, (m, n) => n === "1" ? "1 flash" : n + " flashes"],
+  // 11-17 daily: Jon "only have .3 dc on flame sencer" (sencer became "sender") and Dave "is 45 kila ohms
+  // a bad ignitor" (kila became "kill"). Flame-sensor readings said as ".3 dc" are microamps.
+  [/\bsen[cs][eo]rs?\b/gi, "sensor"],
+  [/\bkil+[aoi]\s*-?\s*ohms?\b/gi, "kilohms"],
+  [/(^|[^\d.])\.(\d)\s*(?:u?a\s*)?dc\b(?=.*\bflame\b)/gi, "$10.$2 microamps dc"],
 ];
 function askKnownTypos(q) { let r = String(q || ""); for (const [re, to] of ASK_KNOWN_TYPOS) r = r.replace(re, to); return r; }
 // What the last askRetrievalQ call borrowed from the question before ({ words, codes }), or null. renderAsk
@@ -3105,7 +3110,11 @@ function askTopItems(units, limit) {
     // time" led with an Amana heat pump card). A unit card whose own name - brand, model, tokens, kind of
     // equipment - holds none of the asked words gives up one point, so the card that names the subject leads.
     // Not when the question carries a model number that this card answers to ("AZV7SA4210 defrost interval").
-    if (it.kind === "maint" && sc > 1 && tsc === 0 &&
+    // 11-17 daily (Cameron "carrier 31 80 percent"): a name that holds only the BRAND does not name the subject
+    // either - three Carrier unit cards led the 58SC0A code 31 row because "carrier" was in their titles.
+    const tscOwn = it.kind === "maint" && sc > 1 && tsc > 0 && tsc <= 1 && askLiveUnits(units).length >= 3
+      ? askUnitHits(units.filter(u => !u.alts.some(a => ASK_BRAND_RE.test(a))), it.titleHay || (it.title + " " + (it.sub || "")).toLowerCase()) : tsc;
+    if (it.kind === "maint" && sc > 1 && (tsc === 0 || tscOwn === 0) &&
         !units.some(u => !u.zero && (u.model || u.pre) && u.alts.some(a => askTermHit(it.hay, a)))) sc -= 1;
     if (sc > 0) scored.push({ it, sc, tsc });
   }
@@ -13620,7 +13629,13 @@ async function scanTagPhoto(file) {
       if (info && info.brand && !info.ocrGuess && fields.ocrTailBad) { info.ocrGuess = true; info.rawModel = fields.model; info.tailBad = true; }
       // v288: a "check the tag" re-read is not a confident ID - Andy reviews every one.
       const guessed = !!(info && info.brand && info.ocrGuess);
-      scanRetakeRemember(file, photoId, fields, info, !!(info && !info.brand) || guessed);   // uploaded below
+      // 11-17 (Jon, TUDOB0CS6H3 read off a TUD furnace): a read that names a family but opens no figures
+      // is a coverage gap (or a misread) like on the Maintenance Figures scan button, but sent no photo,
+      // so nobody could see the plate. Send it the same way (kind maint-no-figures).
+      const noFigures = !!(info && info.brand && !guessed && !info.serialLike && info.model && typeof maintLookup === "function"
+        && typeof MAINT_SPECS !== "undefined" && !maintLookup(info.model).exact.length
+        && !(typeof genMaintResolve === "function" && genMaintResolve(info.model)));
+      scanRetakeRemember(file, photoId, fields, info, !!(info && !info.brand) || guessed || noFigures);   // uploaded below
       thisInfo = info;
       renderScanResult(info);
       scanResultIntoView();
@@ -13631,6 +13646,8 @@ async function scanTagPhoto(file) {
       } else if (guessed) {
         trackEvent("SCAN CHECK-TAG GUESS | read: " + (info.rawModel || fields.model) + " | shown: " + info.model + " | photo: " + photoId);
         saveFailedScan(file, { id: photoId, kind: "check-tag", read: (info.rawModel || fields.model) + " -> shown " + info.model + (fields.serial ? " / " + fields.serial : "") }).catch(() => {});
+      } else if (noFigures) {
+        saveFailedScan(file, { id: photoId, kind: "maint-no-figures", read: fields.model + (fields.serial ? " / " + fields.serial : "") }).catch(() => {});
       }
     }
   } catch (err) {
@@ -15430,7 +15447,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v455";
+const APP_VERSION = "v456";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
