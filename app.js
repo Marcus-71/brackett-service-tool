@@ -11370,11 +11370,13 @@ function extractTagFields(text) {
   // OCR renders the degree sign as °, º, *, ?, o or 0.
   // v311: "NC." / "NC " is a misread "NO." (a Rheem plate's "SER. NC C684595433" kept no serial);
   // only before a space or dot, so a serial that starts with NC is not cut.
-  const FILLER = "(?:[\\s.:#/-]*(?:NUMBER|NUM|N[O0\\u00B0\\u00BA*?]\\.?|NC(?=[\\s.])\\.?|MOD[E\\u00C8\\u00C9]LE|MODELE|DE\\s+S[E\\u00C8\\u00C9]RIE|S[E\\u00C8\\u00C9]RIE))*";
+  // v459: brackets too - Nordyne prints "Model (Modèle): MB7BM-1200K-B" and "Serial (Série) No.: MBD140308360"
+  // (Nick's 11-18 plate kept neither, and a heater-kit number off the same plate won).
+  const FILLER = "(?:[\\s.:#/()-]*(?:NUMBER|NUM|N[O0\\u00B0\\u00BA*?]\\.?|NC(?=[\\s.])\\.?|MOD[E\\u00C8\\u00C9]LE|MODELE|DE\\s+S[E\\u00C8\\u00C9]RIE|S[E\\u00C8\\u00C9]RIE))*";
   // v275: a "-" may sit between label and value: ocrNormDashes turns "M/N – G61MP" into "M/N-G61MP".
   // v311: NODEL / HODEL / MOOEL - OCR's misreads of the MODEL label on Dave's Carrier plate.
-  const modelLabel = new RegExp("(?:MODEL|MODLE|M/N|MOD|M0DEL|NODEL|HODEL|MOOEL)" + FILLER + "[.:#/ -]*\\s*([A-Z0-9][A-Z0-9./-]{4,24})");
-  const serialLabel = new RegExp("(?:SERIAL|SER|S/N|5/N)" + FILLER + "[.:#/ -]*\\s*([A-Z0-9][A-Z0-9-]{5,24})");
+  const modelLabel = new RegExp("(?:MODEL|MODLE|M/N|MOD|M0DEL|NODEL|HODEL|MOOEL)" + FILLER + "[.:#/() -]*\\s*([A-Z0-9][A-Z0-9./-]{4,24})");
+  const serialLabel = new RegExp("(?:SERIAL|SER|S/N|5/N)" + FILLER + "[.:#/() -]*\\s*([A-Z0-9][A-Z0-9-]{5,24})");
   // A two-column header row ("MODEL NO.   SERIAL NO.") makes the MODEL label
   // capture the NEXT label word — a Trane plate scanned as model "SERIAL". Reject
   // the plate's own label words, and require a real model to carry a digit (every
@@ -12398,7 +12400,12 @@ async function ocrTagTextPasses(file, onStatus) {
   // (upside-down "(Compresseur)" -> LRESSA0WOD -> 1RESSA0W0D, a Kohler
   // generator) cannot beat it.
   let labelCand = null;
-  const vetoed = (c) => !!(c && c.fixedFrom && !(c.fields && c.fields.modelSource === "label") && labelCand && labelCand.deg !== c.deg);
+  // v459: a unit model read off the plate's MODEL label (library family, not a heater kit). An air
+  // handler plate also lists its approved heater kits ("H6HK015H-21"); a zoomed read of that list
+  // ended Nick's 11-18 Nordyne scan as the model. A heater-kit read never beats this one.
+  let labelUnit = null;
+  const heaterKitRead = (m) => { const p = m ? ocrLibraryPattern(m) : null; return !!(p && p.equipment === "Other" && /heat(?:er)? kit|heat-strip kit/i.test(p.series || "")); };
+  const vetoed =(c) => !!(c && c.fixedFrom && !(c.fields && c.fields.modelSource === "label") && labelCand && labelCand.deg !== c.deg);
   // v309: a non-library read shaped like a Trane serial is the serial, never the model. On
   // Dustin's tilted TDD plate the values sit a line above their labels, so the value under
   // "MODEL NUMBER:" was the serial ("463AK1G"), and a zoom re-read "confirmed" 60463AK1G.
@@ -12494,6 +12501,7 @@ async function ocrTagTextPasses(file, onStatus) {
     if (fields.modelSource === "pattern" && (clean.tier <= 0 || (clean.tier === 1 && clean.model.length < 7)) && (w ? w.conf : 0) < 90) return null;
     const c = mkCand({ fields, box: w && w.box, rad: turn, deg, passScale, event }, clean, w ? w.conf : fields.confidence);
     if (fields.modelFromProd && c.tier > 1) c.tier = 1;   // v311: a PROD-line number needs a second look, a later pass may read the MODEL line
+    if (fields.modelSource === "label" && clean.lib && !heaterKitRead(clean.model) && (!labelUnit || c.conf > labelUnit.conf)) labelUnit = c;
     if (fields.modelSource === "label" && !clean.lib && clean.model.length >= 8 && c.conf >= 50 && /[A-Z]/.test(clean.model) && /[0-9]/.test(clean.model) && (!labelCand || c.conf > labelCand.conf)) labelCand = c;
     if (!bestCand || score(c) > score(bestCand)) bestCand = c;
     return c;
@@ -12554,6 +12562,7 @@ async function ocrTagTextPasses(file, onStatus) {
   };
   const finish = async (c0) => {
     let c = c0;
+    if (labelUnit && heaterKitRead(c.model)) c = { ...labelUnit, model: labelUnit.model.replace(/-+$/, ""), event: "tag model taken from its MODEL label over a heater-kit number" };
     // v443: a Generac-shaped model with its MODEL label word seen - the boxed value votes on it.
     // A clear vote for other digits replaces the read (0064520 -> 0064620 on Vern's plate).
     if (BOX_MODEL_RE.test(c.model) && anchors.some(a => a.kind === "model" && !a.fr)) {
@@ -15447,7 +15456,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v458";
+const APP_VERSION = "v459";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
