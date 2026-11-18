@@ -9952,5 +9952,573 @@ const UNIT_SCENARIOS = [
   ],
   "source": "IDS Ultra 2026 - BOVB19 (BOVB-36MTB-M19E, BOVB-60MTB-M19E, BIVB-36/48/60MCB-M19X) (R-454B); the nomenclature figure on p.12 and Bosch bulletins BTC 762002303 A / 762002309 A print BOVA-60MTB-M19E / BOVA-60k for the 5 ton Ultra Service Manual - Bosch IDS Heat Pump Ultra Series, 3-5 Ton Capacity, R454B (BTC 762002313 A, 09.2026), p.33, p.34, p.35, p.36, p.38, p.39, p.40, p.43, p.22, p.46",
   "confidence": "manual"
+ },
+ {
+  "id": "u-york-vh4-read-codes",
+  "unit": "^VH4(12|18|24|30|36|42|48|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Reading the codes - VH4 7-segment board (P.0) and drive LEDs",
+  "summary": "Outdoor fault / protection codes are read from the 7-segment display board with a parameter query; drive faults flash on LED1 / LED2 of the main control board.",
+  "steps": [
+   "Open the maintenance panel to reach the 7-segment display board: S1 = select, S2 = increase, S3 = decrease (p.47, p.55).",
+   "Press S1 to show the outdoor parameters, step with S2 / S3 to P.0, wait 3 s: the display shows E and the code, for example E 13. Several codes display in sequence (p.48, p.60).",
+   "Other useful values: P.1 compressor actual frequency, P.5 discharge temperature, P.6 suction temperature, P.7 ambient, P.8 coil, P.14 AC input current, P.15 AC input voltage, P.16 DC bus voltage, P.24 actual outdoor pressure (p.48).",
+   "The display is factory set to °C and MPa. For °F and psig: disconnect line power, wait for the display to go blank, set S4-1 from OFF to ON, restore power (p.45).",
+   "Drive faults: remove the system top cover to see LED1, LED2, LED3 on the main control board (Figure 41; the manual notes the board design is shown upside down there). LED3 on = drive fault; LED1 flashes the tens digit, LED2 the ones digit (23 = LED1 twice, LED2 three times); 5 s off between codes (p.60-61).",
+   "LED3 flashing with LED1 and LED2 off = compressor preheating, not a fault. All three off = no drive fault and no preheating (p.61).",
+   "Outdoor code E45 (IPM fault) means read the drive LEDs and use the drive fault table (p.66, p.69-70)."
+  ],
+  "safety": "This equipment uses an inverter drive that stores hazardous energy up to 5 min after power is removed. Wait for more than 5 min before performing electrical work after power is removed.",
+  "manual": "york-vh4-install-6746765-uim-c-0526",
+  "pages": [
+   45,
+   47,
+   48,
+   55,
+   60,
+   61,
+   66
+  ],
+  "source": "VH4 horizontal-discharge heat pump (VH412E2S11 - VH460E2S11) Installation Manual: VH4 Series - 14.3 SEER2/7.5 HSPF2 Horizontal Discharge Heat Pump (6746765-UIM-C-0526, 2026-05-14), p.45, p.47, p.48, p.55, p.60, p.61, p.66",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-vh4-pump-down",
+  "unit": "^VH4(12|18|24|30|36|42|48|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Pump down / recovery into the outdoor unit - VH4",
+  "summary": "Pump down mode on the S4 DIP switch runs the compressor at a target frequency with the EEV open. Not for line sets over 40 ft.",
+  "steps": [
+   "Line sets over 40 ft: the refrigerant cannot be recovered into the outdoor unit - recover with external equipment (p.45).",
+   "Remove the heating or cooling call so the outdoor unit is in standby (p.45).",
+   "Close the liquid line service valve: hex wrench, stem fully clockwise until seated (p.45-46).",
+   "Open the maintenance panel. With line voltage power applied, set the S4 DIP switch on the 7-segment display board to the pump down position shown in Figure 26 (p.44, p.46).",
+   "The display shows the compressor frequency, then CLOS - wait while the unit keeps running (p.46).",
+   "When the display shows GOOD, close the vapor line service valve fully clockwise (p.46).",
+   "Set the S4 switches back to OFF and immediately remove line voltage power. If the switch is left on, the unit enters pump down mode again at the next power-up (p.45-46)."
+  ],
+  "safety": "In pump down mode the compressor runs without any protection when the frequency rises (p.45). Wait more than 5 min after power is removed before electrical work.",
+  "manual": "york-vh4-install-6746765-uim-c-0526",
+  "pages": [
+   44,
+   45,
+   46
+  ],
+  "source": "VH4 horizontal-discharge heat pump (VH412E2S11 - VH460E2S11) Installation Manual: VH4 Series - 14.3 SEER2/7.5 HSPF2 Horizontal Discharge Heat Pump (6746765-UIM-C-0526, 2026-05-14), p.44, p.45, p.46",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-vh4-dip-defrost",
+  "unit": "^VH4(12|18|24|30|36|42|48|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "DIP switches and forced defrost - VH4",
+  "summary": "S4 and S5 banks on the 7-segment display board; factory setting all OFF.",
+  "steps": [
+   "Factory setting: S4 and S5 all OFF (0000) (p.44).",
+   "S4-1 ON = °F and psig on the display; S4-2 = pump down; S4-3 = forced defrost; S5-1 = capacity Hi - Low (Figure 26, p.44).",
+   "Set S4-2 and S4-3 with line power ON, dialling OFF to ON - without power the setting is not refreshed. Set S4-1, S5-1 and S5-2 with all power OFF (p.44).",
+   "Forced defrost: open the maintenance panel, set S4-3 per Figure 26 with power on; the unit runs a forced defrost. Set the switch back to OFF to leave forced defrost (p.47).",
+   "The four-way valve is de-energized in cooling and defrosting and energized in heating (p.55)."
+  ],
+  "manual": "york-vh4-install-6746765-uim-c-0526",
+  "pages": [
+   44,
+   45,
+   47,
+   55
+  ],
+  "source": "VH4 horizontal-discharge heat pump (VH412E2S11 - VH460E2S11) Installation Manual: VH4 Series - 14.3 SEER2/7.5 HSPF2 Horizontal Discharge Heat Pump (6746765-UIM-C-0526, 2026-05-14), p.44, p.45, p.47, p.55",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-vh4-no-start",
+  "unit": "^VH4(12|18|24|30|36|42|48|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Outdoor unit does not start or short-cycles - VH4 (normal malfunction table)",
+  "summary": "Checks the manual lists before the code tables, including the A2L sensor case.",
+  "steps": [
+   "Outdoor unit does not start: power supply failure - check the power supply circuit; breaker trip or open fuse - measure insulation resistance to ground for leakage; supply voltage too low - check for a defective contact or leakage current; thermostat set wrong - check and set it; no power to the thermostat - check the thermostat and wiring (p.62).",
+   "Indoor unit running at high stage airflow and the outdoor unit does not start: defective A2L sensor or refrigerant leakage - identify which and fix it (p.62). On the VHE air handler a leak above 10% LFL drives the blower to maximum and turns the outdoor compressor off (VHE install manual 6746780-UIM-A-0326 p.32).",
+   "The VH4 needs a multi-stage room thermostat and conventional 24 V wiring C, G, O, Y1, Y/Y2, W (p.36, p.41-42). Code E7 = 24 V low voltage communication problem (p.64).",
+   "Compressor starts or stops frequently: the air inlet or air outlet is blocked or restricted - remove the blockage (p.62). A 3 min delay between cycles is normal start-up protection (p.56).",
+   "Poor cooling or heating: outdoor heat exchanger dirty - clean it; air leakage into the conditioned space or excessive load - improve the air tightness; blockage of the outdoor heat exchanger - remove the blockage; incorrect temperature setting - check the thermostat and set it again (p.62).",
+   "Before start-up, main power must have been on for more than 6 h ahead of unit operation (compressor and base heater) to avoid damage to the compressor (p.43)."
+  ],
+  "manual": "york-vh4-install-6746765-uim-c-0526",
+  "pages": [
+   36,
+   41,
+   42,
+   43,
+   56,
+   62,
+   64
+  ],
+  "source": "VH4 horizontal-discharge heat pump (VH412E2S11 - VH460E2S11) Installation Manual: VH4 Series - 14.3 SEER2/7.5 HSPF2 Horizontal Discharge Heat Pump (6746765-UIM-C-0526, 2026-05-14), p.36, p.41, p.42, p.43, p.56, p.62, p.64",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-vh4-pressures",
+  "unit": "^VH4(12|18|24|30|36|42|48|60)",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Cooling pressures low or high - VH4 flow chart",
+  "summary": "The manual's cooling mode flow chart (Figure 38) and the overload table.",
+  "steps": [
+   "Verify correct airflow for the indoor and outdoor sections first, then test system pressure at the service ports (p.58).",
+   "Pressures low: charge is low - recharge per the manual (qualified technician). If pressure comes up to normal, charge is normal - check for possible leaks (p.58).",
+   "If pressure does not come up: blockage in the refrigeration circuit - is there a restriction in the metering device circuit? Yes = remove the restriction or replace metering device components; No = check the reversing valve or check valve in the metering device circuit (p.58).",
+   "Pressures high: recover refrigerant and evacuate to the level specified. If pressure then is normal, evacuation removed non-condensables. If not, are pressures equalized during operation? Yes = check the reversing valve or compressor for correct operation (p.58).",
+   "Overload in cooling: excess refrigerant, high outdoor ambient, outdoor air short-circuit, dirty outdoor coil, outdoor fan slow / damaged / blocked, blocked inlet or outlet, failed TXV (p.71).",
+   "Charge: the install manual (p.16, p.29, p.36) and the technical guide say the factory charge is for 25 ft - add 0.38 oz/ft beyond 25 ft; the install manual About section (p.5) says 15 ft. Go by the nameplate. See Table 8 and Adjusting refrigerant charge in the install manual, and the Tabular Data Sheet for precharge amount and indoor combinations (p.16, p.36).",
+   "The heating mode flow chart is Figure 39 (p.59)."
+  ],
+  "manual": "york-vh4-install-6746765-uim-c-0526",
+  "pages": [
+   16,
+   36,
+   58,
+   59,
+   71
+  ],
+  "source": "VH4 horizontal-discharge heat pump (VH412E2S11 - VH460E2S11) Installation Manual: VH4 Series - 14.3 SEER2/7.5 HSPF2 Horizontal Discharge Heat Pump (6746765-UIM-C-0526, 2026-05-14), p.16, p.36, p.58, p.59, p.71",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-vhe-airflow-leak-sensor",
+  "unit": "^VHE(12|18|24|30)B",
+  "brand": "York",
+  "equipment": "Air Handler",
+  "title": "VHE air handler: blower speed DIP and the A2L leak sensor",
+  "summary": "Constant-torque blower set on DIP S2; leak sensor on the coil shuts down the outdoor unit and the heat.",
+  "steps": [
+   "Leak sensor: when the LFL concentration exceeds 10% the air handler runs at maximum airflow, the outdoor compressor is deactivated and the electric heat is turned off (p.32).",
+   "Blower tap (18K-30K): tap 3 Medium 0.4 in. W.C. = S2-1 ON, S2-2 OFF; tap 4 Medium-high 0.58 in. W.C. (default) = S2-1 OFF, S2-2 ON (p.32).",
+   "12K unit: Medium = switch 2 ON (1, 3, 4 OFF); Medium-high default = switch 3 ON (1, 2, 4 OFF) (p.33).",
+   "Measure total external static: run fan only for a dry coil, tips 12 in. from the unit in supply and return before any elbows, return reading after the filter and before the coil; add the two as positive numbers (p.33-34).",
+   "Recommended static 0.2-0.5 in.; tested to 0.60 in. W.C. Closed registers, clogged filters or duct restrictions make the motor speed up and can damage it (p.32, p.34).",
+   "Converting to downflow / horizontal right (before brazing): disconnect the sensor wire at the adapter block and make a drip loop secured with a new cable tie, slide the coil out with the sensor attached, turn the cabinet, slide the coil back in, route the wire through the drain pan clip, reconnect at the adapter block (p.22-23)."
+  ],
+  "manual": "york-vhe-install-6746780-uim-a-0326",
+  "pages": [
+   22,
+   23,
+   32,
+   33,
+   34
+  ],
+  "source": "VHE air handler (VHE12B5YK2SS1, VHE18B5YK2SS1, VHE24B5YK2SS1, VHE30B5YK2SS1) Installation Manual: VHE Single-Piece Multi-Position Air Handlers (6746780-UIM-A-0326, 2026-03-04), p.22, p.23, p.32, p.33, p.34",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-vc-charging",
+  "unit": "^VC[34](18|19|24|25|30|36|42|48|60)E",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Charging a VC3 / VC4 (R-454B, TXV, subcooling chart)",
+  "summary": "Weigh in the adders first, then match the liquid pressure on the unit's charging chart.",
+  "steps": [
+   "Measure indoor airflow (manometer between filter and blower plus supply; add return and supply as positive numbers) - do not assume jumper tables and 0.5 in. W.C. (p.44).",
+   "Total charge = base charge shipped + adder for the matched indoor unit + adder for piping over 15 ft (Tabular Data Sheet) (p.44).",
+   "Run cooling with the thermostat at least 6°F below room temperature for 10-15 min; airflow must be 350-400 SCFM/ton (p.46).",
+   "Read indoor wet bulb and outdoor dry bulb; the chart on the unit gives the target liquid pressure. Add charge if the liquid valve reads lower, recover if higher. Allow 10 min after each adjustment (p.45-46).",
+   "At 55°F or below the preferred method is to weigh in the charge (p.19); to charge or check it, use the optional charging tent (70 x 70 x 70 in. minimum, no floor) held above 55°F, stabilize 15 min (p.47-48).",
+   "Permanently stamp the total system charge on the data plate. Over 3.91 lb total requires a refrigerant detection system (p.6, p.45)."
+  ],
+  "safety": "Do not attempt to pump the total system charge into the outdoor unit for maintenance or service. Recover and weigh the charge into a recovery cylinder. R-454B: use 700 psig hoses and R-454B rated equipment.",
+  "manual": "york-split-ac-r454b-install-6711478-uim-a-1025",
+  "pages": [
+   6,
+   19,
+   20,
+   43,
+   44,
+   45,
+   46,
+   47,
+   48
+  ],
+  "source": "VC3 / VC4 (also YC3, YC4, YC6, XC3, XC4, XC6, RC3, RC4) Installation Manual: R-454B Outdoor Split-System Air Conditioner - YC4, XC4, RC4, YC3, XC3, XC3 3phase, RC3, YC6, XC6, VC3, and VC4 (6711478-UIM-A-1025, 2025-10-16, supersedes 6650655-UIM-B-0725), p.6, p.19, p.20, p.43, p.44, p.45, p.46, p.47, p.48",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-york-vc-no-diagnostics",
+  "unit": "^VC[34](18|19|24|25|30|36|42|48|60)E",
+  "brand": "York",
+  "equipment": "Condenser/Heat Pump",
+  "title": "VC3 / VC4 not cooling - what the unit has (no fault codes)",
+  "summary": "Single-stage conventional AC: contactor, capacitor, high-pressure switch; no fault-code display is printed for this series.",
+  "steps": [
+   "Wiring diagram Figure 21 (single-phase 13.4 SEER2 and 14.3 SEER2, 6436388-UWD-A-0221): the HPS high pressure switch is in series with the contactor coil on the 24 VAC control circuit (20 VA minimum). Components shown in dashed lines are optional: LPS low pressure switch, CCH crankcase heater with its HS heater switch, and the SR start relay / SC start capacitor (p.52).",
+   "Do not run cooling below 55°F outdoor without an approved low ambient kit (p.20).",
+   "Rotary compressor sizes (VC318, VC324, VC418) need the factory hard start kit S1-2SA06722006 when the indoor metering device is not S1-1TVM5A1 (p.33).",
+   "Microchannel coil: no coil cleaners containing HF, hydroxides, chlorides or sulfates; water rinse, no pressure washer (p.49-50).",
+   "Gauges cost about 3/4 oz of charge each connection - connect only when trouble is suspected (p.29).",
+   "Initial safety checks for electrical repairs: discharge capacitors, no live parts exposed while charging or recovering, earth bonding continuity (p.49)."
+  ],
+  "manual": "york-split-ac-r454b-install-6711478-uim-a-1025",
+  "pages": [
+   20,
+   29,
+   33,
+   49,
+   50,
+   52
+  ],
+  "source": "VC3 / VC4 (also YC3, YC4, YC6, XC3, XC4, XC6, RC3, RC4) Installation Manual: R-454B Outdoor Split-System Air Conditioner - YC4, XC4, RC4, YC3, XC3, XC3 3phase, RC3, YC6, XC6, VC3, and VC4 (6711478-UIM-A-1025, 2025-10-16, supersedes 6650655-UIM-B-0725), p.20, p.29, p.33, p.49, p.50, p.52",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-linkvs-where-faults",
+  "unit": "^5T[TW]V[08]X",
+  "brand": "Trane",
+  "equipment": "Condenser/Heat Pump",
+  "title": "No code on the outdoor board — where the faults show — Trane Link variable speed 5TWV / 5TTV",
+  "summary": "These units have no fault display outdoors; faults are read at the UX360 or in the Technician Mobile App.",
+  "steps": [
+   "This unit is Link communicating only. It must have the A/T HUI2360A200U thermostat (UX360) and the TSYS2C60A2VVU system controller (SC360), with software 8.0 or later on both.",
+   "The guide's Fault Identification note says a fault condition is indicated by the UX360 User Interface or the Technician Mobile App, and that installation, servicing and troubleshooting are done in the Technician Access area of the thermostat and/or the Link Technician Mobile App (both printed in its Defrost Control - Heat Pump Only chapter).",
+   "The guide's LED table for the outdoor control board lists one LED, the amber COMM LED (DS51, labelled 'Yellow - COMM' on the board drawing): slow, one blink per device = device count; fast, 5 times per second = loss of communication.",
+   "The guide says the alert code meanings are in the Alert Code Tables of the Service Facts and Technical Service Manual (34-4301-01 or newer) - that manual is not in the library.",
+   "The Diagnostics Mobile App is found by scanning the QR code inside the unit or searching for the Trane or American Standard Diagnostics App.",
+   "The 5TWV8X / 5TTV8X guide (ODR-SVN004C-EN) prints the same on the same pages."
+  ],
+  "safety": "Wait two (2) minutes after disconnecting power before touching electrical components - they may hold a dangerous charge of 400 VDC - then verify DC voltage is less than 42 VDC at the inverter test points labelled +DC and -DC before servicing the board.",
+  "manual": "trane-5twv0x-5ttv0x-install-odr-svn006c",
+  "pages": [
+   6,
+   26,
+   31,
+   32
+  ],
+  "source": "5TWV0X / 5TTV0X Installer's Guide - Link Variable Speed Heat Pumps and Air Conditioners, 5TWV0X24A-60A / 5TTV0X24A-60A (ODR-SVN006C-EN, June 2026), p.6, p.26, p.31, p.32",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-linkvs-comm-loss",
+  "unit": "^5T[TW]V[08]X",
+  "brand": "Trane",
+  "equipment": "Condenser/Heat Pump",
+  "title": "COMM LED blinking fast — loss of communication — Trane Link variable speed 5TWV / 5TTV",
+  "summary": "Fast amber COMM blinking (5 per second) means loss of communication on the Link bus. The guide gives the wiring rules to check.",
+  "steps": [
+   "Amber COMM LED: slow (1 time per device) = device count; fast (5 times per second) = loss of communication.",
+   "Link wiring: DH and DL wires are required. Red and common are not required (common enhances communication), but red and common are required for load shed and SmartCharge.",
+   "Wire colours on the connectors: R red, DH white, DL green, B blue. If you use other colours, make sure each lands on the correct terminal throughout all the communicating wiring.",
+   "Connectors are one-time use: strip 1/4 inch, push each wire in until it releases, then pull back on each wire to check it is seated. If an 18-gauge wire breaks inside a connector, the connector needs replacing.",
+   "Maximum total cable length for the whole communicating system: 500 ft of 18 AWG.",
+   "The CAN connector plugs into the male coupling on the low-voltage harness at the outdoor unit; on the indoor board either CAN header can be used - both are in the loop."
+  ],
+  "safety": "Disconnect all electric power, including remote disconnects, before servicing; follow lockout/tagout and verify no power with a voltmeter.",
+  "manual": "trane-5twv0x-5ttv0x-install-odr-svn006c",
+  "pages": [
+   3,
+   23,
+   24,
+   26
+  ],
+  "source": "5TWV0X / 5TTV0X Installer's Guide - Link Variable Speed Heat Pumps and Air Conditioners, 5TWV0X24A-60A / 5TTV0X24A-60A (ODR-SVN006C-EN, June 2026), p.3, p.23, p.24, p.26",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-linkvs-charge",
+  "unit": "^5T[TW]V[08]X",
+  "brand": "Trane",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Checking or setting the charge — Charging Mode-Cooling — Trane Link variable speed 5TWV / 5TTV",
+  "summary": "Subcooling in the Charging Mode-Cooling test is the only approved way to set the charge, between 55°F and 120°F outdoor.",
+  "steps": [
+   "Run the system in the 'Charging Mode-Cooling' test mode from the UX360 Technician menu or the Technician Mobile App - the guide calls this the only approved method for setting the system charge by subcooling. Follow the on-screen prompts.",
+   "Conditions: outdoor 55°F to 120°F, indoor kept between 70°F and 80°F. If starting up in colder conditions, return when conditions are right to validate the charge.",
+   "Final subcooling = the design subcooling from the nameplate (or Service Facts) plus the adder for total line length and lift from the guide's chart for the size (Maintenance Figures lists the design value per size).",
+   "Use bubble point for subcooling. Add refrigerant if the liquid gauge pressure is lower than the chart value; recover refrigerant if it is higher.",
+   "Wait 20 minutes for the system to stabilise between adjustments. The system is properly charged when liquid line temperature and gauge pressure approximately match the chart.",
+   "SmartCharge tool BAYCAKT002 may be used as an optional method - confirm the charge afterward by verifying subcooling.",
+   "Record the readings and fill in the 'Total System Charge' label on the unit with a permanent marker (factory charge + charge added)."
+  ],
+  "safety": "Use ONLY R-454B rated service equipment. R-454B is a blend - add it in liquid form only. Verify that the refrigeration system is earthed before charging and that refrigerants are not mixed.",
+  "manual": "trane-5twv0x-5ttv0x-install-odr-svn006c",
+  "pages": [
+   6,
+   27,
+   28,
+   29
+  ],
+  "source": "5TWV0X / 5TTV0X Installer's Guide - Link Variable Speed Heat Pumps and Air Conditioners, 5TWV0X24A-60A / 5TTV0X24A-60A (ODR-SVN006C-EN, June 2026), p.6, p.27, p.28, p.29",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-linkvs-charge-cold",
+  "unit": "^5T[TW]V[08]X",
+  "brand": "Trane",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Charging below 55°F outdoor — weigh-in, then 10° subcooling in heat — Trane Link variable speed 5TWV / 5TTV",
+  "summary": "Below 55°F the subcooling method in cooling is not recommended; weigh in the charge and come back in warm weather.",
+  "steps": [
+   "The nameplate charge covers 10 feet of AHRI rated line and the smallest AHRI rated coil.",
+   "Measure the line length from the service valve to the indoor unit and subtract 10 ft. Multiply by 0.47 oz per foot for 3/8-inch liquid line or 0.30 oz per foot for 5/16-inch. Weigh that in before opening the service valves.",
+   "Run at least 20 minutes to stabilise - required at start-up and whenever charge is added or removed.",
+   "Heat pump in heating mode: check liquid line temperature and liquid gauge pressure for a minimum of 10° subcooling. Add charge if 10° is not reached with the nameplate charge plus the added charge.",
+   "Fill in the 'Total System Charge' label, then return in the spring or summer to charge accurately in cooling mode with outdoor ambient above 55°F."
+  ],
+  "safety": "Use ONLY R-454B rated service equipment. Never break a vacuum with air and always replace driers when opening the system.",
+  "manual": "trane-5twv0x-5ttv0x-install-odr-svn006c",
+  "pages": [
+   3,
+   15,
+   30
+  ],
+  "source": "5TWV0X / 5TTV0X Installer's Guide - Link Variable Speed Heat Pumps and Air Conditioners, 5TWV0X24A-60A / 5TTV0X24A-60A (ODR-SVN006C-EN, June 2026), p.3, p.15, p.30",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-linkvs-defrost",
+  "unit": "^5TWV[08]X",
+  "brand": "Trane",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Defrost — how it starts, forcing one, termination setting — Trane Link variable speed 5TWV / 5TTV",
+  "summary": "Demand defrost uses the ambient (ODS) and coil (CBS) sensors; a forced defrost is started from the UX360 or the app.",
+  "steps": [
+   "The demand defrost control compares outdoor ambient (sensor outside the coil) with the coil temperature (sensor on the coil). The difference is Delta-T; the coil sensor also ends the defrost.",
+   "The algorithm is enabled when the ambient sensor (ODS) is below 52°F and the coil sensor (CBS) is below 32°F (Trane June 2026 guide). Defrost starts when the difference reaches the initiation threshold. American Standard's 2024 5A6V8X / 5A7V8X guide prints ODS at or below 52°F, CBS at or below 35°F and a heat/cool demand for at least two minutes (11-BC49D1-1E-EN p.32).",
+   "Forced defrost: the system must be running on a demand from the thermostat, heat mode only. Start FRC DFT TEST from the UX360 or the Technician Mobile App and press ENTER.",
+   "The test shows TEST IN PROGRESS with the coil temperature; the UX360 home screen shows DEFROST. It ends on coil temperature or a 15-minute maximum; TEST COMPLETE shows for 10 seconds.",
+   "If there is a defrost fault, the test stops and sends an alert to the alert menu.",
+   "Termination temperature can be configured in the 'Environment' section of the configuration menu (Factory, Medium, High profiles - graph only, no figures printed).",
+   "Snow areas: raise the unit 3 to 12 inches and keep the base pan drain holes clear so defrost water drains before it refreezes."
+  ],
+  "safety": "Do not use any items other than those approved by the manufacturer for defrosting or cleaning. Do not pierce or burn. Be cautious that refrigerants may be odorless.",
+  "manual": "trane-5twv0x-5ttv0x-install-odr-svn006c",
+  "pages": [
+   13,
+   31,
+   32
+  ],
+  "source": "5TWV0X / 5TTV0X Installer's Guide - Link Variable Speed Heat Pumps and Air Conditioners, 5TWV0X24A-60A / 5TTV0X24A-60A (ODR-SVN006C-EN, June 2026), p.13, p.31, p.32",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-linkvs-install-checks",
+  "unit": "^5T[TW]V[08]X",
+  "brand": "Trane",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Leak test, evacuation and start-up — Trane Link variable speed 5TWV / 5TTV",
+  "summary": "The guide's pressure-test limit, vacuum standard and start-up wait for these units.",
+  "steps": [
+   "Do not test the outdoor unit higher than 450 psig. Close the service valves and pressurize only the indoor unit and line set, to the maximum on the outdoor or indoor nameplate, for at least 60 minutes - no pressure loss allowed. An optional preliminary check is 150 psig dry nitrogen.",
+   "Leak check every brazed joint with soapy solution; remove nitrogen pressure and repair leaks before continuing.",
+   "Evacuate to 350 microns or lower, close the valve to the pump. Evacuation is complete if the gauge does not rise above 500 microns in 1 minute and 1,500 microns in 10 minutes (Trane June 2026 guide). American Standard's 2024 5A6V8X / 5A7V8X guide prints only 'does not rise above 1500 microns in ten (10) minute' (11-BC49D1-1E-EN p.21).",
+   "Open the gas service valve first (1/4 turn), then the liquid valve with a 3/16-inch hex until the stem just touches the rolled edge (about five turns). Caps finger-tight plus 1/6 turn.",
+   "Wait three hours before starting the unit if the outdoor ambient temperature is below 85°F.",
+   "Select the correct line set size in the set-up app - the default is the alternate line size."
+  ],
+  "safety": "When opening the suction and liquid service valves, turn the stem counterclockwise only until it contacts the rolled edge - do not apply torque (abrupt release of system charge). Confirm the area is ventilated before breaking into the system or any hot work.",
+  "manual": "trane-5twv0x-5ttv0x-install-odr-svn006c",
+  "pages": [
+   4,
+   8,
+   20,
+   21,
+   22,
+   27
+  ],
+  "source": "5TWV0X / 5TTV0X Installer's Guide - Link Variable Speed Heat Pumps and Air Conditioners, 5TWV0X24A-60A / 5TTV0X24A-60A (ODR-SVN006C-EN, June 2026), p.4, p.8, p.20, p.21, p.22, p.27",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-pkgb-dissipation-fan",
+  "unit": "^(50N[LT]-?B|48N[LT][-N]?B)",
+  "brand": "Carrier",
+  "equipment": "Other",
+  "title": "Indoor fan runs and there is no cooling or heat - leak dissipation mode (R-454B packaged -B)",
+  "summary": "These R-454B packaged units carry a refrigerant sensor and a dissipation board. When the sensor sees refrigerant the board removes every call and runs the fan - that looks like a dead unit with the blower on.",
+  "steps": [
+   "Remove the control access panel (48NT-B: the compressor access panel - its board is in the compressor compartment, 48NT-B-04SI p.14) and read the dissipation board LED (amber / yellow). Solid = normal; Flashing 1 = sensor >= 20% LFL; Flashing 3 = normal dissipation after a leak (label, p.34).",
+   "In dissipation mode the board energizes G and de-energizes Y and W. It shows Flash Code 1 until the refrigerant level drops, then Flash Code 3 (p.32).",
+   "Dissipation mode continues for at least 10 minutes, then a 5-minute ON delay, then normal operation (p.32). The Leak Dissipation System section words it differently: once the level drops the fan stays on 5 minutes, any call for cooling is still removed, and a call for electric resistance or gas heat (non-heat pump) is allowed; after the 5 minutes, if the level stays below the threshold, cooling and blower calls are restored (p.10).",
+   "Flashing 1 or 3: check for refrigerant leaks with an independent R-454B detector. Flashing 1 with no leak found: replace the sensor (p.32).",
+   "For all flash codes, first try power cycling the system to remove the code (p.32).",
+   "The unit must stay powered at all times after installation, other than when servicing, for the safety measures to work (p.1)."
+  ],
+  "safety": "R-454B is an A2L (mildly flammable) refrigerant: non-sparking tools, a refrigerant detector when the system is opened, no open flames except brazing on tubes open to atmosphere or evacuated (p.1, p.21).",
+  "manual": "carrier-50nt-b-install-50nt-04si",
+  "pages": [
+   1,
+   10,
+   21,
+   32,
+   34
+  ],
+  "source": "50NT-B (R-454B packaged heat pump) 50NT-B Comfort 13.4 SEER2 Single-Packaged Heat Pump (R-454B), 2-5 Tons - Installation Instruction (50NT-04SI, Ed. 12/24), p.1, p.10, p.21, p.32, p.34",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-pkgb-dsb-test",
+  "unit": "^(50N[LRT]-?B|48N[GLRT][-N]?B)",
+  "brand": "Carrier",
+  "equipment": "Other",
+  "title": "Checking the leak dissipation system after service (Test button and the six operational checks)",
+  "summary": "The dissipation board has a Test button. A short press runs dissipation mode for 60 s so you can prove the fan comes on and the compressor and heat drop out.",
+  "steps": [
+   "Press the Test button for approximately ONE SECOND to enter Test Mode. Pressing it longer can clear all fault code history (p.11).",
+   "Hold 1-4 s = dissipation mode for 60 s; 5-29 s = display flash code history; 30 s or more = flash code 6; 3 rapid presses = clear flash code history (Table 1, p.11).",
+   "Normal operation checks: no call - compressor, indoor fan, heat off; Cool - compressor and fan on, heat off; Heat - fan and heat on, compressor off (Table 2, p.11).",
+   "With dissipation activated: no call, Cool or Heat - compressor off, indoor fan on, electric / gas heat off (Table 2, p.11).",
+   "Continuous fan must deliver at least the Required Minimum Dissipation Airflow for the size (Table 3, p.11-12)."
+  ],
+  "safety": "Required Minimum Dissipation Airflow must be met or exceeded with the continuous fan speed selected (warning, p.11).",
+  "manual": "carrier-50nt-b-install-50nt-04si",
+  "pages": [
+   11,
+   12
+  ],
+  "source": "50NT-B (R-454B packaged heat pump) 50NT-B Comfort 13.4 SEER2 Single-Packaged Heat Pump (R-454B), 2-5 Tons - Installation Instruction (50NT-04SI, Ed. 12/24), p.11, p.12",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-48nb-igc-no-heat",
+  "unit": "^48N[GLRT][-N]?B",
+  "brand": "Carrier",
+  "equipment": "Other",
+  "title": "No gas heat - read the IGC LED (48NT-B / 48NL-B / 48NR-B / 48NG-B)",
+  "summary": "The integrated gas unit controller (IGC) LED is on steady in normal operation and flashes 1-9 for a fault. Read it before you chase parts.",
+  "steps": [
+   "Remove the control access panel; the IGC LED is continuously on in normal operation (p.26).",
+   "LED off: check the 5-amp fuse on the IGC, power to the unit, the 24-v circuit breaker and transformer; a transformer without a breaker has an internal overload - allow 10 minutes for automatic reset (Table 18, p.45).",
+   "2 flashes (limit) or 4 flashes (four limit trips): check the indoor fan motor and that the temperature rise is within the nameplate range; clean or replace filters (p.45).",
+   "5 flashes (ignition lockout after 15 minutes): check igniter and flame sensor electrode spacing and gaps, wire terminations, and that the unit gets the proper amount of gas (p.45).",
+   "6 flashes (pressure switch): check wiring to the pressure switch and inducer, the pressure switch hose at both ends, and that the inducer wheel is secured and the shaft turns (p.45).",
+   "7 flashes (rollout): the switch resets itself but the IGC keeps the unit locked out - check the gas valve, the inducer wheel on its shaft, inspect the heat exchanger, reset at the unit disconnect (p.45).",
+   "Burners will not ignite with no code: water in the gas line, no 24-v supply, misaligned spark electrodes, air in the gas line - after purging wait at least 5 minutes before trying to light (Table 16, p.44)."
+  ],
+  "safety": "If the IGC must be replaced, ground yourself first - the IGC is sensitive to static electricity (p.45).",
+  "manual": "carrier-48nl-b-install-48nl-02si",
+  "pages": [
+   26,
+   44,
+   45
+  ],
+  "source": "48NL-B (R-454B packaged AC + gas furnace) 48NL-B Comfort 13.4 SEER2 Single-Packaged Air Conditioner and Gas Furnace (R-454B), 2-5 Tons - Installation Instructions (48NL-02SI, Ed. 07/24), p.26, p.44, p.45",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-48ng-two-stage-manifold",
+  "unit": "^48NG[-N]?B",
+  "brand": "Carrier",
+  "equipment": "Other",
+  "title": "Setting high and low fire manifold pressure - 48NG-B two-stage gas",
+  "summary": "208/230 V 48NG-B units have a two-stage gas valve: high stage is set first, then low stage. 460 V units have a single-stage valve.",
+  "steps": [
+   "Turn off gas, remove the manifold pipe plug, connect a manometer, turn the gas on (p.20).",
+   "Remove the regulator cover screw(s) over the plastic adjustment screw(s) (Fig. 16 two-stage, Fig. 17 single-stage 460 V) (p.20).",
+   "High stage (208/230 V) or single stage (460 V): clockwise increases input. Manifold must be between 3.2 and 3.8 in. w.c. (p.20).",
+   "208/230 V only: then set low stage - 1.4 to 2.0 in. w.c. Low stage must be adjusted after high stage is already adjusted (p.21).",
+   "At 0-2000 ft the table prints high / low: 40000 3.2 / 1.4, 60000 3.2 / 1.4, 90000 3.6 / 1.6, 115000 3.8 / 1.7, 127000 3.7 / 1.7 in. w.c. (Table 6, p.20).",
+   "Replace the cover screws, turn off gas, remove the manometer, replace the plug, turn gas on and check for leaks (p.21). Propane: follow the propane kit instructions (p.21)."
+  ],
+  "safety": "WARNING - fire and unit damage hazard: unsafe operation of the unit may result if manifold pressure is outside this range (p.21).",
+  "manual": "carrier-48ng-install-48ng-02si",
+  "pages": [
+   20,
+   21
+  ],
+  "source": "48NG-B (R-454B 2-stage packaged AC + gas, standard and Low NOx) 48NG Performance 15.2+ SEER2 2-Stage Packaged Air Conditioner and Gas Furnace (R-454B), 2-5 Tons - Installation Instructions (48NG-02SI, Ed. 06/25), p.20, p.21",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-48nr-two-stage-manifold",
+  "unit": "^48NR[-N]?B",
+  "brand": "Carrier",
+  "equipment": "Other",
+  "title": "Setting high and low fire manifold pressure - 48NR-B dual fuel",
+  "summary": "48NR-B has a two-stage gas valve: high stage 3.2-3.8 in. w.c. first, then low stage 1.4-2.0 in. w.c.",
+  "steps": [
+   "Turn off gas, remove the manifold pipe plug, connect a manometer, turn the gas on (p.19).",
+   "Turn the high stage plastic adjustment screw clockwise to increase input; manifold must be between 3.2 and 3.8 in. w.c. for high stage (p.19).",
+   "Then turn the low stage screw - low stage manifold must be between 1.4 and 2.0 in. w.c. Low stage is adjusted after high stage (p.19).",
+   "Table 6 at 0-2000 ft: 60000 3.2 / 1.4, 90000 3.6 / 1.6, 115000 3.8 / 1.7, 127000 3.7 / 1.7 in. w.c. (p.20).",
+   "Replace the cover screws, remove the manometer, replace the plug, turn gas on and check for leaks (p.19)."
+  ],
+  "safety": "Unsafe operation may result if manifold pressure is outside the range.",
+  "manual": "carrier-48nr-install-48nr-01si",
+  "pages": [
+   19,
+   20
+  ],
+  "source": "48NR (R-454B 2-stage hybrid heat packaged) 48NR Performance 15.2+ SEER2 2-Stage Packaged HYBRID HEAT Dual Fuel (R-454B), 2-5 Tons - Installation Instructions (48NR-01SI, Ed. 03/25), p.19, p.20",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-48nt-48nl-manifold",
+  "unit": "^48N[LT][-N]?B",
+  "brand": "Carrier",
+  "equipment": "Other",
+  "title": "Checking gas input - 48NT-B / 48NL-B single-stage gas (clock the meter)",
+  "summary": "Single-stage gas valve. Measuring gas flow at the meter is recommended for natural gas; manifold pressure must stay 3.2-3.8 in. w.c.",
+  "steps": [
+   "Turn off all other appliances on the same meter (p.19).",
+   "Turn off gas, remove the manifold pipe plug, connect a manometer, turn on gas (p.19).",
+   "Time one revolution of the test dial; 3600 / seconds x dial size (cu ft) = cu ft per hour; x heating value = input. Example: 32 s, 1 cu ft, 1050 Btu/ft3 = 118,125 Btuh (p.19).",
+   "Compare with the Heating Inputs table (p.13). Turn the plastic screw clockwise to increase input; manifold must be between 3.2 and 3.8 in. w.c. (p.19).",
+   "Larger changes: change main burner orifices; do not redrill an orifice (p.19).",
+   "Propane: check input by manifold pressure per the propane kit instructions; 10.0-11.0 in. w.c. (p.13, p.19)."
+  ],
+  "safety": "WARNING - fire and unit damage hazard if manifold pressure is outside this range. CAUTION: do not redrill an orifice (p.19).",
+  "manual": "carrier-48nt-b-install-48nt-b-04si",
+  "pages": [
+   13,
+   19
+  ],
+  "source": "48NT-B (R-454B hybrid heat dual fuel packaged) 48NT-B Comfort 13.4 SEER2 Single-Packaged HYBRID HEAT Dual Fuel (R-454B), 2-5 Tons - Installation Instructions (48NT-B-04SI, Ed. 12/24), p.13, p.19",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-50nt-defrost",
+  "unit": "^(50N[RT]-?B|48N[RT][-N]?B)",
+  "brand": "Carrier",
+  "equipment": "Other",
+  "title": "Heat pump defrost on the R-454B packaged -B units - interval and defrost thermostat",
+  "summary": "Demand defrost: the board starts at the selected interval and adjusts itself. The defrost thermostat on the outdoor coil tells it when to start and end.",
+  "steps": [
+   "Factory initial interval 60 minutes; may be set to 30, 90 or 120 minutes (p.24).",
+   "Defrost shorter than 2 minutes twice in a row: interval lengthens by 15 minutes (up to 120, or 30 above the setpoint). Longer than 5 minutes twice: interval shortens by 15 minutes (p.24).",
+   "Defrost ends when the condition is satisfied or after a maximum of 10 minutes (p.24).",
+   "50NT-B / 50NR-B: in defrost the board energizes O (reversing valve) and W2 (electric heat) and turns off the outdoor fan (50NT-04SI p.12; 50NR-01SI p.16). The 48NT-B / 48NR-B instructions do not print this line.",
+   "Defrost thermostat: closes at 32 F, opens at 65 F; usually on the lowest liquid-leaving circuit of the left condenser coil, on the liquid side, bottom circuit, as close to the coil as possible (p.32; 50NR-01SI p.32, 48NT-B-04SI p.36, 48NR-01SI p.49). 50NT-B / 48NT-B add that the factory location is the left/back coil."
+  ],
+  "manual": "carrier-50nt-b-install-50nt-04si",
+  "pages": [
+   12,
+   24,
+   32
+  ],
+  "source": "50NT-B (R-454B packaged heat pump) 50NT-B Comfort 13.4 SEER2 Single-Packaged Heat Pump (R-454B), 2-5 Tons - Installation Instruction (50NT-04SI, Ed. 12/24), p.12, p.24, p.32",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-carrier-pkgb-charge-check",
+  "unit": "^(50N[LRT]-?B|48N[GLRT][-N]?B)",
+  "brand": "Carrier",
+  "equipment": "Other",
+  "title": "Checking the charge on an R-454B packaged -B unit",
+  "summary": "The unit ships fully charged. Adjust only if the charge is suspected wrong, with an R-454B leak detector running.",
+  "steps": [
+   "Adjust charge only if the unit is suspected of not having the proper R-454B charge (p.21). 50NT-B / 50NL-B / 48NT-B / 48NL-B instructions add that an R-454B leak detector must be actively monitoring during the process (p.21).",
+   "Use the charging label inside the compressor access panel: subcool chart for TXV units, superheat chart for fixed-orifice units (50NT-B / 50NL-B / 48NT-B / 48NL-B, p.21); 50NR-B, 48NR-B and 48NG-B print a subcooling chart only (50NR-01SI p.15, 48NR-01SI p.24, 48NG-02SI p.29). Cooling mode only.",
+   "Do not run cooling below 40 F outdoor unless the low-ambient kit is installed (p.21).",
+   "Three-phase scroll: check rotation - if not corrected within 5 minutes the internal protector shuts the compressor off; reverse the power leads (p.21).",
+   "Recovering and recharging: evacuate to 500 microns, charge by scale to the rating plate, label the charge, leak test before leaving (p.21)."
+  ],
+  "safety": "CAUTION - unit damage hazard: when evaluating the refrigerant charge, an indicated adjustment to the specified factory charge must always be very minimal; if a substantial adjustment is indicated, an abnormal condition exists somewhere in the cooling system, such as insufficient airflow across either coil or both coils (p.21). Allow the system to operate a minimum of 15 minutes before checking or adjusting charge (p.21).",
+  "manual": "carrier-50nt-b-install-50nt-04si",
+  "pages": [
+   21
+  ],
+  "source": "50NT-B (R-454B packaged heat pump) 50NT-B Comfort 13.4 SEER2 Single-Packaged Heat Pump (R-454B), 2-5 Tons - Installation Instruction (50NT-04SI, Ed. 12/24), p.21",
+  "confidence": "manual"
  }
 ];

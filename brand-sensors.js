@@ -128280,6 +128280,476 @@ const BRAND_SENSOR_MAPS = [
     "what": "board and plug layout"
    }
   ]
+ },
+ {
+  "id": "york-vh4-outdoor-board",
+  "title": "York VH4 outdoor main control board and 7-segment display board (VH412-VH436 board, Figure 33 - the manual text says VH418, VH424 and VH430 have an integrated drive board, the heading covers VH412-VH436; VH442-VH460: main board plus a separate filter / drive board)",
+  "side": "outdoor",
+  "brand": "York",
+  "models": "VH412E2S11, VH418E2S11, VH424E2S11, VH430E2S11, VH436E2S11, VH442E2S11, VH448E2S11, VH460E2S11 (install manual 6746765-UIM-C-0526)",
+  "match": [
+   "VH412",
+   "VH418",
+   "VH424",
+   "VH430",
+   "VH436",
+   "VH442",
+   "VH448",
+   "VH460"
+  ],
+  "sizes": [
+   "all"
+  ],
+  "board": "Main control board (Figure 33, p.52, VH412-VH436): overheat protection switch, high pressure switch, pressure sensor, coil, discharge and ambient sensors, EEV, DC fan motor, electric heating belt, four-way valve, base heater, 24 V C / G / O / Y1 / Y2 and W, AC IN L and N, rectifier, IGBT, diode, IPM, compressor wires. VH442-VH460 (Figure 34-35, p.53-54): main board plus a filter / drive board (AC IN / AC OUT, PTC). Separate 7-segment display board (Figure 36, p.55) with S1 select, S2 increase, S3 decrease, DIP switches and the checker port. Drive LEDs LED1 / LED2 / LED3 on the main board (p.60).",
+  "replacement": [
+   {
+    "board": "York VH4 outdoor control board - replacement",
+    "kit": "",
+    "replaces": "The factory main control / drive board. The manual prints no part number.",
+    "differences": "The manual gives no board-replacement procedure and no part number. What it prints about setup: S4 and S5 DIP switches factory 0000 (all OFF); S4-1 = display units, S4-2 = pump down, S4-3 = forced defrost, S5-1 = capacity Hi-Low (p.44). No refrigerant-type or R-410A / A2L setting is printed - the unit is R-454B only and the leak sensor is in the indoor unit (VHE).",
+    "steps": [
+     "Disconnect and lock out power and wait 5 min for the drive capacitors to discharge (p.6, p.37).",
+     "Note the S4 / S5 DIP positions on the old board; S4-1, S5-1 and S5-2 are set with power OFF, S4-2 and S4-3 with power ON (p.44).",
+     "Move the plugs one at a time. VH412-VH436 (6746778-UWD-A-0526 (VH412-VH436, p.73)): ROOM X400 ambient, Coil X410, DISS X420 discharge, HPS X480, HEAT-PRO X430 heat protect switch, EEV-A X850, 4-WAY X800, HEAT X815 crankcase, BASE HEATER X810, DC FAN X860, compressor U X600 / V X601 / W X602 (RED / WHT / BLU), L-IN X100 / N-IN X110, low voltage C X3.6, G X3.4, O X3.3, Y1 X3.2, Y/Y2 X3.1, W X2. VH442-VH460 (6812175-UWD-A-0225 (VH442-VH460, p.74)): X19 ROOM, X23 COIL, X27 DISS, X13 PRESS-H, X24 H-PRESS, X28 L-PRESS, X20 OVER HEAT, X15 EEV-A, X26 4WAY, X16 HEAT, X17 BASE-HEATER, X8 DC FAN UP, X11 DC FAN DOWN, X10 AC 24V, X9 W, compressor X2 / X4 / X5.",
+     "After power-up, check P.0 for codes and LED1-LED3 for drive faults (p.48, p.60-61)."
+    ],
+    "source": "york-vh4-install-6746765-uim-c-0526.pdf p.6, p.37, p.44, p.48, p.52-55, p.60-61, p.73-74"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "ROOM X400 (VH412-VH436) / X19 ROOM (VH442-VH460)",
+    "code": "E1",
+    "name": "Outdoor ambient temperature sensor",
+    "location": "Outdoor unit (position not described)",
+    "kind": "thermistor",
+    "chart": "york-vh4-ambient-coil-thermistor",
+    "spec": "Table 32: 15.00 k nominal at 0°C (32°F), 4.550 k at 30°C (86°F). Read live at P.7.",
+    "errorCodes": [
+     "E1 = Outdoor ambient temperature sensor fault"
+    ],
+    "test": "Reconnect the sensor; if failed replace the sensor; sampling circuit failure = replace the outdoor control board components (Table 34).",
+    "source": "york-vh4-install-6746765-uim-c-0526.pdf p.48, p.56, p.63, p.73-74"
+   },
+   {
+    "plug": "Coil X410 / X23 COIL",
+    "code": "E2",
+    "name": "Outdoor coil temperature sensor",
+    "location": "Outdoor coil",
+    "kind": "thermistor",
+    "chart": "york-vh4-ambient-coil-thermistor",
+    "spec": "Table 32. Read live at P.8.",
+    "errorCodes": [
+     "E2 = Outdoor coil temperature sensor fault"
+    ],
+    "test": "Reconnect; replace the sensor; sampling circuit failure = replace the outdoor control board components.",
+    "source": "york-vh4-install-6746765-uim-c-0526.pdf p.48, p.56, p.63, p.73-74"
+   },
+   {
+    "plug": "DISS X420 / X27 DISS",
+    "code": "E17 / E47",
+    "name": "Compressor discharge temperature sensor",
+    "location": "Compressor discharge line",
+    "kind": "thermistor",
+    "chart": "york-vh4-discharge-thermistor",
+    "spec": "Table 31: 187.25 k nominal at 0°C, 46.4046 k at 30°C, 3.2491 k at 105°C. Read live at P.5.",
+    "errorCodes": [
+     "E17 = Discharge temperature sensor fault",
+     "E47 = Excessive discharge temperature fault"
+    ],
+    "test": "Reconnect the wiring; replace the sensor; abnormal sampling circuit = replace the outdoor control board.",
+    "source": "york-vh4-install-6746765-uim-c-0526.pdf p.48, p.56, p.66-67, p.73-74"
+   },
+   {
+    "plug": "Not shown on either wiring diagram",
+    "code": "E19",
+    "name": "Suction temperature sensor",
+    "location": "Not described",
+    "kind": "thermistor",
+    "spec": "No plug or location is printed; P.6 shows outdoor suction temperature. The Table 32 lead-in names suction sensors, but the table title does not.",
+    "errorCodes": [
+     "E19 = Suction temperature sensor fault"
+    ],
+    "test": "Reconnect the wiring; replace the sensor; abnormal sampling circuit = replace the outdoor control board.",
+    "source": "york-vh4-install-6746765-uim-c-0526.pdf p.48, p.56, p.66"
+   },
+   {
+    "plug": "Not shown on either wiring diagram",
+    "code": "E22",
+    "name": "Defrost sensor",
+    "location": "Not described",
+    "kind": "thermistor",
+    "spec": "No plug, location or chart is printed; P.9 shows outdoor defrosting temperature.",
+    "errorCodes": [
+     "E22 = Defrost sensor fault"
+    ],
+    "test": "Reconnect the wiring; replace the defrost sensor; abnormal sampling circuit = replace the outdoor control board.",
+    "source": "york-vh4-install-6746765-uim-c-0526.pdf p.48, p.66"
+   },
+   {
+    "plug": "HPS X480 (labelled High Pressure Sensor, VH412-VH436) / X13 PRESS-H (VH442-VH460)",
+    "code": "E43",
+    "name": "Pressure sensor (high-pressure sensor)",
+    "location": "Refrigerant circuit (item 6 on the refrigerant cycle drawings p.49-51)",
+    "kind": "pressure",
+    "spec": "No volts-to-pressure chart is printed. P.24 shows actual outdoor pressure. Used to detect low pressure in cooling and high pressure in heating (technical guide p.6).",
+    "errorCodes": [
+     "E43 = High-pressure sensor fault",
+     "E14 / E15 apply to models with a pressure switch or pressure sensor"
+    ],
+    "test": "Reconnect the wiring; replace the high-pressure sensor; sampling circuit failure = replace the outdoor control board.",
+    "source": "york-vh4-install-6746765-uim-c-0526.pdf p.48-52, p.65-66, p.73-74"
+   },
+   {
+    "plug": "X24 H-PRESS (VH442-VH460); 'High pressure switch' item 2 on the VH412-VH436 board (p.52)",
+    "code": "E14",
+    "name": "High-pressure switch",
+    "location": "Refrigerant circuit (item 15 on the VH442-VH460 drawing p.51)",
+    "kind": "switch",
+    "spec": "Trip and reset pressures are not printed.",
+    "errorCodes": [
+     "E14 = The high-pressure switch has opened or the outdoor unit has shut down for high-pressure switch protection"
+    ],
+    "test": "Reconnect the wiring; replace the switch; abnormal board = replace the outdoor control board; overload in cooling / heating - see Tables 36-37.",
+    "source": "york-vh4-install-6746765-uim-c-0526.pdf p.51-52, p.65, p.74"
+   },
+   {
+    "plug": "X28 L-PRESS (VH442-VH460 only)",
+    "code": "E15",
+    "name": "Low-pressure switch",
+    "location": "Refrigerant circuit (item 16 on the VH442-VH460 drawing p.51)",
+    "kind": "switch",
+    "spec": "Shown only on the VH442-VH460 drawings. Set points are not printed.",
+    "errorCodes": [
+     "E15 = The low-pressure switch has opened or the outdoor unit has shut down for low-pressure protection"
+    ],
+    "test": "Reconnect the wiring; replace the switch; check for leaks and charge; EEV failure in heating = replace the EEV; abnormal board = replace the outdoor control board.",
+    "source": "york-vh4-install-6746765-uim-c-0526.pdf p.51, p.65, p.74"
+   },
+   {
+    "plug": "HEAT-PRO X430 (VH412-VH436) / X20 OVER HEAT (VH442-VH460)",
+    "code": "E13",
+    "name": "Compressor overheat protector (heat protect switch)",
+    "location": "Compressor",
+    "kind": "switch",
+    "spec": "No trip temperature printed.",
+    "errorCodes": [
+     "E13 = Compressor overheat protector device"
+    ],
+    "test": "Reconnect the wiring; replace the protector; check charge (low charge, long line without added charge); EEV failure; control board failure.",
+    "source": "york-vh4-install-6746765-uim-c-0526.pdf p.52, p.54, p.65, p.73-74"
+   },
+   {
+    "plug": "EEV-A X850 / X15 EEV-A",
+    "code": "E13 / E15 / E47",
+    "name": "Outdoor electronic expansion valve",
+    "location": "Liquid line in the outdoor unit",
+    "kind": "eev",
+    "spec": "No coil resistance printed. In pump down mode the EEV runs with an open setting (p.45).",
+    "errorCodes": [
+     "EEV failure is a listed cause of E13 and of E15 (heating)",
+     "Overload in heating: EEV failed - replace the EEV (Table 37)"
+    ],
+    "test": "Replace the EEV per the code tables.",
+    "source": "york-vh4-install-6746765-uim-c-0526.pdf p.45, p.65, p.71, p.73-74"
+   },
+   {
+    "plug": "4-WAY X800 / X26 4WAY",
+    "code": "E97",
+    "name": "Four-way (reversing) valve coil",
+    "location": "Outdoor unit",
+    "kind": "other",
+    "spec": "Energized in heating; de-energized in cooling and defrost, and for a period after the compressor stops in heating (p.55).",
+    "errorCodes": [
+     "E97 = Four-way valve failure"
+    ],
+    "test": "Reconnect the coil wiring; replace the coil; replace the valve; replace the drive board of the four-way valve.",
+    "source": "york-vh4-install-6746765-uim-c-0526.pdf p.55, p.68, p.73-74"
+   }
+  ],
+  "test": "Parameter query (p.48): press S1, step with S2 / S3 to the P. code, wait 3 s. P.0 faults, P.1 actual Hz, P.5 discharge, P.6 suction, P.7 ambient, P.8 coil, P.9 defrosting temperature, P.10 IPM temperature, P.14 AC current, P.15 AC voltage, P.16 DC bus voltage, P.17 compressor phase current, P.24 actual outdoor pressure. Units are °C and MPa unless S4-1 is ON (p.45).",
+  "notes": "Plug names are from the two wiring diagrams; pin numbers and wire colours of the sensor leads are not printed.",
+  "gaps": [
+   "No pressure sensor volts-to-pressure chart",
+   "No pressure switch set points",
+   "No part numbers for boards or sensors",
+   "Suction and defrost sensors have codes and P-values but no plug on either wiring diagram",
+   "No EEV coil resistance"
+  ],
+  "sources": [
+   {
+    "file": "york-vh4-install-6746765-uim-c-0526.pdf",
+    "pages": "6, 37, 44-56, 60-71, 73-74",
+    "what": "board drawings, DIP switches, parameter list, sensor tables, code tables, wiring diagrams"
+   }
+  ]
+ },
+ {
+  "id": "trane-link-vs-5twv-5ttv-ivsc",
+  "title": "Trane Link variable-speed 5TWV0X / 5TTV0X / 5TWV8X / 5TTV8X outdoor Integrated Variable Speed Control board",
+  "side": "outdoor",
+  "brand": "Trane",
+  "models": "5TWV0X24A-60A, 5TTV0X24A / 25A / 36A-60A, 5TWV8X24A-60A, 5TTV8X24A-60A (A1000A and A1000B) - Link communicating only",
+  "match": [
+   "5TWV0X",
+   "5TTV0X",
+   "5TWV8X",
+   "5TTV8X"
+  ],
+  "sizes": [
+   "24",
+   "25",
+   "36",
+   "48",
+   "60"
+  ],
+  "board": "Integrated Variable Speed Control (IVSC): AOC (Application Oriented Control) board on the drive assembly with the MOC (Motor Oriented Control) drive; amber COMM LED DS51",
+  "replacement": [
+   {
+    "board": "Trane integrated variable speed control drive (drive assembly = AOC + MOC)",
+    "kit": "",
+    "replaces": "The drive replacement guide prints no drive part number per unit model. It says to confirm the replacement by the drive label colour and unit tonnage: 2 and 3-ton variable speed = green labelled drive only; 4 and 5-ton variable speed = pink labelled drive only (ODR-SVN009B-EN p.7). Read the tonnage from digits 7-8 of the model (25 = 2 ton).",
+    "differences": "The guide speaks of 'variable speed' drives and prints no unit model numbers. The BAYLPWD17A kit in the same guide is for multi-speed DRV01838 / DRV04015 drives only - it does not apply here. The original drive may have ferrite harnesses on the HPCO leads, fan motor or compressor harness - discard them, they are no longer required with the new drive designs. No refrigerant or A2L setting is printed for this board.",
+    "steps": [
+     "WARNINGS (drive replacement guide p.4, p.9): Disconnect all electric power, including remote disconnects, before servicing; follow lockout/tagout and verify that no power is present with a voltmeter. Wait two (2) minutes after disconnecting power before touching electrical components - they may hold a dangerous charge of 400 VDC - then verify DC voltage is less than 42 VDC at the inverter test points labelled +DC and -DC before servicing the board; do not proceed until it measures less than 42 Vdc. High leakage current: properly connect the system's oversized protective earthing (grounding) terminal(s), and reconnect all grounding devices removed for service. Do not touch the top of the compressor - it may be hot.",
+     "Shut down the unit, wait at least two minutes, remove the four control box cover screws and test across the +DC / -DC test points (their position varies slightly with the drive model).",
+     "Remove the ground wire at the bottom of the drive and disconnect the harness. Unplug from the AOC: Latching Switchover Valve J17, EEV J5, CAN J20, Ambient Temperature J21, Discharge Temperature J22, Coil Temperature J23, Suction Temperature J24, Liquid Temperature J25, Suction Pressure J26, Liquid Pressure J27, Personality module J16, and when applicable Injection Solenoid J9 and Vapor Injection Temperature J7.",
+     "Unplug the HPCO wires, fan harness and compressor harness from the MOC and disconnect the high-voltage field connections. Some connectors have latching tabs that must be depressed; grasp by the connector, do not pull on the wires.",
+     "Remove the three aluminum nuts and the cold plate - avoid direct contact with the thermal grease that is exposed. Move the liquid line one to two inches from the drive without bending or straining the copper and wipe the old grease off with a clean, dry cloth, supporting the tubing at all times.",
+     "Remove the drive screws, supporting the drive on the last one so it cannot slip and damage the liquid line; slide the drive up and away.",
+     "New drive: apply a small 1/8-inch bead of thermal grease in the centre of the liquid-line cutout along its entire length (the 0.5 oz tube is enough for two to three applications).",
+     "Slide the drive between the liquid line and the cabinet, fit the top right screw first hand-tight, check no harness is pinched, fit the remaining five screws with a 5/16-inch nut driver, and reconnect the AOC and MOC plugs.",
+     "Seat the rubber grommet around the liquid line, fit the cold plate and hand-tighten the three aluminum nuts two to three turns; press the line into the cutout and finger-tighten, repeating three to four times until grease flows around the tube. Torque the nuts to 40 to 50 in-lb - they strip at 80 in-lb, do not overtighten. Use only the original nuts or those shipped with the replacement kit.",
+     "Plug the compressor plug into the connector at the bottom of the drive and reattach the shielded harness ground wire to the drive assembly. Final inspection: verify all wires and plugs are reconnected and none are pinched between the drive and cabinet housing, start up the unit and verify operation, reattach the shielded harness ground wire to the drive assembly, and verify the line set cover is in place. Return the failed drive to your local parts center - a valid pre-authorization number is required for factory credit under the limited warranty."
+    ],
+    "source": "trane-vs-drive-replacement-odr-svn009b.pdf p.4, p.7, p.8, p.9, p.11, p.14, p.15, p.16, p.17, p.18"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "J21 AMB",
+    "name": "Outdoor ambient temperature sensor (ODS)",
+    "location": "Outside the outdoor coil",
+    "kind": "thermistor",
+    "spec": "Black / black leads on the wiring diagram. Demand defrost input: algorithm enabled when below 52°F. No resistance table is printed in the Installer's Guide or product data.",
+    "source": "trane-5twv0x-5ttv0x-install-odr-svn006c.pdf p.26, p.31; Trane ODR-PSD025B-EN p.10 (wiring diagram, wire colours)"
+   },
+   {
+    "plug": "J22 Dis T",
+    "name": "Discharge temperature sensor (DTS)",
+    "location": "Not printed in the guides or product data (discharge temperature sensor)",
+    "kind": "thermistor",
+    "spec": "Red / red leads on the wiring diagram. No resistance table or trip temperature printed.",
+    "source": "trane-5twv0x-5ttv0x-install-odr-svn006c.pdf p.26; Trane ODR-PSD025B-EN p.10"
+   },
+   {
+    "plug": "J23 Coil T",
+    "name": "Coil bottom sensor (CBS) - heat pumps only",
+    "location": "On the outdoor coil",
+    "kind": "thermistor",
+    "spec": "Yellow / yellow leads; the wiring diagram notes 'CBS wire color pink on 5TWV8X36* / 5TWV0X36* models' and marks the CBS as used on heat pump models only, not on AC units. Defrost: algorithm enabled when below 32°F; also ends the defrost cycle. No resistance table printed.",
+    "source": "trane-5twv0x-5ttv0x-install-odr-svn006c.pdf p.26, p.31; Trane ODR-PSD025B-EN p.10"
+   },
+   {
+    "plug": "J24 Suc T",
+    "name": "Suction temperature sensor (STS)",
+    "location": "Suction line",
+    "kind": "thermistor",
+    "spec": "Orange / orange leads on the wiring diagram. No resistance table printed.",
+    "source": "trane-5twv0x-5ttv0x-install-odr-svn006c.pdf p.26; Trane ODR-PSD025B-EN p.10"
+   },
+   {
+    "plug": "J25 Liq T",
+    "name": "Liquid temperature sensor (LTS)",
+    "location": "Liquid line",
+    "kind": "thermistor",
+    "spec": "Brown / brown leads on the wiring diagram. No resistance table printed.",
+    "source": "trane-5twv0x-5ttv0x-install-odr-svn006c.pdf p.26; Trane ODR-PSD025B-EN p.10"
+   },
+   {
+    "plug": "J26 Suc P",
+    "name": "Suction pressure transducer (SP-TRD)",
+    "location": "Suction line",
+    "kind": "pressure",
+    "spec": "Three wires red / white / black on the wiring diagram. No volts-to-pressure chart is printed - no chart attached.",
+    "source": "trane-5twv0x-5ttv0x-install-odr-svn006c.pdf p.26; Trane ODR-PSD025B-EN p.10"
+   },
+   {
+    "plug": "J27 Liq P",
+    "name": "Liquid pressure transducer (LP-TRD)",
+    "location": "Liquid line",
+    "kind": "pressure",
+    "spec": "Three wires red / white / black on the wiring diagram. No volts-to-pressure chart is printed - no chart attached.",
+    "source": "trane-5twv0x-5ttv0x-install-odr-svn006c.pdf p.26; Trane ODR-PSD025B-EN p.10"
+   },
+   {
+    "plug": "J7 EXT ODT",
+    "name": "J7 input labelled 'EXT ODT' (meaning not printed)",
+    "kind": "other",
+    "spec": "Labelled 'EXT ODT' in the June 2026 Trane guides. The same position is labelled 'SAT Temp' in American Standard's 2024 guide (11-BC49D1-1E-EN p.27), and the drive replacement guide lists J7 as 'Vapor Injection Temperature (when applicable)' - see the gaps.",
+    "source": "trane-5twv0x-5ttv0x-install-odr-svn006c.pdf p.26"
+   },
+   {
+    "plug": "J5 EEV",
+    "name": "Electronic expansion valve",
+    "kind": "eev",
+    "spec": "Six wires on the wiring diagram (red, brown, blue, orange, yellow, white); marked as used on heat pump models only. No coil resistance printed.",
+    "source": "trane-5twv0x-5ttv0x-install-odr-svn006c.pdf p.26; Trane ODR-PSD025B-EN p.10"
+   },
+   {
+    "plug": "J17 LSOV",
+    "name": "Latching switchover valve (reversing valve) - heat pumps",
+    "kind": "other",
+    "spec": "Blue / red leads on the wiring diagram; marked as used on heat pump models only.",
+    "source": "trane-5twv0x-5ttv0x-install-odr-svn006c.pdf p.26; Trane ODR-PSD025B-EN p.10"
+   },
+   {
+    "plug": "J20 CAN",
+    "name": "Link communication (CAN)",
+    "kind": "other",
+    "spec": "Red, white, green, blue = R, DH, DL, B (Link wire colours). DH and DL required; R and common required for load shed and SmartCharge. 18 AWG, 500 ft combined.",
+    "source": "trane-5twv0x-5ttv0x-install-odr-svn006c.pdf p.23, p.24, p.26"
+   },
+   {
+    "plug": "J8",
+    "name": "AOC / MOC interface",
+    "kind": "other",
+    "source": "trane-5twv0x-5ttv0x-install-odr-svn006c.pdf p.26"
+   },
+   {
+    "plug": "J16 PM",
+    "name": "Personality module (Installer's Guide drawing 'PM'; drive replacement guide 'Personality module J16')",
+    "kind": "other",
+    "spec": "The product-data wiring diagram labels this plug 'PWM J16' and its legend reads 'PWM - Pulse Width Modulated Conn'; the Installer's Guide board drawing labels it 'J16 PM' and the drive replacement guide lists 'Personality module J16'. Not resolved.",
+    "source": "trane-5twv0x-5ttv0x-install-odr-svn006c.pdf p.26; trane-vs-drive-replacement-odr-svn009b.pdf p.8, p.11; Trane ODR-PSD025B-EN p.10 (wiring diagram)"
+   },
+   {
+    "plug": "J11",
+    "name": "Program socket",
+    "kind": "other",
+    "source": "trane-5twv0x-5ttv0x-install-odr-svn006c.pdf p.26"
+   },
+   {
+    "plug": "J2, J3",
+    "name": "Load shed",
+    "kind": "other",
+    "source": "trane-5twv0x-5ttv0x-install-odr-svn006c.pdf p.26"
+   },
+   {
+    "plug": "J14, J15",
+    "name": "Smart Charge",
+    "kind": "other",
+    "source": "trane-5twv0x-5ttv0x-install-odr-svn006c.pdf p.26"
+   },
+   {
+    "plug": "J19",
+    "name": "Data port",
+    "kind": "other",
+    "source": "trane-5twv0x-5ttv0x-install-odr-svn006c.pdf p.26"
+   },
+   {
+    "plug": "MOC HPCO 1 / 2",
+    "name": "High pressure cutout switch",
+    "kind": "switch",
+    "spec": "Two white leads to the HPCO terminals (1, 2) on the MOC (drive). The wiring diagram also draws a dashed box ('optional' in the legend) 'HI-TEMP SW' headed 'For rotary compressors', wired orange / yellow from a third, dashed HPCO lead. No trip or reset pressure is printed.",
+    "source": "Trane ODR-PSD025B-EN p.10 (wiring diagram); trane-vs-drive-replacement-odr-svn009b.pdf p.11, p.13"
+   },
+   {
+    "plug": "DS51",
+    "name": "Amber COMM LED",
+    "kind": "other",
+    "spec": "Table 16 'LEDs in Link mode': Comm (amber) - slow, 1 time per device = device count; fast, 5 times per second = loss of communication. The board drawing labels it 'DS51 Yellow - COMM'.",
+    "source": "trane-5twv0x-5ttv0x-install-odr-svn006c.pdf p.26 (Table 16)"
+   }
+  ],
+  "test": "Faults and tests (Charging Mode-Cooling, forced defrost FRC DFT TEST) are run from the UX360 Technician Access area or the Technician Mobile App. The guide's board LED table lists only the COMM LED.",
+  "notes": [
+   "The 5TWV8X / 5TTV8X guide ODR-SVN004C-EN prints the same board drawing and LED table on p.26 (Table 15).",
+   "Same wiring diagram (same AOC plug colours) in all four product data documents: ODR-PSD019B-EN p.11, PSD020B p.10, PSD025B p.10, PSD026B p.10.",
+   "American Standard 5A6V8X / 5A7V8X already have their own map (amstd-5a6v8x-5a7v8x-link-outdoor); its replacement block could now point at the factory drive replacement guide (its back page reads 'About Trane and American Standard Heating and Air Conditioning')."
+  ],
+  "gaps": [
+   "No thermistor resistance table, no transducer volts-to-psig chart and no EEV coil resistance in any public document found. The guides point to the Service Facts and Technical Service Manual 34-4301-01 for alert codes - not found on the eLibrary or asdealernet.",
+   "J7 is labelled three ways: 'EXT ODT' (Trane SVN006C / SVN004C p.26, June 2026), 'SAT Temp' (American Standard 11-BC49D1-1E-EN p.27, Aug 2024), 'Vapor Injection Temperature J7 (when applicable)' (ODR-SVN009B-EN p.11). Not resolved.",
+   "'PEV J28' and 'J12 Bluetooth' appear on the wiring diagram but not on the guide's board drawing; their meaning is not printed.",
+   "J16 is 'PM' / 'Personality module' in the Installer's Guide and the drive replacement guide (SVN006C p.26; SVN009B p.8, p.11) but 'PWM J16' / 'Pulse Width Modulated Conn' on the product-data wiring diagram (PSD025B p.10). Not resolved."
+  ],
+  "sources": [
+   "trane-5twv0x-5ttv0x-install-odr-svn006c.pdf",
+   "trane-5twv8x-5ttv8x-install-odr-svn004c.pdf",
+   "trane-vs-drive-replacement-odr-svn009b.pdf",
+   "Trane ODR-PSD019B-EN / PSD020B-EN / PSD025B-EN / PSD026B-EN (June 2026) wiring diagrams"
+  ]
+ },
+ {
+  "id": "carrier-pkg-b-r454b-dsb",
+  "title": "Carrier R-454B small packaged units (50NT-B / 50NL-B / 50NR-B / 48NT-B / 48NL-B / 48NR-B / 48NG-B) - leak dissipation board, refrigerant sensor and refrigerant switches",
+  "side": "outdoor",
+  "brand": "Carrier",
+  "models": "50NT-B, 50NL-B, 50NR-B, 48NT-B (48NTNB), 48NL-B (48NLNB), 48NR-B (48NRNB), 48NG-B (48NGNB)",
+  "match": [
+   "50NTB",
+   "50NLB",
+   "50NRB",
+   "48NTB",
+   "48NTNB",
+   "48NLB",
+   "48NLNB",
+   "48NRB",
+   "48NRNB",
+   "48NGB",
+   "48NGNB"
+  ],
+  "sizes": [
+   "all"
+  ],
+  "board": "Leak dissipation control board (DSB): in the control box on 50NT-B, 50NL-B, 50NR-B, 48NL-B, 48NR-B and 48NG-B; in the compressor compartment on 48NT-B (48NT-B-04SI p.14). 2 LEDs - the SIs call the status LED amber, the board label heads its column 'Yellow LED' - and a Test button; 8-pin harness (pin 1 red to unit 24VAC, 2 green to SPP unit G, 3 white to TSTAT W/W1, 4 yellow to SPP unit Y/Y1, 5 yellow to TSTAT Y/Y1, 6 green to TSTAT G, 7 white to SPP unit W/W1, 8 brown to unit COM) per the board label 350502-201 (50NT-04SI p.11, p.34)",
+  "replacement": [],
+  "sensors": [
+   {
+    "plug": "Sensor harness to the dissipation board",
+    "name": "Refrigerant detection sensor (RDS)",
+    "location": "48NT-B: blower compartment, near the evaporator coil (48NT-B-04SI p.14). Other families: see the Refrigerant Detection Sensor figures in the unit's SI (50NT-04SI p.11 shows separate figures for sizes 24 & 30 and 36-60)",
+    "kind": "other",
+    "spec": "Board goes to dissipation at sensor >= 20% LFL (Flashing 1); sensor open = Flashing 2; digital sensor fault = Flashing 5 (label 350502-201)",
+    "errorCodes": [
+     "Flashing 1 = sensor >= 20% LFL",
+     "Flashing 2 = sensor open",
+     "Flashing 5 = fault with A2L digital sensor"
+    ],
+    "test": "Test button held 1-4 s runs dissipation mode for 60 s (Table 1, all seven SIs, e.g. 50NT-04SI p.11). 50NT-B, 50NL-B, 48NT-B, 48NL-B SIs (50NT-04SI p.32, 50NL-02SI p.31, 48NT-B-04SI p.37, 48NL-02SI p.42): check both ends of the sensor harness; power cycle; check for leaks with an independent R-454B detector; replace the sensor if the code stays. The 50NR-B, 48NR-B and 48NG-B SIs print no flash-code actions.",
+    "source": "50NT-04SI p.11, p.32, p.34; 48NT-B-04SI p.14"
+   },
+   {
+    "plug": "Discharge line",
+    "name": "High-pressure switch",
+    "kind": "switch",
+    "spec": "Cutout 650 +/- 15 psig, auto reset 420 +/- 25 psig - all seven families (50NT-08PD p.4, 50NL-06PD p.4, 50NR-06PD p.4, 48NT-B-07PD p.5-6, 48NL-05PD p.6-7, 48NR-04PD p.5, 48NG-05PD p.6)",
+    "errorCodes": [],
+    "test": "Power off, disconnect leads, ohmmeter across the switch - continuity on a good switch. High pressure may be caused by a dirty outdoor coil, failed fan motor or outdoor air recirculation (50NT-04SI p.30)",
+    "source": "50NT-04SI p.30"
+   },
+   {
+    "plug": "Liquid line (suction line on 50NL 'if used')",
+    "name": "Loss-of-charge / low-pressure switch",
+    "kind": "switch",
+    "spec": "50NT-B, 48NT-B: cutout 20 +/- 5, reset 45 +/- 10 psig. 50NR-B, 48NR-B: 20 +/- 5 / 45 +/- 5. 48NG-B: physical data prints 50 +/- 7 / 95 +/- 7 (48NG-05PD p.6, 48NG-02SI p.10), but the same SI's Loss of Charge Switch text says it opens at about 20 psig (48NG-02SI p.60) - go by the switch itself / rating plate. 50NL-B, 48NL-B: N/A in the physical data (same pages as above)",
+    "errorCodes": [],
+    "test": "Opens on a pressure drop at about 20 psig (50NT); power off, disconnect leads, continuity on a good switch. Do not remove the switch unless sure it is bad - recover the charge to 0 psig first and break vacuum with dry nitrogen before opening the system (50NT-04SI p.30)",
+    "source": "50NT-04SI p.30; 50NL-02SI p.30"
+   },
+   {
+    "plug": "Defrost board",
+    "name": "Defrost thermostat (heat pump families 50NT-B, 50NR-B, 48NT-B, 48NR-B only)",
+    "location": "Lowest liquid-leaving circuit of the left outdoor coil, on the liquid side, bottom circuit, as close to the coil as possible",
+    "kind": "switch",
+    "spec": "Closes at 32 F (0 C), opens at 65 F (18 C) (50NT-04SI p.32). The same page also prints a tolerance line whose sign characters do not print even on the rendered page ('32_ ? 3_F ... 65_ ? 5_F') - not carried over",
+    "errorCodes": [],
+    "test": "Thermally actuated switch clamped to the outdoor coil - check it closes cold and opens warm per the figures (50NT-04SI p.32; 50NR-01SI p.32; 48NT-B-04SI p.36-37; 48NR-01SI p.49)",
+    "source": "50NT-04SI p.32; 48NT-B-04SI p.36-37"
+   }
+  ],
+  "notes": "Only the 32 F close / 65 F open points are carried; the tolerance characters on 50NT-04SI p.32 print as '?' on the rendered page too."
  }
 ];
 const BRAND_SENSOR_CHARTS = [
@@ -147434,5 +147904,177 @@ const BRAND_SENSOR_CHARTS = [
   ],
   "source": "york-yd5-xd5-install-btc910503201b.pdf p.60 (Table 25 \"for T5\", BTC 910503201 B); same numbers in BTC 910103201 B p.62 (Table 24) and BTC 910803201 B p.67 (Table 25)",
   "notes": "All 27 rows as printed. Printed as-is: -5°F = 600.13 sits close to -10°F = 612.41."
+ },
+ {
+  "id": "york-vh4-discharge-thermistor",
+  "name": "York VH4 outdoor compressor discharge temperature sensor - resistance vs temperature (R0 = 187.25 k)",
+  "kind": "thermistor",
+  "columns": [
+   "C",
+   "F",
+   "kOhm_min",
+   "kOhm",
+   "kOhm_max"
+  ],
+  "rows": [
+   [
+    -30,
+    -22,
+    908.2603,
+    985.5274,
+    1065.121
+   ],
+   [
+    -15,
+    5,
+    384.2888,
+    413.3808,
+    442.9105
+   ],
+   [
+    0,
+    32,
+    175.4533,
+    187.25,
+    199.0468
+   ],
+   [
+    15,
+    59,
+    85.4114,
+    90.4842,
+    95.5398
+   ],
+   [
+    30,
+    86,
+    44.1034,
+    46.4046,
+    48.696
+   ],
+   [
+    45,
+    113,
+    23.9697,
+    25.0632,
+    26.1488
+   ],
+   [
+    60,
+    140,
+    13.64,
+    14.1799,
+    14.7154
+   ],
+   [
+    75,
+    167,
+    8.0951,
+    8.3705,
+    8.644
+   ],
+   [
+    90,
+    194,
+    4.9853,
+    5.1292,
+    5.2726
+   ],
+   [
+    105,
+    221,
+    3.1632,
+    3.2491,
+    3.3353
+   ]
+  ],
+  "source": "york-vh4-install-6746765-uim-c-0526.pdf p.56 (Table 31, 6746765-UIM-C-0526)",
+  "notes": "All 10 rows as printed, -30°C to 105°C in 15°C steps. The manual prints °C only; the F column is converted. Heading as printed: R0=187.25K±6.3%, R100=3.77K±2.5K, B0/100=3979K±1% (the R100 tolerance is printed with K, not %)."
+ },
+ {
+  "id": "york-vh4-ambient-coil-thermistor",
+  "name": "York VH4 outdoor ambient and coil temperature sensor - resistance vs temperature (R0 = 15 k)",
+  "kind": "thermistor",
+  "columns": [
+   "C",
+   "F",
+   "kOhm_min",
+   "kOhm",
+   "kOhm_max"
+  ],
+  "rows": [
+   [
+    -30,
+    -22,
+    60.78,
+    64.77,
+    68.99
+   ],
+   [
+    -15,
+    5,
+    29.07,
+    29.97,
+    30.89
+   ],
+   [
+    0,
+    32,
+    14.7,
+    15,
+    15.29
+   ],
+   [
+    15,
+    59,
+    7.804,
+    8.021,
+    8.24
+   ],
+   [
+    30,
+    86,
+    4.355,
+    4.55,
+    4.753
+   ],
+   [
+    45,
+    113,
+    2.558,
+    2.701,
+    2.85
+   ],
+   [
+    60,
+    140,
+    1.551,
+    1.654,
+    1.762
+   ],
+   [
+    75,
+    167,
+    0.9676,
+    1.041,
+    1.12
+   ],
+   [
+    90,
+    194,
+    0.6188,
+    0.6718,
+    0.7291
+   ],
+   [
+    105,
+    221,
+    0.4056,
+    0.444,
+    0.4859
+   ]
+  ],
+  "source": "york-vh4-install-6746765-uim-c-0526.pdf p.56 (Table 32, 6746765-UIM-C-0526)",
+  "notes": "All 10 rows as printed. The manual prints °C only; the F column is converted. Heading as printed: R0=15k±2%, B0/100=3450k±2%. The lead-in line says these are the parameters for the 'suction, ambient, coil, and discharge sensors' while the table title says ambient and coil, and the discharge sensor has its own Table 31."
  }
 ];

@@ -70871,3 +70871,1829 @@ const TSTAT_NEW_1117 = {
   const xl = THERMOSTATS.find(e => e.id === "tst-trane-xl824");
   if (xl && !(xl.techTips || []).some(t => t.text === TSTAT_NEW_1117.xl824Note)) xl.techTips = [{ text: TSTAT_NEW_1117.xl824Note, source: "trane.com, 'Introducing the Priority Smart Thermostat' (August 6, 2026)" }, ...(xl.techTips || [])];
 })();
+
+// ============================================================
+// v453 (Andy 2026-11-17: "continue without me saying so till its all done"): Honeywell ElitePRO S1100 / S1200,
+// Lennox L40, ecobee Smart Thermostat Lite (Pro), Sensi Equipment Interface Module SA20 and Carrier Smart
+// Thermostat Advanced (thin - its installer manual is not public), plus Google's Nest end-of-support note on the
+// two Nest Learning cards. Each card from the maker's own documents, checked claim by claim by a second pass
+// (591 claims, 33 corrected). Same build as TSTAT_NEW_1117 above.
+// ============================================================
+const TSTAT_NEW_1117B = {
+ "cards": [
+  {
+   "id": "tst-honeywell-elitepro",
+   "brand": "Honeywell Home",
+   "family": "ElitePRO S1100 / S1200 Smart Thermostat (Redlink 3.0)",
+   "aka": "THX1100W3 / THX1100B4 (S1100) / THX1200W5 / THX1200B6 (S1200) / THX1200W7S / THX1200B8S (S1200, EIM required) / YTHX1200W5 / YTHX1200B6 (S1200 + wireless indoor sensor) / YTHX1200W7 / YTHX1200B8 (S1200 + EIM)",
+   "models": [
+    "THX1100W3",
+    "THX1100B4",
+    "THX1200W5",
+    "THX1200B6",
+    "THX1200W7S",
+    "THX1200B8S",
+    "YTHX1200W5",
+    "YTHX1200B6",
+    "YTHX1200W7",
+    "YTHX1200B8",
+    "THX1100",
+    "THX1200",
+    "S1100",
+    "S1200"
+   ],
+   "type": "smart-wifi",
+   "stages": "Heat pump: up to 3 heat / 2 cool (up to 4 heat / 2 cool using U or L at the thermostat or U1-U3 at the EIM for the extra stage). Conventional: up to 2 heat / 2 cool (up to 3 heat / 4 cool the same way). Heat pump compressor stages 1 or 2; backup heat stages 0, 1 or 2. Also dual fuel, hot water / steam, radiant floor with slab sensor, 2-pipe / 4-pipe fan coil, PTAC (not with an EIM). THX1200W7S / THX1200B8S have only a U relay and must be used with an EIM.",
+   "sort": 20,
+   "confidence": "verify",
+   "power": {
+    "cWire": "required",
+    "batteries": "",
+    "notes": "24 VAC at R and C (or Rc and C on a 2-transformer system) powers the display - the C terminal is required. No C wire but wires to Y and G: the THP9045A C-wire adapter (sold separately) can be used (THP9045A2098 in the S1100/S1200 submittal). Input rating 24V~ 60 Hz, 0.11A in the Installation Manual and Installer Guide; the submittal sheet prints 0.09A. Power consumption S1100 and S1200: 2.6 VA. With an EIM the UWP only needs R and C from a 24 VAC supply, usually R and C at the upper right of the EIM."
+   },
+   "terminals": [
+    {
+     "t": "R",
+     "fn": "24 VAC heating transformer",
+     "notes": "R Slider Tab on the UWP: up (1 wire) when there is only one R wire (on R, Rc or RH of the old thermostat); down (2 wires) when there is one wire on R and one on Rc."
+    },
+    {
+     "t": "Rc",
+     "fn": "24 VAC cooling transformer",
+     "notes": "See the R Slider Tab note on R."
+    },
+    {
+     "t": "C",
+     "fn": "24VAC common wire from secondary side of cooling transformer (if 2 transformers)",
+     "notes": "Required."
+    },
+    {
+     "t": "Y",
+     "fn": "Compressor stage 1",
+     "notes": ""
+    },
+    {
+     "t": "Y2",
+     "fn": "Compressor stage 2",
+     "notes": ""
+    },
+    {
+     "t": "G",
+     "fn": "Fan relay",
+     "notes": ""
+    },
+    {
+     "t": "W",
+     "fn": "Conventional: heat stage 1",
+     "notes": "Heat pump: do NOT connect any wire to W - this can cause the heat to run continuously."
+    },
+    {
+     "t": "W2",
+     "fn": "Conventional: heat stage 2",
+     "notes": ""
+    },
+    {
+     "t": "O/B",
+     "fn": "Heat pump: changeover valve",
+     "notes": "Set ISU 2060 Reversing Valve: O (O/B on cool) or B (O/B on heat)."
+    },
+    {
+     "t": "AUX",
+     "fn": "Heat pump: backup heat",
+     "notes": "U can alternately be used for backup heat if powered off a separate transformer, such as with a boiler."
+    },
+    {
+     "t": "E",
+     "fn": "Heat pump: emergency heat when separate aux and E are selected during setup (not typical)",
+     "notes": "Set with ISU 2175 Aux/E Terminal Control."
+    },
+    {
+     "t": "L/A",
+     "fn": "Heat pump fault monitor or economizer fault alert input; alternately a remote setback switch input",
+     "notes": "S1000, S1100 and S1200 models can also use L/A to control a humidifier, dehumidifier or ventilator. The alert use (economizer or heat pump failure) is set in ISU 2220 L Terminal alert; L can also be set for remote setback, a 2-pipe fan coil changeover aquastat, or (S1000 / S1100 / S1200) an extra heat or cool stage."
+    },
+    {
+     "t": "U/U",
+     "fn": "Relay for humidifier, dehumidifier, ventilator, economizer, or an extra heat / cool stage (heat pump: an auxiliary heat stage)",
+     "notes": "U Slider Tab sets the U relay for the IAQ device. THX1200W7S / THX1200B8S have only this relay on the thermostat."
+    },
+    {
+     "t": "S/S",
+     "fn": "Input for a wired sensor or dry contact alert",
+     "notes": ""
+    },
+    {
+     "t": "K",
+     "fn": "Connect to K on the C-wire adapter",
+     "notes": "Used in place of Y and G with the THP9045A C-wire adapter; the freed wire becomes the common."
+    }
+   ],
+   "wiringNotes": [
+    "IMPORTANT (Resideo): for heat pump applications do NOT connect any wire to W on the UWP - this can cause the heat to run continuously.",
+    "Heat pump with aux heat: strips on AUX, reversing valve on O/B. Some heat pumps use B rather than O for the reversing valve. L is only connected if the heat pump has a fault terminal.",
+    "Use 18- to 22-gauge thermostat wire; shielded cable is not required.",
+    "R Slider Tab on the UWP: up (1 wire) for one-transformer systems, down (2 wires) for two-transformer systems.",
+    "With an EIM the UWP only needs R and C of a 24 VAC supply (usually R and C at the upper right of the EIM); the equipment wires land on the EIM.",
+    "THX1200W7S and THX1200B8S (the thermostats in the YTHX1200W7 / YTHX1200B8 EIM kits) only have a U relay on the thermostat and MUST be used with an EIM.",
+    "Dual fuel: the furnace and heat pump boards are shown together in Resideo's diagram to simplify it - W comes from the furnace board. Balance point lockout can be done through the router / internet and app, a wired outdoor sensor or a wireless outdoor sensor.",
+    "Manufacturer WARNING: this product must be installed by a trained, experienced HVAC professional. Improper wiring or configuring can cause unintended operation of the HVAC system which could lead to property damage, injury, including death.",
+    "Manufacturer CAUTION (electrical hazard): can cause electrical shock or equipment damage. Disconnect power before beginning installation.",
+    "Manufacturer CAUTION (equipment damage): compressor protection is bypassed during testing. To prevent equipment damage, avoid cycling the compressor quickly."
+   ],
+   "setup": {
+    "access": "First power-up: the display asks basic questions about the application and prompts to link an EIM and any Redlink 3.0 accessories; setup can be finished on the thermostat or in the Resideo Technician app. Touch NEXT to advance, DONE to save. To change settings later: Menu > Thermostat Information, write down the date code, go back, Installer Options, enter the date code, Installer Setup. No factory values are marked in the ISU table except where noted below.",
+    "keySettings": [
+     {
+      "setting": "ISU 2000 System Type",
+      "options": "Conventional Forced Air Heat, Heat Pump, Radiant Heat, Fan Coil, Other, None (Cool only), PTAC",
+      "notes": "PTAC is not available when the thermostat is used with an EIM."
+     },
+     {
+      "setting": "ISU 2010 Equipment type (heat pump)",
+      "options": "Air to Air Heat Pump, Geothermal Heat Pump",
+      "notes": "Shown when ISU 2000 = Heat Pump."
+     },
+     {
+      "setting": "ISU 2060 Reversing Valve",
+      "options": "O (O/B on Cool), B (O/B on Heat)",
+      "notes": "Resideo: system setup is critical - if unsure, trace the O/B wire to the equipment. O at the heat pump = O; B at the heat pump = B."
+     },
+     {
+      "setting": "ISU 2070 Equipment stages - Compressor Stages",
+      "options": "1, 2",
+      "notes": "ISU 2000 = Heat Pump."
+     },
+     {
+      "setting": "ISU 2070 Equipment stages - Backup Heat Stages",
+      "options": "0, 1, 2",
+      "notes": "Available stages may vary depending on what L or U are used for without an EIM, or U1-U3 with an EIM."
+     },
+     {
+      "setting": "ISU 2170 Stage 1 backup heat terminal",
+      "options": "Thermostat AUX, Thermostat U, Thermostat L, EIM AUX 1",
+      "notes": "Default is Thermostat AUX without an EIM and EIM AUX 1 with an EIM. ISU 2171 assigns stage 2 backup heat: Thermostat U, Thermostat L, EIM AUX 2 (default EIM AUX 2 with an EIM)."
+     },
+     {
+      "setting": "ISU 2175 Aux/E Terminal Control",
+      "options": "Drive Aux and E together, Aux and E independent",
+      "notes": "Only with 1 backup heat stage on thermostat AUX and no EIM. If the same heat source is used for aux and em heat, do not set separate aux and E."
+     },
+     {
+      "setting": "ISU 2180 Backup Heat Type",
+      "options": "None, Electric Forced Air, Standard Efficiency Gas Forced Air, High Efficiency Gas Forced Air, Oil Forced Air, Hot Water Fan Coil, Hot Water Radiant Heat, Other",
+      "notes": "Heat pump with 1 or 2 backup heat stages."
+     },
+     {
+      "setting": "ISU 2190 External Fossil Fuel Kit",
+      "options": "Thermostat Controls Backup Heat, External Fossil Fuel Kit Controls Backup Heat",
+      "notes": "Heat pump with gas or oil backup. With Thermostat Controls the thermostat never runs the heat pump and furnace together."
+     },
+     {
+      "setting": "ISU 2200 Backup Heat Operation",
+      "options": "NOT Allowed to Run with Heat Pump, Allowed to Run with Heat Pump",
+      "notes": "Shown when ISU 2180 is Hot Water or Other; the latest firmware also shows it for Radiant Heat."
+     },
+     {
+      "setting": "ISU 2220 L Terminal alert",
+      "options": "None, Economizer Failure indication, Heat Pump Failure indication, Heat Pump Failure indication and Lockout",
+      "notes": "With the Heat Pump Failure alert active the thermostat runs only backup heat."
+     },
+     {
+      "setting": "ISU 3000 Changeover / ISU 3015 Auto Changeover Differential",
+      "options": "Manual, Automatic / 0-5 F",
+      "notes": "With 0 selected the thermostat enforces a 1.5 F differential behind the scenes."
+     },
+     {
+      "setting": "ISU 3060 Compressor Heat Differential Stage 2",
+      "options": "Comfort, 1.0 F to 3.5 F in 0.5 F steps",
+      "notes": "Heat pump with 2 compressor stages."
+     },
+     {
+      "setting": "ISU 3090 Backup Heat differentials",
+      "options": "Stage 1: Comfort, 2.0 F to 15 F. Stage 2: Comfort, 2.5 F to 15.5 F",
+      "notes": "Comfort is the default differential in the manual's Specifications. Comfort is not available for dual fuel (dual fuel defaults to 2 F, adjustable 2 F to 15 F)."
+     },
+     {
+      "setting": "ISU 3110 Backup heat upstage timer",
+      "options": "Off, 30, 45, 60, 75, 90 minutes, 2, 3, 4, 5, 6, 8, 10, 12, 14, 16 hours",
+      "notes": "Default Off. Works only in steady state (cycling to hold set point); a manual or scheduled set point change does not trigger it, and aux heat does not necessarily run when it expires. Resideo's manual disagrees with itself on Comfort: one page says the timer is limited to 30-60 minutes when the differential is Comfort, another says the upstage and holdoff timers are available when the differential is set to other than Comfort."
+     },
+     {
+      "setting": "ISU 3110 Backup Heat holdoff timer",
+      "options": "Auto, 15 to 120 minutes in 15 minute steps",
+      "notes": "Shown when the upstage timer is not Off. Out-of-box setting Auto (holds off backup heat as long as possible after a set point change); any other setting FORCES the aux heat on after that time."
+     },
+     {
+      "setting": "ISU 3120 Compressor Lockout / Balance point",
+      "options": "Off, -15 F to 50 F",
+      "notes": "Heat pump with an aux heat stage."
+     },
+     {
+      "setting": "ISU 3120 Backup Heat Lockout",
+      "options": "Off, 5 F to 65 F",
+      "notes": "Heat pump with an aux heat stage."
+     },
+     {
+      "setting": "ISU 3125 Fan Lockout after cool call ends",
+      "options": "Off, 5-120 minutes in 5 minute increments",
+      "notes": "For humid regions. Equipment Status shows 'Idle (Fan Lockout)'. The troubleshooting section of the same manual says 5 to 90 minutes."
+     },
+     {
+      "setting": "ISU 3140 Compressor Cycles Per Hour",
+      "options": "Stage 1 and stage 2: settings 1-6",
+      "notes": "ISU 3160 Backup heat cycles per hour: settings 1-12."
+     },
+     {
+      "setting": "ISU 3240 Minimum Compressor or Fan Coil Off Time",
+      "options": "Off, 1-5 minutes in 1-minute increments",
+      "notes": ""
+     },
+     {
+      "setting": "ISU 3260 Extended fan run time in cool / in heat",
+      "options": "Off, 30 seconds to 15 minutes",
+      "notes": ""
+     },
+     {
+      "setting": "ISU 4150 / 4154 High / low indoor temperature and humidity alerts",
+      "options": "High temp Off, 32 to 99 F; low temp Off, 31 to 98 F; high RH Off, 6 to 99%; low RH Off, 5 to 98%",
+      "notes": "Generate an alert message on the display and in the app; they do not limit set points (that is ISU 4100)."
+     },
+     {
+      "setting": "ISU 1060 Outdoor Temperature",
+      "options": "None, Wired, Wireless, Internet",
+      "notes": "Wireless only shown if a C7089R3013 was linked during setup."
+     }
+    ],
+    "installerTest": "Installer Options > Installer Test (date code needed, see access). Heat: select heat stage(s); Em heat (heat pumps with backup heat only); Cool: select cool stage(s); Fan: on / off, each speed if multiple; Other: humidifier, dehumidifier, ventilator. A timer shows run time; equipment shuts off automatically after 30 minutes if the test is not ended. With RATS and DATS sensors and an EIM the display shows both readings and the delta. The installer test bypasses the compressor protection delay - Resideo CAUTION: avoid cycling the compressor quickly.",
+    "factoryReset": "Installer Options > Reset > Factory Reset (returns the thermostat to the state it was in prior to installation). Getting there: Menu > Thermostat Information (write down the date code) > back > Installer Options > enter the date code. The Reset menu also has Reset Schedule, Delete all Devices (Redlink accessories), Reset Matter and Reset WiFi. A thermostat already configured without an EIM must be factory reset to get back to the initial screen that offers use with an EIM."
+   },
+   "techTips": [
+    {
+     "text": "ElitePRO S1100 / S1200 installer setup (ISU): Menu > Thermostat Information, write down the date code, back, Installer Options, enter the date code, Installer Setup. Or set it up with the Resideo Technician app.",
+     "source": "Resideo 33-00762-02 (10/26) ElitePRO Series Thermostats, EIM, ERM & Redlink 3.0 accessories Installation Manual, Installer Setup (ISU) p.71"
+    },
+    {
+     "text": "ElitePRO heat pump O/B: set ISU 2060 Reversing Valve to O (O/B on cool) or B (O/B on heat). Cool runs on a call for heat - check the O/B wire connection and ISU 2060.",
+     "source": "Resideo 33-00762-02 (10/26) ElitePRO Series Thermostats, EIM, ERM & Redlink 3.0 accessories Installation Manual, ISU 2060 p.76; Troubleshooting p.198"
+    },
+    {
+     "text": "ElitePRO heat pump wiring: aux heat (strips) to AUX, never W. A wire on W of the UWP on a heat pump can make the heat run continuously; aux heat running in cooling means a wire on W - separate wires on W and O/B is a mis-wire.",
+     "source": "Resideo 33-00706EF-02 (Rev 09/26) ElitePRO S1100 & S1200 Smart Thermostat Installer Guide p.1; Resideo 33-00762-02 (10/26) ElitePRO Series Thermostats, EIM, ERM & Redlink 3.0 accessories Installation Manual p.31, p.198"
+    },
+    {
+     "text": "ElitePRO aux heat (backup heat) not coming on: run it from Installer Test. If it runs in test but not in normal operation, look for ISU settings restricting it (backup heat differential ISU 3090, not allowed to run with the primary heat ISU 2200, backup heat lockout ISU 3120), check the aux wire is on the terminal assigned in ISU 2170, and that ISU 2175 is not set for separate aux and E when one heat source does both.",
+     "source": "Resideo 33-00762-02 (10/26) ElitePRO Series Thermostats, EIM, ERM & Redlink 3.0 accessories Installation Manual, Troubleshooting p.199"
+    },
+    {
+     "text": "ElitePRO C wire: the C terminal is required (24 VAC at R and C, or Rc and C on 2 transformers). No C wire but Y and G present: THP9045A C-wire adapter, K terminal on the UWP. Blank display: check breaker, equipment power switch, furnace door and that the C wire is connected.",
+     "source": "Resideo 33-00762-02 (10/26) ElitePRO Series Thermostats, EIM, ERM & Redlink 3.0 accessories Installation Manual, Power Options p.28; Terminal Designations p.18; Troubleshooting p.197"
+    },
+    {
+     "text": "ElitePRO reset: Installer Options > Reset > Factory Reset (also Reset WiFi, Reset Schedule, Delete all Devices, Reset Matter). An S1100 / S1200 set up without an EIM must be factory reset to get the 'use with an EIM' screen.",
+     "source": "Resideo 33-00762-02 (10/26) ElitePRO Series Thermostats, EIM, ERM & Redlink 3.0 accessories Installation Manual, Installer Options p.140; Redlink troubleshooting p.201"
+    },
+    {
+     "text": "ElitePRO 'Waiting for Equipment' is compressor protection (no error code) - up to 5 minutes. Longer than 5 minutes: look for an active alert or dry contact lockout (Equipment Status may say 'Idle (Dry contact lockout)'), or an intermittent power loss - test with only R and C on the UWP / EIM.",
+     "source": "Resideo 33-00762-02 (10/26) ElitePRO Series Thermostats, EIM, ERM & Redlink 3.0 accessories Installation Manual, Troubleshooting p.199"
+    },
+    {
+     "text": "ElitePRO alerts have no numeric error codes: Alerts icon top left of the home screen. Installer-set alerts include heat pump failure on L (ISU 2220 - with it active only backup heat runs), dry contact alerts on S (full drain pan, dirty filter, water leak, system shutdown, service needed, fan failure) and high / low indoor temperature or humidity (ISU 4150 / 4154).",
+     "source": "Resideo 33-00762-02 (10/26) ElitePRO Series Thermostats, EIM, ERM & Redlink 3.0 accessories Installation Manual p.84, p.98, p.125, p.171"
+    },
+    {
+     "text": "THX1200W7S / THX1200B8S (EIM kit thermostats YTHX1200W7 / YTHX1200B8) only have a U relay and must be paired with an EIM - there is no option to run them without one. Use EIM4010; the older THM04R3000 works with firmware 1.1.4 or later (factory date code 2337 or higher) but then no ERM4010, ANT4010 or PTAC.",
+     "source": "Resideo 33-00762-02 (10/26) ElitePRO Series Thermostats, EIM, ERM & Redlink 3.0 accessories Installation Manual p.8, p.15, p.201-202"
+    },
+    {
+     "text": "ElitePRO wireless outdoor sensor is the Redlink 3.0 C7089R3013 - the older Redlink 2.0 C7089R1013 is not compatible. Up to 20 wireless indoor sensors (C7189R3010) per thermostat.",
+     "source": "Resideo 33-00762-02 (10/26) ElitePRO Series Thermostats, EIM, ERM & Redlink 3.0 accessories Installation Manual, Redlink troubleshooting p.202"
+    }
+   ],
+   "diagnostics": [
+    {
+     "code": "WAITING FOR EQUIPMENT",
+     "meaning": "Built-in compressor protection holding off a restart (shown above the room temperature)",
+     "action": "Wait - the short cycling delay should last 5 minutes at most. If longer, check for active alerts / dry contact lockout and for intermittent power loss to the thermostat (test with only R and C connected). The installer test bypasses this delay."
+    },
+    {
+     "code": "Heat Pump Failure (L terminal alert)",
+     "meaning": "Heat pump fault input on L when ISU 2220 is set to Heat Pump Failure indication (and Lockout)",
+     "action": "When the Heat Pump Failure alert is active the thermostat runs only backup heat. Check the heat pump."
+    },
+    {
+     "code": "Economizer Failure (L terminal alert)",
+     "meaning": "Economizer fault input on L when ISU 2220 = Economizer Failure indication",
+     "action": "Check the economizer."
+    },
+    {
+     "code": "Full Drain Pan Alert",
+     "meaning": "Dry contact device on S detects the condensate drain pan is full",
+     "action": "Follow-up setting chooses whether the system shuts off or only alerts."
+    },
+    {
+     "code": "Dirty Filter Alert",
+     "meaning": "Dry contact device detects a dirty air filter (pressure drop across the filter)",
+     "action": "Replace the filter."
+    },
+    {
+     "code": "Water Leak Alert",
+     "meaning": "Dry contact device detects a water leak",
+     "action": "With a humidifier configured, a follow-up setting chooses whether the humidifier shuts off."
+    },
+    {
+     "code": "System Shutdown Alert",
+     "meaning": "Dry contact device detects a critical problem (for example smoke detection)",
+     "action": "The thermostat will not call for heating, cooling, fan or IAQ equipment until the dry contact is deactivated or the feature is no longer configured."
+    },
+    {
+     "code": "Service Needed Alert",
+     "meaning": "Dry contact device detects an issue that requires service",
+     "action": "Alert to the user."
+    },
+    {
+     "code": "Fan Failure Alert",
+     "meaning": "Dry contact device (for example a sail switch) detects no airflow for 5 minutes after a call for forced air heat, cool or fan",
+     "action": "The thermostat calls for the fan and locks out all other equipment until airflow is sensed again or the feature is no longer configured."
+    },
+    {
+     "code": "Idle (Dry contact lockout)",
+     "meaning": "Equipment Status: a custom dry contact alert set to lock out heat and / or cooling is active (it may have been snoozed or set not to show a message)",
+     "action": "Check active alerts and the dry contact device."
+    },
+    {
+     "code": "Idle (Fan Lockout)",
+     "meaning": "Equipment Status: fan locked out at the end of a cooling call (ISU 3125)",
+     "action": "Installer setting for humid regions - change ISU 3125 if not wanted."
+    },
+    {
+     "code": "Freeze Protection active",
+     "meaning": "Heat runs in cool or off mode to hold the freeze protection temperature (ISU 5170)",
+     "action": "Verify ISU 5170 and, on radiant floor heat, ISU 5150 minimum / maximum floor temperature."
+    },
+    {
+     "code": "Setting locked",
+     "meaning": "Shown when touching the up / down arrow with the screen locked",
+     "action": "Unlock under Menu > Screen lock."
+    },
+    {
+     "code": "Connection Failed - Invalid Password / No IP Address / No Internet Link",
+     "meaning": "WiFi connection was unsuccessful",
+     "action": "Invalid Password: re-enter it. No IP Address: verify the router assigns IP addresses automatically; remove the thermostat from the wall plate for 10 seconds and snap it back. No Internet Link: check router settings, Ethernet cable, reboot the router."
+    },
+    {
+     "code": "WiFi signal lost",
+     "meaning": "Thermostat lost its WiFi connection",
+     "action": "Cycle power to the thermostat (furnace switch, breaker, or off the wall plate 10 seconds or more), wait 5 minutes to reconnect; if it cannot, troubleshoot the router."
+    },
+    {
+     "code": "Datasync",
+     "meaning": "Shown on the thermostat or app",
+     "action": "Remove the thermostat from the wall plate 30 seconds and reattach. If it persists, delete the thermostat from the app and add it again; failing that, run it on a hotspot or alternate network 24 hours, then Reset WiFi and reconnect to the home network."
+    }
+   ],
+   "troubleshooting": [
+    {
+     "symptom": "Display is blank",
+     "causes": [
+      "No 24 VAC at R and C"
+     ],
+     "fixes": [
+      "Check circuit breaker and reset if necessary",
+      "Make sure the power switch for the heating and cooling system is on",
+      "Make sure the furnace door is closed securely",
+      "Make sure the C wire is connected"
+     ]
+    },
+    {
+     "symptom": "Aux heat runs in cooling (heat pump)",
+     "causes": [
+      "A wire attached to W on the UWP"
+     ],
+     "fixes": [
+      "For heat pump systems verify there is no wire on W - separate wires on W and O/B means the thermostat is mis-wired"
+     ]
+    },
+    {
+     "symptom": "Cool runs with a call for heat (heat pump)",
+     "causes": [
+      "O/B wire connection or changeover valve setting"
+     ],
+     "fixes": [
+      "Verify the O/B wire is making a good connection",
+      "Verify ISU 2060 is correct for the heat pump used"
+     ]
+    },
+    {
+     "symptom": "Auxiliary (backup) heat doesn't come on",
+     "causes": [
+      "An ISU setting restricting aux heat (differential, not allowed to run with the primary heat, high outdoor temperature lockout)",
+      "Aux wire not on the terminal assigned to backup heat",
+      "ISU 2175 set for separate aux and E when the same heat source does both"
+     ],
+     "fixes": [
+      "Go to Installer Test and try to run the aux heat",
+      "If it runs in test but not in normal operation, check the ISU settings",
+      "Verify the aux wiring matches the assigned terminal",
+      "Check ISU 2175"
+     ]
+    },
+    {
+     "symptom": "Heat doesn't come on",
+     "causes": [
+      "WAITING FOR EQUIPMENT delay",
+      "Wrong mode or set point",
+      "Wiring or R/Rc slider",
+      "Active alert lockout"
+     ],
+     "fixes": [
+      "If WAITING FOR EQUIPMENT is shown longer than 5 minutes see that row",
+      "Verify Heat, Em Heat or Auto mode and heat set point above room temperature",
+      "If HEATING TO shows and heat does not start after a short delay, have the installer verify wiring connections and the R/Rc slider on the UWP",
+      "If HEAT TO shows with the set point above room temperature, check Equipment Status for the reason",
+      "Check for active alerts"
+     ]
+    },
+    {
+     "symptom": "Cooling doesn't come on",
+     "causes": [
+      "WAITING FOR EQUIPMENT delay",
+      "Wrong mode or set point",
+      "Wiring, R/Rc slider (or R, Rh, Rc jumpers on an EIM)",
+      "Active alert lockout"
+     ],
+     "fixes": [
+      "Verify Cool or Auto mode and cool set point below room temperature",
+      "If COOLING TO shows, verify wire connections and the R/Rc slider (or EIM jumpers)",
+      "If COOL TO shows, check Equipment Status",
+      "Check for active alerts"
+     ]
+    },
+    {
+     "symptom": "Heat runs with thermostat in cool or off mode",
+     "causes": [
+      "Freeze Protection active (ISU 5170)",
+      "Radiant floor minimum floor temperature (ISU 5150)"
+     ],
+     "fixes": [
+      "Verify ISU 5170 and ISU 5150"
+     ]
+    },
+    {
+     "symptom": "Cooling runs below set point (display shows Cooling to above room temperature)",
+     "causes": [
+      "Set to over-cool for dehumidification - up to 3 degrees below the cool set point"
+     ],
+     "fixes": [
+      "If the status shows DEHUMIDIFYING, select OPTIONS and deselect USE DEHUMIDIFICATION",
+      "If COOL TO shows and cooling runs, something is wrong - turn off power to the cooling equipment and call a professional"
+     ]
+    },
+    {
+     "symptom": "Fan will not run when expected",
+     "causes": [
+      "Heat-only system has no fan setting",
+      "Fan lockout after cooling (ISU 3125)"
+     ],
+     "fixes": [
+      "Check Menu > Equipment Status for the fan state",
+      "Idle (Fan Lockout) means ISU 3125 is set"
+     ]
+    },
+    {
+     "symptom": "Fan is running unexpectedly",
+     "causes": [
+      "Fan set to run with ventilation, humidification or dehumidification",
+      "Extended fan run (ISU 3260, up to 15 minutes)",
+      "Temperature balancing",
+      "Fan On / Circ in a schedule period",
+      "Another control running the fan"
+     ],
+     "fixes": [
+      "Check Menu > Equipment Status",
+      "Check ISU 3260 and the Temperature Balancing menu"
+     ]
+    },
+    {
+     "symptom": "Cannot link the thermostat to the EIM",
+     "causes": [
+      "Incompatible EIM or firmware",
+      "EIM4010 antenna switch in the wrong position",
+      "Thermostat already configured without an EIM"
+     ],
+     "fixes": [
+      "Use EIM4010, or THM04R3000 with firmware 1.1.4 or later",
+      "Without an ANT4010 set the EIM4010 switch to Internal Antenna",
+      "Factory reset the thermostat to reach the screen that offers use with an EIM"
+     ]
+    },
+    {
+     "symptom": "Cannot link the wireless outdoor sensor",
+     "causes": [
+      "Redlink 2.0 sensor C7089R1013"
+     ],
+     "fixes": [
+      "Use the Redlink 3.0 C7089R3013"
+     ]
+    },
+    {
+     "symptom": "Display temperature reads too high or low",
+     "causes": [
+      "Feels Like Temperature on",
+      "Indoor display offset set (up to 3 degrees / +/- 12% RH)",
+      "Sensor priority set to a wireless sensor or average",
+      "Feedback on a sensor wired to the S terminals"
+     ],
+     "fixes": [
+      "Check Feels Like Temperature, display offsets and Priority",
+      "Check the S-terminal sensor is not wired in parallel to another thermostat or zone panel"
+     ]
+    }
+   ],
+   "tips": [
+    "Setup can be done on the thermostat or in the Resideo Technician app, which can save and apply company setup templates.",
+    "Emergency Heat mode is only available on a heat pump or PTAC with one or more backup heat stages; in Em Heat the heat pump is locked out.",
+    "Default set point limits: heat 40 F to 90 F, cool 50 F to 99 F (Menu > Preferences > Temperature limits).",
+    "Dual-band WiFi 2.4 and 5 GHz, Bluetooth BLE, Redlink 3.0 (900 MHz); Redlink devices re-establish communication within 6 minutes after power returns.",
+    "Video doorbell integration is S1200 only (THX1200 / YTHX1200 models)."
+   ],
+   "howTo": [
+    {
+     "label": "",
+     "note": "",
+     "topics": [
+      {
+       "title": "Installer setup, installer test and reset",
+       "steps": [
+        "Touch the Menu icon (lower left), select Thermostat Information and write down the date code.",
+        "Go back, select Installer Options and enter the date code.",
+        "Installer Setup: change ISU settings, touch NEXT to advance, DONE to save.",
+        "Installer Test: Heat, Em heat, Cool, Fan, Other (humidifier, dehumidifier, ventilator). It shuts off after 30 minutes if not ended. Compressor protection is bypassed during testing - avoid cycling the compressor quickly.",
+        "Reset: Reset Schedule, Delete all Devices, Reset Matter, Reset WiFi, Factory Reset."
+       ],
+       "notes": [],
+       "source": "Resideo 33-00762-02 (10/26) ElitePRO Series Thermostats, EIM, ERM & Redlink 3.0 accessories Installation Manual, Installer Setup p.71; Installer Options p.139-140"
+      },
+      {
+       "title": "Connect it to WiFi",
+       "steps": [
+        "Touch Menu, then WiFi. Make sure the Enable WiFi slider is to the right.",
+        "Touch Choose Network, pick the home network and enter the password. The display shows Success when it connects.",
+        "Hidden network: Menu > WiFi > Other, enter the name, pick the security setting, touch Select, enter the password.",
+        "The homeowner uses the Resideo Connect app; if the installer set up with the Resideo Technician app and sent an invite to their email, the thermostat shows in their app."
+       ],
+       "notes": [],
+       "source": "Resideo 33-00762-02 (10/26) ElitePRO Series Thermostats, EIM, ERM & Redlink 3.0 accessories Installation Manual, WiFi Setup and Troubleshooting p.121"
+      }
+     ]
+    }
+   ],
+   "manuals": [
+    {
+     "title": "ElitePRO Series Thermostats, EIM, ERM & Redlink 3.0 accessories Installation Manual (33-00762-02, 10/26)",
+     "docType": "install",
+     "url": "https://digitalassets.resideo.com/damroot/Original/10014/33-00762.pdf"
+    },
+    {
+     "title": "ElitePRO S1100 & S1200 Smart Thermostat Installer Guide (33-00706EF-02, 09/26)",
+     "docType": "install",
+     "url": "https://digitalassets.resideo.com/damroot/Original/10014/33-00706EF.pdf"
+    },
+    {
+     "title": "ElitePRO S1100 & S1200 Smart Thermostat with Redlink 3.0 Submittal Sheet (33-00741-02, 08/26)",
+     "docType": "spec",
+     "url": "https://digitalassets.resideo.com/damroot/Original/10013/33-00741.pdf"
+    }
+   ],
+   "sourceNotes": "Resideo 33-00762-02 (10/26) ElitePRO Series Thermostats, EIM, ERM & Redlink 3.0 accessories Installation Manual (206 p; covers S900 / S1000 / S1100 / S1200 - only S1100 / S1200 facts used, model-limited notes kept); online version docs.honeywellhome.com/elitepro-im; 33-00706EF-02 (Rev 09/26) ElitePRO S1100 & S1200 Installer Guide; 33-00741-02 (08/26) S1100 & S1200 Submittal Sheet.",
+   "img": ""
+  },
+  {
+   "id": "tst-lennox-l40",
+   "brand": "Lennox",
+   "family": "L40 Smart Thermostat",
+   "aka": "Lennox L40 Smart Wi-Fi Thermostat, order number 27V51 (conventional 24V, 2 heat / 1 cool universal)",
+   "models": [
+    "L40",
+    "27V51"
+   ],
+   "type": "smart-wifi",
+   "stages": "Lennox rates it 2 Heat / 1 Cool, universal: single-stage heating or cooling for gas, electric and heat pumps, including dual fuel. Heat pump: Y1 runs the compressor and W1 is the second stage of heat (or emergency heat). Setup choices are 1 Stage AC Unit or 1 Stage HP Unit outdoors and 1 Stage Electric, 1 Stage Electric No Heat or 1 Stage Gas indoors.",
+   "sort": 20,
+   "confidence": "verify",
+   "power": {
+    "cWire": "",
+    "batteries": "",
+    "notes": "Power supply 24VAC (18 to 30VAC maximum), 50/60Hz. The terminal table lists C as Common 24VAC. The L40 documents list no batteries; settings are kept in non-volatile memory during a power outage. They do not print the word 'required' for the C wire."
+   },
+   "terminals": [
+    {
+     "t": "R",
+     "fn": "24VAC power",
+     "notes": ""
+    },
+    {
+     "t": "C",
+     "fn": "Common 24VAC",
+     "notes": ""
+    },
+    {
+     "t": "Y1",
+     "fn": "First-stage heating or cooling",
+     "notes": "The back plate label and the spec sheet print this terminal as Y."
+    },
+    {
+     "t": "W1",
+     "fn": "First-stage heating (non-heat pump or emergency heat) or second-stage heating (heat pump)",
+     "notes": "The back plate label and the spec sheet print this terminal as W. On a heat pump this is the only heat terminal after the compressor - there is no W2."
+    },
+    {
+     "t": "G",
+     "fn": "Fan relay",
+     "notes": ""
+    },
+    {
+     "t": "O/B",
+     "fn": "Heat pump reversing valve. Set to O (default): relay ON in cooling, OFF in heating. Set to B: relay ON in heating, OFF in cooling. In Off mode it keeps its previous state.",
+     "notes": "Set with the O/B setting in the Dealer Service Center (see the wiring notes for where each Lennox document puts it)."
+    }
+   ],
+   "wiringNotes": [
+    "Six terminals only: R, C, Y1, W1, G and O/B (back plate label R Y W G O/B C). There is no Y2, W2, aux, humidifier or dehumidifier terminal on the L40.",
+    "The system wiring diagrams are on the fold-out Lennox L40 Smart Thermostat Diagrams sheet that comes in the box; the Installation and Setup Guide itself prints only the terminal table.",
+    "Replacement: note the wire colors and the terminals they were on before removing the old thermostat. If the old thermostat's terminals were different, use the terminal table and the wiring diagrams in the kit.",
+    "Seal the hole in the wall with a suitable material to keep drafts out of the thermostat case - Lennox says not doing so could affect the thermostat's internal temperature sensor.",
+    "Wire opening 3/4 x 3/4 in. Pull about 3 in. of thermostat wire through and strip 1/4 in. of insulation from each lead. Mount about 5 ft above the floor, away from drafts, ducts, sun, hidden pipes and outside walls.",
+    "Once on the back plate it may take up to 45 seconds to power up. Taking it off the back plate shuts it down and it cannot talk to the system. Do not remove the label covering the screen until power is applied.",
+    "O/B setting location: the terminal table says settings > advanced settings > terminal settings; the guide's parameter table lists O/B Mode under Equipment Settings > Thermostat; the spec sheet lists O/B Terminal under Non-Communicating Equipment > Outdoor (1 Stage AC Unit and 1 Stage Heat Pump). Look in the Dealer Service Center Equipment Settings.",
+    "Lennox: improper installation, adjustment, alteration, service or maintenance can cause property damage or personal injury. Installation and service must be performed by a qualified installer and servicing agency."
+   ],
+   "setup": {
+    "access": "Lennox recommends full setup in the Lennox Smart Tech app (Setup Route 'Smart Tech App (Recommended)' - all information is added from the phone); the other route, 'L40 Thermostat', adds only partial information on the thermostat. Smart Tech pairs over Bluetooth, then makes a direct Wi-Fi connection to the L40; it only connects locally near the thermostat, not through the home Wi-Fi or the Internet, needs iOS 15.0+ or Android 12.0+, and the thermostat drops the connection after 30 minutes idle. On the thermostat the installer settings are in the Dealer Service Center: Menu > Advanced Settings > View Support Service Control Center (a warning says the screens are for qualified Lennox equipment installers only). The spec sheet notes additional settings are available only in the Smart Tech app. Factory values are shown in [brackets].",
+    "keySettings": [
+     {
+      "setting": "Setup Route",
+      "options": "[Smart Tech App (Recommended)], L40 Thermostat",
+      "notes": "Offered on the first power-up after Language."
+     },
+     {
+      "setting": "Indoor Unit",
+      "options": "[Not Installed], 1 Stage Electric No Heat, 1 Stage Electric, 1 Stage Gas",
+      "notes": "Initial setup on the thermostat."
+     },
+     {
+      "setting": "Outdoor Unit",
+      "options": "[Not Installed], 1 Stage AC Unit, 1 Stage HP Unit",
+      "notes": "A heat pump has to be set here."
+     },
+     {
+      "setting": "Outdoor Unit Capacity",
+      "options": "18 to 60 kBtu, [36 kBtu]",
+      "notes": ""
+     },
+     {
+      "setting": "O/B Terminal (O/B Mode)",
+      "options": "[O (Cooling)], B (Heating)",
+      "notes": "O: reversing valve relay ON in cooling. B: relay ON in heating."
+     },
+     {
+      "setting": "Compressor Short Cycle Delay",
+      "options": "60 to 300 sec, [300 sec]",
+      "notes": "Listed under the 1 Stage AC Unit and 1 Stage Heat Pump outdoor equipment."
+     },
+     {
+      "setting": "Balance Point Control",
+      "options": "[Disabled], Enabled",
+      "notes": "The guide describes Balance Point Control 'via Internet Weather' and says the balance points need a sensed outdoor temperature (its wording mentions an outdoor sensor or a communicating heat pump, but the L40 has no outdoor sensor terminal; the High Balance Point is only supported by Internet weather). Shown for dual fuel or heat pump with electric heat. When enabled both balance points can be set."
+     },
+     {
+      "setting": "High Balance Point",
+      "options": "From (Low Balance Point + 2) up to 75 F, [50 F]",
+      "notes": "Only supported by weather information from an Internet connection. Above it the auxiliary heat stage is disallowed and the heat pump must carry the load. Can be disabled on this screen."
+     },
+     {
+      "setting": "Low Balance Point",
+      "options": "-20 to 72 F, [25 F], 1 F steps",
+      "notes": "Keeps the heat pump from heating; below it only auxiliary heat is used."
+     },
+     {
+      "setting": "1st Stage Differential",
+      "options": "0.5 to 3 F, [1.0 F], 0.5 F steps",
+      "notes": ""
+     },
+     {
+      "setting": "2nd Stage Differential",
+      "options": "0.5 to 8 F, [1.0 F]",
+      "notes": "The guide: stage 2-6 differentials apply to heat pumps in electric configurations when the outdoor temperature is between the high and low balance points."
+     },
+     {
+      "setting": "Staged Delay Timers",
+      "options": "Enabled, [Disabled]",
+      "notes": "Duration is fixed. If the first stage does not move the room 1.0 F toward setpoint within the delay time, the second stage comes on. The guide notes it applies to heat pumps in electric configurations for Balance Point control."
+     },
+     {
+      "setting": "Aux Heating Activation",
+      "options": "0 to 10 F, [2.5 F]",
+      "notes": "Range and default as printed in the spec sheet; no description is printed."
+     },
+     {
+      "setting": "Outdoor Temperature",
+      "options": "-10 to 10 F, [0 F]",
+      "notes": "Range and default as printed in the spec sheet; no description is printed."
+     },
+     {
+      "setting": "Temp Reading Calibration",
+      "options": "-5 to 5 F, [0 F]",
+      "notes": "Adjusts the displayed temperature when independent readings show it is off."
+     },
+     {
+      "setting": "Auto-Changeover - Temp Deadband",
+      "options": "3 to 9 F, [3 F], 1 F steps",
+      "notes": ""
+     },
+     {
+      "setting": "Max Heat Setpoint",
+      "options": "60 to 90 F, [90 F]",
+      "notes": ""
+     },
+     {
+      "setting": "Min Cool Setpoint",
+      "options": "60 to 90 F, [60 F]",
+      "notes": ""
+     },
+     {
+      "setting": "Min Gas Heating Off Time",
+      "options": "1.5 to 10 min, [1.5 min]",
+      "notes": ""
+     },
+     {
+      "setting": "Smooth Setback Recovery",
+      "options": "[Enabled], Disabled",
+      "notes": "Starts early to reach the next occupied setpoint (looks 2 hours ahead). Does not turn off stage delay timers."
+     },
+     {
+      "setting": "Heat Cool Stages Locked In",
+      "options": "[Disabled], Enabled",
+      "notes": "Enabled turns heat/cool stages off together. Non-variable capacity systems only."
+     },
+     {
+      "setting": "Heat Alert Temperature",
+      "options": "80 to 100 F, [90 F]",
+      "notes": "Notifies the homeowner when the indoor temperature reaches this setting."
+     },
+     {
+      "setting": "Group ID",
+      "options": "0 to 9, [1]",
+      "notes": "Group 0 = no connectivity with another thermostat. Lennox recommends no more than 5 thermostats per group."
+     },
+     {
+      "setting": "Wide Setpoint",
+      "options": "[Off], On",
+      "notes": "Widens the setpoint range. The documents print different widened ranges (see Tips)."
+     },
+     {
+      "setting": "Screen Saver",
+      "options": "Off, [Power Save], Dim",
+      "notes": ""
+     },
+     {
+      "setting": "Reminders - Replace Filter 1, Replace Filter 2, Maintenance Reminder",
+      "options": "3, 6, 12, 24 months, [disabled]",
+      "notes": "As printed in the spec sheet's initial setup table. The Installation Guide's thermostat setup route offers 3 months, 6 months, 12 months or Disabled for the UV bulb and maintenance reminders (no 24 months) - the documents differ."
+     }
+    ],
+    "installerTest": "The Installation and Setup Guide: after commissioning in Lennox Smart Tech choose Run Test, select or deselect the components and touch Start, then scroll through the results for each HVAC component; the Dealer Service Center also lists Tests and Diagnostics. Its installation checklist gives the thermostat path as settings > advanced settings > view dealer control center > select tests. The spec sheet's list of Dealer Service Center items on the thermostat itself (Connect to Mobile App, Equipment Settings, Notifications, Installation Report, Information) does not include Tests. No list of test modes or time limit is printed.",
+    "factoryReset": "Factory Reset: Menu > Advanced Settings > View Support Service Control Center > OK > Equipment Settings > Reset > Factory Reset. It unregisters the thermostat and resets Zoning, Air Flow and Ventilation settings; the homeowner account and home profile are not affected. Re-Configure System (same path, Reset > Re-Configure System) resets the existing outdoor / indoor units and settings. Restart: Menu > Advanced Settings > Restart. The documents disagree on what Restart clears: the guide's restart table says the account, home profile and Zoning, Air Flow and Ventilation settings are not affected, and the spec sheet says Restart Thermostat restarts the system without affecting settings - but the guide's parameter table describes Restart Thermostat as erasing thermostat settings and restarting installer setup."
+   },
+   "techTips": [
+    {
+     "text": "Lennox L40 installer setup: Menu > Advanced Settings > View Support Service Control Center (Dealer Service Center) > Equipment Settings. Lennox recommends doing the full setup in the Lennox Smart Tech app (Bluetooth, then a direct Wi-Fi link to the thermostat); some settings are only in the app.",
+     "source": "Lennox L40 Installation and Setup Guide 508674-01 (3/2025) p.7, p.13; L40 Product Specifications (EHB) 210878 (March 2025) p.12-13"
+    },
+    {
+     "text": "L40 heat pump O/B: the O/B Terminal setting is O (Cooling) from the factory, or B (Heating). O energizes the reversing valve in cooling, B in heating; in Off mode the terminal keeps its previous state. Set Outdoor Unit to 1 Stage HP Unit first.",
+     "source": "Lennox 508674-01 p.4 (Tables 2 and 3), p.15; EHB 210878 p.12, p.14"
+    },
+    {
+     "text": "L40 aux heat on a heat pump: the strips land on W1 (W) - on a heat pump W1 is second-stage heat or emergency heat; there is no W2. Set Indoor Unit to 1 Stage Electric. Balance Point Control (factory Disabled) adds a Low Balance Point (factory 25 F, only aux heat below it) and a High Balance Point (factory 50 F, no aux heat above it, Internet weather only).",
+     "source": "Lennox 508674-01 p.4, p.14; EHB 210878 p.12, p.14, p.16"
+    },
+    {
+     "text": "L40 C wire: the six terminals are R, C, Y1, W1, G, O/B; C is common 24VAC and the power supply is 24VAC (18 to 30VAC max). Lennox lists no batteries for the L40.",
+     "source": "Lennox 508674-01 p.4; EHB 210878 p.16"
+    },
+    {
+     "text": "L40 reset: Restart = Menu > Advanced Settings > Restart. Factory reset = Menu > Advanced Settings > View Support Service Control Center > OK > Equipment Settings > Reset > Factory Reset (unregisters the thermostat). Re-Configure System is in the same Reset menu.",
+     "source": "Lennox 508674-01 p.26-27"
+    },
+    {
+     "text": "L40 alert codes / error codes (Dealer Service Center > Notifications): 29 Over Temperature Protection, 30 Low Temperature Protection, 610 Low Room Temperature Detected, 611 High Room Temperature Detected, 700 Thermostat Temp Sensor Problem, 3000 Replace Filter 1, 3001 Filter 2, 3004 Maintenance Reminder.",
+     "source": "Lennox 508674-01 p.20-21; L40 User Guide 508724-01 (04/2026) p.19"
+    },
+    {
+     "text": "L40 vs S40 / E30 / E40: the L40 is a conventional 24V wall thermostat for single-stage equipment (Lennox rates it 2 heat / 1 cool) wired R, C, Y1, W1, G, O/B. The S40 is a communicating control wired R, C, I+, I- (RSBus). The E30 wires the equipment to a Smart Hub with W1-W3, Y1-Y2, O, B, DS and H terminals. The E40 handles 2 heat / 2 cool or 4 heat / 2 cool with Y2 and W2. Lennox says the S30, L40 and S40 do not communicate with each other even on the same network.",
+     "source": "EHB 210878 p.1, p.16; 508674-01 p.4, p.12; S40 Product Specifications 210953 (June 2026) p.4; E30 Installation and Setup Guide 507686-06 (6/2021) p.6; E40 Product Specifications 211256 (April 2026) p.1, p.3"
+    },
+    {
+     "text": "L40 Wi-Fi: 2.4 GHz only (no 5 GHz), WPA / WPA2 / WPA3, network name up to 32 characters, password up to 63 characters with no spaces or % symbol, never a guest network. Signal is enough between -1 and -69 RSSI.",
+     "source": "Lennox 508674-01 p.12-13"
+    }
+   ],
+   "diagnostics": [
+    {
+     "code": "29",
+     "meaning": "Over Temperature Protection (Service Urgent). The thermostat reads an indoor temperature higher than 90 F (factory default) and will not allow any heating operation to begin until it senses an indoor temperature lower than 90 F.",
+     "action": "Heating operation is not allowed. Check that the heating equipment is not stuck ON (reversing valve, etc.). Check the accuracy of the thermostat temperature sensor. Select cooling mode to cool the space below 90 F. Clears automatically when the system detects the issue no longer exists."
+    },
+    {
+     "code": "30",
+     "meaning": "Low Temperature Protection (Service Soon / Service Urgent). The thermostat will not allow any cooling operation to begin until it senses a temperature higher than 40 F.",
+     "action": "Cooling operation is not allowed. Check that the cooling equipment is not stuck ON. Check the accuracy of the thermostat temperature sensor. Select heating mode to heat the space above 40 F. Clears automatically when the system detects the issue no longer exists."
+    },
+    {
+     "code": "610",
+     "meaning": "Low Room Temperature Detected (Service Urgent). Freeze alert protection parameter range 30 F to 50 F, default 40 F. Notification needs an active Wi-Fi connection and a user account with a valid email address.",
+     "action": "Clears automatically when the condition is resolved."
+    },
+    {
+     "code": "611",
+     "meaning": "High Room Temperature Detected (Service Urgent). Heat alert protection parameter range 80 F to 100 F, default 90 F. Notification needs an active Wi-Fi connection and a user account with a valid email address.",
+     "action": "Clears automatically when the condition is resolved."
+    },
+    {
+     "code": "700",
+     "meaning": "Thermostat Temp Sensor Problem (Service Urgent). The display's internal temperature sensor is not operating correctly.",
+     "action": "As printed (the guide words it for an 'HD display' on a 'mag-mount'): remove the display from the mount and reattach it; seal the hole in the wall behind the mount; run 'reset all' under the dealer control center; if the issue persists, replace the display. Clears automatically when the system detects the issue no longer exists."
+    },
+    {
+     "code": "3000",
+     "meaning": "Replace Filter 1 (Maintenance)",
+     "action": "Reset the filter reminder."
+    },
+    {
+     "code": "3001",
+     "meaning": "Filter 2 reminder (Maintenance) - listed in the User Guide's maintenance alerts table only",
+     "action": "The guides print no separate clearing step for 3001."
+    },
+    {
+     "code": "3004",
+     "meaning": "Maintenance Reminder (Maintenance)",
+     "action": "Make a service appointment with the dealer and reset the reminder."
+    }
+   ],
+   "troubleshooting": [
+    {
+     "symptom": "'Will start soon' on the screen and the compressor does not start",
+     "causes": [
+      "A five minute safety delay keeps the compressor from starting too soon after shut-down so internal pressures can equalize"
+     ],
+     "fixes": [
+      "No action printed - it is a safety delay. The installer setting Compressor Short Cycle Delay is 60 to 300 sec, factory 300 sec"
+     ]
+    },
+    {
+     "symptom": "'Ambient lockout' on the home screen - heat pump or strips not running",
+     "causes": [
+      "The outdoor temperature is above or below the balance point settings: below the Low Balance Point only auxiliary heat is used; above the High Balance Point auxiliary heat is not allowed"
+     ],
+     "fixes": [
+      "The User Guide says the balance point settings can be adjusted by the dealer (Dealer Service Center > Equipment Settings > Thermostat)"
+     ]
+    },
+    {
+     "symptom": "'System Under Test' after a power outage",
+     "causes": [
+      "After a power interruption the thermostat looks for the indoor and outdoor controls; the outdoor control can take longer to boot and not answer"
+     ],
+     "fixes": [
+      "Recycling power to the system may resolve the issue"
+     ]
+    },
+    {
+     "symptom": "Thermostat screen blank or not controlling",
+     "causes": [
+      "Thermostat taken off the back plate - it shuts down and cannot communicate with the system",
+      "Just installed - it may take up to 45 seconds to power up"
+     ],
+     "fixes": [
+      "Line it up with the back plate and press on the edges until the mounting snaps engage (not on the glass)"
+     ]
+    },
+    {
+     "symptom": "Will not connect to Wi-Fi or keeps dropping",
+     "causes": [
+      "5 GHz network (L40 supports 2.4 GHz only)",
+      "Network name over 32 characters, password over 63 characters or containing spaces or %",
+      "Guest network or unsecured network",
+      "Weak signal (outside -1 to -69 RSSI) or interference from microwaves, cameras, cordless phones, baby monitors, Bluetooth devices, garage door openers"
+     ],
+     "fixes": [
+      "Use a secured (WPA, WPA2 or WPA3) 2.4 GHz home network, never a guest account",
+      "Relocate the router closer, add a repeater, or move the thermostat; adjusting the router or extender antenna may help",
+      "Confirm at Menu > Wi-Fi on the thermostat - Connected should display"
+     ]
+    },
+    {
+     "symptom": "Lennox Smart Tech app loses the thermostat",
+     "causes": [
+      "The thermostat auto-disconnects after 30 minutes idle",
+      "Smart Tech only connects locally within Wi-Fi range of the thermostat - not through the home Wi-Fi or the Internet"
+     ],
+     "fixes": [
+      "Stay near the thermostat and repeat the connection steps (Dealer Service Center > Connect to Mobile App > Discover > Start)"
+     ]
+    },
+    {
+     "symptom": "Dealer cannot see the thermostat or its alerts in the LennoxPros Service Dashboard",
+     "causes": [
+      "Dealer main phone number or company name not added during commissioning",
+      "Homeowner has not granted Monitoring and/or Advanced Diagnostic access"
+     ],
+     "fixes": [
+      "Add the dealer information (Menu > Lennox Dealer Support Access > Local Lennox Dealer Info) and, with the homeowner's permission, turn on Remote Sharing, Alerts and Notifications and Advanced Diagnostics under Dealer Support Access"
+     ]
+    }
+   ],
+   "tips": [
+    "Order number 27V51. ENERGY STAR certified; limited five-year warranty in residential applications.",
+    "Compressor short-cycle protection 5 minutes; non-volatile memory keeps all programming in a power outage; clock accuracy +/- 10 minutes per year.",
+    "Setpoint ranges: the spec sheet prints heating 60 to 87 F and cooling 63 to 90 F, widened in the Lennox Home app to heating 40 to 99 F and cooling 60 to 99 F. The Installation Guide says Wide Setpoint changes the 60-90 F range to 44-99 F; the User Guide says 60-90 F to 40-99 F.",
+    "Fan Circulate runs 9 to 27 minutes per hour (spec sheet default 21 minutes).",
+    "Modes: Heat/Cool, Heat Only, Cool Only, Emergency Heat (heat pump systems only) and Off.",
+    "Works with Amazon Alexa, Google Assistant, Control4 and Building36.",
+    "Dealer remote access: with the homeowner's permission, Menu > Lennox Dealer Support Access > Dealer Support Access turns on Remote Sharing, Alerts and Notifications and Advanced Diagnostics. A Temporary Advanced Diagnostics request from the Service Dashboard gives 24 hours of access.",
+    "Lennox residential technical support for installers: 1-800-453-6669."
+   ],
+   "howTo": [
+    {
+     "label": "",
+     "note": "Schedules, fan run time and most homeowner settings are made in the Lennox Home app.",
+     "topics": [
+      {
+       "title": "Commission with the Lennox Smart Tech app",
+       "steps": [
+        "Power up the thermostat and pick the language (English, Francais, Espanol).",
+        "On Choose Setup Route pick Smart Tech App. Answer whether the app is installed; if not, the thermostat shows QR codes to download it.",
+        "Touch Start on the Connect to Technician App screen - the thermostat broadcasts its ID.",
+        "In the app touch Connect to a Thermostat, pick the L40 ID that matches the thermostat screen, then Connect to the DIRECT- network it shows.",
+        "Follow the app screens: Dealer Information (ties the thermostat to your LennoxPros account), General Information, Lennox Home Configuration (import captured equipment or add indoor / outdoor units manually), Reminders, System Name.",
+        "At Commissioning Process Complete pick Finish, then Run Test or the Dealer Service Center."
+       ],
+       "notes": [
+        "The phone must have Bluetooth and Wi-Fi and be in the home near the thermostat. Idle for 30 minutes the thermostat disconnects."
+       ],
+       "source": "Lennox L40 Installation and Setup Guide 508674-01 (3/2025) p.7-10"
+      },
+      {
+       "title": "Connect the L40 to home Wi-Fi",
+       "steps": [
+        "After pairing, open Select a Wi-Fi Network in the Lennox Home app, pick the home network and enter its password.",
+        "Hidden network: choose Other, enter the network name, pick the security (WPA, WPA2 or WPA3) and the password.",
+        "Touch Finish on the thermostat when Connected to Wi-Fi shows. Check later at Menu > Wi-Fi - it should show Connected."
+       ],
+       "notes": [
+        "2.4 GHz only. Never a guest network."
+       ],
+       "source": "Lennox L40 Installation and Setup Guide 508674-01 (3/2025) p.12-13"
+      }
+     ]
+    }
+   ],
+   "manuals": [
+    {
+     "title": "Lennox L40 Smart Thermostat Installation and Setup Guide (508674-01, 3/2025)",
+     "docType": "install",
+     "url": "https://s7d9.scene7.com/is/content/lennoxinternational/508674-01-000"
+    },
+    {
+     "title": "Lennox L40 Smart Thermostat User Guide (508724-01, 04/2026)",
+     "docType": "user",
+     "url": "https://s7d9.scene7.com/is/content/lennoxinternational/508724-01-000"
+    },
+    {
+     "title": "L40 Smart Wi-Fi Thermostat Residential Product Specifications (EHB) (Form 210878, March 2025)",
+     "docType": "spec",
+     "url": "https://www.lennox.com/dA/aa03b57c4e/ehb_l40_2503.pdf"
+    }
+   ],
+   "sourceNotes": "Lennox 508674-01 L40 Smart Thermostat Installation and Setup Guide (3/2025, supersedes 1/2025); Lennox 508724-01 L40 Smart Thermostat User Guide (04/2026, supersedes 12/2025); Lennox L40 Residential Product Specifications (EHB) Form 210878 (March 2025, order no. 27V51). Comparison only: Lennox S40 Product Specifications 210953 (June 2026) p.4; iComfort E30 Installation and Setup Guide 507686-06 (6/2021) p.6; E40 Product Specifications 211256 (April 2026) p.1.",
+   "img": ""
+  },
+  {
+   "id": "tst-ecobee-lite-pro",
+   "brand": "ecobee",
+   "family": "Smart Thermostat Lite (Pro)",
+   "aka": "ecobee for Pro Smart Thermostat Lite - sold only to contractors; Rheem / Ruud version: ecobee Smart Thermostat Lite | Works with EcoNet Technology. ecobee's documents print no model number for it.",
+   "models": [],
+   "type": "smart-wifi",
+   "stages": "Conventional: up to 2 heat / 2 cool. Heat pump (air, water and geothermal): up to 2 compressor stages and 2 stages of aux heat (the spec sheets call it Heat Pump 4H/2C). 2- and 4-pipe fan coil units with up to 3 fan speeds (pipe sensors supported), PTAC up to 3 fan speeds, boilers. One 1-wire accessory (dehumidifier, humidifier, ventilator, HRV or ERV) on ACC.",
+   "sort": 15,
+   "confidence": "verify",
+   "power": {
+    "cWire": "required",
+    "batteries": "None",
+    "notes": "Hardwired 24 VAC; the spec sheet says batteries are not required. No C wire: the Power Extender Kit (PEK, sold separately) on G/PEK - the PEK is not compatible with dual transformer, fan coil or communicating units. Power consumption 3 VA."
+   },
+   "terminals": [
+    {
+     "t": "G/PEK",
+     "fn": "Fan or Power Extender Kit (PEK)",
+     "notes": ""
+    },
+    {
+     "t": "Rc",
+     "fn": "Cool transformer or single transformer setup",
+     "notes": ""
+    },
+    {
+     "t": "Rh",
+     "fn": "Heat transformer",
+     "notes": ""
+    },
+    {
+     "t": "OB",
+     "fn": "Heat pump reversing valve",
+     "notes": ""
+    },
+    {
+     "t": "Y1, Y2",
+     "fn": "1-2 stages of conventional A/C or 1-2 stages of heat pump compressor",
+     "notes": ""
+    },
+    {
+     "t": "W1, W2",
+     "fn": "1-2 stages of conventional heat or 1-2 stages of auxiliary heat with heat pump",
+     "notes": "On a heat pump the aux heat (heat strips) lands on W1 and W2."
+    },
+    {
+     "t": "C",
+     "fn": "24VAC common",
+     "notes": ""
+    },
+    {
+     "t": "ACC",
+     "fn": "1-wire dehumidifiers, humidifiers, ventilators, HRVs or ERVs",
+     "notes": "Spec sheets: self-powered accessories will require an additional 24V isolation relay."
+    }
+   ],
+   "wiringNotes": [
+    "ecobee IMPORTANT - turn off power: power off the HVAC system with the master switch or circuit breaker box.",
+    "ecobee WARNING: the thermostat is designed for 24VAC equipment. Do not connect it to line (high) voltage or millivolt systems. Limit 2A maximum current per terminal.",
+    "No common wire: the Power Extender Kit (PEK) extends a C wire when a physical wire is not available. The PEK is not compatible with dual transformer, fan coil or communicating units.",
+    "When using a PEK with a heat pump system, the O/B terminal is wired directly to the thermostat.",
+    "Heat pump diagram (air or geothermal with auxiliary heat): every thermostat wire lands at the air handler - OB to O/B, Rc to R, C, G, Y1, Y2, W1 (aux) and W2 (aux) - and the heat pump is wired from the air handler terminals. Y2 / W2 (dashed) only if the second stage applies. Heat pumps use an internet-based weather feed and do not require an outdoor temp sensor and/or a dual-fuel kit.",
+    "Fan coil and PTAC diagrams: G1, G2, G3 may also be labeled GL, GM, GH.",
+    "Self-powered accessories will require an additional 24V isolation relay (both spec sheets)."
+   ],
+   "setup": {
+    "access": "Threshold settings can only be changed on the thermostat (not in the ecobee app): Menu > Settings > Installation Settings > Thresholds; accessories are under Menu > Settings > Installation Settings > Equipment. Installer Code (default Disabled) restricts access to Installation Settings; code 3262 permits access. Initial setup: ecobee calls it Pro First Run Setup; the Rheem EcoNet version's spec sheet says the Contractor App is required for initial ecobee setup. Defaults below are the ones the wiring guide prints.",
+    "keySettings": [
+     {
+      "setting": "Auto Heat/Cool",
+      "options": "Default Enabled",
+      "notes": "In Auto the thermostat engages heating and cooling as necessary."
+     },
+     {
+      "setting": "Heat/Cool Min Delta",
+      "options": "Default 5 F",
+      "notes": "Minimum difference between heat and cool setpoints in Auto."
+     },
+     {
+      "setting": "Configure Staging",
+      "options": "Default Automatic; Manual",
+      "notes": "Manual opens the Manual Setting Options (differentials, dissipation times, stage deltas, max runtimes)."
+     },
+     {
+      "setting": "Compressor Min Cycle Off Time",
+      "options": "Default 300 seconds",
+      "notes": ""
+     },
+     {
+      "setting": "Compressor Min Outdoor Temperature",
+      "options": "Default AC - 35 F / Heatpump - User defined",
+      "notes": "The AC or heat pump compressor will not run below this outdoor temperature."
+     },
+     {
+      "setting": "AC Overcool Max",
+      "options": "Default Disabled",
+      "notes": "Lets the A/C overcool past the cool setpoint to help decrease humidity."
+     },
+     {
+      "setting": "Heat Min On Time",
+      "options": "Default 5 minutes",
+      "notes": "Furnace / boiler minimum on time during a heat call."
+     },
+     {
+      "setting": "Compressor Min On Time",
+      "options": "Default 5 minutes",
+      "notes": ""
+     },
+     {
+      "setting": "Temperature Correction",
+      "options": "Default +0F",
+      "notes": ""
+     },
+     {
+      "setting": "Humidity Correction",
+      "options": "Default +0%",
+      "notes": ""
+     },
+     {
+      "setting": "Thermal Protect",
+      "options": "Default Disabled",
+      "notes": ""
+     },
+     {
+      "setting": "Installer Code",
+      "options": "Default Disabled",
+      "notes": "When enabled, restricts access to Installation Settings (Code 3262 permits access)."
+     },
+     {
+      "setting": "Aux Savings Optimization (heat pump only)",
+      "options": "Default 2 F",
+      "notes": "Simplifies heat pump to aux staging based on savings vs. comfort; the higher the setting, the more comfort is sacrificed for savings."
+     },
+     {
+      "setting": "Aux Heat Max Outdoor Temperature (heat pump only)",
+      "options": "Default 50 F",
+      "notes": "Aux heat will not run above this outdoor temperature."
+     },
+     {
+      "setting": "Aux Min On Time (heat pump only)",
+      "options": "Default 5 minutes",
+      "notes": ""
+     },
+     {
+      "setting": "Compressor To Aux Temperature Delta (heat pump only)",
+      "options": "Default Auto",
+      "notes": "Minimum degrees from setpoint before aux heat is engaged."
+     },
+     {
+      "setting": "Compressor to Aux Runtime (heat pump only)",
+      "options": "Default Auto",
+      "notes": "Minimum minutes the heat pump compressor runs before switching to aux heat."
+     },
+     {
+      "setting": "Aux Reverse Staging (heat pump only)",
+      "options": "Default Off",
+      "notes": "Wiring guide: when enabled, aux heat will be engaged if the current temperature is greater than the value designated in the Compressor to Aux Temperature Delta setting. ecobee support article describes it differently: disengages auxiliary heat near the end of a heating cycle to rely on the heat pump."
+     },
+     {
+      "setting": "Heat Differential Temperature (manual staging)",
+      "options": "Default 0.5 F",
+      "notes": ""
+     },
+     {
+      "setting": "Heat / Cool Dissipation Time (manual staging)",
+      "options": "Default Auto",
+      "notes": "Fan run time after the heating / cooling cycle."
+     },
+     {
+      "setting": "Cool Differential Temperature (manual staging)",
+      "options": "Default Auto",
+      "notes": ""
+     },
+     {
+      "setting": "Compressor Reverse Staging / Heat Reverse Staging (manual staging)",
+      "options": "Default Off",
+      "notes": ""
+     },
+     {
+      "setting": "Compressor Stage 2 Temperature Delta / Compressor Stage 1 Max Runtime (manual staging)",
+      "options": "Default Auto",
+      "notes": ""
+     },
+     {
+      "setting": "Heat Stage 2 Temp Delta / Heat Stage 1 Max Runtime (manual staging)",
+      "options": "Default Auto",
+      "notes": ""
+     },
+     {
+      "setting": "Humidifier - Evaporative or Steam / Min Runtime Delta / Window Efficiency",
+      "options": "User defined / 5% / 2",
+      "notes": "Equipment menu. Window Efficiency: the Frost Control setting uses the efficiency rating to set the desired humidity within 15 to 50%."
+     },
+     {
+      "setting": "Dehumidifier - Dehumidify with Fan / Min Runtime Delta / Dehumidify in Heat Mode / Dehumidifier Active",
+      "options": "Yes / 5% / No / User defined",
+      "notes": "Equipment menu."
+     },
+     {
+      "setting": "Ventilator - Pre-Occupancy Purge / Free Cooling Max Outdoor Temperature / Indoor/Outdoor Temperature Delta / Max Desired Temperature Delta",
+      "options": "Disabled / 72 F / 2 F / Disabled",
+      "notes": "Equipment menu. The guide prints the Free Cooling Max Outdoor Temperature and Pre-Occupancy Purge rows twice; the second Free Cooling row describes maximum outdoor humidity (default Disabled)."
+     },
+     {
+      "setting": "Reminders: HVAC Maintenance / Furnace Filter / UV Lamp",
+      "options": "Enabled, 6 months / Enabled, 3 months / Disabled",
+      "notes": "Menu > Reminders and Alerts > Preferences."
+     }
+    ],
+    "installerTest": "The wiring guide prints no equipment test procedure.",
+    "factoryReset": "Menu > Settings > Reset (Lite and Essential path). Reset Schedule and Preferences keeps the equipment configuration and registration; Reset Registration unlinks the account but keeps settings; Reset All returns the thermostat to factory settings - ecobee warns that the heating and cooling (HVAC) system settings will be lost and a technician may be needed to reconfigure them. ecobee also says a Reset All will not fix heating, cooling or internet problems in most cases."
+   },
+   "techTips": [
+    {
+     "text": "Installer setup on the ecobee Smart Thermostat Lite: Menu > Settings > Installation Settings > Thresholds (and > Equipment). Thresholds can only be changed on the thermostat, not in the ecobee app. If an installer code is turned on, ecobee's code 3262 opens it.",
+     "source": "ecobee Smart Thermostat Lite Pro Wiring Guide 465-00456 Rev C (file dated 2024-07-25), Installation Settings; Threshold settings for ecobee thermostats (support.ecobee.com article, read 17 Nov 2026)"
+    },
+    {
+     "text": "Heat pump with aux heat strips: Y1/Y2 compressor, W1/W2 aux heat, OB reversing valve. Heat pumps use the internet weather feed - no outdoor sensor or dual-fuel kit needed. Aux heat will not run above Aux Heat Max Outdoor Temperature (default 50 F).",
+     "source": "ecobee Smart Thermostat Lite Pro Wiring Guide 465-00456 Rev C (file dated 2024-07-25), Terminal Descriptions, heat pump diagram and Installation Settings"
+    },
+    {
+     "text": "No C wire on the ecobee Lite: use the Power Extender Kit (PEK, sold separately) on G/PEK. The PEK does not work with dual transformer, fan coil or communicating units, and with a PEK on a heat pump the O/B wire goes straight to the thermostat.",
+     "source": "ecobee Smart Thermostat Lite Pro Wiring Guide 465-00456 Rev C (file dated 2024-07-25), No common wire and PEK notes"
+    },
+    {
+     "text": "ecobee Lite reset: Menu > Settings > Reset. Reset All wipes it to factory settings and the HVAC equipment setup is lost - re-run the installer setup after. Reset Schedule and Preferences keeps the equipment setup.",
+     "source": "Resetting your ecobee thermostat (support.ecobee.com article, read 17 Nov 2026)"
+    },
+    {
+     "text": "24 VAC only - never on line voltage or a millivolt system; 2 A maximum per terminal. A self-powered accessory on ACC needs an additional 24V isolation relay.",
+     "source": "ecobee Smart Thermostat Lite Pro Wiring Guide 465-00456 Rev C (file dated 2024-07-25), WARNING; ecobee for Pro Smart Thermostat Lite spec sheet (2024), HVAC accessory support"
+    },
+    {
+     "text": "Carrier and Bryant sell their own ecobee Lite, listed by Carrier as 'ecobee for Carrier / for Bryant Smart Thermostat Lite' - for those see the ecobee for Carrier / for Bryant card; Carrier IM-HK-05 covers the InteliSense relearn after a control board change.",
+     "source": "Carrier IM-HK-05 InteliSense/SmartSense Equipment Relearning (06/26), Table 1 and section 2.1"
+    }
+   ],
+   "diagnostics": [
+    {
+     "code": "Low Temp Alert",
+     "meaning": "Generated when indoor temperature meets or exceeds this setting (default Enabled, 50 F).",
+     "action": "Set under Menu > Reminders and Alerts > Preferences."
+    },
+    {
+     "code": "High Temp Alert",
+     "meaning": "Generated when indoor temperature meets or exceeds this setting (default Enabled, 92 F).",
+     "action": "Set under Menu > Reminders and Alerts > Preferences."
+    },
+    {
+     "code": "Aux Outdoor Temp Alert",
+     "meaning": "Generated when Aux Heat is used at this outdoor value or above (default Disabled).",
+     "action": "Set under Menu > Reminders and Alerts > Preferences."
+    },
+    {
+     "code": "Aux Heat Runtime Alert",
+     "meaning": "Generated when Aux Heat meets or exceeds this runtime in a 24hr period (default Disabled).",
+     "action": "Set under Menu > Reminders and Alerts > Preferences."
+    },
+    {
+     "code": "Heating / Cooling alert",
+     "meaning": "Indicates the system has failed to heat or cool the indoor location (Enable Heating/Cooling Alerts, default Enabled).",
+     "action": "Set under Menu > Reminders and Alerts > Preferences."
+    },
+    {
+     "code": "Low / High Humidity Alert",
+     "meaning": "Generated if humidity falls below / rises above the set value (default Disabled).",
+     "action": "Display Alerts on Thermostat (default Disabled) also shows alerts on the thermostat display."
+    }
+   ],
+   "troubleshooting": [],
+   "tips": [
+    "Display range 32 F to 120 F; desired (setpoint) range 45 F to 120 F; temperature sensitivity +/- 1 F; humidity display 20% to 90% RH (both spec sheets).",
+    "Wi-Fi 802.11 b/g/n/ax @ 2.4GHz, Bluetooth 5.0, 915MHz radio (both spec sheets).",
+    "Warranty: 5 years when installed by a professional (both spec sheets).",
+    "The Rheem / Ruud EcoNet version works with most non-communicating Rheem Family of Brands HVAC systems up to 4H/2C; its spec sheet footnotes its setup configuration options as 'not compatible with other manufacturers' HVAC systems'."
+   ],
+   "howTo": [],
+   "manuals": [
+    {
+     "title": "Smart Thermostat Lite Pro Wiring Guide (465-00456 Rev C) - terminals, wiring diagrams, installation settings, reminders and alerts",
+     "docType": "wiring",
+     "url": "https://assets.ctfassets.net/a3qyhfznts9y/2XQvz5RBMPCclPz0dC3F2q/ceeff247b6caf6c02b8b924b9fe6f625/465-00456_Rev_C_Attis_Pro_Wiring_Guide_20240725.pdf"
+    },
+    {
+     "title": "ecobee for Pro Smart Thermostat Lite spec sheet",
+     "docType": "spec",
+     "url": "https://assets.ctfassets.net/a3qyhfznts9y/1Tv7arsyNP7odEmuKS2TOn/577f9c118601f27dbc6fbba1d8429588/ecobee_Lite_SpecSheets_EN-US.pdf"
+    },
+    {
+     "title": "ecobee Smart Thermostat Lite | Works with EcoNet Technology spec sheet (Rheem TDB-003 Rev. 0)",
+     "docType": "spec",
+     "url": "https://files.rheem.com/blobazrheem/wp-content/uploads/sites/2/RHM6005A_ACD_2025_ecobee_Spec_Sheet_R5-Digital.pdf"
+    }
+   ],
+   "sourceNotes": "ecobee Smart Thermostat Lite Pro Wiring Guide 465-00456 Rev C (file dated 2024-07-25); ecobee for Pro Smart Thermostat Lite spec sheet (2024); ecobee Smart Thermostat Lite | Works with EcoNet Technology spec sheet, Rheem Form No. TDB-003 Rev. 0 (1/26); Threshold settings for ecobee thermostats (support.ecobee.com article, read 17 Nov 2026); Resetting your ecobee thermostat (support.ecobee.com article, read 17 Nov 2026); ecobee.com Smart Thermostat Lite Pro page (read 17 Nov 2026); Carrier IM-HK-05 (06/26) Table 1.",
+   "img": ""
+  },
+  {
+   "id": "tst-sensi-eim-sa20",
+   "brand": "White-Rodgers",
+   "family": "Sensi Equipment Interface Module SA20 (for Sensi Touch 2)",
+   "aka": "Copeland Sensi EIM (Indoor + Outdoor) - called ERM when mounted outdoors; SK20B = EIM + Sensi Touch 2 bundle. Wireless (Sensi Connect sub-GHz) equipment module: 2 wires (R, C) to the Touch 2, all system wires at the module.",
+   "models": [
+    "SA20",
+    "SK20B"
+   ],
+   "type": "accessory",
+   "stages": "Heat pump up to 4 heat / 2 cool. Conventional: the install guide specifications and spec sheet R-5962 (terminals page) say up to 3 heat / 2 cool, but the guide's conventional drawing shows only two heat terminals (W/D, W2) and the R-5962 front-page table and training deck R-6134 list 2 heat / 2 cool - the documents differ. 3 universal accessory terminals (U1, U2, U3 dry contacts) for humidification, dehumidification and ventilation. Works with the Sensi Touch 2 smart thermostat (the only thermostat Copeland lists for it).",
+   "sort": 30,
+   "confidence": "verify",
+   "power": {
+    "cWire": "required",
+    "batteries": "",
+    "notes": "Hardwired 24VAC. The EIM takes 24V from the HVAC system on C and RC or RH (under 24V AC INPUT) and powers the Touch 2 through its T-STAT R and C terminals (or the Touch 2 can use a separate 24 volt transformer, not provided)."
+   },
+   "terminals": [
+    {
+     "t": "C (24V AC INPUT)",
+     "fn": "Common wire, 24V",
+     "notes": "From the HVAC system."
+    },
+    {
+     "t": "RC",
+     "fn": "Power for cooling, 24V",
+     "notes": "Jumper RC-RH on the EIM control - remove the jumper if using separate transformers."
+    },
+    {
+     "t": "RH",
+     "fn": "Power for heating, 24V",
+     "notes": ""
+    },
+    {
+     "t": "U1, U2, U3",
+     "fn": "Accessory terminals (normally-open or normally-closed dry contacts)",
+     "notes": "Humidification, dehumidification or ventilation, any combination; assigned and set NO / NC in the thermostat installer setup."
+    },
+    {
+     "t": "W/D",
+     "fn": "Conventional: 1st stage heat. Heat pump: 1st stage auxiliary/emergency heat (2nd stage heat on a single stage heat pump, 3rd stage heat on a multi-stage heat pump)",
+     "notes": "The install guide's electrical ratings table calls this W1 (stage 1 heat)."
+    },
+    {
+     "t": "W2",
+     "fn": "Conventional: 2nd stage heat. Heat pump: 2nd stage auxiliary/emergency heat (3rd stage heat on single stage, 4th stage heat on multi-stage)",
+     "notes": "Training deck R-6134 adds: or dehumidifier."
+    },
+    {
+     "t": "Y1",
+     "fn": "Conventional: 1st stage cool. Heat pump: 1st stage heat and cool compressor",
+     "notes": ""
+    },
+    {
+     "t": "Y2",
+     "fn": "Conventional: 2nd stage cool. Heat pump: 2nd stage heat and cool compressor",
+     "notes": ""
+    },
+    {
+     "t": "G",
+     "fn": "Indoor blower (fan): energized on call for fan, cool or electric heat (conventional) / fan, cool or heat (heat pump)",
+     "notes": ""
+    },
+    {
+     "t": "O/B",
+     "fn": "Heat pump changeover (reversing valve) - configure as O or B in the installer menu. Conventional: zone panel or 3-wire hot water zone valve (configurable as O, B or 6)",
+     "notes": "Labeled O if energized in cool, B if energized in heat."
+    },
+    {
+     "t": "R (T-STAT)",
+     "fn": "System power to the thermostat",
+     "notes": "Wire to RC or RH on the Sensi Touch 2."
+    },
+    {
+     "t": "C (T-STAT)",
+     "fn": "Common wire to the thermostat",
+     "notes": "Wire to C on the Sensi Touch 2."
+    }
+   ],
+   "wiringNotes": [
+    "Copeland: DISCONNECT POWER BEFORE INSTALLATION - can cause electrical shock or equipment damage. MUST BE INSTALLED BY A TRAINED, EXPERIENCED TECHNICIAN.",
+    "Mount the EIM near the HVAC equipment or on the equipment itself; it is rated for indoor or outdoor use (operating -40 to 165 F, 5% to 95% RH non-condensing).",
+    "At the thermostat only two wires: C and either RC or RH of the Sensi Touch 2. At the EIM: thermostat wires to R and C under T-STAT; HVAC power to C and RC or RH under 24V; system and accessory wires per the diagrams.",
+    "Remove the RC/RH jumper on the EIM control if using separate transformers (two-transformer systems with separate RC and RH wires).",
+    "Heat pump: the auxiliary heat stage(s) are labeled differently on different heat pump air handlers; most heat pump applications have only one stage of auxiliary heat. For A2L applications the installer should refer to the system installation manual to determine if the installation meets local code (training deck R-6134).",
+    "Dehumidification with a variable speed blower: wire the U relay to the low speed fan connection at the furnace; the relay can be set normally-open or normally-closed in the thermostat installer setup.",
+    "Current ratings - the documents differ: the install guide table gives W1 1.00A, W2/Aux1 0.60A, G 0.50A, Y1 1.00A, Y2 0.60A, O/B 1.00A, U1-U3 0.50A (18 to 30 VAC); the pro spec sheet R-5962 gives 1.5 amps max per terminal, 2.5 amps max all terminals combined.",
+    "The install guide's ratings table also lists 'L (input for heat pump)' with no rating, but no L terminal appears on the EIM terminal drawings."
+   ],
+   "setup": {
+    "access": "Pair at the Sensi Touch 2: Menu (four squares, top left) > Advanced Setup > EIM > Add, then choose Indoor (EIM on the furnace, air handler or IAQ equipment) or Outdoor (EIM outside on the air conditioner or heat pump). The EIM number shown on the thermostat should match the number printed on the EIM. Accessories: Menu > Advanced Setup > HVAC Equipment > Configure > Additional Accessories, then pick the U terminal for each accessory. Copeland: all Sensi Touch 2s with date code 2510 and newer have the firmware to work with the EIM.",
+    "keySettings": [
+     {
+      "setting": "EIM - Add",
+      "options": "Indoor / Outdoor",
+      "notes": "Menu > Advanced Setup > EIM."
+     },
+     {
+      "setting": "Additional Accessories",
+      "options": "U1 / U2 / U3 per accessory",
+      "notes": "Menu > Advanced Setup > HVAC Equipment > Configure > Additional Accessories. Relays can be normally-open or normally-closed."
+     },
+     {
+      "setting": "Reversing valve (O/B)",
+      "options": "O or B (heat pump); O, B or 6 (zone panel / 3-wire zone valve)",
+      "notes": "Installer menu."
+     },
+     {
+      "setting": "System configuration",
+      "options": "Conventional AC1, GA1, EL1 (single stage) / AC2, GA2, EL2 (multi-stage); Heat pump HP1 (single stage) / HP2 (multi-stage)",
+      "notes": "As labeled on the EIM wiring diagrams."
+     },
+     {
+      "setting": "AUX Lockout (Touch 2)",
+      "options": "On/Off; -4 to 80 F",
+      "notes": "Menu > Advanced HVAC Settings > HVAC Equipment > Configure > Aux Heat Settings (Sensi support article wording; the EIM install guide calls the Touch 2 menu 'Advanced Setup' - the documents name it differently). Locks out aux heat - heat pump only - when outdoor temperature is above the setting. Needs Wi-Fi; aux lockout can never go below the balance point."
+     },
+     {
+      "setting": "Balance Point (Touch 2)",
+      "options": "On/Off; -5 to 55 F",
+      "notes": "Same menu. Locks out the heat pump - aux heat only - when outdoor temperature is below the setting."
+     },
+     {
+      "setting": "Circulating fan",
+      "options": "10%-100% in 5% steps (default OFF)",
+      "notes": "Percentage of the day the fan runs, counting heat, cool and continuous fan time."
+     },
+     {
+      "setting": "Humidify / Dehumidify / Ventilator",
+      "options": "5% to 50% / 40% to 95% (5% steps) / Minimum, runtime per hour",
+      "notes": "Menu > Advanced Setup > Humidify, Dehumidify or Ventilator."
+     }
+    ],
+    "installerTest": "System Testing (install guide): Cool - setpoint 1 degree below room, blower on then cold air (up to a 5 minute delay, shown by a flashing setpoint). Heat - setpoint 1 degree above room. Heat pump with aux - raise the setpoint 3 degrees above room: aux should run and the thermostat shows 'Heating Auxiliary'. Aux position in Mode bypasses the heat pump and runs auxiliary-only heat. Fan On / Auto, circulating fan, humidify, dehumidify and ventilator checks. After each test go to the EIM and check that the LED for the corresponding terminal is on.",
+    "factoryReset": "EIM: press and hold the RESET button to restart the pairing process (status LED flashes green while pairing, solid green when paired). Thermostat reset per the guide's troubleshooting: turn the power to the system off, wait 5 seconds and turn it back on. The Touch 2's own Factory Reset is on the Sensi Touch 2 card."
+   },
+   "techTips": [
+    {
+     "text": "Sensi EIM installer setup: pair it at the Touch 2 under Menu > Advanced Setup > EIM > Add, pick Indoor or Outdoor, and check the EIM number on screen matches the one printed on the EIM. Touch 2 date code 2510 and newer has the EIM firmware.",
+     "source": "Sensi SA20 Equipment Interface Module Installation guide 0037-7916 (Copeland, 2024), step 4; Sensi Equipment Interface Module (Indoor + Outdoor) training deck R-6134 (Copeland, 2025), p.3"
+    },
+    {
+     "text": "Sensi EIM status LED solid red = EIM not connected: press and hold RESET on the EIM to restart pairing (flashing green = pairing, solid green = paired). Not connecting: move the EIM closer to the thermostat or away from interference.",
+     "source": "Sensi SA20 Equipment Interface Module Installation guide 0037-7916 (Copeland, 2024), Troubleshooting"
+    },
+    {
+     "text": "Heat pump wiring with aux heat on the Sensi EIM: aux / emergency heat on W/D (1st stage) and W2 (2nd stage); O/B set as O or B in the installer menu. Most heat pumps have only one aux stage. Up to 4 heat / 2 cool heat pump.",
+     "source": "Sensi SA20 Equipment Interface Module Installation guide 0037-7916 (Copeland, 2024), heat pump wiring guide; Sensi Equipment Interface Module (Indoor + Outdoor) Pro Spec Sheet R-5962 (Copeland)"
+    },
+    {
+     "text": "C wire with the Sensi EIM: only R and C run from the EIM (T-STAT R, C) to the Touch 2 (C, and RC or RH) - every system wire lands at the EIM. Remove the RC/RH jumper on the EIM for separate transformers.",
+     "source": "Sensi SA20 Equipment Interface Module Installation guide 0037-7916 (Copeland, 2024), steps 1 and 3"
+    },
+    {
+     "text": "Sensi Touch 2 aux heat lockout and balance point: Menu > Advanced HVAC Settings > HVAC Equipment > Configure > Aux Heat Settings. AUX Lockout -4 to 80 F, Balance Point -5 to 55 F. The thermostat must be set up as a heat pump and connected to Wi-Fi; outdoor temperature comes from the registered zip code or a Sensi outdoor sensor. Copeland's EIM training deck lists four ways the Touch 2 controls balance point and aux lockout: Sensi dual fuel logic, Sensi outdoor sensor, internet/zip code, EIM built-in temp sensor.",
+     "source": "Aux heat settings (sensi.copeland.com support article, read 17 Nov 2026); Sensi Equipment Interface Module (Indoor + Outdoor) training deck R-6134 (Copeland, 2025), p.21"
+    },
+    {
+     "text": "'Call for Service' on the Touch 2 screen with an EIM: the system could not heat or cool to within 5 degrees of setpoint in 2 hours (see No Heat / No Cool), '--' for room temperature means replace the thermostat, or buttons do not work (check keypad lockout, then reset).",
+     "source": "Sensi SA20 Equipment Interface Module Installation guide 0037-7916 (Copeland, 2024), Troubleshooting"
+    }
+   ],
+   "diagnostics": [
+    {
+     "code": "EIM status LED light solid red",
+     "meaning": "EIM is not connected",
+     "action": "Press and hold the RESET button to restart the pairing process. Once pairing has started the LED flashes green; once pairing is complete it is solid green."
+    },
+    {
+     "code": "EIM not connecting to Sensi Touch 2",
+     "meaning": "1. EIM may be located too far from the thermostat. 2. EIM signal is experiencing interference.",
+     "action": "Move the EIM closer and/or to a location where it gets better signal strength."
+    },
+    {
+     "code": "Call for Service",
+     "meaning": "1. Heating or cooling system is not able to heat/cool the space to within 5 degrees of the setpoint within 2 hours. 2. If '--' is displayed for the room temperature, a replacement thermostat is needed. 3. None of the buttons operate on the thermostat.",
+     "action": "1. See corrective action for No Heat or No Cool. 2. Replace thermostat. 3. Make sure keypad lockout is not turned on; if it is OFF, try resetting the thermostat (power off, wait 5 seconds, power on)."
+    }
+   ],
+   "troubleshooting": [
+    {
+     "symptom": "No Heat / No Cool / No Fan",
+     "causes": [
+      "Blown fuse or tripped circuit breaker",
+      "Furnace power switch to OFF",
+      "Furnace blower compartment door panel loose",
+      "Loose connection to thermostat or system"
+     ],
+     "fixes": [
+      "Replace fuse or reset breaker",
+      "Turn switch to ON",
+      "Replace door panel in proper position to engage safety interlock or door switch",
+      "Tighten connections"
+     ]
+    },
+    {
+     "symptom": "No Heat",
+     "causes": [
+      "Thermostat not set to Heat",
+      "Loose connection to thermostat or system",
+      "Heating system requires service or thermostat requires replacement"
+     ],
+     "fixes": [
+      "Set thermostat to Heat",
+      "Verify thermostat and system wires are securely attached",
+      "Set Mode to Heat and raise the setpoint above room temperature: within five minutes the thermostat should click and the display turn orange. No click - reset the thermostat; still no click - replace it. If it clicks, verify the heating system is operating correctly."
+     ]
+    },
+    {
+     "symptom": "No Cool",
+     "causes": [
+      "Thermostat not set to Cool",
+      "Loose connection to thermostat or system",
+      "Cooling system requires service or thermostat requires replacement"
+     ],
+     "fixes": [
+      "Set thermostat to Cool",
+      "Verify thermostat and system wires are securely attached",
+      "Same check as No Heat with Cool and the setpoint below room temperature; there may be up to a five minute delay if the AC Protection feature is on"
+     ]
+    },
+    {
+     "symptom": "Heat, Cool or Fan runs constantly",
+     "causes": [
+      "Possible short in wiring, thermostat, heat, cool or fan system"
+     ],
+     "fixes": [
+      "Check each wire connection to verify they are not shorted or touching other wires. Try resetting the thermostat."
+     ]
+    },
+    {
+     "symptom": "Display is blank",
+     "causes": [
+      "The display could be turned off or a common wire (c-wire) is needed"
+     ],
+     "fixes": [
+      "Attach a common wire (c-wire) or turn on the display"
+     ]
+    },
+    {
+     "symptom": "Furnace (air conditioner) cycles too fast or slow",
+     "causes": [
+      "Thermostat location and/or heating system size influencing the cycle rate"
+     ],
+     "fixes": [
+      "To increase cycle time, choose Slow for the Cycle Rate in the Sensi app"
+     ]
+    }
+   ],
+   "tips": [
+    "EIM dimensions 8.5 in W x 6.75 in H x 1.5 in D.",
+    "Communicates with the Touch 2 over Sensi Connect (sub-GHz); no separate gateway is needed to connect to Wi-Fi (spec sheet R-5962).",
+    "Professional 5-year warranty on SA20 and SK20B (training deck R-6134)."
+   ],
+   "howTo": [],
+   "manuals": [
+    {
+     "title": "Sensi SA20 Equipment Interface Module Installation guide (0037-7916)",
+     "docType": "install",
+     "url": "https://media.copeland.com/df2a0ddb-ecbb-4bd2-8f6c-b37800f20253/0037-7916-Sensi%20EIM%20Install%20Guide.pdf"
+    },
+    {
+     "title": "Sensi Equipment Interface Module (Indoor + Outdoor) Pro Spec Sheet (R-5962)",
+     "docType": "spec",
+     "url": "https://media.copeland.com/b28601eb-e32f-4076-8703-b27c0076481f/R-5962-Sensi-EIM-pro-spec-sheet.pdf"
+    }
+   ],
+   "sourceNotes": "Sensi SA20 Equipment Interface Module Installation guide 0037-7916 (Copeland, 2024); Sensi Equipment Interface Module (Indoor + Outdoor) Pro Spec Sheet R-5962 (Copeland); Sensi Equipment Interface Module (Indoor + Outdoor) training deck R-6134 (Copeland, 2025) (media.copeland.com Sensi-EIM-Training.pdf); Aux heat settings (sensi.copeland.com support article, read 17 Nov 2026).",
+   "img": ""
+  },
+  {
+   "id": "tst-carrier-smart-advanced",
+   "brand": "Carrier",
+   "family": "Smart Thermostat Advanced featuring InteliSense",
+   "aka": "Carrier TSTATCCIAWF-01 / Bryant Smart Thermostat Advanced featuring InteliSense TSTATBBIAWF-01 / ION Blue Smart Thermostat featuring SmartSense TSTATIIIAWF-01 (touchscreen; launched with the 27VPA9 heat pump)",
+   "models": [
+    "TSTATCCIAWF-01",
+    "TSTATBBIAWF-01",
+    "TSTATIIIAWF-01"
+   ],
+   "type": "smart-wifi",
+   "stages": "Carrier: compatible with single- and two-stage systems and one indoor air quality accessory. With the Performance 27VPA9 variable-speed heat pump, ComfortAdjust manages up to 21 adaptable stages of heating and cooling. Heat pump / aux heat stage counts are not in any public Carrier document.",
+   "sort": 20,
+   "confidence": "verify",
+   "power": {
+    "cWire": "",
+    "batteries": "",
+    "notes": "Not published: the installation manual for the Advanced is not on a public Carrier site, so power and C-wire needs are not confirmed here."
+   },
+   "terminals": [],
+   "wiringNotes": [
+    "Carrier has not published the installation manual for the Smart Thermostat Advanced on a public site (the carrier.com product page Documents section lists no files, and web searches of carrier.com and shareddocs.com on 17 Nov 2026 found none). Terminals, wiring and installer settings: get the installation manual from HVACpartners or the box.",
+    "Do not use the Smart Thermostat featuring InteliSense (TSTATCCIEWF-01) card's terminals for this thermostat - Carrier lists them as different SKUs."
+   ],
+   "setup": {
+    "access": "On the thermostat: the menu icon (hamburger) on the Main screen opens Menu, which shows System, Network, Preferences, Advanced and Cleaning Mode. Menu > System includes Name, InteliSense Equipment (ION: SmartSense Equipment), Dealer Info & Contact, Time & Day, Status, Reset and About (IM-HK-05 figures). Homeowner setup is through the Carrier SmartHome app. The installer settings themselves are not in any public Carrier document.",
+    "keySettings": [],
+    "installerTest": "Not in any public Carrier document.",
+    "factoryReset": "Menu > System > Reset shows Network Reset, Factory Reset and InteliSense Reset (Carrier / Bryant; ION shows SmartSense Reset). The public document does not say what Factory Reset clears."
+   },
+   "techTips": [
+    {
+     "text": "InteliSense relearn on the Carrier Smart Thermostat Advanced after replacing any equipment control board listed in IM-HK-05 Table 2 (furnace, fan coil, AC / heat pump boards) or after a USB firmware update: Menu > System > Reset > InteliSense Reset (ION: SmartSense Reset) > Reset Now. Then check Menu > System > InteliSense Equipment shows 'Found'.",
+     "source": "Carrier IM-HK-05 InteliSense/SmartSense Equipment Relearning (Edition 06/26), section 3.2 (PDF p.43-51)"
+    },
+    {
+     "text": "Carrier Smart Thermostat Advanced installer setup, terminals, aux heat and heat pump O/B settings, and C wire needs are not public - Carrier has not posted the installation manual. Use the manual in the box or on HVACpartners.",
+     "source": "Searched carrier.com product page, carrier.com Product Documents and shareddocs on 17 Nov 2026"
+    },
+    {
+     "text": "Reset menu on the Advanced: Menu > System > Reset has Network Reset, Factory Reset and InteliSense Reset. LED edge colors: orange heating, blue cooling, green fan, purple off, yellow utility energy management event.",
+     "source": "Carrier IM-HK-05 InteliSense/SmartSense Equipment Relearning (Edition 06/26), Fig. 42; carrier.com product page TSTATCCIAWF-01 'Carrier Smart Thermostat Advanced featuring InteliSense' (read 17 Nov 2026)"
+    },
+    {
+     "text": "One relearn procedure (IM-HK-05 section 3.2, Smart Thermostat Advanced) covers all three SKUs: Carrier TSTATCCIAWF-01, Bryant TSTATBBIAWF-01 and ION Blue TSTATIIIAWF-01.",
+     "source": "Carrier IM-HK-05 InteliSense/SmartSense Equipment Relearning (Edition 06/26), Table 1 (PDF p.2)"
+    }
+   ],
+   "diagnostics": [
+    {
+     "code": "LED edge orange",
+     "meaning": "Heating (LED light color)",
+     "action": ""
+    },
+    {
+     "code": "LED edge blue",
+     "meaning": "Cooling (LED light color)",
+     "action": ""
+    },
+    {
+     "code": "LED edge green",
+     "meaning": "Fan (LED light color)",
+     "action": ""
+    },
+    {
+     "code": "LED edge purple",
+     "meaning": "Off (LED light color)",
+     "action": ""
+    },
+    {
+     "code": "LED edge yellow",
+     "meaning": "Utility energy management event (LED light color)",
+     "action": ""
+    },
+    {
+     "code": "InteliSense Equipment: Not Found",
+     "meaning": "InteliSense / SmartSense capabilities were not detected on the equipment (equipment with them shows 'Found').",
+     "action": "Shown at Menu > System > InteliSense Equipment (ION: SmartSense Equipment) after a relearn. Carrier also says to confirm all connectors to the control board are fully seated and all sensors properly connected."
+    }
+   ],
+   "troubleshooting": [],
+   "tips": [
+    "Warranty: two-year parts limited warranty, extended to five years when the thermostat is registered, connected to Wi-Fi and data sharing is enabled within 90 days of installation (carrier.com).",
+    "ComfortAdjust and over-the-air equipment updates work when paired with the Performance 27VPA9 variable-speed heat pump (carrier.com).",
+    "Carrier's Feb. 2026 launch release calls the Advanced the premium model, with a touchscreen and guided setup."
+   ],
+   "howTo": [
+    {
+     "label": "",
+     "note": "Only the InteliSense relearn is in a public Carrier document.",
+     "topics": [
+      {
+       "title": "InteliSense / SmartSense relearn after a control board change",
+       "steps": [
+        "Use this whenever any equipment control board listed in IM-HK-05 Table 2 is replaced (for example HK42FZ114 / HK42FZ116 InteliSense furnace boards, HK42FZ126 / HK42FZ127 / HK42FZ128 / HK42FZ129 mid-tier, entry-tier and ULN furnace boards, HK38EA071 fan coil board, HK38EA076 / HK38EA079 control boards, HK32EA013 AC HP SCM, HR46VP007 / HR46VR006 control boards), and after firmware updates made through a USB-based reprogramming interface.",
+        "First confirm all connectors to the control board are fully seated and all sensors are properly connected.",
+        "Main screen: press the hamburger menu to open Menu. Scroll to System and select it.",
+        "On the System screen scroll to Reset and select it. Select InteliSense Reset (Carrier or Bryant) or SmartSense Reset (ION).",
+        "Press Reset Now and let the device complete the process.",
+        "Confirm: Menu > System > InteliSense Equipment (or SmartSense Equipment). Equipment with InteliSense / SmartSense shows 'Found'; if not detected it shows 'Not Found'."
+       ],
+       "notes": [],
+       "source": "Carrier IM-HK-05 InteliSense/SmartSense Equipment Relearning (Edition 06/26), section 3.2 Smart Thermostat Advanced, PDF p.2-3 and 43-51"
+      }
+     ]
+    }
+   ],
+   "manuals": [
+    {
+     "title": "InteliSense / SmartSense Equipment Relearning (IM-HK-05, 06/26) - section 3.2 Smart Thermostat Advanced",
+     "docType": "service",
+     "url": "https://www.shareddocs.com/hvac/docs/1009/Public/06/IM-HK-05.pdf"
+    }
+   ],
+   "sourceNotes": "Carrier IM-HK-05 InteliSense/SmartSense Equipment Relearning (Edition 06/26); carrier.com product page TSTATCCIAWF-01 'Carrier Smart Thermostat Advanced featuring InteliSense' (read 17 Nov 2026); carrier.com news 'Carrier Debuts the Next Generation in HVAC Solutions at International Builders' Show' (Feb. 17, 2026).",
+   "img": ""
+  }
+ ],
+ "aux": {
+  "tst-honeywell-elitepro": {
+   "applies": "yes",
+   "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+   "steps": [
+    "Get into installer setup: Menu > Thermostat Information (write down the date code) > back > Installer Options > enter the code > Installer Setup.",
+    "Make sure it knows the strips are there: ISU 2000 System Type = Heat Pump, ISU 2070 Backup Heat Stages 1 or 2, ISU 2180 Backup Heat Type = Electric Forced Air, and the strips wired to the terminal set in ISU 2170 (Thermostat AUX without an EIM, EIM AUX 1 with one). Never W on a heat pump.",
+    "ISU 3090 Backup Heat differential, stage 1: Comfort or 2.0 F to 15 F. With Comfort the thermostat brings on aux heat when the highest compressor stage reaches 90% capacity. With 2 F or more the room has to drop that far below set point while the highest compressor stage runs.",
+    "ISU 3110 Backup heat upstage timer: Off (default), 30 minutes to 16 hours - once the highest heat pump stage has run that long in steady state, the thermostat may bring on aux heat if it calculates the heat pump cannot carry the load (it does not necessarily run). A set point change does not trigger it. Resideo's manual disagrees with itself on Comfort: one page limits the timer to 30-60 minutes with Comfort, another says the timers are available when the differential is other than Comfort. Holdoff timer (differential 2 F or higher, upstage 30 minutes or more): Auto (out of box) holds aux off as long as possible after a set point change; any other setting forces aux on after that time.",
+    "ISU 3120 Backup Heat Lockout (Off, 5 F to 65 F) stops aux heat above that outdoor temperature - check it is not set too low. ISU 3120 Compressor Lockout / Balance point (Off, -15 F to 50 F) locks out the heat pump below that outdoor temperature.",
+    "Resideo's own steps when the heat pump struggles to hold set point: 1. verify the heat pump is operating as expected; 2. set a balance point - if one is set and the heat pump cannot handle the load even when working correctly, the installer may need to raise it; 3. for heat pump with electric backup heat, set the Differential to Comfort, which uses the backup heat more aggressively.",
+    "Prove the strips: Installer Options > Installer Test > Em heat (shuts off after 30 minutes if not ended).",
+    "Right now fix: touch Mode and pick Em Heat - the heat pump is locked out and the backup heat holds the set point. Put it back to Heat after."
+   ],
+   "notes": [
+    "Dual fuel (gas / oil backup): the differential cannot be set to Comfort - it defaults to 2 F, adjustable 2 F to 15 F - and the thermostat shuts the heat pump off and runs the furnace.",
+    "During a programmed recovery with Adaptive Recovery the thermostat holds aux heat off unless the room is not rising quickly enough.",
+    "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+   ],
+   "source": "Resideo 33-00762-02 (10/26) ElitePRO Series Thermostats, EIM, ERM & Redlink 3.0 accessories Installation Manual, ISU p.77, p.82, p.88-89; Heat Differential p.163; Upstage Timer / Holdoff Timer p.164; Em Heat p.161"
+  },
+  "tst-lennox-l40": {
+   "applies": "yes",
+   "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+   "steps": [
+    "Open the installer settings: Menu > Advanced Settings > View Support Service Control Center > Equipment Settings > Thermostat.",
+    "Make sure it knows the strips are there: Outdoor Unit must be 1 Stage HP Unit and Indoor Unit 1 Stage Electric. The strips are wired to W1 (W) - on a heat pump that is the second stage of heat.",
+    "Aux Heating Activation (0 to 10 F, factory 2.5 F) is also in this list, but no Lennox L40 document says what it does - do not change it expecting the strips to come on sooner.",
+    "2nd Stage Differential: 0.5 to 8 F, factory 1.0 F. The Installation Guide says stage 2-6 differentials apply to heat pumps in electric configurations when the outdoor temperature is between the high and low balance points.",
+    "Staged Delay Timers: Enabled or Disabled (factory Disabled); the duration is fixed. If the first stage does not move the room 1.0 F toward setpoint within the delay time, the second stage comes on.",
+    "Balance Point Control (factory Disabled): when enabled, below the Low Balance Point (-20 to 72 F, factory 25 F) only aux heat runs; above the High Balance Point (factory 50 F, Internet weather only) aux heat is not allowed.",
+    "Right now fix: Menu > Mode > Emergency Heat (heat pump systems only). Put it back to Heat Only or Heat / Cool after."
+   ],
+   "notes": [
+    "'Ambient lockout' on the home screen means the outdoor temperature is past a balance point setting.",
+    "The L40 runs one compressor stage and one stage of heat on W1 after it - there is no W2 for a second bank of strips.",
+    "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+   ],
+   "source": "Lennox L40 Product Specifications (EHB) 210878 p.8, p.12, p.14, p.16; L40 Installation and Setup Guide 508674-01 p.4, p.13-15; L40 User Guide 508724-01 p.16"
+  },
+  "tst-ecobee-lite-pro": {
+   "applies": "yes",
+   "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+   "steps": [
+    "Make sure the strips are wired and set up: aux heat on W1 (and W2 for a second stage) at the thermostat and the air handler. Installation settings are at Menu > Settings > Installation Settings > Thresholds - on the thermostat only, not in the app.",
+    "Configure Staging = Automatic (default): the heat pump only list shows Aux Savings Optimization (default 2 F). ecobee: it stages heat pump to aux on savings vs. comfort - the higher the setting, the more comfort is given up for savings.",
+    "Configure Staging = Manual: Compressor To Aux Temperature Delta (degrees from setpoint before aux engages, default Auto) or Compressor to Aux Runtime (minutes the compressor runs before switching to aux, default Auto). ecobee: only one of these per category can be set - by time or by temperature delta.",
+    "Check Aux Heat Max Outdoor Temperature (default 50 F): aux heat will not run above this outdoor temperature.",
+    "Check Compressor Min Outdoor Temperature (heat pump: user defined): the compressor will not run below it."
+   ],
+   "notes": [
+    "Aux Reverse Staging (default Off) - the two ecobee sources word it differently: the wiring guide says aux heat will be engaged if the current temperature is greater than the Compressor to Aux Temperature Delta value; the support article says it disengages aux heat near the end of a heating cycle to rely on the heat pump.",
+    "Alerts that show aux use: Aux Outdoor Temp Alert and Aux Heat Runtime Alert (both default Disabled) under Menu > Reminders and Alerts > Preferences.",
+    "ecobee WARNING: if you're unfamiliar with the capabilities of the HVAC equipment, contact ecobee Support before making changes."
+   ],
+   "source": "ecobee Smart Thermostat Lite Pro Wiring Guide 465-00456 Rev C (file dated 2024-07-25), Installation Settings - Threshold Settings; Threshold settings for ecobee thermostats (support.ecobee.com article, read 17 Nov 2026)"
+  },
+  "tst-sensi-eim-sa20": {
+   "applies": "yes",
+   "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+   "steps": [
+    "The EIM guide prints no aux timing setting - aux heat is decided by the Sensi Touch 2. Check the wiring first: aux / emergency heat on W/D (1st stage) and W2 (2nd stage) at the EIM, and the system set up as a heat pump (HP1 or HP2).",
+    "At the Touch 2: Menu > Advanced HVAC Settings > HVAC Equipment > Configure > Aux Heat Settings (Sensi support article wording; the EIM install guide calls the menu 'Advanced Setup').",
+    "AUX Lockout (range -4 to 80 F): when On, aux heat is locked out and only the heat pump runs while the outdoor temperature is above the setting. If the strips never come on, check whether AUX Lockout is On and what it is set to.",
+    "Balance Point (range -5 to 55 F): when On, the heat pump is locked out and only aux heat runs while the outdoor temperature is below the setting. Aux lockout can never go below the balance point.",
+    "Tap Save. Test: in Heat raise the setpoint 3 degrees above room temperature - aux should run, the thermostat shows 'Heating Auxiliary', and the EIM LED for that terminal lights."
+   ],
+   "notes": [
+    "Sensi: aux heat settings are an advanced feature - consult an HVAC technician for proper configuration.",
+    "These settings need an outdoor temperature (Wi-Fi zip code or a Sensi outdoor sensor). If the thermostat is offline or can't update outdoor weather, Sensi temporarily disables the Aux Heat settings and controls on system performance instead.",
+    "Right-now fix: Mode > Aux bypasses the heat pump and runs auxiliary-only heat."
+   ],
+   "source": "Aux heat settings (sensi.copeland.com support article, read 17 Nov 2026); Sensi SA20 Equipment Interface Module Installation guide 0037-7916 (Copeland, 2024), System Testing and heat pump wiring guide"
+  },
+  "tst-carrier-smart-advanced": {
+   "applies": "no-setting",
+   "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+   "steps": [
+    "Carrier has not published the Smart Thermostat Advanced installation manual, so no public document shows its aux heat settings.",
+    "Check the installer settings in the manual that came in the box or on HVACpartners.",
+    "Right now fix: none can be confirmed from public Carrier documents for this model."
+   ],
+   "notes": [
+    "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+   ],
+   "source": "carrier.com product page TSTATCCIAWF-01 'Carrier Smart Thermostat Advanced featuring InteliSense' (read 17 Nov 2026); Carrier IM-HK-05 InteliSense/SmartSense Equipment Relearning (Edition 06/26)"
+  }
+ },
+ "nest": [
+  {
+   "cardId": "tst-nest-learning-1st-gen",
+   "techTip": {
+    "text": "Google ended support for the Nest Learning Thermostat 1st gen (2011), 2nd gen (2012) and 2nd gen Europe version (2014) on October 25, 2025: it is unpaired and removed from the Nest and Google Home apps - no app status, remote control, notifications or settings from a phone, no third-party assistants, Home/Away Assist or multi-device Eco, and Nest Protects disconnect from it (emergency shut off no longer runs). It still runs its schedules, modes and all settings on the thermostat itself, and gets no more software or security updates. After unpairing the device may show connection status 'None' or 'Connected'.",
+    "source": "End of support for Nest Learning Thermostats (1st & 2nd gen), Google Home and Nest Help support.google.com/googlehome/answer/16233096 (read 17 Nov 2026)"
+   }
+  },
+  {
+   "cardId": "tst-nest-learning-3rd-2nd-gen",
+   "techTip": {
+    "text": "2nd gen only (the 3rd gen is not on Google's list): Google ended support for the Nest Learning Thermostat 1st gen (2011), 2nd gen (2012) and 2nd gen Europe version (2014) on October 25, 2025: it is unpaired and removed from the Nest and Google Home apps - no app status, remote control, notifications or settings from a phone, no third-party assistants, Home/Away Assist or multi-device Eco, and Nest Protects disconnect from it (emergency shut off no longer runs). It still runs its schedules, modes and all settings on the thermostat itself, and gets no more software or security updates. After unpairing the device may show connection status 'None' or 'Connected'.",
+    "source": "End of support for Nest Learning Thermostats (1st & 2nd gen), Google Home and Nest Help support.google.com/googlehome/answer/16233096 (read 17 Nov 2026)"
+   }
+  }
+ ]
+};
+(function () {
+  for (const n of TSTAT_NEW_1117B.cards) {
+    if (THERMOSTATS.some(e => e.id === n.id)) continue;
+    const x = TSTAT_NEW_1117B.aux[n.id];
+    const e = { ...n };
+    if (x) {
+      TSTAT_AUX_SOONER[n.id] = x;
+      const topic = { title: x.title, steps: x.steps, notes: x.notes, source: x.source };
+      const how = e.howTo || [];
+      if (how.length === 1) e.howTo = [{ ...how[0], topics: [...how[0].topics, topic] }];
+      else e.howTo = [...how, { label: how.length ? "All models on this card" : "", note: "", topics: [topic] }];
+    }
+    const sents = String((e.setup || {}).access || "").split(/(?<=\.)\s+/);
+    const how = sents.find(s => /press and hold|press Menu|Menu >|Menu icon/i.test(s)) || sents.find(s => /press|Menu/i.test(s)) || "";
+    const test0 = String((e.setup || {}).installerTest || "").split(/(?<=\.)\s+/)[0] || "";
+    const test = test0 === how ? "" : test0;
+    const names = ((e.setup || {}).keySettings || []).map(k => k.setting).filter(s => /aux|backup|droop|upstage|lockout|balance/i.test(s) && !/keypad|fan after/i.test(s));
+    const tip = [how && "Installer setup: " + how, test && !/does not print/i.test(test) && "System test / test mode: " + test, names.length && "Backup heat / auxiliary heat (aux heat) settings in this card's setup table: " + names.join("; ") + "."].filter(Boolean).join(" ");
+    if (tip) e.techTips = [...(e.techTips || []), { text: tip, source: "This card's Installer setup section" }];
+    THERMOSTATS.push(e);
+  }
+  for (const n of TSTAT_NEW_1117B.nest) {
+    const c = THERMOSTATS.find(e => e.id === n.cardId);
+    if (c && !(c.techTips || []).some(t => t.text === n.techTip.text)) c.techTips = [n.techTip, ...(c.techTips || [])];
+  }
+})();
