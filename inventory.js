@@ -380,7 +380,7 @@ async function invOcrLines(worker, canvas, tag) {
   const lines = [];
   for (const psm of ["3", "11"]) {
     await worker.setParameters({ tessedit_pageseg_mode: psm });
-    const { data } = await worker.recognize(canvas);
+    const { data } = await (typeof ocrRecognize === "function" ? ocrRecognize(worker, canvas) : worker.recognize(canvas));
     // Each line with Tesseract's own confidence, so a clean read outvotes a
     // smudged look-alike (LC23/37Y9BG at 74 vs LC23/37v98G). "blk" groups the
     // lines of one pass so the parser knows which line sits under which.

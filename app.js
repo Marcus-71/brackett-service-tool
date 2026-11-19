@@ -1317,8 +1317,13 @@ function askBuildIndex() {
   return job.items;
 }
 // Sensor maps load on demand on low-memory devices (sensors.js snEnsure); start it so the next search includes them.
-function askWantSensors() {
-  if (typeof snEnsure === "function" && typeof snLoaded !== "undefined" && !snLoaded) snEnsure().catch(() => {});
+// v464 (11-19 audit #9): on a low-memory phone (snLowMem) the 8 MB of sensor files used to load on the
+// first question of any kind. There they now load only for a question about sensors, plugs or readings.
+const ASK_SENSOR_WORDS = /sensor|thermistor|\bplug|connector|\bpins?\b|\bohms?\b|kohm|k ?ω|resistan|\bchart|transducer|\be[ex]v\b|expansion valve|\btemp|thermo?\b|discharge|suction|liquid line|ambient|\bcn ?-?\d|\bth ?-?\d|\bt\d\b|\b[rx]\d{1,2}[atmp]\b|\b[my]\d[cefs]\b|\ba\d{1,2}p\b|\bpl ?-?\d|\b(?:oat|hps|lps)\b|psi|\bvolts?\b|transmitter/i;
+function askWantSensors(q) {
+  if (typeof snEnsure !== "function" || typeof snLoaded === "undefined" || snLoaded) return;
+  if (typeof snLowMem !== "undefined" && snLowMem && !(q && ASK_SENSOR_WORDS.test(q))) return;
+  snEnsure().catch(() => {});
 }
 // ----- Ask index and word list built while the app is idle (11-12 speed audit #4) -----
 // The first question of a session used to freeze the phone 2-3 s while 13,700 entries and the word
@@ -2192,7 +2197,7 @@ function renderAsk() {
     askAiToken++;   // v342 (audit CODE-09): an answer still in flight is for the old question - drop it, don't paint it under the new one
   }
 
-  askWantSensors();   // the index may have been built ahead of time (askIdleKick), so ask here too
+  askWantSensors(q);   // the index may have been built ahead of time (askIdleKick), so ask here too
   if (!askIndexCache) askIndexCache = askBuildIndex();
   // The word list for the first question is built while the tech types it (every phone, low memory too).
   if (!askVocabCache) { askIdleOn = true; askIdleKick(); }
@@ -9692,7 +9697,7 @@ async function ccScanGauge(file) {
     const worker = await getTessWorker(show);
     let best = null;
     for (const deg of [0, 180, 90, 270]) {
-      const { data } = await worker.recognize(deg ? rotateCanvas(base, deg) : base);
+      const { data } = await ocrRecognize(worker, deg ? rotateCanvas(base, deg) : base);
       const parsed = ccGaugeParse(data.text || "");
       const score = parsed.found.filter(f => f.field).length + (parsed.refrig ? 1 : 0);
       if (!best || score > best.score) best = { parsed, score, deg };
@@ -11560,6 +11565,7 @@ function ocrWarmEngine() {
 async function getTessWorker(onStatus) {
   if (onStatus) tessStatusSink = onStatus;
   await loadTesseract();
+  if (tessWorkerSuspect) await ocrCheckSuspect();
   if (!tessWorkerPromise) {
     const base = new URL(".", location.href).href;
     tessWorkerPromise = Tesseract.createWorker("eng", 1, {
@@ -11572,9 +11578,41 @@ async function getTessWorker(onStatus) {
       // copy in IndexedDB ("keyval-store") - cleared in startApp().
       cacheMethod: "none",
       logger: (m) => { const sink = tessStatusSink; if (m.status && sink) sink(m.status + (m.progress ? ` ${Math.round(m.progress*100)}%` : "")); },
-    });
+    // v464 (11-19 audit #5): a start that fails once (weak signal, phone short on memory) used to stay
+    // failed - every scan for the rest of the day failed until the app was closed. Forget it so the
+    // next scan starts the engine again.
+    }).catch((e) => { tessWorkerPromise = null; throw e; });
   }
   return tessWorkerPromise;
+}
+// v464: a worker that throws mid-read MAY be dead. It is only marked here - the scan in hand carries on
+// (its zoom reads are allowed to fail one by one), and terminating it now would hang or break any read
+// still running on it. The next scan tests it first (ocrCheckSuspect) and starts a fresh one only if
+// the test read fails.
+let tessWorkerSuspect = null;
+function resetTessWorker() {
+  const p = tessWorkerPromise; tessWorkerPromise = null;
+  if (p) p.then((w) => { try { w.terminate(); } catch (e) {} }).catch(() => {});
+}
+function ocrRecognize(worker, canvas, opts) {
+  return worker.recognize(canvas, opts).catch((e) => {
+    if (e !== OCR_STOP && tessWorkerSuspect !== worker) { tessWorkerSuspect = worker; try { trackEvent("ocr read failed: " + String(e && e.message || e).slice(0, 80)); } catch (x) {} }
+    throw e;
+  });
+}
+async function ocrCheckSuspect() {
+  const bad = tessWorkerSuspect; if (!bad || !tessWorkerPromise) return;
+  tessWorkerSuspect = null;
+  const w = await tessWorkerPromise.catch(() => null);
+  if (w !== bad) return;
+  const c = document.createElement("canvas"); c.width = 40; c.height = 20;
+  const ok = await Promise.race([
+    w.recognize(c).then(() => true, () => false),
+    new Promise((r) => setTimeout(() => r(false), 8000)),
+  ]);
+  if (ok || tessWorkerPromise === null) return;
+  resetTessWorker();
+  try { trackEvent("ocr engine reset: a test read failed after an earlier failed read"); } catch (x) {}
 }
 
 // Downscale the photo before OCR — phone photos are huge and slow to process.
@@ -11587,6 +11625,8 @@ async function preprocessPhoto(file) {
   canvas.height = Math.round(bmp.height * scale);
   const ctx = canvas.getContext("2d");
   ctx.drawImage(bmp, 0, 0, canvas.width, canvas.height);
+  // v464 (audit #10): free the full-size photo now instead of whenever the phone gets round to it.
+  try { bmp.close(); } catch (e) {}
   return canvas;
 }
 
@@ -12094,7 +12134,7 @@ async function ocrZoomLine(worker, photo, box, rad, deg, passScale, glyphPx, str
   // (tesseract.js applies it to this recognize only), so the shared worker's
   // settings are never disturbed. rotateAuto straightens a line shot at an angle.
   const psm = area && area.psm || "6";
-  const { data } = await worker.recognize(line, straighten ? { tessedit_pageseg_mode: psm, rotateAuto: true } : { tessedit_pageseg_mode: psm });
+  const { data } = await ocrRecognize(worker, line, straighten ? { tessedit_pageseg_mode: psm, rotateAuto: true } : { tessedit_pageseg_mode: psm });
   return data;
 }
 
@@ -12355,7 +12395,7 @@ async function ocrBoxedSerial(worker, base, mAnchor, sAnchor, modelDigits, stopC
   // the plate is seen at an angle: the print leans the way it turns. Turn + lean pairs, likeliest first.
   const T = sg ? [[rot0 + 3 * sg, sg * 0.15], [rot0 + 1.5 * sg, sg * 0.15], [rot0 + 4.5 * sg, sg * 0.3], [rot0 + 3 * sg, sg * 0.3], [rot0, 0], [rot0 + 1.5 * sg, 0]]
     : [[rot0, 0], [rot0 - 3, 0], [rot0 + 3, 0], [rot0 - 3, -0.15], [rot0 + 3, 0.15], [rot0 - 6, -0.15]];
-  const rec = async (canvas, psm) => { if (stopCheck) stopCheck(); const { data } = await worker.recognize(canvas, { tessedit_pageseg_mode: psm }); tally(data.text); return data; };
+  const rec = async (canvas, psm) => { if (stopCheck) stopCheck(); const { data } = await ocrRecognize(worker, canvas, { tessedit_pageseg_mode: psm }); tally(data.text); return data; };
   const sub = (canvas, b, k) => {
     const hh = b.y1 - b.y0, px = hh * 0.3, py = hh * 0.22;
     const x0 = Math.max(0, b.x0 - px), y0 = Math.max(0, b.y0 - py), x1 = Math.min(canvas.width, b.x1 + px), y1 = Math.min(canvas.height, b.y1 + py);
@@ -12432,7 +12472,7 @@ async function ocrTagTextPasses(file, onStatus) {
   // turn comes back in data.rotateRadians).
   const read = async (canvas, opts, deg, passScale, event, rad, noProbes) => {
     if (ocrStopRequested) throw OCR_STOP;
-    const { data } = await worker.recognize(canvas, opts);
+    const { data } = await ocrRecognize(worker, canvas, opts);
     const turn = (rad || 0) + (data.rotateRadians || 0);
     // Model-shaped words, for a zoomed look if no pass finds a model.
     const words = noProbes ? [] : data.words || [];
@@ -15473,7 +15513,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v463";
+const APP_VERSION = "v464";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -15558,6 +15598,32 @@ function trackEvent(eventName) {
   safeSet(TRACK_QUEUE_KEY, queue);
   flushTrackQueue();
 }
+
+// v464 (11-19 audit #6): a crash on a tech's phone used to leave no trace in the office. The first 5
+// different errors per app open go to the usage log as "app error: <message> @ <file:line>".
+const appErrorsSent = new Set();
+function reportAppError(msg, where) {
+  try {
+    const m = String(msg || "unknown").replace(/\s+/g, " ").slice(0, 140);
+    const w = String(where || "").replace(/^.*\//, "").slice(0, 40);
+    const k = m + "|" + w;
+    if (appErrorsSent.has(k) || appErrorsSent.size >= 5) return;
+    appErrorsSent.add(k);
+    trackEvent("app error: " + m + (w ? " @ " + w : ""));
+  } catch (e) {}
+}
+window.addEventListener("error", (ev) => {
+  // a broken <img>/<script> fires here too (no message); those are not app crashes
+  if (!ev || !ev.message) return;
+  reportAppError(ev.message, ev.filename ? ev.filename + ":" + ev.lineno : "");
+});
+window.addEventListener("unhandledrejection", (ev) => {
+  const r = ev && ev.reason;
+  if (r === OCR_STOP) return;
+  const stack = r && r.stack ? String(r.stack).split("\n").find(l => /\.js:\d+/.test(l)) || "" : "";
+  const at = (stack.match(/([\w.-]+\.js:\d+)/) || [])[1] || "";
+  reportAppError("unhandled: " + (r && r.message ? r.message : String(r)), at);
+});
 
 let trackFlushing = false;
 async function flushTrackQueue() {

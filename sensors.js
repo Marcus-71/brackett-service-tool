@@ -12,11 +12,24 @@ let snAll = null;
 // at once when Sensors & Plugs opens. Both stay precached in sw.js, so this works offline.
 let snLoaded = typeof DAIKIN_SENSOR_MAPS !== "undefined" && typeof BRAND_SENSOR_MAPS !== "undefined";
 let snLoadP = null;
+const snFileP = {};
 function snEnsure() {
   if (snLoaded) return Promise.resolve();
   if (!snLoadP) {
-    const add = (src) => new Promise((ok, bad) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = bad; document.head.appendChild(s); });
-    snLoadP = Promise.all(["daikin-sensors.js", "brand-sensors.js"].map(add)).then(() => {
+    // v464 (11-19 audit): a retry after one file failed used to load BOTH again (the one that had arrived ran twice,
+    // ~1.9 MB parsed for nothing, and its const lines threw). Each file now loads on its own and is skipped once its
+    // data is there; a failed tag is removed so the retry adds a clean one.
+    // A file still on its way from the last try is waited for, not asked for again.
+    const add = (src, have) => have() ? Promise.resolve() : snFileP[src] || (snFileP[src] = new Promise((ok, bad) => {
+      const s = document.createElement("script"); s.src = src;
+      s.onload = () => { delete snFileP[src]; ok(); };
+      s.onerror = (e) => { s.remove(); delete snFileP[src]; bad(e); };
+      document.head.appendChild(s);
+    }));
+    snLoadP = Promise.all([
+      add("daikin-sensors.js", () => typeof DAIKIN_SENSOR_MAPS !== "undefined"),
+      add("brand-sensors.js", () => typeof BRAND_SENSOR_MAPS !== "undefined"),
+    ]).then(() => {
       snLoaded = true; snAll = null;
       // Ask Anything gets the sensor maps: added to the index it already has (app.js askSensorsLanded, 11-12 speed audit #4)
       if (typeof askSensorsLanded === "function") askSensorsLanded();

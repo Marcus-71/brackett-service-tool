@@ -1,4 +1,4 @@
-const CACHE_NAME = "bfc-cache-v463";
+const CACHE_NAME = "bfc-cache-v464";
 // v286: library files that never change between versions (OCR engine, barcode
 // reader, PDF viewer, icons, Education PDFs) live in their own cache, kept from
 // one version to the next. A version update now downloads only the app's own
@@ -7,6 +7,11 @@ const CACHE_NAME = "bfc-cache-v463";
 // ever changes under the same name (an Education PDF replaced, a vendor
 // upgrade), bump STATIC_CACHE - otherwise phones keep the old copy.
 const STATIC_CACHE = "bfc-static-v1";
+// v464 (11-19 audit #7): thermostat wiring photos (tstat-img/, 177 files, 1.7 MB) are stored when first
+// viewed, in this cache that every version keeps - they used to go into the version cache and vanish
+// offline after each update. Served from here at once and refreshed from the web in the background
+// when there is signal, so a photo replaced under the same name still updates.
+const IMG_CACHE = "bfc-img-v1";
 // The OCR worker is created LSTM-only (createWorker("eng", 1)), so it only ever
 // loads one of the two -lstm builds: SIMD on any phone from the last several
 // years, the plain one on very old phones. Same test the OCR worker itself runs
@@ -86,7 +91,7 @@ const APP_SHELL = [
 const SHELL_HASHES = {
   "./index.html": "15a5475fdeeb193335e2",
   "./style.css": "88b036207515c23ba520",
-  "./app.js": "858bae4bfeec1424ee0c",
+  "./app.js": "a711fb0047cd2efda042",
   "./pt-data.js": "683d0d877945d72a0b2a",
   "./data.js": "11cdaa89dfed4257242f",
   "./symptoms.js": "14ef621d201887971830",
@@ -95,7 +100,7 @@ const SHELL_HASHES = {
   "./charging-charts.js": "daec2cb65dd460da0f69",
   "./daikin-sensors.js": "9e76c4d5d59b3b9bc604",
   "./brand-sensors.js": "731df2e88bce24521e44",
-  "./sensors.js": "f69d869703aa04352c9f",
+  "./sensors.js": "8c995965d00c0d577010",
   "./toolbox.js": "c67328fc6c22100d95ec",
   "./thermostats.js": "87c4cd4c80c23a44f256",
   "./generators.js": "0426e7d416f8d2a0582e",
@@ -103,7 +108,7 @@ const SHELL_HASHES = {
   "./weather.js": "5b9215e305c303ac986f",
   "./maint.js": "f1fda68720dc60ad25aa",
   "./bulletins.js": "0774fbdfaf85a3011e27",
-  "./inventory.js": "5cfc7dc549d17149b4a9",
+  "./inventory.js": "e6d0cd7d0b0bcf018a46",
   "./dchecker/index.html": "2487e203cbdae9ed9c1d",
   "./guides/daikin-checker-guide.html": "0d7a518082b6f948041a",
   "./manuals-seed/seed-index.js": "412a4834ea2bb641bd58",
@@ -121,9 +126,12 @@ const shellHash = async (bytes) => {
 async function reusePlan() {
   const plan = new Map();
   if (!self.crypto || !crypto.subtle || !SHELL_HASHES["./app.js"]) return plan;
+  // v464 (11-19 audit #8): THIS version's own cache comes first. An install that failed partway (weak
+  // signal) now leaves the files that did arrive there, and the next try keeps each one whose bytes hash
+  // to the published value instead of starting over from zero. Any other version's cache is next.
   const olds = (await caches.keys())
-    .map((n) => [n, +((/^bfc-cache-v(\d+)$/.exec(n) || [])[1] || 0)])
-    .filter((x) => x[1] && x[0] !== CACHE_NAME)
+    .map((n) => [n, n === CACHE_NAME ? Infinity : +((/^bfc-cache-v(\d+)$/.exec(n) || [])[1] || 0)])
+    .filter((x) => x[1])
     .sort((a, b) => b[1] - a[1]);
   for (const url of APP_SHELL) {
     if (url === "./app.js") continue;
@@ -231,9 +239,10 @@ self.addEventListener("install", (event) => {
       }));
     } catch (err) {
       failed = true; listProven(false);   // release the files still waiting on app.js; they stop
-      // Don't leave a half-filled cache under this version's name behind (the fetch handler
-      // searches every cache); the next install starts clean.
-      await caches.delete(CACHE_NAME).catch(() => {});
+      // v464: the half-filled cache under this version's name STAYS, so the next try only fetches what
+      // is missing (reusePlan hash-checks every kept file first). Safe since v345: the running version
+      // answers only from its own caches, never this one, and activate deletes it once any later
+      // install succeeds. app.js is still downloaded every try (it proves the version and the list).
       throw err;
     }
   })());
@@ -247,8 +256,20 @@ self.addEventListener("install", (event) => {
 const FORCED_UPDATE_SINCE = 303;
 self.addEventListener("activate", (event) => {
   event.waitUntil((async () => {
-    const names = (await caches.keys()).filter((n) => n !== CACHE_NAME && n !== STATIC_CACHE);
+    const names = (await caches.keys()).filter((n) => n !== CACHE_NAME && n !== STATIC_CACHE && n !== IMG_CACHE);
     const oldVersions = names.map((n) => +((/^bfc-cache-v(\d+)$/.exec(n) || [])[1] || 0)).filter(Boolean);
+    // v464: thermostat photos a tech already viewed under an older version move to the kept cache.
+    try {
+      const img = await caches.open(IMG_CACHE);
+      for (const n of [CACHE_NAME, ...names]) {
+        const c = await caches.open(n);
+        for (const req of await c.keys()) {
+          if (!new URL(req.url).pathname.includes("/tstat-img/")) continue;
+          if (!(await img.match(req))) { const r = await c.match(req); if (r && r.ok && /^image\//i.test(r.headers.get("content-type") || "")) await img.put(req, r); }
+          if (n === CACHE_NAME) await c.delete(req);
+        }
+      }
+    } catch (e) {}
     await Promise.all(names.map((n) => caches.delete(n)));
     await self.clients.claim();
     // NOT awaited: the reload's own request waits until this worker has finished activating, so
@@ -296,6 +317,19 @@ self.addEventListener("fetch", (event) => {
   // reproduced in scratch\sw-race\e2e-old-phone.js).
   const ownMatch = (req) => caches.open(CACHE_NAME).then((c) => c.match(req))
     .then((hit) => hit || caches.open(STATIC_CACHE).then((c) => c.match(req)));
+  if (url.pathname.includes("/tstat-img/")) {
+    const fresh = (img) => fetch(event.request).then((response) => {
+      if (response.ok && response.type === "basic" && /^image\//i.test(response.headers.get("content-type") || "")) img.put(event.request, response.clone()).catch(() => {});
+      return response;
+    });
+    event.respondWith(caches.open(IMG_CACHE).then((img) => img.match(event.request).then((hit) => {
+      if (!hit) return fresh(img).catch(() => Response.error());
+      const bg = fresh(img).catch(() => {});   // refresh in the background; the stored copy answers now
+      try { event.waitUntil(bg); } catch (e) {}
+      return hit;
+    })));
+    return;
+  }
   event.respondWith(
     ownMatch(event.request).then((cached) => {
       if (cached) return cached;
