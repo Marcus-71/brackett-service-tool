@@ -12765,10 +12765,10 @@ async function ocrTagTextPasses(file, onStatus) {
   const BOX_READS = [[0.2, 0.8, false, true, 44], [0.3, 1.4, false, true, 64], [0.6, 2, false, true, 44], [0.2, 0.8, false, true, 64], [0.2, 0.8, false, false, 44], [0.2, 0.8, false, false, 64], [0.3, 1.4, false, false, 44], [0.3, 1.4, true, true, 64], [0.6, 2, false, true, 64], [0.6, 2, true, true, 64]];
   const BOX_MODEL_RE = /^G?00\d{5,6}$/;
   const boxVotes = new Map();   // label word -> Map(digits -> { n, g }), filled once per label word
-  const boxModelVote = async (candModel) => {
+  const boxModelVote = async (candModel, from) => {
     const candDigits = candModel ? candModel.replace(/^G/, "") : "";
     const total = new Map(), seen = new Set();
-    for (const a of anchors.filter(x => x.kind === "model" && !x.fr).sort((x, y) => y.conf - x.conf)) {
+    for (const a of (from || anchors.filter(x => x.kind === "model" && !x.fr)).sort((x, y) => y.conf - x.conf)) {
       const key = [a.deg, a.passScale, a.box.x0, a.box.y0, a.box.x1, a.box.y1].join(",");
       if (seen.has(key)) continue;
       if (seen.size >= 2) break;
@@ -12784,7 +12784,9 @@ async function ocrTagTextPasses(file, onStatus) {
           const [u, d, flat, straight, size] = BOX_READS[k];
           let data = null;
           try { data = await ocrZoomLine(worker, photo, a.box, a.rad, a.deg, a.passScale, size, straight, { l: -(lw + 0.35), r: 11, u, d, psm: "7" }, flat); } catch (e) { data = null; }
-          for (const t of new Set(String(data && data.text || "").toUpperCase().split(/[^A-Z0-9]+/))) {
+          for (const t0 of new Set(String(data && data.text || "").toUpperCase().split(/[^A-Z0-9]+/))) {
+            // v460: on a row found from the SERIAL word the box's left edge can read as a 1 ("10058730")
+            const t = from ? t0.replace(/^[1IL](?=G?00\d{5,6}$)/, "") : t0;
             if (!BOX_MODEL_RE.test(t)) continue;
             const dg = t.replace(/^G/, ""), e = v.get(dg) || { n: 0, g: 0 };
             e.n++; if (t[0] === "G") e.g++;
@@ -12801,13 +12803,28 @@ async function ocrTagTextPasses(file, onStatus) {
     const ranked = [...total].sort((x, y) => y[1].n - x[1].n);
     if (!ranked.length || ranked[0][1].n < 3 || (ranked[1] && ranked[1][1].n * 3 > ranked[0][1].n)) return null;
     const [dg, e] = ranked[0];
-    const at = anchors.find(x => x.kind === "model" && !x.fr);
+    const at = from ? from[0] : anchors.find(x => x.kind === "model" && !x.fr);
     return { model: (e.g * 2 > e.n ? "G" : "") + dg, agree: dg === candDigits, at };
+  };
+  // v460 (Vern 11-18, sunlit Generac plate 0058730): no pass saw the MODEL label word, but the
+  // SERIAL label was read with an all-digit serial. A Generac plate prints MODEL one row above
+  // SERIAL, so the box vote reads the row above the SERIAL word (same gate: 3+ agreeing reads of
+  // a Generac-shaped number the library knows). Tried once per scan.
+  let boxFromSerialTried = false;
+  const serialRowModelAnchors = () => {
+    if (boxFromSerialTried || !best || !/^\d{7,10}$/.test(best.serial || "")) return null;
+    const s = anchors.filter(a => a.kind === "serial" && !a.fr).sort((x, y) => y.conf - x.conf)[0];
+    if (!s) return null;
+    boxFromSerialTried = true;
+    const h = Math.max(1, s.box.y1 - s.box.y0);
+    // the MODEL word is shorter than SERIAL, so its box starts further left
+    return [3.4, 3].map(dy => ({ ...s, kind: "model", base: null, box: { x0: s.box.x0 - 1.2 * h, x1: s.box.x1 - 1.2 * h, y0: s.box.y0 - dy * h, y1: s.box.y1 - dy * h } }));
   };
   // No pass found a model: the boxed value by itself, when the vote is clear and the library knows it.
   const boxModel = async () => {
-    if (!anchors.some(a => a.kind === "model" && !a.fr)) return null;
-    const bv = await boxModelVote("");
+    const from = anchors.some(a => a.kind === "model" && !a.fr) ? null : serialRowModelAnchors();
+    if (!from && !anchors.some(a => a.kind === "model" && !a.fr)) return null;
+    const bv = await boxModelVote("", from);
     if (!bv) return null;
     const zc = ocrCleanModel(bv.model);
     if (!(zc.lib && zc.tier === 2)) return null;
@@ -15456,7 +15473,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v459";
+const APP_VERSION = "v460";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
