@@ -1138,11 +1138,11 @@ const ERROR_CODES = [
     equipment: "Gas Furnace",
     code: "23.3 / 26.1 / 31.3 / 31.4 / 31.5 / 32.3 / 34.4",
     title: "Ultra-low-NOx (ULN) furnace codes - BTS lockout, HPSR, pressure loss, self-healing ignition",
-    meaning: "ULN communicating furnace codes from the master list: 23.3 pressure on the ULN burner not below 0.15 in. w.c. when it should be; 26.1 burner thermal switch (BTS) open lockout; 31.3 HPSR contact does not close when it should; 31.4 loss of pressure before blower on; 31.5 loss of pressure after blower on; 32.3 loss of pressure during low heat; 34.4 ignition fault in any self-healing mode. All ULN (ultra-low-NOx) only.",
+    meaning: "ULN communicating furnace codes from the master list: 23.3 pressure on the ULN burner not below 0.15 in. w.c. (Carrier TIC2025-0010 Residential Fault Code List p.2) when it should be; 26.1 burner thermal switch (BTS) open lockout; 31.3 HPSR contact does not close when it should; 31.4 loss of pressure before blower on; 31.5 loss of pressure after blower on; 32.3 loss of pressure during low heat; 34.4 ignition fault in any self-healing mode. All ULN (ultra-low-NOx) only.",
     steps: [
       "26.1: the BTS is a burner over-temperature safety - check for flame rollback / impingement, gas input and combustion air before resetting; it is a lockout.",
       "31.x / 32.3 pressure-loss codes: work them like 31 / 32 - venting, condensate, tubing, inducer - plus the HPSR relay (31.3, 43.2).",
-      "23.3: pressure switch / tubing did not drop to below 0.15 in. w.c. - check tubing and switch.",
+      "23.3: pressure switch / tubing did not drop to below 0.15 in. w.c. (Carrier TIC2025-0010 p.2) - check tubing and switch.",
       "Confirm each number on the furnace service label; these come from the master list only.",
     ],
     techTips: [
@@ -5257,7 +5257,7 @@ const ERROR_CODES = [
     steps: [
       "Reset system power and verify inducer is running properly",
       "Replace inducer motor or integrated control module if necessary",
-      "Before condemning the inducer: unplug the motor and ohm the ECM windings at room temperature - 14-17 ohms between any two of the three windings, all three within about 5% of each other (S-303); an open or shorted winding = replace the inducer, good windings with the code still returning = check the IFC drive output / replace the control",
+      "Before condemning the inducer: unplug the motor and ohm the ECM windings at room temperature - 14-17 ohms (Daikin DM97MC/DC97MC Service Instructions RSD6612009r5 p.55) between any two of the three windings, all three within about 5% of each other (S-303); an open or shorted winding = replace the inducer, good windings with the code still returning = check the IFC drive output / replace the control",
     ],
     confidence: "common",
   },
@@ -27264,7 +27264,7 @@ const ERROR_CODES = [
       "Check charge and the reversing valve - a valve that does not fully shift will never clear the coil.",
     ],
     techTips: [
-      { text: "PCM v7.0 improved defrost operation for 41-13 (Defrost Timeout/Overrun) and fixed the 61-13 / 61-53 Reversing Valve Timeout fault and malfunction; v6.0 had already fixed defrost not ending when the 50 PSI differential (DP-SP) needed to shift the reversing valve was not reached within the 10-minute 61-13 timeout. Update the PCM before replacing the reversing valve for these codes.", source: "Carrier TIC2021-0007, 26/24 Condensing Unit PCM Software v7.0 Release, Mar 2021" },
+      { text: "PCM v7.0 improved defrost operation for 41-13 (Defrost Timeout/Overrun) and fixed the 61-13 / 61-53 Reversing Valve Timeout fault and malfunction; v6.0 had already fixed defrost not ending when the 50 PSI differential (DP-SP) (Carrier TIC2021-0001 p.1) needed to shift the reversing valve was not reached within the 10-minute 61-13 timeout. Update the PCM before replacing the reversing valve for these codes.", source: "Carrier TIC2021-0007, 26/24 Condensing Unit PCM Software v7.0 Release, Mar 2021" },
     ],
     confidence: "common",
   },
@@ -27705,7 +27705,7 @@ const ERROR_CODES = [
       "Check charge and the valve solenoid.",
     ],
     techTips: [
-      { text: "PCM v7.0 improved defrost operation for 41-13 (Defrost Timeout/Overrun) and fixed the 61-13 / 61-53 Reversing Valve Timeout fault and malfunction; v6.0 had already fixed defrost not ending when the 50 PSI differential (DP-SP) needed to shift the reversing valve was not reached within the 10-minute 61-13 timeout. Update the PCM before replacing the reversing valve for these codes.", source: "Carrier TIC2021-0007, 26/24 Condensing Unit PCM Software v7.0 Release, Mar 2021" },
+      { text: "PCM v7.0 improved defrost operation for 41-13 (Defrost Timeout/Overrun) and fixed the 61-13 / 61-53 Reversing Valve Timeout fault and malfunction; v6.0 had already fixed defrost not ending when the 50 PSI differential (DP-SP) (Carrier TIC2021-0001 p.1) needed to shift the reversing valve was not reached within the 10-minute 61-13 timeout. Update the PCM before replacing the reversing valve for these codes.", source: "Carrier TIC2021-0007, 26/24 Condensing Unit PCM Software v7.0 Release, Mar 2021" },
     ],
     confidence: "common",
   },
@@ -27735,7 +27735,7 @@ const ERROR_CODES = [
       "Work the 61-13 cause list.",
     ],
     techTips: [
-      { text: "PCM v7.0 improved defrost operation for 41-13 (Defrost Timeout/Overrun) and fixed the 61-13 / 61-53 Reversing Valve Timeout fault and malfunction; v6.0 had already fixed defrost not ending when the 50 PSI differential (DP-SP) needed to shift the reversing valve was not reached within the 10-minute 61-13 timeout. Update the PCM before replacing the reversing valve for these codes.", source: "Carrier TIC2021-0007, 26/24 Condensing Unit PCM Software v7.0 Release, Mar 2021" },
+      { text: "PCM v7.0 improved defrost operation for 41-13 (Defrost Timeout/Overrun) and fixed the 61-13 / 61-53 Reversing Valve Timeout fault and malfunction; v6.0 had already fixed defrost not ending when the 50 PSI differential (DP-SP) (Carrier TIC2021-0001 p.1) needed to shift the reversing valve was not reached within the 10-minute 61-13 timeout. Update the PCM before replacing the reversing valve for these codes.", source: "Carrier TIC2021-0007, 26/24 Condensing Unit PCM Software v7.0 Release, Mar 2021" },
       { text: "Before PCM v9.02, this code could escalate to malfunction (lockout) status too early, before its occurrence-count and timing rules were met. On older PCM software treat a single lockout as possibly premature: update the PCM (v10.0 or later includes the fix) and re-check before replacing parts.", source: "Carrier TIC2021-0021, Software PCM V9.02 Release, Dec 2021; Carrier TIC2022-0010, Software PCM V10.0 Release, Jun 2022" },
     ],
     confidence: "common",
