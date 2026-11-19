@@ -2402,3 +2402,6 @@ body.inv-cam-open { overflow: hidden; }
 .scan-unit-scen-more > summary { cursor: pointer; font-weight: 700; padding: 0.7rem 0.2rem; min-height: 44px; }
 .scan-unit-scen-more[open] > summary { margin-bottom: 0.4rem; }
 .scan-unit-scen-more > .scan-unit-scen-btn { display: block; width: 100%; margin-bottom: 0.4rem; }
+
+/* Andy 2026-11-19: the Brackett house mascot waves at the bottom of the start screen */
+.home-mascot { display: block; width: min(34vw, 140px); height: auto; margin: 0.4rem auto 0.3rem; pointer-events: none; user-select: none; }
