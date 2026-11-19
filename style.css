@@ -657,6 +657,10 @@ main {
 
 .tile-icon { font-size: 1.8rem; margin-bottom: 0.3rem; }
 .tile-label { font-size: 1.2rem; font-weight: 800; }
+/* v465 (audit #16): More tools - full width, short; its tiles open below in the same grid */
+.home-tiles .tile-more { grid-column: 1 / -1; min-height: 56px; border-style: dashed; justify-content: center; }
+.tile-more.open .tile-more-caret { display: inline-block; transform: rotate(180deg); }
+.home-tiles.home-more { padding-top: 0; }
 .tile-sub { font-size: 0.9rem; color: var(--text-dim); }
 
 .tile-ask { border-left: 5px solid var(--brand-yellow); background: linear-gradient(180deg, rgba(253,210,110,0.10), transparent 60%), var(--card); }
@@ -1624,6 +1628,16 @@ main {
 }
 .maint-title { font-weight: 700; }
 .maint-sub { font-size: .85rem; color: var(--text-dim); margin-top: .15rem; }
+/* v465 (audit #12): open card - description cut to 2 lines here, in full under the figures */
+.maint-sub-short { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.maint-cautions { margin: .2rem 0 .6rem; border: 1px solid var(--border); border-left: 4px solid var(--danger); border-radius: 8px; }
+.maint-cautions > summary { list-style: none; cursor: pointer; min-height: 44px; display: flex; align-items: center; flex-wrap: wrap; gap: 0 .3rem; padding: .3rem .6rem; font-weight: 700; color: var(--danger); }
+.maint-cautions > summary::-webkit-details-marker { display: none; }
+.maint-cautions > summary::after { content: "›"; margin-left: auto; font-size: 1.3rem; line-height: 1; }
+.maint-cautions[open] > summary::after { content: "⌄"; }
+.maint-cautions-hint { font-weight: 400; color: var(--text-dim); font-size: .85rem; }
+.maint-cautions > .maint-flag { margin: 0 .5rem .5rem; }
+.maint-about { margin-top: 1rem; font-size: .9rem; color: var(--text); }
 .maint-caret { color: var(--text-dim); font-size: 1.1rem; }
 
 .maint-tabs { display: flex; gap: .5rem; padding: 0 1rem .6rem; }
@@ -1999,13 +2013,13 @@ main {
 /* Generators: Troubleshoot a Problem scan box under the checklist box (Andy 2026-10-02). */
 .gwz-entry-problem { margin-top: 0.35rem; border-color: var(--brand-yellow); }
 #genProblemScanStatus { margin-top: 0.3rem; }
-.gen-type-model { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.4rem; }
-.gen-type-model input, .gen-type-model button { min-height: 46px; }
-.gen-type-model input { flex: 1 1 9rem; min-width: 0; padding: 0.55rem 0.6rem; font-size: 1rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-elevated); color: var(--text); text-transform: uppercase; }
-.gen-type-model input#genProblemSerial { flex: 1 1 7rem; }
-.gen-type-model input#genProblemModel { flex: 1 1 100%; }
-.gen-type-model input::placeholder { text-transform: none; }
-.gen-type-model button { flex: 0 0 auto; padding: 0.55rem 1rem; font-weight: 700; border: none; border-radius: 8px; background: var(--brand-yellow); color: #1a1a1a; }
+/* v465 (audit #13): one Generators box; the Open row appears under it for a known model */
+.gen-search-form { margin: 0; }
+.gen-open-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+.gen-open-row input, .gen-open-row button { min-height: 46px; }
+.gen-open-row input { flex: 1 1 7rem; min-width: 0; padding: 0.55rem 0.6rem; font-size: 1rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-elevated); color: var(--text); text-transform: uppercase; }
+.gen-open-row input::placeholder { text-transform: none; }
+.gen-open-row button { flex: 1 1 10rem; padding: 0.55rem 1rem; font-weight: 800; font-size: 1rem; border: none; border-radius: 8px; background: var(--brand-yellow); color: #1a1a1a; }
 
 /* Inventory (Andy 2026-10-02) */
 .tile-inventory { border-left: 5px solid var(--brand-orange); }
@@ -2145,6 +2159,14 @@ body.inv-cam-open { overflow: hidden; }
 .bul-ask-line .bul-open-high { border-color: var(--danger); }
 /* Inside the Maintenance / Codes result lists the card is a sibling of .card articles - keep the gap. */
 #maintResults > .bul-card, #codesResults > .bul-card { margin: 0.2rem 0 0.75rem; }
+/* v465: the folded one-line card (audit #14) - the whole line is the tap target */
+.bul-fold > summary.bul-head { list-style: none; cursor: pointer; min-height: 44px; display: flex; align-items: center; flex-wrap: wrap; gap: 0 0.3rem; margin: 0; font-size: 0.9rem; text-transform: none; letter-spacing: 0; }
+.bul-fold > summary::-webkit-details-marker { display: none; }
+.bul-fold > summary::after { content: "›"; margin-left: auto; font-size: 1.3rem; line-height: 1; }
+.bul-fold[open] > summary::after { content: "⌄"; }
+.bul-fold { padding-top: 0; padding-bottom: 0; }
+.bul-fold[open] { padding-bottom: 0.3rem; }
+.bul-hi-count { color: #fff; background: #b91c1c; border-radius: 5px; padding: 0 0.35rem; font-size: 0.8rem; font-weight: 800; }
 .bul-more { border-top: 1px solid var(--border); }
 .bul-more > summary { list-style: none; cursor: pointer; padding: 0.45rem 0; font-size: 0.85rem; font-weight: 700; color: var(--text-dim); }
 .bul-more > summary::-webkit-details-marker { display: none; }
@@ -2405,3 +2427,14 @@ body.inv-cam-open { overflow: hidden; }
 
 /* Andy 2026-11-19: the Brackett house mascot waves at the bottom of the start screen */
 .home-mascot { display: block; width: min(34vw, 140px); height: auto; margin: 0.4rem auto 0.3rem; pointer-events: none; user-select: none; }
+
+/* v465 (11-19 audit #17): readable in sun, big enough for a gloved thumb. Text that was 12.5-12.8 px
+   goes to 14 px; the tap targets that were under 44 px get 44. */
+.tag, .tstat-badge, .scan-id-facts .k, .gen-guide-src, .folder-meta, .bul-pri, .maint-source { font-size: 0.875rem; }
+.status-pill { font-size: 0.85rem; }
+.ask-ai-cite { min-height: 44px; padding: 0.45rem 0.8rem; font-size: 0.9rem; }
+.bul-sn-input { min-height: 44px; }
+.bul-more > summary { min-height: 44px; display: flex; align-items: center; font-size: 0.9rem; }
+.tech-picker-link { min-height: 44px; padding: 0.6rem 0.8rem; font-size: 0.9rem; }
+.scan-identify { min-height: 48px; }
+#genMultiAtsOpen { min-height: 44px; }

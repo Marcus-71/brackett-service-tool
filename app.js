@@ -472,6 +472,17 @@ function showScreen(name, fromBack) {
 document.querySelectorAll(".tile").forEach(tile => {
   if (tile.dataset.screen) tile.addEventListener("click", () => showScreen(tile.dataset.screen));
 });
+// v465 (11-19 audit #16): the little-used tools open under "More tools".
+(() => {
+  const btn = document.getElementById("homeMoreBtn"), box = document.getElementById("homeMore");
+  if (!btn || !box) return;
+  btn.addEventListener("click", () => {
+    const open = box.classList.toggle("hidden") === false;
+    btn.setAttribute("aria-expanded", String(open));
+    btn.classList.toggle("open", open);
+    if (open) { trackEvent("home: opened More tools"); box.scrollIntoView({ block: "nearest", behavior: "smooth" }); }
+  });
+})();
 
 // ---- Set Up My Pad (v366, Andy 2026-11-04: "the qr can be put on the phone app since they all have that") ----
 // The phone shows a QR code of the app's address; the tech points the pad's camera at
@@ -891,7 +902,10 @@ function renderCodes() {
   }
   // 11-12 audit (field-use #1, screens #3): a code typed off the board lists the cards that ARE that code
   // first, then codes that start with it, then cards that only mention it. Brand A-Z breaks ties.
-  const codeTok = viaPrefix ? "" : codeSearchToken(codesState.search);
+  // v465 (11-19 audit #11): "59TP6 33" lands in the model-family fallback (no card is written "59TP6"),
+  // and the code in it was dropped there - code 33 sat 19 screens down. The model word is never
+  // code-shaped, so the code beside it still ranks the family's cards.
+  const codeTok = codeSearchToken(codesState.search);
   const rankOf = new Map();
   if (codeTok) for (const c of filtered) rankOf.set(c, codeMatchRank(c.code, codeTok, codesState.search));
   filtered.sort((a, b) => (codeTok ? rankOf.get(a) - rankOf.get(b) : 0) || a.brand.localeCompare(b.brand) || a.code.localeCompare(b.code));
@@ -912,7 +926,7 @@ function renderCodes() {
     const nBrands = new Set(filtered.filter(c => rankOf.get(c) <= 1).map(c => c.brand)).size;
     note.textContent = (nReal === 1 ? "1 card is code " + codeTok : nReal + " cards are code " + codeTok) + " - listed first." +
       (nBrands > 1 && codesState.brand === "All" ? " Pick the brand above to see only yours." : "") +
-      (filtered.length > nReal ? " The other " + (filtered.length - nReal) + " only mention it." : "");
+      (filtered.length > nReal ? (viaPrefix ? " The family's other " + (filtered.length - nReal) + " codes follow." : " The other " + (filtered.length - nReal) + " only mention it.") : "");
     results.appendChild(note);
   }
   if (viaPrefix) {
@@ -3767,7 +3781,8 @@ var searchClearSyncs = [];
 function searchClearSync() { for (const f of (searchClearSyncs || [])) f(); }
 document.querySelectorAll(".search-input").forEach((el) => {
   el.setAttribute("enterkeyhint", "search");
-  if (el.id !== "askInput") el.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); el.blur(); } });
+  // v465: a box inside its own form (Generators) lets Enter submit that form; its handler does the blur.
+  if (el.id !== "askInput" && !el.form) el.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); el.blur(); } });
   let row = el.parentElement;
   if (!row || !row.classList.contains("ask-input-row")) {
     row = document.createElement("div");
@@ -5409,6 +5424,21 @@ function genFamilyForModel(model) {
   return (full && genEntries().find(g => (g.models || []).some(m => m.g === full)))
     || genEntries().find(g => (g.models || []).some(m => m.digits === d)) || null;
 }
+// v465 (audit #13): the one Generators box takes models, codes and kW. A text counts as a MODEL only by its
+// shape - a G-number (G0072580, or 0072580 as the plate prints it) or letters + digits, 5 or more (20RCAL,
+// RG022, QT048) - never a bare code ("1100") or a size ("22kW").
+function genModelShaped(t) {
+  const u = String(t || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  // 7 digits, or 8 on 2024+ plates (G00722610); a G-number only once all its digits are in.
+  if (/^\d+$/.test(u)) return /^00\d{5,6}$/.test(u);
+  if (/^G\d+$/.test(u)) return /^G0\d{6,7}$/.test(u);
+  // a Kohler model is its family prefix plus more (6VSG -> 6VSG-QS1 ...); the bare prefix counts too
+  if (typeof genEntries === "function" && genEntries().some(g => (g.models || []).some(m => m.k && String(m.k).toUpperCase().replace(/[^A-Z0-9]/g, "") === u))) return true;
+  return u.length >= 5 && /[A-Z]/.test(u) && /\d/.test(u) && !/^\d+KW$/.test(u);
+}
+function genTypedModelFamily(t) {
+  return genModelShaped(t) && typeof genFamilyForModel === "function" ? genFamilyForModel(t) : null;
+}
 // v346: Generac data tags print the model without its "G" (Vern's plate: 0064620 for G0064620).
 // Returns the G-number when the bare number is one the generator library lists exactly, else "".
 function genBareToG(model) {
@@ -5549,7 +5579,13 @@ function bulletinsHtml(list, opts) {
     const foldIds = new Set(folded.map(b => b.id));
     shown = list.filter(b => !foldIds.has(b.id));
   }
-  bulTrackShown(shown, opts.where || "unit", opts.model);
+  // v465 (11-19 audit #14: 1,214 shown, 15 opened, and a 9-row box pushed the code cards down): outside a
+  // bulletin's own page the card is ONE line with the count, tapped open. It opens by itself only when a
+  // High bulletin is confirmed for the plate serial. Rows are logged as shown only once the card is open.
+  const fold = !opts.open;
+  const hiCount = list.filter(b => b.priority === "high").length;
+  const serialHit = !!opts.serial && list.some(b => b.priority === "high" && (bulSerialStatus(b, opts.serial) || {}).ok === true);
+  if (!fold || serialHit) bulTrackShown(shown, opts.where || "unit", opts.model);
   // A short list (a scan result with one or two bulletins) opens its high-priority rows; a long one
   // (a Next Gen card with 12) keeps every row to one line - the red High badge is the flag - so the
   // card stays under a third of a phone screen and the unit's own codes are still right below it.
@@ -5580,6 +5616,10 @@ function bulletinsHtml(list, opts) {
   const more = folded.length
     ? `<details class="bul-more" data-where="${escapeHtml(opts.where || "unit")}" data-model="${escapeHtml(opts.model || "")}" data-nums="${escapeHtml(folded.map(b => b.number).join("|"))}"><summary>${folded.length} more (FYI) - tap to see them</summary>${folded.map(item).join("")}</details>`
     : "";
+  if (fold) {
+    const label = `📌 ${list.length === 1 ? "1 bulletin" : list.length + " bulletins"} for this unit${hiCount ? ` · <span class="bul-hi-count">${hiCount} High</span>` : ""}${serialHit ? " · applies to this serial" : ""}`;
+    return `<details class="bul-card bul-fold" aria-label="Service bulletins for this unit" data-where="${escapeHtml(opts.where || "unit")}" data-model="${escapeHtml(opts.model || "")}" data-nums="${escapeHtml(shown.map(b => b.number).join("|"))}"${serialHit ? ' open data-seen="1"' : ""}><summary class="bul-head">${label}</summary>${items}${more}</details>`;
+  }
   return `<section class="bul-card" aria-label="Service bulletins for this unit"><div class="bul-head">📌 Bulletins for this unit (${list.length})</div>${items}${more}</section>`;
 }
 // v405 (Andy 11-10: "not listing serial range on bulletin a0013147290"): a bulletin that covers separate
@@ -5612,7 +5652,7 @@ document.addEventListener("toggle", (e) => {
   const d = e.target;
   if (!d || !d.classList || !d.open || d.dataset.seen) return;
   if (d.classList.contains("bul-item")) { d.dataset.seen = "1"; trackEvent("bulletin opened: " + (d.dataset.bul || "")); }
-  else if (d.classList.contains("bul-more")) {
+  else if (d.classList.contains("bul-more") || d.classList.contains("bul-fold")) {
     d.dataset.seen = "1";
     for (const n of String(d.dataset.nums || "").split("|").filter(Boolean)) trackEvent("bulletin shown: " + n + " | " + (d.dataset.where || "unit") + (d.dataset.model ? " | " + d.dataset.model : ""));
   }
@@ -6439,7 +6479,7 @@ function genMaintCardWire(root) {
   genWireChecklistBtns(root);
   root.querySelectorAll("[data-gen-open]").forEach(b => {
     b.onclick = () => {
-      genState.search = ""; const gi = document.getElementById("genSearchInput"); if (gi) gi.value = "";
+      genState.search = ""; const gi = document.getElementById("genSearchInput"); if (gi) gi.value = ""; if (window.genSyncOpenRow) window.genSyncOpenRow();
       showScreen("gen");
       openGenDetail(b.dataset.genOpen, b.dataset.genFocus || undefined);
     };
@@ -7186,10 +7226,10 @@ async function genClEntryCount() {
   const typed = document.getElementById("genProblemTypeForm");
   if (typed) typed.addEventListener("submit", (e) => {
     e.preventDefault();
-    const model = String(document.getElementById("genProblemModel").value || "").trim().toUpperCase();
+    const s = document.getElementById("genSearchInput");
+    const model = String(s.value || "").trim().toUpperCase();
     const serial = String(document.getElementById("genProblemSerial").value || "").trim().toUpperCase();
-    if (!model) { genProblemScanStatus("Type the MODEL number off the tag.", true); return; }
-    const fam = genFamilyForModel(model);
+    const fam = genTypedModelFamily(model);
     if (fam) {
       genNoteScan(model, serial);
       trackEvent("gen problem typed -> " + model + (serial ? " | serial: " + serial : ""));
@@ -7197,11 +7237,23 @@ async function genClEntryCount() {
       openGenDetail(fam.id, model, { serial, where: "gen problem typed" });
       return;
     }
-    trackEvent("gen problem typed -> " + model + " | not in library");
-    genProblemScanStatus(model + " isn't a generator model in our list. Check it against the MODEL line on the tag - or search a code or kW in the box below.", true);
-    const s = document.getElementById("genSearchInput");
-    if (s) { s.value = model; genState.search = model; renderGens(); }
+    s.blur();   // v465: Enter on a code or kW keeps the list filtered and closes the keyboard
+    if (genModelShaped(model)) {
+      trackEvent("gen problem typed -> " + model + " | not in library");
+      genProblemScanStatus(model + " isn't a generator model in our list. Check it against the MODEL line on the tag - the list below shows the closest matches.", true);
+    }
   });
+  // v465: the Open row shows only while the box holds a model the library knows.
+  const genSync = () => {
+    const v = String((document.getElementById("genSearchInput") || {}).value || "").trim().toUpperCase();
+    const fam = genTypedModelFamily(v), row = document.getElementById("genOpenRow"), btn = document.getElementById("genOpenBtn");
+    if (!row || !btn) return;
+    row.classList.toggle("hidden", !fam);
+    if (fam) btn.textContent = "Open " + v + " ›";
+  };
+  const gsi = document.getElementById("genSearchInput");
+  if (gsi) gsi.addEventListener("input", genSync);
+  window.genSyncOpenRow = genSync;
   const rec = document.getElementById("genClEntryRecent");
   if (rec) rec.onclick = () => { genCl.view = "recent"; showScreen("genchecklist"); window.scrollTo(0, 0); };
   document.querySelectorAll("#genBrandTabs [data-brand]").forEach(b => {
@@ -13945,7 +13997,7 @@ function renderScanResult(info) {
   const goGen = document.getElementById("scanGoGen");
   if (goGen) goGen.onclick = () => {
     const fam = genFamilyForModel(info.model);
-    genState.search = ""; document.getElementById("genSearchInput").value = "";
+    genState.search = ""; document.getElementById("genSearchInput").value = ""; if (window.genSyncOpenRow) window.genSyncOpenRow();
     showScreen("gen");
     if (fam) openGenDetail(fam.id, info.model);
   };
@@ -15513,7 +15565,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v464";
+const APP_VERSION = "v465";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

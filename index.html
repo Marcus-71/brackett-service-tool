@@ -64,15 +64,33 @@
       <span class="tile-label">Thermostats</span>
       <span class="tile-sub">Wiring, setup, codes — every brand</span>
     </button>
-    <button class="tile tile-charge" data-screen="charge">
-      <span class="tile-icon">🌡️</span>
-      <span class="tile-label">Charging Calc</span>
-      <span class="tile-sub">Check a charge - 410A, R-32, 454B</span>
-    </button>
     <button class="tile tile-checker" data-screen="checker">
       <span class="tile-icon">📈</span>
       <span class="tile-label">Daikin Checker</span>
       <span class="tile-sub">Read a D-Checker recording</span>
+    </button>
+    <button class="tile tile-request" data-screen="request">
+      <span class="tile-icon">💬</span>
+      <span class="tile-label">Request Info</span>
+      <span class="tile-sub">Tell the office what's missing</span>
+    </button>
+    <button id="tileInventory" class="tile tile-inventory hidden" data-screen="inventory">
+      <span class="tile-icon">📦</span>
+      <span class="tile-label">Inventory</span>
+      <span class="tile-sub">Scan each unit's tag - totals by model, emails an Excel count</span>
+    </button>
+    <!-- v465 (11-19 audit #16): tools with almost no use in four weeks (Charging Calc and Toolbox 0 views)
+         sit behind More, so the daily tiles fit on one phone screen. Each one still works the same. -->
+    <button type="button" id="homeMoreBtn" class="tile tile-more" aria-expanded="false" aria-controls="homeMore">
+      <span class="tile-label">More tools <span class="tile-more-caret" aria-hidden="true">▾</span></span>
+      <span class="tile-sub">Charging Calc, House Size, Toolbox, Weather, Education, Pad setup</span>
+    </button>
+  </div>
+  <div id="homeMore" class="home-tiles home-more hidden">
+    <button class="tile tile-charge" data-screen="charge">
+      <span class="tile-icon">🌡️</span>
+      <span class="tile-label">Charging Calc</span>
+      <span class="tile-sub">Check a charge - 410A, R-32, 454B</span>
     </button>
     <button class="tile tile-sqft" data-screen="sqft">
       <span class="tile-icon">📐</span>
@@ -94,20 +112,10 @@
       <span class="tile-label">Education</span>
       <span class="tile-sub">Training handouts</span>
     </button>
-    <button class="tile tile-request" data-screen="request">
-      <span class="tile-icon">💬</span>
-      <span class="tile-label">Request Info</span>
-      <span class="tile-sub">Tell the office what's missing</span>
-    </button>
     <button id="tilePadSetup" class="tile tile-padsetup" type="button">
       <span class="tile-icon">📲</span>
       <span class="tile-label">Set Up My Pad</span>
       <span class="tile-sub">QR code for your pad</span>
-    </button>
-    <button id="tileInventory" class="tile tile-inventory hidden" data-screen="inventory">
-      <span class="tile-icon">📦</span>
-      <span class="tile-label">Inventory</span>
-      <span class="tile-sub">Scan each unit's tag - totals by model, emails an Excel count</span>
     </button>
   </div>
   <div class="home-footer">
@@ -205,18 +213,20 @@
       <span class="gwz-entry-go" aria-hidden="true">›</span>
     </label>
     <input type="file" id="genProblemScanFile" accept="image/*" capture="environment" class="hidden">
-    <!-- Andy 2026-10-06: troubleshooting was scan-only - let the tech type the model too -->
-    <form id="genProblemTypeForm" class="gen-type-model" autocomplete="off">
-      <input type="text" id="genProblemModel" placeholder="Or type the model # - G0072580, 20RCAL" aria-label="Generator model number" autocapitalize="characters" spellcheck="false">
-      <input type="text" id="genProblemSerial" placeholder="Serial (optional)" aria-label="Generator serial number" autocapitalize="characters" spellcheck="false">
-      <button type="submit">Open this generator</button>
-    </form>
     <div id="genProblemScanStatus" class="scan-status hidden"></div>
   </div>
   <!-- 2026-11-12 audit #8: brand tabs and the code search sit above the two guide boxes (the search was at y=853 on a phone) -->
   <div class="gen-brand-tabs" id="genBrandTabs" role="tablist"><button type="button" data-brand="Generac" class="active">Generac</button><button type="button" data-brand="Kohler">Kohler</button></div>
   <div class="controls">
-    <input id="genSearchInput" class="search-input" type="search" inputmode="search" placeholder="Model, kW or code — 22kW, 1100" autocomplete="off">
+    <!-- v465 (11-19 audit #13): ONE box. A full model typed here offers "Open <model>" (the old second box,
+         Andy 2026-10-06 "let the tech type the model too"); a code or kW filters the list below. -->
+    <form id="genProblemTypeForm" class="gen-search-form" autocomplete="off">
+      <input id="genSearchInput" class="search-input" type="search" inputmode="search" placeholder="Model, code or kW - G0072580, 1100, 22kW" aria-label="Generator model, code or kW" autocapitalize="characters" spellcheck="false" autocomplete="off">
+      <div id="genOpenRow" class="gen-open-row hidden">
+        <button type="submit" id="genOpenBtn">Open this generator ›</button>
+        <input type="text" id="genProblemSerial" placeholder="Serial (optional)" aria-label="Generator serial number" autocapitalize="characters" spellcheck="false">
+      </div>
+    </form>
     <div class="filter-row">
       <select id="genSeriesChips" class="filter-select" aria-label="Filter by series"></select>
       <select id="genCtrlChips" class="filter-select" aria-label="Filter by controller"></select>
