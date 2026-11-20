@@ -72459,17 +72459,23 @@ const TSTAT_NEW_1117B = {
     "TSTATIIIAWF-01"
    ],
    "type": "smart-wifi",
-   "stages": "Carrier: compatible with single- and two-stage systems and one indoor air quality accessory. With the Performance 27VPA9 variable-speed heat pump, ComfortAdjust manages up to 21 adaptable stages of heating and cooling. Heat pump / aux heat stage counts are not in any public Carrier document.",
+   "stages": "Carrier: compatible with single- and two-stage systems and one indoor air quality accessory. With the Performance 27VPA9 variable-speed heat pump, ComfortAdjust manages up to 21 adaptable stages of heating and cooling. Carrier Tech Specs 01-TSTAT-127-01 (2026): Conventional 2H/2C, Heat Pump 4H/2C; gas, oil, electric, dual-fuel, forced air and heat pump; humidifier / dehumidifier, ERV or HRV accessories.",
    "sort": 20,
    "confidence": "verify",
    "power": {
     "cWire": "",
     "batteries": "",
-    "notes": "Not published: the installation manual for the Advanced is not on a public Carrier site, so power and C-wire needs are not confirmed here."
+    "notes": "Carrier Tech Specs 01-TSTAT-127-01: powering method 'Wired 24 VAC through terminals C, Rc or Rh'; power consumption 3 watts or less. Optional InteliSense-enabled C-wire Adapter P/N TSTATXXZAW-01 (sold separately). The sheet does not say whether a C wire is required."
    },
-   "terminals": [],
+   "terminals": [
+    {
+     "t": "ACC1, ACC1*, W1A1, W2A2, O/B, S1, S2, C, Y1, Y2, G, RC, RH, ACC2",
+     "fn": "Wire terminal labels as printed in Carrier Tech Specs 01-TSTAT-127-01.",
+     "notes": "The sheet does not say what each terminal does or what the * on ACC1 means - check the installation manual in the box before wiring."
+    }
+   ],
    "wiringNotes": [
-    "Carrier has not published the installation manual for the Smart Thermostat Advanced on a public site (the carrier.com product page Documents section lists no files, and web searches of carrier.com and shareddocs.com on 17 Nov 2026 found none). Terminals, wiring and installer settings: get the installation manual from HVACpartners or the box.",
+    "Carrier has still not posted the installation manual for the Smart Thermostat Advanced (carrier.com, shareddocs and an HVACpartners search for TSTATCCIAWF on 20 Nov 2026 found only the Tech Specs sheet and brochure). Terminal functions, wiring and installer settings: use the installation manual in the box.",
     "Do not use the Smart Thermostat featuring InteliSense (TSTATCCIEWF-01) card's terminals for this thermostat - Carrier lists them as different SKUs."
    ],
    "setup": {
@@ -72484,8 +72490,8 @@ const TSTAT_NEW_1117B = {
      "source": "Carrier IM-HK-05 InteliSense/SmartSense Equipment Relearning (Edition 06/26), section 3.2 (PDF p.43-51)"
     },
     {
-     "text": "Carrier Smart Thermostat Advanced installer setup, terminals, aux heat and heat pump O/B settings, and C wire needs are not public - Carrier has not posted the installation manual. Use the manual in the box or on HVACpartners.",
-     "source": "Searched carrier.com product page, carrier.com Product Documents and shareddocs on 17 Nov 2026"
+     "text": "Carrier Smart Thermostat Advanced installer setup, aux heat and heat pump O/B settings, and what each terminal does are not public - Carrier has not posted the installation manual. Use the manual in the box. The Tech Specs sheet (01-TSTAT-127-01) only gives the terminal labels, 24 VAC power through C, Rc or Rh, and Conventional 2H/2C and Heat Pump 4H/2C.",
+     "source": "Searched carrier.com product page, carrier.com Product Documents and shareddocs on 17 Nov 2026 and HVACpartners on 20 Nov 2026; Carrier Smart Thermostat Advanced Tech Specs 01-TSTAT-127-01"
     },
     {
      "text": "Reset menu on the Advanced: Menu > System > Reset has Network Reset, Factory Reset and InteliSense Reset. LED edge colors: orange heating, blue cooling, green fan, purple off, yellow utility energy management event.",
@@ -72532,7 +72538,8 @@ const TSTAT_NEW_1117B = {
    "tips": [
     "Warranty: two-year parts limited warranty, extended to five years when the thermostat is registered, connected to Wi-Fi and data sharing is enabled within 90 days of installation (carrier.com).",
     "ComfortAdjust and over-the-air equipment updates work when paired with the Performance 27VPA9 variable-speed heat pump (carrier.com).",
-    "Carrier's Feb. 2026 launch release calls the Advanced the premium model, with a touchscreen and guided setup."
+    "Carrier's Feb. 2026 launch release calls the Advanced the premium model, with a touchscreen and guided setup.",
+    "Optional accessories (Tech Specs 01-TSTAT-127-01): Smart Thermostat Advanced Oversized Wall Plate P/N TSTATXXZOW-01; InteliSense-enabled C-wire Adapter P/N TSTATXXZAW-01. Thermostat sensors: temperature, humidity, proximity, ambient light. Operating range 14 F to 120 F, humidity 20% to 80%."
    ],
    "howTo": [
     {
@@ -72560,9 +72567,14 @@ const TSTAT_NEW_1117B = {
      "title": "InteliSense / SmartSense Equipment Relearning (IM-HK-05, 06/26) - section 3.2 Smart Thermostat Advanced",
      "docType": "service",
      "url": "https://www.shareddocs.com/hvac/docs/1009/Public/06/IM-HK-05.pdf"
+    },
+    {
+     "title": "Carrier Smart Thermostat Advanced Tech Specs (01-TSTAT-127-01, 2026)",
+     "docType": "spec",
+     "url": "https://www.shareddocs.com/hvac/docs/1010/Public/0D/01-TSTAT-127-01.pdf"
     }
    ],
-   "sourceNotes": "Carrier IM-HK-05 InteliSense/SmartSense Equipment Relearning (Edition 06/26); carrier.com product page TSTATCCIAWF-01 'Carrier Smart Thermostat Advanced featuring InteliSense' (read 17 Nov 2026); carrier.com news 'Carrier Debuts the Next Generation in HVAC Solutions at International Builders' Show' (Feb. 17, 2026).",
+   "sourceNotes": "Carrier Smart Thermostat Advanced Tech Specs 01-TSTAT-127-01 (listed on HVACpartners 11/17/2026; PDF (c)2026); Carrier IM-HK-05 InteliSense/SmartSense Equipment Relearning (Edition 06/26); carrier.com product page TSTATCCIAWF-01 'Carrier Smart Thermostat Advanced featuring InteliSense' (read 17 Nov 2026); carrier.com news 'Carrier Debuts the Next Generation in HVAC Solutions at International Builders' Show' (Feb. 17, 2026).",
    "img": ""
   }
  ],
