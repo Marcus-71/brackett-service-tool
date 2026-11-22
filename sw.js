@@ -1,4 +1,4 @@
-const CACHE_NAME = "bfc-cache-v468";
+const CACHE_NAME = "bfc-cache-v469";
 // v286: library files that never change between versions (OCR engine, barcode
 // reader, PDF viewer, icons, Education PDFs) live in their own cache, kept from
 // one version to the next. A version update now downloads only the app's own
@@ -91,7 +91,7 @@ const APP_SHELL = [
 const SHELL_HASHES = {
   "./index.html": "6e6dc82950b026f4c0dd",
   "./style.css": "6336d34e1cbdbdee086a",
-  "./app.js": "9d250c24d2cf7342c4f4",
+  "./app.js": "d7ab0567d2371a14817b",
   "./pt-data.js": "683d0d877945d72a0b2a",
   "./data.js": "11cdaa89dfed4257242f",
   "./symptoms.js": "5ad3ec5e322bd9d90c81",
@@ -106,7 +106,7 @@ const SHELL_HASHES = {
   "./generators.js": "0426e7d416f8d2a0582e",
   "./kohler-gens.js": "4ac18582a2f40b48ea12",
   "./weather.js": "5b9215e305c303ac986f",
-  "./maint.js": "75ab451cfd372a95c807",
+  "./maint.js": "e7615b0e6ea6d4af252a",
   "./bulletins.js": "0774fbdfaf85a3011e27",
   "./inventory.js": "e6d0cd7d0b0bcf018a46",
   "./dchecker/index.html": "2487e203cbdae9ed9c1d",
