@@ -10932,5 +10932,266 @@ const UNIT_SCENARIOS = [
   ],
   "source": "R80MSU Installation, Start-up, Operating and Service and Maintenance Instructions (R80MSU-03SI, Edition 11/25, replaces R80MSU-02SI), p.26, p.40",
   "confidence": "manual"
+ },
+ {
+  "id": "u-goodman-gm9s80-dead-no-24v",
+  "unit": "^(GM9S|GC9S|AM9S|AC9S|VM9S|VC9S)80",
+  "brand": "Goodman",
+  "equipment": "Gas Furnace",
+  "title": "Furnace dead, no status light - power, door switch, transformer, fuse - GM9S80 / AM9S80 / GC9S80",
+  "summary": "On these 80% single-stage furnaces work from 115V at the junction box down to 24V at R and C before blaming the board.",
+  "steps": [
+   "Measure hot to neutral at the junction box behind the burner door. The door interlock switch must be held closed. No reading means open wiring, an open fuse, no power, or a bad door interlock switch.",
+   "Jumper R to G on the control to run the blower, then read line voltage again. It should be 115 volts plus or minus 10 percent. Lower than that: check the wire size on long runs.",
+   "Pull the thermostat wires and read R to C on the control. It must read 24 VAC.",
+   "No 24 VAC: check the transformer primary at the line connections, the fuse, splices and the blower door switch. Line voltage on the primary but none on the secondary means the transformer is bad - replace it.",
+   "If the transformer puts out 24 volts but you read only about 13 volts between C and R on the terminal board, check for a blown fuse on the control.",
+   "No LED at all: the troubleshooting chart lists no 115V or no 24V to the control, a blown fuse or tripped breaker, or a dead control. Fix whatever blew the fuse before replacing it."
+  ],
+  "safety": "Line voltage is present with the door switch held closed. Do not bypass any safety circuit.",
+  "manual": "goodman-gm9s80-single-stage-service-rs6621008r3",
+  "pages": [
+   14,
+   15,
+   23,
+   33
+  ],
+  "source": "GM9S80 / GC9S80 / VM9S80 / VC9S80 (Amana AM9S80 / AC9S80) Service and Troubleshooting - 80% Single Stage Gas Furnaces & Accessories (RS6621008r3, December 2026), p.14, p.15, p.23, p.33",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-goodman-gm9s80-thermostat-jumper",
+  "unit": "^(GM9S|GC9S|AM9S|AC9S|VM9S|VC9S)80",
+  "brand": "Goodman",
+  "equipment": "Gas Furnace",
+  "title": "Thermostat or furnace? R-W jumper test - GM9S80 / AM9S80 / GC9S80",
+  "summary": "Take the thermostat out of the picture with a jumper at the control board.",
+  "steps": [
+   "Remove the thermostat wires from the furnace control terminals.",
+   "Jumper R to W on the integrated ignition control and restore power with the door switch closed.",
+   "The inducer must run and pull in the pressure switch. If the igniter heats, the gas valve opens after warm-up and the burners light, the problem is the thermostat or its wiring.",
+   "With power off, check continuity of the thermostat and the wire run. Repair or replace as needed.",
+   "For cooling: power off, jumper R to Y to G, power on. If the furnace blower starts and the condensing unit runs, the fault is in the thermostat or wiring."
+  ],
+  "manual": "goodman-gm9s80-single-stage-service-rs6621008r3",
+  "pages": [
+   14
+  ],
+  "source": "GM9S80 / GC9S80 / VM9S80 / VC9S80 (Amana AM9S80 / AC9S80) Service and Troubleshooting - 80% Single Stage Gas Furnaces & Accessories (RS6621008r3, December 2026), p.14",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-goodman-gm9s80-inducer-no-run",
+  "unit": "^(GM9S|GC9S|AM9S|AC9S|VM9S|VC9S)80",
+  "brand": "Goodman",
+  "equipment": "Gas Furnace",
+  "title": "Call for heat but inducer will not start - GM9S80 / AM9S80 / GC9S80",
+  "summary": "Prove 24V on W, then 120V out of the board to the inducer, then the motor windings.",
+  "steps": [
+   "Check for 24 volts from W to C on the ignition control. None: check the transformer, the thermostat and the wiring.",
+   "Check for 120 volts to the inducer between Pin 1 of the 2-pin connector and Line (Neutral) on the control board. No voltage there: replace the ignition control.",
+   "Power off, unplug the inducer leads and ohm between each lead. Then go from each lead to the motor frame. Open windings or any reading to ground: replace the motor.",
+   "Windings good: reconnect, call for heat and check for 115V at the inducer terminals during trial for ignition. 115V present and the motor does not run: replace the inducer motor."
+  ],
+  "safety": "Disconnect power before ohm checks.",
+  "manual": "goodman-gm9s80-single-stage-service-rs6621008r3",
+  "pages": [
+   19,
+   23
+  ],
+  "source": "GM9S80 / GC9S80 / VM9S80 / VC9S80 (Amana AM9S80 / AC9S80) Service and Troubleshooting - 80% Single Stage Gas Furnaces & Accessories (RS6621008r3, December 2026), p.19, p.23",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-goodman-gm9s80-pressure-switch",
+  "unit": "^(GM9S|GC9S|AM9S|AC9S|VM9S|VC9S)80",
+  "brand": "Goodman",
+  "equipment": "Gas Furnace",
+  "title": "Inducer runs, no ignition - pressure switch checks - GM9S80 / AM9S80 / GC9S80",
+  "summary": "The pressure switch proves venting; test it at rest, then read inducer draft with a manometer against the model's trip chart.",
+  "steps": [
+   "Chart causes for inducer running with no furnace operation: pressure switch not closing, hose blocked, pinched or connected wrong, blocked flue or inlet pipe, blocked drain, weak inducer, wrong set point or bad contacts, loose wiring.",
+   "If the switch is already closed at the start of a heat call, look for stuck contacts or a short in the pressure switch wiring.",
+   "Power off, pull the wires off the switch and check common to NC with a meter - it should read open. If not, replace the pressure switch.",
+   "Remove the switch hose and tee in a manometer to read the negative pressure from the inducer tap.",
+   "Compare with the trip point chart for your exact model: set point on pressure fall runs from -0.60 to -0.80 in. w.c. depending on model, with its own max make on rise and switch part number. Read your model's row on the chart.",
+   "Low draft: inspect flue piping for blockage, length, elbows and termination, and check the inducer."
+  ],
+  "safety": "Do not bypass the pressure switch.",
+  "manual": "goodman-gm9s80-single-stage-service-rs6621008r3",
+  "pages": [
+   22,
+   23,
+   25,
+   32
+  ],
+  "source": "GM9S80 / GC9S80 / VM9S80 / VC9S80 (Amana AM9S80 / AC9S80) Service and Troubleshooting - 80% Single Stage Gas Furnaces & Accessories (RS6621008r3, December 2026), p.22, p.23, p.25, p.32",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-goodman-gm9s80-igniter",
+  "unit": "^(GM9S|GC9S|AM9S|AC9S|VM9S|VC9S)80",
+  "brand": "Goodman",
+  "equipment": "Gas Furnace",
+  "title": "Igniter does not glow - ohm values and board output - GM9S80 / AM9S80 / GC9S80",
+  "summary": "These furnaces use a 120V carbide mini igniter or a 120V silicon nitride igniter, each with its own cold resistance.",
+  "steps": [
+   "With the inducer running and the pressure switch closed, check for 120 volts to the igniter during preheat between Pin 2 of the 2-pin connector and Line (Neutral) on the board. No voltage: check the pressure switch.",
+   "Power off and let the igniter cool to about 70-77 F. Unplug it from the control and ohm it.",
+   "Carbide mini igniter (part 20165703): 30 to 300 ohms.",
+   "Silicon nitride igniter (part 0130F00008): 37 to 68 ohms at room temperature.",
+   "Out of range or open: replace the igniter. The trouble chart also lists a poor unit ground, a shorted igniter and an igniter relay fault on the control - check the control output and replace the control if it gives none."
+  ],
+  "manual": "goodman-gm9s80-single-stage-service-rs6621008r3",
+  "pages": [
+   22,
+   23,
+   33
+  ],
+  "source": "GM9S80 / GC9S80 / VM9S80 / VC9S80 (Amana AM9S80 / AC9S80) Service and Troubleshooting - 80% Single Stage Gas Furnaces & Accessories (RS6621008r3, December 2026), p.22, p.23, p.33",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-goodman-gm9s80-flame-sense",
+  "unit": "^(GM9S|GC9S|AM9S|AC9S|VM9S|VC9S)80",
+  "brand": "Goodman",
+  "equipment": "Gas Furnace",
+  "title": "Lights then drops out, or locks out after 3 tries - flame sense - GM9S80 / AM9S80 / GC9S80",
+  "summary": "The control retries ignition 3 times then locks out; low flame current, bad ground or reversed polarity are the usual causes.",
+  "steps": [
+   "Unhook the orange flame sensor wire and put a micro-amp meter in series between the wire and the sensor. Run a heat cycle.",
+   "Once flame is proven the igniter shuts off. These controls should read 1 to 4 micro-amps.",
+   "Below that: check for high-resistance connections, the sensor-to-burner gap, a dirty sensor, or poor grounding. Clean a coated sensor with steel wool.",
+   "Check the ground: power off, ohm from the neutral (white) connection to the burner closest to the flame sensor. It should be less than 10 ohms. The ground wire must run all the way back to the panel.",
+   "Reversed hot and neutral, no earth ground, or a high-resistance neutral can make the control lock out on failure to sense flame. Correct polarity first.",
+   "No reading at all with every component checking good: replace the ignition control. It is not field repairable."
+  ],
+  "safety": "Line voltage is present during the micro-amp test.",
+  "manual": "goodman-gm9s80-single-stage-service-rs6621008r3",
+  "pages": [
+   23,
+   24,
+   32,
+   33
+  ],
+  "source": "GM9S80 / GC9S80 / VM9S80 / VC9S80 (Amana AM9S80 / AC9S80) Service and Troubleshooting - 80% Single Stage Gas Furnaces & Accessories (RS6621008r3, December 2026), p.23, p.24, p.32, p.33",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-goodman-gm9s80-gas-pressure",
+  "unit": "^(GM9S|GC9S|AM9S|AC9S|VM9S|VC9S)80",
+  "brand": "Goodman",
+  "equipment": "Gas Furnace",
+  "title": "Checking inlet and manifold gas pressure - GM9S80 / AM9S80 / GC9S80",
+  "summary": "Read both pressures with the burners firing; run the other gas appliances on the line for the inlet reading.",
+  "steps": [
+   "Shut the gas, connect a manometer at the valve inlet tap or a hose fitting in the drip leg. On White-Rodgers 36J22 valves use adapter kit 0151K00000S.",
+   "Run the furnace and every other gas appliance on the line. Inlet must be: natural gas 4.5 to 10.0 in. w.c.; propane 11.0 to 13.0 in. w.c. Outside that range, fix the regulator or piping or call the gas utility.",
+   "Move the manometer to the outlet tap. With burners firing, manifold should be: natural gas 3.5 in. w.c.; propane 10.0 in. w.c. (9.7 to 10.3). Final setting must stay within plus or minus 0.3 in. w.c.",
+   "Adjust under the regulator cap screw: clockwise raises pressure, counterclockwise lowers it. Only small changes - big flow changes are done with orifices.",
+   "Seal the test port (36G22: test screw in to 7 in-lb minimum), turn gas back on and leak check."
+  ],
+  "safety": "Shut off gas and power before connecting or removing the manometer.",
+  "manual": "goodman-gm9s80-single-stage-service-rs6621008r3",
+  "pages": [
+   20,
+   21,
+   22
+  ],
+  "source": "GM9S80 / GC9S80 / VM9S80 / VC9S80 (Amana AM9S80 / AC9S80) Service and Troubleshooting - 80% Single Stage Gas Furnaces & Accessories (RS6621008r3, December 2026), p.20, p.21, p.22",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-goodman-gm9s80-rollout",
+  "unit": "^(GM9S|GC9S|AM9S|AC9S|VM9S|VC9S)80",
+  "brand": "Goodman",
+  "equipment": "Gas Furnace",
+  "title": "Blower runs nonstop, 6 flashes - rollout switch - GM9S80 / AM9S80 / GC9S80",
+  "summary": "A tripped manual-reset rollout switch keeps the circulator running; on single-stage 80% models the light flashes 6 times.",
+  "steps": [
+   "The rollout control on the manifold opens on flame rollout, over-firing or flame hitting the heat shield. The circulating blower then runs continuously.",
+   "Six flashes on the ignition control light means a rollout trip. On some models 6 flashes can also mean an open control board fuse.",
+   "Reset the control by opening and closing the thermostat. A glowing igniter shows the control has power.",
+   "During the ignition attempt measure voltage from each side of the rollout switch to ground. None on either side: control or wiring to it. Voltage on one side only: the switch is open. Voltage on both sides: the gas valve wiring or the valve is at fault.",
+   "Before resetting a red-button switch, find why it tripped: the chart points to gas pressure, burner alignment and burner restriction."
+  ],
+  "safety": "The rollout switch is manual reset. Find why it tripped (gas pressure, burner alignment, burner restriction) before resetting it. Do not bypass it.",
+  "manual": "goodman-gm9s80-single-stage-service-rs6621008r3",
+  "pages": [
+   18,
+   19,
+   33
+  ],
+  "source": "GM9S80 / GC9S80 / VM9S80 / VC9S80 (Amana AM9S80 / AC9S80) Service and Troubleshooting - 80% Single Stage Gas Furnaces & Accessories (RS6621008r3, December 2026), p.18, p.19, p.33",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-goodman-gm9s80-limit-temp-rise",
+  "unit": "^(GM9S|GC9S|AM9S|AC9S|VM9S|VC9S)80",
+  "brand": "Goodman",
+  "equipment": "Gas Furnace",
+  "title": "Tripping on limit - static, temperature rise, primary limit - GM9S80 / AM9S80 / GC9S80",
+  "summary": "Too much static means too little air, a high rise and limit trips; the primary limit itself is automatic reset.",
+  "steps": [
+   "With clean filters, read return static (negative) and supply static (positive) and add them for total external static. Include the coil or air cleaner in the readings.",
+   "Over the allowed static: look for closed dampers or registers and undersized or poorly laid-out duct.",
+   "Fire the furnace about 10 minutes, then read return and supply temperatures close to the furnace, out of sight of the heat exchanger. Supply minus return is the rise.",
+   "Raise blower speed to lower the rise, lower speed to raise it. Check motor amps so the motor is not overloaded.",
+   "Primary limit is a non-adjustable automatic-reset bimetal. Power off, pull its wires and ohm across it - it should be continuous unless the heat exchanger is above the limit setting. If not, replace it.",
+   "Chart: limit open with the circulator running continuously points at blocked filters, restrictive duct, wrong blower speed or a failed blower motor."
+  ],
+  "safety": "Do not bypass any limit.",
+  "manual": "goodman-gm9s80-single-stage-service-rs6621008r3",
+  "pages": [
+   16,
+   17,
+   32
+  ],
+  "source": "GM9S80 / GC9S80 / VM9S80 / VC9S80 (Amana AM9S80 / AC9S80) Service and Troubleshooting - 80% Single Stage Gas Furnaces & Accessories (RS6621008r3, December 2026), p.16, p.17, p.32",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-goodman-gm9s80-ecm-blower",
+  "unit": "^(GM9S|GC9S|AM9S|AC9S|VM9S|VC9S)80",
+  "brand": "Goodman",
+  "equipment": "Gas Furnace",
+  "title": "Circulator blower not running - multi-speed ECM checks - GM9S80 / AM9S80 / GC9S80",
+  "summary": "The ECM needs line voltage on CIRC H and neutral plus a 6-17 VDC signal on a speed tap.",
+  "steps": [
+   "Check for anything stopping the wheel from turning.",
+   "Main harness: white to Neutral, black to CIRC H, red to the COM female spade next to the T1-T5 wires, green to cabinet ground.",
+   "Control harness: blue T1, red T2, orange T3, black T4, yellow T5.",
+   "The motor needs line voltage (black on CIRC H, white on neutral) and a signal on one speed tap (9-speed motors: one or two taps).",
+   "Read the tap signal from the tap to the COM terminal beside the taps: 6 to 17 VDC, varying with the speed selected."
+  ],
+  "safety": "Disconnect power before checking wiring.",
+  "manual": "goodman-gm9s80-single-stage-service-rs6621008r3",
+  "pages": [
+   15,
+   16
+  ],
+  "source": "GM9S80 / GC9S80 / VM9S80 / VC9S80 (Amana AM9S80 / AC9S80) Service and Troubleshooting - 80% Single Stage Gas Furnaces & Accessories (RS6621008r3, December 2026), p.15, p.16",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-goodman-gm9s80-fault-history",
+  "unit": "^(GM9S|GC9S|AM9S|AC9S|VM9S|VC9S)80",
+  "brand": "Goodman",
+  "equipment": "Gas Furnace",
+  "title": "Reading and clearing stored faults (L 6 F) - GM9S80 / AM9S80 / GC9S80",
+  "summary": "The board keeps the last 6 faults; read them before you clear anything.",
+  "steps": [
+   "Press the Left or Right button until L 6 F shows.",
+   "Press the center button to view the stored faults.",
+   "To erase: press and hold the center button for 5 to 30 seconds. The display flashes - - - three times and returns to L 6 F.",
+   "The same menu also shows the active alarm and the settings for blower speeds and heat / cool on and off delays - see the status code table on p.30."
+  ],
+  "manual": "goodman-gm9s80-single-stage-service-rs6621008r3",
+  "pages": [
+   30,
+   32
+  ],
+  "source": "GM9S80 / GC9S80 / VM9S80 / VC9S80 (Amana AM9S80 / AC9S80) Service and Troubleshooting - 80% Single Stage Gas Furnaces & Accessories (RS6621008r3, December 2026), p.30, p.32",
+  "confidence": "manual"
  }
 ];
