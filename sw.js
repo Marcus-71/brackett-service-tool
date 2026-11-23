@@ -1,4 +1,4 @@
-const CACHE_NAME = "bfc-cache-v472";
+const CACHE_NAME = "bfc-cache-v473";
 // v286: library files that never change between versions (OCR engine, barcode
 // reader, PDF viewer, icons, Education PDFs) live in their own cache, kept from
 // one version to the next. A version update now downloads only the app's own
@@ -91,7 +91,7 @@ const APP_SHELL = [
 const SHELL_HASHES = {
   "./index.html": "6e6dc82950b026f4c0dd",
   "./style.css": "6336d34e1cbdbdee086a",
-  "./app.js": "a0e90db055e690b38ae5",
+  "./app.js": "54ef706d8b953af66110",
   "./pt-data.js": "683d0d877945d72a0b2a",
   "./data.js": "39bd5bebce1efd6a3454",
   "./symptoms.js": "5ad3ec5e322bd9d90c81",
@@ -104,9 +104,9 @@ const SHELL_HASHES = {
   "./toolbox.js": "c67328fc6c22100d95ec",
   "./thermostats.js": "cc723312345a746b79c1",
   "./generators.js": "0426e7d416f8d2a0582e",
-  "./kohler-gens.js": "4ac18582a2f40b48ea12",
+  "./kohler-gens.js": "a3c07e4c7ac0c17a330f",
   "./weather.js": "5b9215e305c303ac986f",
-  "./maint.js": "705f9b256b93f7528686",
+  "./maint.js": "138155dc407bb0cc7305",
   "./bulletins.js": "0774fbdfaf85a3011e27",
   "./inventory.js": "e6d0cd7d0b0bcf018a46",
   "./dchecker/index.html": "2487e203cbdae9ed9c1d",
