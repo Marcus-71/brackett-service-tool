@@ -1130,7 +1130,8 @@ let askAiToken = 0;
 // "Brackett Failed Scans" 1pXJoIL6dGmGY1nG8UeJtmbfHde7EJIaT in the work Drive. The
 // old personal-Gmail relay (AKfycbwsRf8U...) stays up a few days for photos
 // already queued on phones by older versions.
-const SCAN_PHOTO_RELAY = "https://script.google.com/macros/s/AKfycbyFqD-FI0xjxZZn9v_AErY-KUoTszCVpDimdGUGWrXMr4x6Nn4TeqnxOmo6O4_dpgW4/exec";
+// v472 (2026-11-23): redeployed - the 10-09 deployment (AKfycbyFqD-FI0x...) answered 404 from about 11-19 and its project was gone.
+const SCAN_PHOTO_RELAY = "https://script.google.com/macros/s/AKfycbx9J8_0DFho128yteXr1TpTmHtaWCbLcoE0B8pmvFk57kpBNYQsD4VgGawZhFXbdD5mCQ/exec";
 // Must equal the relay's APP_TOKEN script property. Same weak-shared-secret
 // model as ASK_AI_APP_TOKEN (obscure URL + daily cap do the real work).
 const SCAN_PHOTO_APP_TOKEN = ASK_AI_APP_TOKEN;
@@ -15571,7 +15572,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v471";
+const APP_VERSION = "v472";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
