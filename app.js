@@ -10985,6 +10985,12 @@ function decodeCapacity(model, equipment) {
   // SSG-PH5G-08 p.2, SSG-PY5G-05 p.3) - without this the general rule reads PY5G heat digits (060) as 5 ton.
   const bpk = model.match(/^(?:605C[NPE]X|675CNW|P[HY]5G[NPE]A)B(24|30|36|42|48|60)/);
   if (bpk) { const btu = parseInt(bpk[1], 10); return `${Math.round((btu / 12) * 2) / 2} ton (${btu},000 BTU/h nominal cooling)`; }
+  // v471 (Dave's 48TCED08A2A6A0A0A0 showed "~4 ton" off the 48 = gas-heat prefix): Carrier 48TC rooftops print the
+  // cooling tons in positions 7-8 (48TC-3SM Appendix I p.86: 08 = 7.5, 12 = 10, 14 = 12.5 Ton; heat size D/E/F/S/R/T,
+  // refrigerant system D). Other 48/50 light-commercial rooftop families have no sourced size key here: no line, not a wrong one.
+  const ctc = model.match(/^48TC[DEFSRT]D(08|12|14)/);
+  if (ctc) return { "08": "7.5", "12": "10", "14": "12.5" }[ctc[1]] + " ton nominal cooling (Carrier 48TC size " + ctc[1] + ")";
+  if (/^(48|50)(TC|HC|LC|FE|GE)[A-Z0-9]/.test(model)) return null;
   // v454: Rheem / Ruud RDFXYC and RGE(A/X)YC packaged - 3 digits = cooling size, then A + voltage + V, then the gas heat code
   // 06 / 08 / 10 (P11-858 p.4, R11-888 p.4; 1st / 2nd-stage input P11-858 p.9-12, R11-888 p.11-16).
   const rhpk = model.match(/^R(?:DFX|GE[AX])YC(024|036|048|060)A[JCD]V(06|08|10)[2T]/);
@@ -15565,7 +15571,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v470";
+const APP_VERSION = "v471";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
