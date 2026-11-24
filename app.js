@@ -5387,7 +5387,7 @@ async function genProblemScan(file) {
   if (fam) {
     genNoteScan(model, serial);
     trackEvent("gen problem scan -> " + model);
-    genProblemScanStatus("Read " + model + (serial ? " · SN " + serial : "") + " - opened its generator page.");
+    genProblemScanStatus("Read " + model + (serial ? " · SN " + serial : "") + " - opened its generator page." + (fields.ocrTailBad ? " " + ocrCheckTagText(model) : ""));   // v476
     openGenDetail(fam.id, model, { serial, where: "gen problem scan" });
     return;
   }
@@ -9506,7 +9506,7 @@ function ccInferMeter(chart) {
 
 async function ccScanPhoto(which, file) {
   const st = document.getElementById("ccScanStatus");
-  const show = (msg) => { if (msg) { st.textContent = msg; st.classList.remove("hidden"); } else st.classList.add("hidden"); };
+  const show = (msg) => ocrStatusWithNote(st, msg, OCR_UNSURE_BOXES.ccScanStatus);   // v476: keeps either side's check-the-tag caution
   trackEvent("charge calc scanned " + which + " tag");
   try {
     show("Reading the " + which + " tag… first scan on a phone takes ~15-30 seconds.");
@@ -9516,8 +9516,11 @@ async function ccScanPhoto(which, file) {
       show("Couldn't find a model number on the " + which + " tag — try a straighter, closer shot, or type it in the box.");
       return;
     }
-    document.getElementById(which === "outdoor" ? "ccOutModel" : "ccInModel").value = fields.model;
+    const boxId = which === "outdoor" ? "ccOutModel" : "ccInModel";
+    document.getElementById(boxId).value = fields.model;
+    ocrUnsure[boxId] = fields.ocrTailBad ? fields.model : "";
     ccApplyScan();
+    show(null);
   } catch (err) {
     show("Scan failed: " + (err && err.message ? err.message : err) + " — you can type the model instead.");
   }
@@ -14036,7 +14039,7 @@ async function scanTagPhoto(file) {
     };
     try { fields = await ocrTagFields(file, onStatus); }
     finally { clearTimeout(scanTimer); stopBtn.classList.add("hidden"); ocrStopRequested = false; ocrPartialHook = null; live.stop = null; }
-    scanWarrantyTag = { model: fields.model || "", serial: fields.serial || "", badge: detectBadgeInText(String(fields.text || "").toUpperCase()) };   // v432: for the Check warranty button
+    scanWarrantyTag = { model: fields.model || "", serial: fields.serial || "", badge: detectBadgeInText(String(fields.text || "").toUpperCase()), tailBad: !!fields.ocrTailBad };   // v432: for the Check warranty button (v476: + unsure read)
     if (!fields.ocrStopped) timedOut = false;   // it finished by itself just as the limit hit
     if (!live.identified) scanStatus(null);
     const typedModel = modelEl.value !== typedBefore[0] && modelEl.value.trim();
@@ -14358,6 +14361,38 @@ window.addEventListener("online", () => {
 
 // Maintenance Figures shares the Tag Scanner's photo-OCR: snap the data plate
 // on the Maintenance screen and the read model drops straight into its search.
+// v476 (Andy 2026-11-24 "Yes, add it"): an unsure read (fields.ocrTailBad - a character breaks the family's
+// format, or the faint embossed-plate pass) gets the same "check the tag" caution on Warranty and Charging Calc
+// as on the Tag Scanner (whose unit page also holds the Maintenance figures), instead of a confident read.
+// The caution is tied to the model box, not to one message: ocrUnsure[box id] = the unsure model the scan put
+// there. Every status message on that screen carries the caution while the box still holds that model (a later
+// "Run the warranty check", the other side's scan on Charging Calc, a failed rescan), and it goes once the tech
+// types over it.
+function ocrCheckTagText(model) {
+  return "📷 The scan may have misread a character in " + model + " — check the tag to confirm before trusting the details below (watch 0/O, 1/I, 8/B, 6/G and A/R).";
+}
+const ocrUnsure = {};
+function ocrUnsureNote(ids) {
+  const ms = ids.filter(id => { const el = document.getElementById(id); return ocrUnsure[id] && el && el.value.trim() === ocrUnsure[id]; }).map(id => ocrUnsure[id]);
+  return ms.length ? ocrCheckTagText(ms.join(" and ")) : "";
+}
+// st: the screen's status element; msg: its own message (null/"" = none); ids: the model boxes it speaks for.
+function ocrStatusWithNote(st, msg, ids) {
+  if (!st) return;
+  st.dataset.msg = msg || "";
+  const text = [msg, ocrUnsureNote(ids)].filter(Boolean).join(" ");
+  if (text) { st.textContent = text; st.classList.remove("hidden"); } else st.classList.add("hidden");
+}
+const OCR_UNSURE_BOXES = { ccScanStatus: ["ccOutModel", "ccInModel"], warrantyStatus: ["warrantyModelInput"] };
+Object.entries(OCR_UNSURE_BOXES).forEach(([stId, ids]) => ids.forEach(inId => {
+  const inp = document.getElementById(inId);
+  if (inp) inp.addEventListener("input", () => {
+    if (!ocrUnsure[inId]) return;
+    delete ocrUnsure[inId];
+    const st = document.getElementById(stId);
+    if (st && !st.classList.contains("hidden")) ocrStatusWithNote(st, st.dataset.msg, ids);
+  });
+}));
 function maintScanStatus(msg) {
   const el = document.getElementById("maintScanStatus");
   if (!el) return;
@@ -14584,9 +14619,7 @@ function detectBadgeInText(up) {
 const BRAND_TO_BADGE = { Goodman: "GOODMAN", Daikin: "DAIKIN", Carrier: "CARRIER", Lennox: "LENNOX", Trane: "TRANE", York: "YORK", Rheem: "RHEEM", Mitsubishi: "MITSUBISHI", Bosch: "BOSCH", Nortek: "NORTEK", ICP: "ICP", "Allied Air": "ALLIED", LG: "LG ELECTRONICS", Fujitsu: "FUJITSU", Samsung: "SAMSUNG" };
 
 function warrantyStatus(msg) {
-  const el = document.getElementById("warrantyStatus");
-  if (msg) { el.textContent = msg; el.classList.remove("hidden"); }
-  else el.classList.add("hidden");
+  ocrStatusWithNote(document.getElementById("warrantyStatus"), msg, OCR_UNSURE_BOXES.warrantyStatus);   // v476: keeps the check-the-tag caution
 }
 
 async function warrantyScanPhoto(file) {
@@ -14599,9 +14632,11 @@ async function warrantyScanPhoto(file) {
   try {
     warrantyStatus("Reading the tag… first scan on a phone takes ~15-30 seconds.");
     const fields = await ocrTagFields(file, warrantyStatus);
+    if (fields.model) ocrUnsure.warrantyModelInput = fields.ocrTailBad ? fields.model : "";
     warrantyStatus(null);
     if (fields.serial) document.getElementById("warrantySerialInput").value = fields.serial;
     if (fields.model) document.getElementById("warrantyModelInput").value = fields.model;
+    if (fields.model && fields.ocrTailBad) warrantyStatus(null);   // the box now holds the unsure model: show the caution
     if (!fields.serial && !fields.model) {
       warrantyStatus("Couldn't find a serial or model on the photo — try a straighter, closer shot, or type them below.");
       return;
@@ -14795,6 +14830,8 @@ function scanGoWarranty() {
   trackEvent("scan -> warranty: " + (model || serial || "nothing typed"));
   document.getElementById("warrantyModelInput").value = model;
   document.getElementById("warrantySerialInput").value = serial;
+  // v476: the Tag Scanner's unsure read keeps its caution here while the box still holds that read
+  ocrUnsure.warrantyModelInput = t && t.tailBad && model && norm(model) === norm(t.model) ? model : "";
   const preview = document.getElementById("warrantyPreview");   // a photo from an earlier warranty scan is another unit's
   if (preview.src && preview.src.startsWith("blob:")) URL.revokeObjectURL(preview.src);
   preview.removeAttribute("src"); preview.classList.add("hidden");
@@ -15906,7 +15943,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v475";
+const APP_VERSION = "v476";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
