@@ -12153,6 +12153,309 @@ function ocrTextDirection(flat) {
   return n ? sum / n : 0;
 }
 
+// v475 (Andy 2026-11-04 standing OK for scanner fixes; Dave's 11-20 Carrier rooftop plate g9h025,
+// MODEL 48TCED08A2A6A0A0A0 / SERIAL 5011G40171): a weathered white plate with EMBOSSED print. The
+// characters are only a few grey levels lighter than the plate, so every pass above read nothing.
+//  * ocrEmboss: the photo minus a wide blur of itself, keeping only what is LIGHTER than its
+//    surroundings, drawn as dark print on a white page. out.top = how strong the light detail is
+//    (95th percentile, in grey levels): 8.9 on that plate, 20-70 on the other 84 field photos (34
+//    of the 240 synthetic bench plates, the dim ones, are also under 14). The pass only runs under
+//    OCR_EMBOSS_MAX - and only once the scan would end with no model.
+//  * The plate's fixed-pitch dot font is read with digits and letters mixed up (4 as A, 8 and 6
+//    both as B or S, 0 as O / D / C / G): "A8TCEDOBA2ABADACAD". Tesseract picks by its neighbours,
+//    so the model line is cut into its character cells and the DIGIT cells are read again as one
+//    strip (which cell is which comes from the family's own nomenclature, OCR_GRID_FORMATS). The
+//    strip reads 480826000. The letters are taken from reads of the whole line, where they come
+//    out right. The reads vote (ocrGridVote). The vote and the format table are the ONLY guard:
+//    the library's own 48TC pattern matches any 48TC + one more character, so "it is in the
+//    library" proves nothing about the other 14 characters. So: every character must be a value
+//    the nomenclature lists for its position, the two size digits must be a size the manuals
+//    list, the family's fixed characters (48TC) must come back exactly, and where the runner-up
+//    is a look-alike that would ALSO be valid there (A/R, 6/8, 5/6 ...) five reads in six must
+//    agree. Anything less and the scan stays "no model" (a blank beats a wrong ID). A model read
+//    this way is always shown with the "check the tag" note: on turned and darkened copies of the
+//    photo one A still came back as R in most reads of an earlier version.
+//  * Only a family with a full positional format is read this way. 48TC: Carrier 48TC service
+//    manual 48TC-3SM appendix I and 48TC 07-16 installation instructions p4 (18 characters; a
+//    plate with a dash at position 13, the size-16 "C" fan option, or a size those two manuals
+//    do not list - the 3 to 5 ton 04/05/06 - is left unread).
+const OCR_EMBOSS_MAX = 14;
+const OCR_GRID_FORMATS = [
+  // 48 TC, heat D/E/F/S/R/T, refrigerant system A/B/D/E/M, tons 07-16, sensors A-L, fan 1-3, coil,
+  // voltage 1/5/6, design revision, controls 0-2, intake A/B/F/K/U/W, service 0-5, electrical
+  // A/C/D/F/G/J/K/M, packaging 0/1. A value the manuals do not list leaves the plate unread.
+  { pos: ["4", "8", "T", "C", "DEFSRT", "ABDEM", "01", "#", "ABCDEFGHJKL", "123", "ABCDEFGHJKLMNPQRSTUVWX", "156", "@", "012", "ABFKUW", "012345", "ACDFGJKM", "01"],
+    pair: { at: 6, ok: ["07", "08", "09", "12", "14", "16"] } },
+];
+const OCR_EMBOSS_LOOK = { "4": "A", "8": "BS3", "T": "1I7", "C": "GO0Q" };
+// Characters this font swaps for each other. When the runner-up of a vote is one of these AND
+// would be a valid value at that position, the vote has to be 5 in 6 (ocrGridVote).
+const OCR_EMBOSS_PAIRS = ["AR", "PR", "BR", "KR", "EF", "PF", "BD", "BE", "DO", "OQ", "CG", "CO", "GO", "KX", "MN", "HN", "HM", "UV", "VW", "JU", "LE", "56", "68", "38", "58", "89", "69", "39", "35", "06", "08", "09", "17", "12", "27", "14"];
+// The worker is shared: a digits-only whitelist left on it would wreck every later read. Set while
+// a strip read may have left one behind; ocrTagTextPasses clears it in its finally.
+let ocrWhitelistDirty = false;
+function ocrEmboss(src, r1) {
+  const w = src.width, h = src.height, n = w * h;
+  const d = src.getContext("2d").getImageData(0, 0, w, h).data;
+  const g = new Float32Array(n);
+  for (let i = 0, p = 0; p < n; i += 4, p++) g[p] = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+  const blur = (a, r) => {   // box blur through an integral image
+    const W1 = w + 1, I = new Float64Array(W1 * (h + 1)), out = new Float32Array(n);
+    for (let y = 0; y < h; y++) { let s = 0; for (let x = 0; x < w; x++) { s += a[y * w + x]; I[(y + 1) * W1 + x + 1] = I[y * W1 + x + 1] + s; } }
+    for (let y = 0; y < h; y++) {
+      const y0 = Math.max(0, y - r), y1 = Math.min(h, y + r + 1);
+      for (let x = 0; x < w; x++) {
+        const x0 = Math.max(0, x - r), x1 = Math.min(w, x + r + 1);
+        out[y * w + x] = (I[y1 * W1 + x1] - I[y0 * W1 + x1] - I[y1 * W1 + x0] + I[y0 * W1 + x0]) / ((y1 - y0) * (x1 - x0));
+      }
+    }
+    return out;
+  };
+  const s = blur(blur(g, r1), r1);                              // joins the dots of the print
+  const r2 = Math.max(8, Math.round(Math.max(w, h) / 66));      // 24 px on the 1600 px copy
+  const bg = blur(blur(s, r2), r2);
+  const hist = new Uint32Array(1024);
+  let pos = 0;
+  for (let p = 0; p < n; p++) { const v = s[p] - bg[p]; s[p] = v; if (v > 0.5) { hist[Math.min(1023, (v * 8) | 0)]++; pos++; } }
+  let hi = 1023, acc = 0;
+  for (let i = 1023; i >= 0; i--) { acc += hist[i]; if (acc > pos * 0.05) { hi = i; break; } }
+  const top = Math.max(2, hi / 8);
+  const out = document.createElement("canvas");
+  out.width = w; out.height = h;
+  const oc = out.getContext("2d"), o = oc.createImageData(w, h), od = o.data;
+  // the weakest 30% is the plate's grain, not print
+  for (let p = 0, i = 0; p < n; p++, i += 4) { const v = Math.max(0, Math.min(1, (s[p] / top - 0.3) / 0.7)); od[i] = od[i + 1] = od[i + 2] = 255 - 255 * v; od[i + 3] = 255; }
+  oc.putImageData(o, 0, 0);
+  out.top = top;
+  // per 1000 pixels, as ocrFlatten: lone dark pixels and dark/light edges along rows. A page of
+  // grain takes Tesseract 7-22 s to read (two dim synthetic bench plates); the plate is 0.11 / 13.
+  let specks = 0, edges = 0;
+  for (let y = 1; y < h - 1; y++) for (let x = 1, p = y * w + 1; x < w - 1; x++, p++) {
+    const d0 = od[p * 4] < 128;
+    if (d0 !== (od[(p + 1) * 4] < 128)) edges++;
+    if (d0 && od[(p - 1) * 4] >= 128 && od[(p + 1) * 4] >= 128 && od[(p - w) * 4] >= 128 && od[(p + w) * 4] >= 128) specks++;
+  }
+  out.specks = 1000 * specks / n;
+  out.edges = 1000 * edges / n;
+  return out;
+}
+// Where the print of the word in box really starts and ends (Tesseract's word box can be a few
+// pixels off, and the cells are cut by even division of this span).
+function ocrInkSpan(page, box) {
+  const h = box.y1 - box.y0, m = Math.round(h * 0.6);
+  const X0 = Math.max(0, Math.floor(box.x0 - m)), X1 = Math.min(page.width, Math.ceil(box.x1 + m));
+  const Y0 = Math.max(0, Math.floor(box.y0)), Y1 = Math.min(page.height, Math.ceil(box.y1));
+  const W = X1 - X0, H = Y1 - Y0;
+  if (W < 20 || H < 8) return null;
+  const d = page.getContext("2d").getImageData(X0, Y0, W, H).data, col = new Uint16Array(W);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (d[(y * W + x) * 4] < 128) col[x]++;
+  const ink = (x) => x >= 0 && x < W && col[x] >= 2;
+  const edge = (x, step) => {   // step -1: the left end, 1: the right end
+    if (ink(x) || ink(x + step) || ink(x + 2 * step)) {
+      let last = x, gap = 0;
+      for (let k = x + step; k >= 0 && k < W && gap < 3; k += step) { if (ink(k)) { last = k; gap = 0; } else gap++; }
+      return last;
+    }
+    for (let k = x - step; k >= 0 && k < W; k -= step) if (ink(k)) return k;
+    return x;
+  };
+  const l = edge(Math.round(box.x0) - X0, -1), r = edge(Math.round(box.x1) - 1 - X0, 1);
+  return r - l < 20 ? null : { x0: X0 + l, x1: X0 + r + 1 };
+}
+// The word in box is f.pos.length characters of a fixed-pitch font.
+//  * Letters: the line read as it stands, on every page copy at three sizes (plus the page read
+//    that found it, first). Among their own neighbours the letters read right; a strip of only
+//    the letter cells did not (A came back R).
+//  * Digits: the line cut into even cells and the DIGIT cells read as one strip, on every page
+//    copy at two spacings and two sizes.
+// Each position needs 4 or more usable reads with two thirds of them agreeing - five in six when
+// the runner-up is a look-alike that is also a valid value there (OCR_EMBOSS_PAIRS) - and the
+// result must fit the family's format (f.pos, f.pair). Returns the model, or "" when it is not
+// that clear. Every canvas it makes is emptied after its read (phones are short on memory).
+async function ocrGridVote(worker, pages, box, f, first) {
+  const n = f.pos.length, span = ocrInkSpan(pages[0], box), W = pages[0].width, H = pages[0].height;
+  if (!span) return "";
+  const h0 = box.y1 - box.y0;
+  const y0 = Math.max(0, box.y0 - h0 * 0.12), y1 = Math.min(H, box.y1 + h0 * 0.12), h = y1 - y0;
+  const pitch = (span.x1 - span.x0) / n;
+  if (pitch < 8 || h < 12) return "";
+  const isDigit = (c) => c === "#" || /^[0-9]+$/.test(c);
+  const okAt = (i, ch) => { const c = f.pos[i]; return c === "#" ? /[0-9]/.test(ch) : c === "@" ? /[A-Z]/.test(ch) : c.includes(ch); };
+  const pick = (votes, valid, i) => {
+    const r = Object.entries(votes).sort((a, b) => b[1] - a[1]);
+    if (valid < 4 || !r.length || r[0][1] * 3 < valid * 2) return "";
+    const rival = r.slice(1).some(([ch]) => okAt(i, ch) && OCR_EMBOSS_PAIRS.some(p => p.includes(r[0][0]) && p.includes(ch)));
+    return rival && r[0][1] * 6 < valid * 5 ? "" : r[0][0];
+  };
+  const out = new Array(n).fill("");
+  const lines = first && first.length === n ? [first] : [];
+  const lx0 = Math.max(0, Math.round(span.x0 - 1.2 * h0)), lx1 = Math.min(W, Math.round(span.x1 + 1.2 * h0));
+  const ly0 = Math.max(0, Math.round(box.y0 - 0.35 * h0)), ly1 = Math.min(H, Math.round(box.y1 + 0.35 * h0));
+  for (const page of pages) for (const size of [34, 48, 68]) {
+    if (ocrStopRequested) throw OCR_STOP;
+    const k = size / h0, line = document.createElement("canvas");
+    line.width = Math.round((lx1 - lx0) * k); line.height = Math.round((ly1 - ly0) * k);
+    const lc = line.getContext("2d");
+    lc.imageSmoothingQuality = "high";
+    lc.drawImage(page, lx0, ly0, lx1 - lx0, ly1 - ly0, 0, 0, line.width, line.height);
+    let data = null;
+    try { data = (await ocrRecognize(worker, line, { tessedit_pageseg_mode: "7" })).data; } catch (e) { if (e === OCR_STOP) throw e; data = null; } finally { line.width = 0; }
+    const t = String(data && data.text || "").toUpperCase().split(/[^A-Z0-9]+/).find(x => x.length === n);
+    if (t) lines.push(t);
+  }
+  const digitAt = [];
+  for (let i = 0; i < n; i++) {
+    if (isDigit(f.pos[i])) { digitAt.push(i); continue; }
+    const votes = {};
+    for (const t of lines) if (/[A-Z]/.test(t[i])) votes[t[i]] = (votes[t[i]] || 0) + 1;
+    out[i] = pick(votes, lines.length, i);
+    if (!out[i]) return "";
+  }
+  if (digitAt.length) {
+    const votes = digitAt.map(() => ({}));
+    let valid = 0;
+    for (const page of pages) for (const gap of [0, 0.25]) for (const size of [48, 68]) {
+      if (ocrStopRequested) throw OCR_STOP;
+      const k = size / h, pad = Math.round(h * 0.4), cw = pitch * (1 + gap);
+      const strip = document.createElement("canvas");
+      strip.width = Math.round((digitAt.length * cw + 2 * pad) * k); strip.height = Math.round((h + 2 * pad) * k);
+      const sx = strip.getContext("2d");
+      sx.fillStyle = "#fff"; sx.fillRect(0, 0, strip.width, strip.height); sx.imageSmoothingQuality = "high";
+      digitAt.forEach((ix, j) => sx.drawImage(page, span.x0 + ix * pitch, y0, pitch, h, (pad + j * cw + pitch * gap / 2) * k, pad * k, pitch * k, h * k));
+      let data = null;
+      // The whitelist is passed for this one read, and the worker puts its settings back only when
+      // the read SUCCEEDS. A read that throws may leave "digits only" on the shared worker: clear
+      // it here and give the pass up (ocrTagTextPasses clears it again when the scan ends).
+      ocrWhitelistDirty = true;
+      try { data = (await ocrRecognize(worker, strip, { tessedit_pageseg_mode: "7", tessedit_char_whitelist: "0123456789" })).data; }
+      catch (e) {
+        strip.width = 0;
+        if (e === OCR_STOP) throw e;
+        try { await worker.setParameters({ tessedit_char_whitelist: "" }); } catch (x) {}
+        return "";
+      }
+      strip.width = 0;
+      const t = String(data && data.text || "").replace(/[^A-Za-z0-9]/g, "");
+      if (t.length !== digitAt.length || !/^[0-9]+$/.test(t)) continue;
+      valid++;
+      for (let j = 0; j < t.length; j++) votes[j][t[j]] = (votes[j][t[j]] || 0) + 1;
+    }
+    for (let j = 0; j < digitAt.length; j++) {
+      out[digitAt[j]] = pick(votes[j], valid, digitAt[j]);
+      if (!out[digitAt[j]]) return "";
+    }
+  }
+  for (let i = 0; i < n; i++) if (!okAt(i, out[i])) return "";
+  if (f.pair && !f.pair.ok.includes(out[f.pair.at] + out[f.pair.at + 1])) return "";
+  return out.join("");
+}
+// The serial on the same embossed Carrier plate (4 digits + letter + 5 digits): the block around
+// the model line is read to FIND a 10-character word of that shape, then that line is read by
+// itself six times and the reads vote (4 or more agreeing, at least twice the runner-up). Among
+// nine digits Tesseract reads the plant letter as its look-alike digit ("5011640171" for
+// 5011G40171); the 5th character is always a letter on a Carrier serial, so a digit there with
+// ONE look-alike letter is turned back - but only when at least one agreeing read showed a real
+// letter there or had the SERIAL label word beside it, so a plain 10-digit number elsewhere on
+// the plate cannot become a serial. (A cell-by-cell read like the model's was tried on the serial
+// and read worse than the plain line.)
+const OCR_EMBOSS_FIFTH = { "6": "G", "5": "S", "8": "B", "2": "Z" };
+async function ocrEmbossSerial(worker, pages, box, brand) {
+  if (serialBrandFamily(brand) !== "carrier") return null;
+  const page = pages[0], h = box.y1 - box.y0;
+  const x0 = Math.max(0, Math.round(box.x0 - 4 * h)), x1 = Math.min(page.width, Math.round(box.x1 + 2 * h));
+  const y0 = Math.max(0, Math.round(box.y0 - 2.6 * h)), y1 = Math.min(page.height, Math.round(box.y1 + 2.6 * h));
+  const tried = [];
+  for (const size of [44, 28, 66]) {
+    if (ocrStopRequested) throw OCR_STOP;
+    const k = size / h, crop = document.createElement("canvas");
+    crop.width = Math.round((x1 - x0) * k); crop.height = Math.round((y1 - y0) * k);
+    if (crop.width < 20 || crop.height < 10 || crop.width * crop.height > 6e6) continue;
+    const cx = crop.getContext("2d");
+    cx.imageSmoothingQuality = "high";
+    cx.drawImage(page, x0, y0, x1 - x0, y1 - y0, 0, 0, crop.width, crop.height);
+    let data = null;
+    try { data = (await ocrRecognize(worker, crop, { tessedit_pageseg_mode: "6" })).data; } catch (e) { if (e === OCR_STOP) throw e; data = null; } finally { crop.width = 0; }
+    for (const w of data && data.words || []) {
+      const t = (w.text || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+      if (!/^\d{4}[A-Z0-9]\d{5}$/.test(t)) continue;
+      const wb = { x0: x0 + w.bbox.x0 / k, y0: y0 + w.bbox.y0 / k, x1: x0 + w.bbox.x1 / k, y1: y0 + w.bbox.y1 / k };
+      // the same word found again at another size is not read twice
+      if (tried.some(b => Math.abs(b.x0 - wb.x0) < h && Math.abs(b.y0 - wb.y0) < h / 2)) continue;
+      tried.push(wb);
+      // that line by itself, on both page copies at three sizes; the reads vote on the whole serial
+      const hh = wb.y1 - wb.y0, votes = new Map();
+      // wide to the left, to take in the SERIAL label: the digits alone read worse ("53116406171")
+      const lx0 = Math.max(0, Math.round(wb.x0 - 5.5 * hh)), lx1 = Math.min(page.width, Math.round(wb.x1 + 1.2 * hh));
+      const ly0 = Math.max(0, Math.round(wb.y0 - 0.3 * hh)), ly1 = Math.min(page.height, Math.round(wb.y1 + 0.3 * hh));
+      for (const pg of pages) for (const sz of [30, 45, 68]) {
+        if (ocrStopRequested) throw OCR_STOP;
+        const kk = sz / hh, line = document.createElement("canvas");
+        line.width = Math.round((lx1 - lx0) * kk); line.height = Math.round((ly1 - ly0) * kk);
+        if (line.width < 20 || line.height < 10) continue;
+        const lc = line.getContext("2d");
+        lc.imageSmoothingQuality = "high";
+        lc.drawImage(pg, lx0, ly0, lx1 - lx0, ly1 - ly0, 0, 0, line.width, line.height);
+        let ld = null;
+        try { ld = (await ocrRecognize(worker, line, { tessedit_pageseg_mode: "7" })).data; } catch (e) { if (e === OCR_STOP) throw e; ld = null; } finally { line.width = 0; }
+        const up = String(ld && ld.text || "").toUpperCase(), labelled = /(^|[^A-Z0-9])(SER[I1L]AL|S\/N)([^A-Z0-9]|$)/.test(up);
+        for (const tok of new Set(up.split(/[^A-Z0-9]+/))) {
+          const letter = /^\d{4}[A-Z]\d{5}$/.test(tok);
+          const s = letter ? tok : /^\d{10}$/.test(tok) && OCR_EMBOSS_FIFTH[tok[4]] ? tok.slice(0, 4) + OCR_EMBOSS_FIFTH[tok[4]] + tok.slice(5) : "";
+          if (!s || !ocrBareSerialFitsBrand(brand, s)) continue;
+          const v = votes.get(s) || { n: 0, sure: false };
+          v.n++; v.sure = v.sure || letter || labelled;
+          votes.set(s, v);
+        }
+      }
+      const ranked = [...votes].sort((a, b) => b[1].n - a[1].n);
+      if (ranked.length && ranked[0][1].n >= 4 && ranked[0][1].sure && !(ranked[1] && ranked[1][1].n * 2 > ranked[0][1].n)) return { serial: ranked[0][0], serialSource: "shape" };
+    }
+  }
+  return null;
+}
+// The whole embossed pass on the 1600 px copy. null: not a faint plate, or nothing sure was read.
+async function ocrEmbossedPlate(worker, base, onStatus) {
+  const em = ocrEmboss(base, 1);
+  const made = [em];   // every page-size canvas made here is emptied on the way out
+  try {
+  if (!(em.top < OCR_EMBOSS_MAX && em.specks < 0.25 && em.edges < 20)) return null;
+  if (onStatus) onStatus("Faint raised print - reading it another way...");
+  let em2 = null;
+  for (const deg of ocrTextDirection(em) < 0 ? [90, 270] : [0, 180]) {
+    if (ocrStopRequested) throw OCR_STOP;
+    const page = deg ? rotateCanvas(em, deg) : em;
+    if (deg) made.push(page);
+    let data = null;
+    try { data = (await ocrRecognize(worker, page, { tessedit_pageseg_mode: "6" })).data; } catch (e) { if (e === OCR_STOP) throw e; data = null; }
+    let hit = null;
+    for (const w of data && data.words || []) {
+      const t = (w.text || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+      for (const f of OCR_GRID_FORMATS) {
+        // the right length give or take one (the line is read again by itself in ocrGridVote)
+        if (Math.abs(t.length - f.pos.length) > 1 || w.bbox.y1 - w.bbox.y0 < 12) continue;
+        // the family's fixed characters: each as printed or as this font's look-alike, half or more exact
+        let lits = 0, exact = 0, ok = true;
+        f.pos.forEach((c, i) => { if (c.length !== 1 || c === "#" || c === "@") return; lits++; if (t[i] === c) exact++; else if (!(OCR_EMBOSS_LOOK[c] || "").includes(t[i] || "?")) ok = false; });
+        if (ok && lits && exact * 2 >= lits && (!hit || (w.confidence || 0) > (hit.w.confidence || 0))) hit = { w, f, t };
+      }
+    }
+    if (!hit) continue;
+    if (!em2) { em2 = ocrEmboss(base, 2); made.push(em2); }
+    const pages = [page, deg ? rotateCanvas(em2, deg) : em2];
+    if (deg) made.push(pages[1]);
+    const model = await ocrGridVote(worker, pages, hit.w.bbox, hit.f, hit.t);
+    // Only a check that the library files this string under a family at all (for the brand and
+    // the unit card). It is NOT proof of the read: the 48TC pattern takes any 48TC + one character.
+    // What vouches for the 18 characters is the vote and the format table in ocrGridVote.
+    const cl = model ? ocrCleanModel(model) : null;
+    if (!(cl && cl.lib && cl.tier === 2 && cl.exact && cl.model === model && !cl.tailBad)) continue;
+    const ser = await ocrEmbossSerial(worker, pages, hit.w.bbox, cl.lib.brand);
+    return { model, lib: cl.lib, serial: ser ? ser.serial : "", serialSource: ser ? ser.serialSource : "", text: data.text || "", deg };
+  }
+  return null;
+  } finally { for (const c of made) { try { c.width = 0; } catch (e) {} } }
+}
+
 // Re-read the model line from the full-resolution photo. box is in the pixels
 // of the pass canvas (the 1600 px copy scaled by passScale, then turned deg
 // degrees clockwise by rotateCanvas) as Tesseract reported it: in its own
@@ -13083,7 +13386,36 @@ async function ocrTagTextPasses(file, onStatus) {
     // must be a library family - "JAOW3H" off Cameron's 1993 ICP plate read
     // upside down was reported as the model)
     const bc = bestCand;
-    if (bc && !vetoed(bc) && !serialAsModel(bc) && (bc.tier === 2 || (bc.model.length >= 7 && bc.conf >= (bc.tier === 1 ? 50 : 65)) || (bc.conf >= 80 && (bc.lib || bc.model.length >= 7)))) return await finish(bc);
+    const bcOk = !!(bc && !vetoed(bc) && !serialAsModel(bc) && (bc.tier === 2 || (bc.model.length >= 7 && bc.conf >= (bc.tier === 1 ? 50 : 65)) || (bc.conf >= 80 && (bc.lib || bc.model.length >= 7))));
+    // v475: the scan is about to end with no model at all - a faint EMBOSSED plate (white on white,
+    // Dave's Carrier 48TC rooftop) gets its own pass (ocrEmbossedPlate). It runs on no other photo,
+    // and it returns a model only when the vote is clear and every character fits the family's
+    // nomenclature table. Anything that goes wrong inside it (other than the tech's Stop or the
+    // 40 s limit, which end the scan the usual way) is logged and the scan ends as the ordinary
+    // "no model" result - serial, brand and the retake card kept - never as "Scan failed".
+    if (!bcOk && !(labelCand && !serialAsModel(labelCand))) {
+      let emb = null;
+      try { emb = await ocrEmbossedPlate(worker, base, onStatus); }
+      catch (e) {
+        if (e === OCR_STOP) throw e;
+        emb = null;
+        try { trackEvent("embossed pass error: " + String(e && e.message || e).slice(0, 80)); } catch (x) {}
+      }
+      if (emb) {
+        const fields = best ? { ...best } : { model: "", serial: "", serialSource: "", brandHint: null, text: "", confidence: 0 };
+        fields.model = emb.model;
+        fields.ocrTailBad = true;   // always "check the tag": this print is at the edge of what OCR reads
+        fields.text = (fields.text || "") + " \n" + emb.text;
+        if (!fields.brandHint) fields.brandHint = detectBrandInText(emb.text.toUpperCase());
+        // a serial an earlier pass read off its SERIAL label stands (as in finish())
+        if (fields.serial && fields.serialSource === "label") { /* kept */ }
+        else if (emb.serial) { fields.serial = emb.serial; fields.serialSource = emb.serialSource; }
+        else if (fields.serial && !ocrBareSerialFitsBrand(emb.lib.brand, fields.serial)) { fields.serial = ""; fields.serialSource = ""; }
+        trackEvent("tag read by embossed pass" + (emb.deg ? " rotate " + emb.deg : ""));
+        return fields;
+      }
+    }
+    if (bcOk) return await finish(bc);
     // v279: a clean labelled read the library doesn't know yet - shown as "not in
     // the library" (and uploaded for the nightly check) instead of "can't read".
     if (labelCand && !serialAsModel(labelCand)) return await finish({ ...labelCand, event: "tag model read from its label, not in library" });
@@ -13097,6 +13429,8 @@ async function ocrTagTextPasses(file, onStatus) {
     // The worker is shared by every later scan: put it back in its default
     // layout mode (SINGLE_BLOCK = "6", per the bundled worker), not PSM 3.
     try { await worker.setParameters({ tessedit_pageseg_mode: "6" }); } catch (e) {}
+    // v475: the embossed pass read digit strips with a whitelist; never leave it on the worker
+    if (ocrWhitelistDirty) { ocrWhitelistDirty = false; try { await worker.setParameters({ tessedit_char_whitelist: "" }); } catch (e) {} }
     try { if (photo.bmp.close) photo.bmp.close(); } catch (e) {}
   }
   if (best) best.model = "";
@@ -15572,7 +15906,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v474";
+const APP_VERSION = "v475";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
