@@ -5309,6 +5309,7 @@ function openGenDetail(id, focusModel, opts) {
     ${g.img ? `<img class="tstat-hero" src="${escapeHtml(g.img)}" alt="" onerror="this.remove()">` : ""}
     <h2>${escapeHtml(g.family)}</h2>
     <div class="sub">${escapeHtml(g.series)} · ${escapeHtml(g.controller || "")}${genShort(g.engine) ? " · " + escapeHtml(g.engine) : ""}${genShort(g.fuel) ? " · " + escapeHtml(g.fuel) : ""}${genShort(g.years) ? " · " + escapeHtml(g.years) : ""}</div>
+    ${opts.unsure && focusModel ? `<p class="scan-ocr-note gen-unsure-note">${escapeHtml(ocrCheckTagText(String(focusModel)))}</p>` : ""}
     ${jumpRow}
     ${(() => { try {
       // Bulletins for this family / model sit above everything else (Andy 2026-10-06). The serial comes
@@ -5354,6 +5355,14 @@ function openGenDetail(id, focusModel, opts) {
     btn.onclick = () => { trackEvent("opened generator manual: " + btn.textContent.trim().slice(0, 60)); openManualDetail(seedIdOf({ file: btn.dataset.seed })); };
   });
   const firstHit = modal.querySelector(".hit");
+  // v479: the page opens scrolled to the highlighted model row, so an unsure read's caution also sits right above it.
+  if (opts.unsure && focusModel && firstHit && firstHit.tagName === "TR" && firstHit.parentNode) {
+    const tr = document.createElement("tr"), td = document.createElement("td");
+    td.colSpan = 2;
+    td.innerHTML = `<p class="scan-ocr-note gen-unsure-note">${escapeHtml(ocrCheckTagText(String(focusModel)))}</p>`;
+    tr.appendChild(td);
+    firstHit.parentNode.insertBefore(tr, firstHit);
+  }
   document.getElementById("modalBackdrop").classList.remove("hidden");
   modal.scrollTop = 0;   // a card opened over another one starts at its top too
   if (firstHit) setTimeout(() => cardScrollToHit(modal, firstHit), 50);
@@ -5388,7 +5397,7 @@ async function genProblemScan(file) {
     genNoteScan(model, serial);
     trackEvent("gen problem scan -> " + model);
     genProblemScanStatus("Read " + model + (serial ? " · SN " + serial : "") + " - opened its generator page." + (fields.ocrTailBad ? " " + ocrCheckTagText(model) : ""));   // v476
-    openGenDetail(fam.id, model, { serial, where: "gen problem scan" });
+    openGenDetail(fam.id, model, { serial, where: "gen problem scan", unsure: !!fields.ocrTailBad });   // v479: caution on the page itself
     return;
   }
   const photoId = newScanPhotoId();
@@ -14343,7 +14352,7 @@ function renderScanResult(info) {
     const fam = genFamilyForModel(info.model);
     genState.search = ""; document.getElementById("genSearchInput").value = ""; if (window.genSyncOpenRow) window.genSyncOpenRow();
     showScreen("gen");
-    if (fam) openGenDetail(fam.id, info.model);
+    if (fam) openGenDetail(fam.id, info.model, { unsure: !!info.tailBad });   // v479: the scan's caution carries over
   };
 }
 
@@ -15943,7 +15952,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v478";
+const APP_VERSION = "v479";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
