@@ -798,6 +798,7 @@ const BULLETINS = [
     summary: "v3.01 clears heat pump diagnostics when the unit is set up as an AC, and adds four codes that catch a thermistor that is partly shorted: 51-12 (OAT) and 55-12 (LLT), 52-12 (OCT) and 53-12 (OST/ALT).",
     steps: [
       "51-12, 52-12, 53-12 or 55-12 on these units means that sensor reads like it is partly shorted. Check the named thermistor and its wiring and plug for damage, rubbed insulation or water before replacing the control.",
+      "TIC2026-0026 (11/19/2026): Carrier says these codes mean the thermistor has failed and should be replaced. Rolling the wall control back to 2.10 will not clear them.",
       "51-12 / 55-12 = outdoor air temp (OAT) or liquid line temp (LLT) sensor. 52-12 / 53-12 = outdoor coil temp (OCT) or suction temp (OST/ALT) sensor.",
       "Heat pump codes showing on a unit configured as an AC: update to v3.01; they no longer show after the update.",
       "Same release for 27VNA3 / 293VAN is v4.01 (TIC2026-0025). Earlier v3.0 changes are in TIC2026-0012."
@@ -813,6 +814,7 @@ const BULLETINS = [
     summary: "v4.01 clears heat pump diagnostics when the unit is set up as an AC, and adds four codes that catch a thermistor that is partly shorted: 51-12 (OAT) and 55-12 (LLT), 52-12 (OCT) and 53-12 (OST/ALT).",
     steps: [
       "51-12, 52-12, 53-12 or 55-12 on these units means that sensor reads like it is partly shorted. Check the named thermistor and its wiring and plug for damage, rubbed insulation or water before replacing the control.",
+      "TIC2026-0026 (11/19/2026): Carrier says these codes mean the thermistor has failed and should be replaced. Rolling the wall control back to 2.10 will not clear them.",
       "51-12 / 55-12 = outdoor air temp (OAT) or liquid line temp (LLT) sensor. 52-12 / 53-12 = outdoor coil temp (OCT) or suction temp (OST/ALT) sensor.",
       "Heat pump codes showing on a unit configured as an AC: update to v4.01; they no longer show after the update.",
       "Same release for 27VNA0 / 26VNA1 / 290VAN / 191VAN is v3.01 (TIC2026-0024)."
@@ -1151,10 +1153,27 @@ const BULLETINS = [
       "On 2.14 the blower no longer runs a weekly 15-minute checkout by itself. A blower that stays off all week on an AC-only system in the off season is normal.",
       "Use the indoor airflow CFM on the cooling charge mode screen to confirm airflow while charging.",
       "The control shows a QR code on screen that opens the release notes for the installed software.",
-      "Earlier versions (2.10, 2.05 and older) are in TIC2026-0011."
+      "Earlier versions (2.10, 2.05 and older) are in TIC2026-0011.",
+      "UPDATE 11/19/2026 (TIC2026-0026): the 2.14 release has been SUSPENDED after reports of no heat from the air handler. No heat on 2.14: check for fault codes, then install 2.10 by hand."
     ],
     priority: "info", confidential: true,
     source: "HVACpartners TIC2026-0023, Software 2.14 Release (-C Wall Control), Nov 2026"
+  },
+  {
+    id: "carrier-tic2026-0026", brand: "Carrier", number: "TIC2026-0026 (catalogued as PTC2026-0026)", docNo: "", rev: "", date: "2026-11-19", type: "Technical",
+    title: "-C wall control software 2.14 suspended - no heat from the air handler; go back to 2.10",
+    applies: { modelRe: ["^SYSTXCCITC01-?C", "^SYSTXCCWIC01-?C", "^SYSTXBBECC01-?C", "^SYSTXBBWEC01-?C", "^27VNA0", "^26VNA1", "^27VNA3", "^290VAN", "^191VAN", "^293VAN"], codes: ["51-12", "52-12", "53-12", "55-12"] },
+    appliesText: "Deluxe tier communicating systems with a -C system control (Carrier SYSTXCCITC01-C, SYSTXCCWIC01-C; Bryant SYSTXBBECC01-C, SYSTXBBWEC01-C) that took the 2.14 update. The thermistor-code part covers the current R-454B communicating outdoor units that got the 3.01 / 4.01 update the week of 11/09/2026 (27VNA0, 26VNA1, 27VNA3; Bryant 290VAN, 191VAN, 293VAN).",
+    summary: "Carrier has suspended system control software 2.14 because of scattered no-heat calls with air handlers after the update. Installing 2.10 by hand fixes the no heat. Separately, the 3.01 / 4.01 outdoor software added codes 51-12, 52-12, 53-12 and 55-12 for failed thermistors; those are real hardware failures and rolling the wall control back to 2.10 will not clear them.",
+    steps: [
+      "No heat on an air handler system with a -C wall control: check the control's software version.",
+      "First look for any fault codes that could cause the no heat and fix those.",
+      "No fault codes and the control is on 2.14: install software 2.10 on the control by hand. That restores heat.",
+      "51-12, 52-12, 53-12 or 55-12 on the outdoor unit means a failed thermistor: replace the thermistor. Going back to 2.10 on the wall control does NOT fix these codes.",
+      "See TIC2026-0023 for what 2.14 changed and TIC2026-0024 / TIC2026-0025 for which thermistor each code names."
+    ],
+    priority: "high", confidential: true,
+    source: "HVACpartners TIC2026-0026, No Heat with Software Update, Nov 2026"
   },
   {
     id: "carrier-tic2025-0034", brand: "Carrier", number: "TIC2025-0034", docNo: "", rev: "", date: "2025-11-11", type: "Technical",
