@@ -1695,6 +1695,9 @@ const ASK_KNOWN_TYPOS = [
   [/\bsen[cs][eo]rs?\b/gi, "sensor"],
   [/\bkil+[aoi]\s*-?\s*ohms?\b/gi, "kilohms"],
   [/(^|[^\d.])\.(\d)\s*(?:u?a\s*)?dc\b(?=.*\bflame\b)/gi, "$10.$2 microamps dc"],
+  // v480: Cameron 11-25 "weather king hot surface ignitor" - two words, so "king" was spell-fixed to "kind" and the
+  // brand was lost. The cards and ASK_BRAND_RE spell the Rheem badge as one word.
+  [/\bweather\s+king\b/gi, "weatherking"],
 ];
 function askKnownTypos(q) { let r = String(q || ""); for (const [re, to] of ASK_KNOWN_TYPOS) r = r.replace(re, to); return r; }
 // What the last askRetrievalQ call borrowed from the question before ({ words, codes }), or null. renderAsk
@@ -2023,7 +2026,9 @@ function askSeriesBoost(units, it) {
   const sizeQ = others.every(x => ASK_SIZE_WORD.test(w(x)) || /^(many|much|big|model|number)$/.test(w(x))) && others.some(x => ASK_SIZE_WORD.test(w(x)));
   const brandQ = others.every(x => /^(brand|manufacturer|manufactured|who|made)$/.test(w(x))) && others.some(x => /^(brand|manufacturer|manufactured)$/.test(w(x)));
   if (!sizeQ && !brandQ) return false;
-  if (typeof MAINT_SPECS !== "undefined" && typeof maintIsExact === "function" && MAINT_SPECS.some(s => { try { return maintIsExact(s, u.model); } catch (e) { return false; } })) return false;
+  // v480: a size question still goes to this card when the unit has a figures card - the figures card does not print the
+  // size, and without this "size" code rows led (Dustin 11-25, "gsx140601kd system size"). Brand questions keep the old rule.
+  if (!sizeQ && typeof MAINT_SPECS !== "undefined" && typeof maintIsExact === "function" && MAINT_SPECS.some(s => { try { return maintIsExact(s, u.model); } catch (e) { return false; } })) return false;
   // A fix card written for this very model number ("Amana RCB condenser (RCB42B2A) - unit size ...") keeps first place.
   const um = String(u.model).toUpperCase().replace(/[^A-Z0-9]/g, "");
   if (typeof SYMPTOMS !== "undefined" && um.length >= 6 && SYMPTOMS.some(s => String(s.title || "").toUpperCase().replace(/[^A-Z0-9]+/g, " ").split(" ").includes(um))) return false;
@@ -15952,7 +15957,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v479";
+const APP_VERSION = "v480";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
